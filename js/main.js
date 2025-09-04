@@ -1,6 +1,6 @@
 /* js/main.js */
 document.addEventListener('DOMContentLoaded', () => {
-  /* ---------------- Menu Toggle ---------------- */
+  // menu toggle
   const menuBtn = document.getElementById('menuBtn');
   const nav = document.getElementById('nav');
   if (menuBtn && nav) {
@@ -10,38 +10,56 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ---------------- Reveal on Scroll ---------------- */
+  // reveal on scroll
   const reveal = (el) => {
     const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('show');
-          obs.unobserve(e.target);
-        }
+        if (e.isIntersecting) { e.target.classList.add('show'); obs.unobserve(e.target); }
       });
-    }, { threshold: 0.15 });
+    }, {threshold: 0.15});
     observer.observe(el);
   };
   document.querySelectorAll('.fade-up').forEach(reveal);
 
-  /* ---------------- Simple Cart (localStorage) ---------------- */
+  // cart functionality
   const CART_KEY = 'potlapalli_cart_v1';
   const addButtons = document.querySelectorAll('.add-to-cart');
+  const cartSidebar = document.createElement('div');
+  cartSidebar.id = 'cartSidebar';
+  document.body.appendChild(cartSidebar);
 
   const getCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '{}');
   const saveCart = (c) => localStorage.setItem(CART_KEY, JSON.stringify(c));
 
+  const updateCartUI = () => {
+    const cart = getCart();
+    let html = '<h4>Cart</h4>';
+    if(Object.keys(cart).length === 0){
+      html += '<p>Your cart is empty</p>';
+    } else {
+      html += '<ul>';
+      Object.values(cart).forEach(item => {
+        html += `<li>${item.name} × ${item.qty} <span>₹${item.price * item.qty}</span></li>`;
+      });
+      html += '</ul>';
+      const total = Object.values(cart).reduce((sum,item)=>sum+item.price*item.qty,0);
+      html += `<div class="cart-total">Total: ₹${total}</div>`;
+    }
+    cartSidebar.innerHTML = html;
+  };
+
   addButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      const card = btn.closest('.product-card');
+      const card = btn.closest('.card');
       if (!card) return;
-      const id = card.dataset.id || card.querySelector('h4')?.textContent || 'item';
-      const name = card.dataset.name || card.querySelector('h4')?.textContent || 'Item';
+      const id = card.dataset.id;
+      const name = card.dataset.name;
       const price = parseFloat(card.dataset.price) || 0;
       const cart = getCart();
       if (!cart[id]) cart[id] = { id, name, price, qty: 0 };
       cart[id].qty += 1;
       saveCart(cart);
+      updateCartUI();
 
       // feedback
       const old = btn.innerHTML;
@@ -50,7 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------------- Contact Form Submit ---------------- */
+  updateCartUI();
+
+  // contact form demo
   const form = document.getElementById('contactForm');
   if (form) {
     form.addEventListener('submit', (e) => {
@@ -59,30 +79,4 @@ document.addEventListener('DOMContentLoaded', () => {
       form.reset();
     });
   }
-
-  /* ---------------- Smooth Scroll ---------------- */
-  document.querySelectorAll('nav a[href^="#"]').forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      const target = document.querySelector(link.getAttribute('href'));
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-  });
-
-  /* ---------------- Back-to-top Button ---------------- */
-  const topButton = document.createElement('button');
-  topButton.textContent = '↑';
-  topButton.style.cssText = `
-    position: fixed; bottom: 20px; right: 20px;
-    padding: 0.5rem 1rem; background:#27ae60; color:#fff;
-    border:none; border-radius:50%; cursor:pointer; display:none; z-index:9999;`;
-  document.body.appendChild(topButton);
-
-  window.addEventListener('scroll', () => {
-    topButton.style.display = window.scrollY > 300 ? 'block' : 'none';
-  });
-
-  topButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 });
