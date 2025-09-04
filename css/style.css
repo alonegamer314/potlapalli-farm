@@ -121,3 +121,53 @@
       padding: 1.5rem 0;
       margin-top: 3rem;
     }
+
+/* Responsive Fixes for Mobile */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .hero h2 {
+    font-size: 2rem;
+    padding: 0 1rem;
+  }
+
+  .btn {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .products h3 {
+    font-size: 2rem;
+  }
+
+  .product-card img {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  nav ul {
+    gap: 0.5rem;
+  }
+
+  .hero h2 {
+    font-size: 1.6rem;
+  }
+
+  .btn {
+    font-size: 0.8rem;
+  }
+}
