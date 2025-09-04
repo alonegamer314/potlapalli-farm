@@ -33,14 +33,19 @@
       <a href="#deals">Deals</a>
       <a href="#about">About</a>
       <a href="#testimonials">Testimonials</a>
-      <a href="#gallery.html">Gallery</a>
       <a href="#contact">Contact</a>
     </nav>
 
     <div class="header-actions">
       <button class="menu-btn" id="menuBtn">☰</button>
-      <!-- Mini Cart with proper flex behavior -->
-      <a href="cart.html" class="mini-cart" id="miniCart">🛒 <span id="cartCount">0</span></a>
+      <div class="mini-cart" id="miniCart">
+        <a href="cart.html">🛒 <span id="cartCount">0</span></a>
+      </div>
+      <!-- Auth buttons -->
+      <div id="authButtons">
+        <a href="signin.html" class="auth-btn" id="signinBtn">Sign In</a>
+        <a href="signup.html" class="auth-btn" id="signupBtn">Sign Up</a>
+      </div>
     </div>
   </div>
 </header>
@@ -142,6 +147,45 @@
       <p>© 2025 Potlapalli Farm. All rights reserved.</p>
     </div>
   </footer>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+    authDomain: "potlapallifarm.firebaseapp.com",
+    projectId: "potlapallifarm",
+    storageBucket: "potlapallifarm.firebasestorage.app",
+    messagingSenderId: "1017629729159",
+    appId: "1:1017629729159:web:357c420a9de335d427b322"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const authButtonsDiv = document.getElementById("authButtons");
+
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      // User is signed in, show Profile and Logout instead
+      authButtonsDiv.innerHTML = `
+        <a href="profile.html" class="auth-btn">Profile</a>
+        <a href="#" id="logoutBtn" class="auth-btn">Logout</a>
+      `;
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        signOut(auth).then(() => {
+          alert("Logged out successfully!");
+          location.reload();
+        });
+      });
+    } else {
+      // User not signed in, show Sign In / Sign Up
+      authButtonsDiv.innerHTML = `
+        <a href="signin.html" class="auth-btn">Sign In</a>
+        <a href="signup.html" class="auth-btn">Sign Up</a>
+      `;
+    }
+  });
+</script>
 </body>
 </html>
