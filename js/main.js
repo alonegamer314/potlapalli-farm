@@ -1,6 +1,6 @@
 /* js/main.js */
 document.addEventListener('DOMContentLoaded', () => {
-  // menu toggle
+  /* ---------------- Menu Toggle ---------------- */
   const menuBtn = document.getElementById('menuBtn');
   const nav = document.getElementById('nav');
   if (menuBtn && nav) {
@@ -10,18 +10,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // reveal on scroll
+  /* ---------------- Reveal on Scroll ---------------- */
   const reveal = (el) => {
     const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('show'); obs.unobserve(e.target); }
+        if (e.isIntersecting) {
+          e.target.classList.add('show');
+          obs.unobserve(e.target);
+        }
       });
-    }, {threshold: 0.15});
+    }, { threshold: 0.15 });
     observer.observe(el);
   };
   document.querySelectorAll('.fade-up').forEach(reveal);
 
-  // simple cart (localStorage)
+  /* ---------------- Simple Cart (localStorage) ---------------- */
   const CART_KEY = 'potlapalli_cart_v1';
   const addButtons = document.querySelectorAll('.add-to-cart');
 
@@ -30,10 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   addButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      const card = btn.closest('.card');
+      const card = btn.closest('.product-card');
       if (!card) return;
-      const id = card.dataset.id;
-      const name = card.dataset.name;
+      const id = card.dataset.id || card.querySelector('h4')?.textContent || 'item';
+      const name = card.dataset.name || card.querySelector('h4')?.textContent || 'Item';
       const price = parseFloat(card.dataset.price) || 0;
       const cart = getCart();
       if (!cart[id]) cart[id] = { id, name, price, qty: 0 };
@@ -47,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // optional: safe form submit (demo only)
+  /* ---------------- Contact Form Submit ---------------- */
   const form = document.getElementById('contactForm');
   if (form) {
     form.addEventListener('submit', (e) => {
@@ -56,4 +59,30 @@ document.addEventListener('DOMContentLoaded', () => {
       form.reset();
     });
   }
+
+  /* ---------------- Smooth Scroll ---------------- */
+  document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  /* ---------------- Back-to-top Button ---------------- */
+  const topButton = document.createElement('button');
+  topButton.textContent = '↑';
+  topButton.style.cssText = `
+    position: fixed; bottom: 20px; right: 20px;
+    padding: 0.5rem 1rem; background:#27ae60; color:#fff;
+    border:none; border-radius:50%; cursor:pointer; display:none; z-index:9999;`;
+  document.body.appendChild(topButton);
+
+  window.addEventListener('scroll', () => {
+    topButton.style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
+
+  topButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 });
