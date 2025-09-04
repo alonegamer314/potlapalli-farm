@@ -386,3 +386,36 @@ footer {
 .mini-cart.open {
   right: 0;
 }
+
+/* ===== Header Scroll Shadow ===== */
+header.scrolled {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  transition: box-shadow 0.3s ease;
+}
+
+/* ===== Mini Cart Icon ===== */
+.cart-icon {
+  display: inline-block;
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  position: relative;
+}
+#cartCount {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background: #e74c3c;
+  color: #fff;
+  font-size: 0.8rem;
+  padding: 2px 5px;
+  border-radius: 50%;
+}
+
+/* ===== Mobile Menu Transition ===== */
+nav {
+  transition: right 0.3s ease;
+}
+nav.open {
+  right: 0;
+}
