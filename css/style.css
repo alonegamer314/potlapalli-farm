@@ -8,22 +8,9 @@
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
 }
 body {
-  background: #ffffff;
+  background: #fff;
   color: #222;
   line-height: 1.6;
-  scroll-behavior: smooth;
-}
-a {
-  text-decoration: none;
-}
-
-/* ==========================
-   Container Utility
-========================== */
-.container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 /* ==========================
@@ -48,16 +35,12 @@ header .logo {
   font-size: 1.5rem;
   color: #2c3e50;
 }
-header .logo img {
-  height: 40px;
-  width: auto;
-}
-nav ul {
+nav {
   display: flex;
-  list-style: none;
   gap: 2rem;
 }
 nav a {
+  text-decoration: none;
   color: #2c3e50;
   font-weight: 500;
   transition: color 0.3s;
@@ -66,25 +49,23 @@ nav a:hover {
   color: #27ae60;
 }
 
-/* Mobile Menu */
+/* Mini-cart */
+.mini-cart {
+  margin-left: 15px;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* Mobile Navbar */
 .menu-btn {
   display: none;
-  font-size: 2rem;
+  font-size: 1.8rem;
   background: none;
   border: none;
   cursor: pointer;
 }
 .header-actions .cta {
   display: inline-block;
-  padding: 0.8rem 2rem;
-  background: #27ae60;
-  color: #fff;
-  border-radius: 50px;
-  transition: all 0.3s;
-}
-.header-actions .cta:hover {
-  background: #1e874b;
-  transform: scale(1.05);
 }
 @media (max-width: 768px) {
   nav {
@@ -100,51 +81,103 @@ nav a:hover {
     transition: right 0.3s ease;
     z-index: 999;
   }
-  nav.open { right: 0; }
+  nav.open {
+    right: 0;
+  }
+  nav a {
+    font-size: 1.2rem;
+  }
   nav ul { flex-direction: column; gap: 1rem; }
   .menu-btn { display: block; }
   .header-actions .cta { display: none; }
 }
 
 /* ==========================
-   Hero Section
+   Hero Section / Slider
 ========================== */
 .hero {
   position: relative;
-  background: url('../assets/images/farm-hero.jpg') center/cover no-repeat;
   height: 90vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  color: #fff;
-  padding: 0 1rem;
+  overflow: hidden;
 }
-.hero::after {
+.hero-slider {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+.slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+.slide::after {
   content: '';
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: rgba(0,0,0,0.4);
 }
-.hero .hero-content {
+.slide-content {
   position: relative;
-  z-index: 2;
+  color: #fff;
   max-width: 700px;
-  animation: fadeUp 1s ease forwards;
 }
-.hero h1 {
-  font-family: 'Playfair Display', serif;
+.slide-content h1 {
   font-size: 3rem;
-  font-weight: 700;
   margin-bottom: 1rem;
+  text-shadow: 2px 2px 12px rgba(0,0,0,0.5);
 }
-.hero p {
-  font-size: 1.1rem;
+.slide-content p {
+  font-size: 1.2rem;
   margin-bottom: 1.5rem;
 }
-.hero .cta {
+.slide-content .cta {
   display: inline-block;
+  background: #27ae60;
+  padding: 0.8rem 2rem;
+  color: #fff;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+.slide-content .cta:hover {
+  background: #1e874b;
+  transform: scale(1.05);
+}
+
+/* ==========================
+   Search / Filter Bar
+========================== */
+.search-bar {
+  padding: 1rem 5%;
+  display: flex;
+  justify-content: center;
+}
+.search-bar input {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 16px;
+  border-radius: 50px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  outline: none;
 }
 
 /* ==========================
@@ -153,109 +186,165 @@ nav a:hover {
 .products {
   padding: 4rem 5%;
   background: #f9f9f9;
+  text-align: center;
 }
-.products h2 {
+.products h3 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  color: #2c3e50;
-}
-.products p.small {
-  color: #555;
-  font-size: 0.95rem;
 }
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
   gap: 2rem;
-  margin-top: 2rem;
 }
-.product-card {
+.card {
   background: #fff;
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  position: relative;
   transition: transform 0.3s, box-shadow 0.3s;
 }
-.product-card:hover {
+.card:hover {
   transform: translateY(-8px) scale(1.02);
   box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
-.product-card img {
+.card img {
   width: 100%;
   aspect-ratio: 4/3;
   object-fit: cover;
 }
 .card-body {
-  flex: 1;
   padding: 1rem;
-  display: flex;
-  flex-direction: column;
 }
 .card-body h4 {
-  font-size: 1.3rem;
-  color: #2c3e50;
   margin-bottom: 0.5rem;
 }
 .card-body p {
-  color: #555;
   font-size: 0.95rem;
-  flex: 1;
+  color: #555;
 }
 .card-foot {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
+  padding-top: 0.5rem;
 }
-.card-foot .price {
+.price {
   font-weight: 600;
   color: #27ae60;
 }
 .btn.add-to-cart {
-  padding: 0.5rem 1.2rem;
-  font-size: 0.95rem;
-  border-radius: 50px;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+/* Badges */
+.badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 5px 10px;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 5px;
+}
+.badge.best-seller { background: #f39c12; }
+.badge.organic { background: #27ae60; }
+.badge.new { background: #e74c3c; }
+
+/* ==========================
+   Deals Section
+========================== */
+.deals {
+  padding: 3rem 5%;
+  background: #fff8f0;
+}
+.deal-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+.deal-card {
+  background: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  flex: 1 1 250px;
+  max-width: 300px;
+  font-weight: 600;
 }
 
 /* ==========================
-   About / Contact Sections
+   Testimonials
 ========================== */
-.section {
+.testimonials {
+  background: #f0f0f5;
   padding: 4rem 5%;
-  text-align: center;
 }
-.section h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: #2c3e50;
+.testimonial-slider {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.5rem;
+  padding: 1rem 0;
 }
-.section p {
-  font-size: 1rem;
-  color: #555;
-  max-width: 700px;
-  margin: 0 auto 1.5rem auto;
+.testimonial {
+  flex: 0 0 300px;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
-.contact form {
-  max-width: 700px;
-  margin: 1rem auto 0 auto;
+.testimonial p {
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+.testimonial span {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* ==========================
+   Contact / Newsletter
+========================== */
+.contact-form,
+.newsletter {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 12px;
+  max-width: 600px;
+  margin: 1rem auto 2rem;
 }
-.contact input,
-.contact textarea {
-  padding: 12px;
+.contact-form input,
+.contact-form textarea,
+.newsletter input {
+  padding: 12px 16px;
   border-radius: 10px;
   border: 1px solid #e6e6e6;
   font-size: 1rem;
-  width: 100%;
+  outline: none;
 }
-.contact button {
-  width: fit-content;
-  align-self: center;
+.contact-form button,
+.newsletter button {
+  width: max-content;
+  align-self: flex-start;
+  padding: 0.7rem 1.8rem;
 }
+
+/* Social links */
+.social-links {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+.social-links a {
+  text-decoration: none;
+  color: #2c3e50;
+  margin: 0 5px;
+  transition: color 0.3s;
+}
+.social-links a:hover { color: #27ae60; }
 
 /* ==========================
    Footer
@@ -263,14 +352,9 @@ nav a:hover {
 footer {
   background: #2c3e50;
   color: #fff;
-  padding: 2rem 5%;
   text-align: center;
+  padding: 2rem 5%;
 }
-footer a {
-  color: #fff;
-  text-decoration: underline;
-}
-footer a:hover { color: #27ae60; }
 
 /* ==========================
    Animations
@@ -284,19 +368,13 @@ footer a:hover { color: #27ae60; }
   opacity: 1;
   transform: translateY(0);
 }
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 
 /* ==========================
    Responsive
 ========================== */
-@media (max-width: 1024px) {
-  .hero h1 { font-size: 2.5rem; }
-  .products h2 { font-size: 2rem; }
-}
 @media (max-width: 768px) {
   .hero h1 { font-size: 2rem; }
   .product-grid { grid-template-columns: 1fr; }
+  .deal-cards { flex-direction: column; }
+  .testimonial-slider { overflow-x: scroll; }
 }
