@@ -141,3 +141,39 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
+
+// ===== Mobile Menu Toggle =====
+const menuBtn = document.getElementById('menuBtn');
+const nav = document.getElementById('nav');
+
+if(menuBtn && nav){
+  menuBtn.addEventListener('click', () => {
+    nav.classList.toggle('open');
+    menuBtn.classList.toggle('open');
+  });
+}
+
+// ===== Header Scroll Shadow =====
+const header = document.querySelector('header');
+window.addEventListener('scroll', () => {
+  if(window.scrollY > 50){
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+});
+
+// ===== Mini Cart Count (localStorage) =====
+const cartCountEl = document.getElementById('cartCount');
+const CART_KEY = 'potlapalli_cart_v1';
+const updateCartCount = () => {
+  const cart = JSON.parse(localStorage.getItem(CART_KEY) || '{}');
+  let total = 0;
+  Object.values(cart).forEach(item => total += item.qty);
+  if(cartCountEl) cartCountEl.textContent = total;
+};
+// Run initially and after adding items
+updateCartCount();
+document.querySelectorAll('.add-to-cart').forEach(btn => {
+  btn.addEventListener('click', () => setTimeout(updateCartCount, 100));
+});
