@@ -3,16 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Potlapalli Farm – Your Cart" />
   <title>Potlapalli Farm - Cart</title>
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/cart.js" defer></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Header / Navbar -->
+
+  <!-- =========================
+       Header / Navbar
+  ========================= -->
   <header class="header">
     <div class="container header-inner">
       <div class="logo">
-        <img src="assets/logo.png" alt="Potlapalli Farm Logo" />
+        <img src="assets/logo.png" alt="Potlapalli Farm Logo" onerror="this.style.display='none'" />
         <span>Potlapalli Farm</span>
       </div>
 
@@ -27,25 +35,63 @@
     </div>
   </header>
 
-  <!-- Cart Section -->
-  <section class="cart-section">
+  <!-- =========================
+       Cart Section
+  ========================= -->
+  <section class="section cart">
     <div class="container">
       <h2>Your Cart</h2>
+      <p>Review your selected items, adjust quantities, and proceed to checkout.</p>
+
       <div id="cartItems" class="cart-items">
-        <!-- Dynamically filled with JS -->
+        <!-- Cart items dynamically generated here -->
       </div>
+
       <div class="cart-summary">
-        <h3>Total: ₹<span id="cartTotal">0</span></h3>
+        <p>Subtotal: ₹<span id="cartSubtotal">0</span></p>
+        <p>Tax (5%): ₹<span id="cartTax">0</span></p>
+        <p><strong>Total: ₹<span id="cartTotal">0</span></strong></p>
         <button id="checkoutBtn" class="btn">Proceed to Checkout</button>
       </div>
+
+      <!-- Optional: Recommended products -->
+      <div class="cart-recommendations">
+        <h3>You may also like</h3>
+        <div class="recommendation-grid">
+          <div class="recommendation-card">
+            <img src="assets/images/milk.jpg" alt="Fresh Goat Milk">
+            <h4>Fresh Goat Milk</h4>
+            <p>₹60 / L</p>
+            <button class="add-to-cart-btn" data-id="milk-01" data-price="60" data-name="Fresh Goat Milk">Add</button>
+          </div>
+          <div class="recommendation-card">
+            <img src="assets/images/eggs.jpg" alt="Farm Eggs">
+            <h4>Farm Eggs</h4>
+            <p>₹8 / egg</p>
+            <button class="add-to-cart-btn" data-id="eggs-01" data-price="8" data-name="Farm Eggs">Add</button>
+          </div>
+          <div class="recommendation-card">
+            <img src="assets/images/chicken.jpg" alt="Country Chicken">
+            <h4>Country Chicken</h4>
+            <p>₹320 / kg</p>
+            <button class="add-to-cart-btn" data-id="chicken-01" data-price="320" data-name="Country Chicken">Add</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- =========================
+       Footer
+  ========================= -->
   <footer>
     <div class="container">
       <p>© 2025 Potlapalli Farm. All rights reserved.</p>
     </div>
   </footer>
+
+  <!-- JS -->
+  <script src="js/cart.js" defer></script>
 </body>
 </html>
