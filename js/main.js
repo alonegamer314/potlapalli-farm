@@ -1,11 +1,59 @@
-// JS for navbar scroll effect
-window.addEventListener('scroll', () => {
-  const header = document.querySelector('header');
-  if (window.scrollY > 50) {
-    header.style.background = '#ffffff';
-    header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-  } else {
-    header.style.background = '#f8f8f8';
-    header.style.boxShadow = 'none';
+/* js/main.js */
+document.addEventListener('DOMContentLoaded', () => {
+  // menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const nav = document.getElementById('nav');
+  if (menuBtn && nav) {
+    menuBtn.addEventListener('click', () => {
+      nav.classList.toggle('open');
+      menuBtn.classList.toggle('open');
+    });
+  }
+
+  // reveal on scroll
+  const reveal = (el) => {
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('show'); obs.unobserve(e.target); }
+      });
+    }, {threshold: 0.15});
+    observer.observe(el);
+  };
+  document.querySelectorAll('.fade-up').forEach(reveal);
+
+  // simple cart (localStorage)
+  const CART_KEY = 'potlapalli_cart_v1';
+  const addButtons = document.querySelectorAll('.add-to-cart');
+
+  const getCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '{}');
+  const saveCart = (c) => localStorage.setItem(CART_KEY, JSON.stringify(c));
+
+  addButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.card');
+      if (!card) return;
+      const id = card.dataset.id;
+      const name = card.dataset.name;
+      const price = parseFloat(card.dataset.price) || 0;
+      const cart = getCart();
+      if (!cart[id]) cart[id] = { id, name, price, qty: 0 };
+      cart[id].qty += 1;
+      saveCart(cart);
+
+      // feedback
+      const old = btn.innerHTML;
+      btn.innerHTML = 'Added ✓';
+      setTimeout(() => btn.innerHTML = old, 900);
+    });
+  });
+
+  // optional: safe form submit (demo only)
+  const form = document.getElementById('contactForm');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Thanks — your message was recorded (demo).');
+      form.reset();
+    });
   }
 });
