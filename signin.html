@@ -69,5 +69,23 @@
         .catch(error => alert(error.message));
     });
   </script>
+<script type="module">
+  // Import Firebase functions
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+  // Your Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+    authDomain: "potlapallifarm.firebaseapp.com",
+    projectId: "potlapallifarm",
+    storageBucket: "potlapallifarm.firebasestorage.app",
+    messagingSenderId: "1017629729159",
+    appId: "1:1017629729159:web:357c420a9de335d427b322"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
+
 </body>
 </html>
