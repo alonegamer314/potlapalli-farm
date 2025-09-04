@@ -618,3 +618,87 @@ html {
 @media (max-width: 768px) {
   .gallery-item img { height: 150px; }
 }
+
+/* ==========================
+   Gallery Section
+========================== */
+.gallery-section {
+  padding: 4rem 5%;
+  text-align: center;
+  background: #f9f9f9;
+}
+
+.gallery-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.gallery-section p {
+  margin-bottom: 2rem;
+  color: #555;
+}
+
+.gallery-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.gallery-item {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.gallery-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.gallery-caption {
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  background: #f1f1f1;
+}
+
+.gallery-detail-section {
+  padding: 4rem 5%;
+  text-align: center;
+}
+
+.gallery-detail-section .back-btn {
+  display: inline-block;
+  margin-bottom: 2rem;
+  text-decoration: none;
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.gallery-detail-section .detail-image {
+  width: 80%;
+  max-width: 700px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  margin: 1rem 0;
+}
+
+.gallery-detail-section h2 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.gallery-detail-section p {
+  color: #555;
+  font-size: 1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
