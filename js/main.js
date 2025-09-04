@@ -1,92 +1,129 @@
-/* ==========================
-   main.js - Final Version
-========================== */
-
+/* js/main.js */
 document.addEventListener('DOMContentLoaded', () => {
-
-  // ===== Mobile Menu Toggle =====
+  /* ==========================
+     Mobile Menu Toggle
+  ========================== */
   const menuBtn = document.getElementById('menuBtn');
   const nav = document.getElementById('nav');
-
-  if (menuBtn && nav) {
+  if(menuBtn && nav){
     menuBtn.addEventListener('click', () => {
       nav.classList.toggle('open');
       menuBtn.classList.toggle('open');
     });
   }
 
-  // ===== Scroll Reveal (Fade Up Animation) =====
-  const revealElements = document.querySelectorAll('.fade-up');
-  const revealObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting) {
-        entry.target.classList.add('show');
-        observer.unobserve(entry.target);
-      }
+  /* ==========================
+     Hero Slider Auto-Rotation
+  ========================== */
+  const slides = document.querySelectorAll('.slide');
+  let currentSlide = 0;
+  const slideInterval = 5000; // 5s
+
+  function showSlide(index){
+    slides.forEach((s,i) => {
+      s.classList.toggle('active', i === index);
     });
-  }, { threshold: 0.15 });
+  }
 
-  revealElements.forEach(el => revealObserver.observe(el));
+  function nextSlide(){
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+  }
 
-  // ===== Add-to-Cart Functionality =====
+  if(slides.length > 0){
+    showSlide(currentSlide);
+    setInterval(nextSlide, slideInterval);
+  }
+
+  /* ==========================
+     Fade-Up Scroll Animations
+  ========================== */
+  const fadeElements = document.querySelectorAll('.fade-up');
+  const revealOnScroll = (el) => {
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('show');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {threshold: 0.15});
+    observer.observe(el);
+  }
+  fadeElements.forEach(revealOnScroll);
+
+  /* ==========================
+     Mini-Cart / Add to Cart
+  ========================== */
   const CART_KEY = 'potlapalli_cart_v1';
   const addButtons = document.querySelectorAll('.add-to-cart');
-
   const getCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '{}');
-  const saveCart = (cart) => localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  const saveCart = (c) => localStorage.setItem(CART_KEY, JSON.stringify(c));
 
   addButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const card = btn.closest('.card');
-      if (!card) return;
-
+      if(!card) return;
       const id = card.dataset.id;
       const name = card.dataset.name;
       const price = parseFloat(card.dataset.price) || 0;
-
       const cart = getCart();
-      if (!cart[id]) cart[id] = { id, name, price, qty: 0 };
+      if(!cart[id]) cart[id] = {id, name, price, qty: 0};
       cart[id].qty += 1;
       saveCart(cart);
 
-      // Temporary feedback
-      const originalText = btn.innerHTML;
+      // Feedback animation
+      const oldText = btn.innerHTML;
       btn.innerHTML = 'Added ✓';
-      btn.disabled = true;
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-      }, 900);
-    });
-  });
+      setTimeout(()=> btn.innerHTML = oldText, 1000);
 
-  // ===== Contact Form Demo Submission =====
-  const form = document.getElementById('contactForm');
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Thanks — your message was recorded (demo).');
-      form.reset();
-    });
-  }
-
-  // ===== Smooth Scroll for Anchor Links =====
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
-      if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  });
-
-  // ===== Optional: Close Mobile Menu on Link Click =====
-  document.querySelectorAll('nav a').forEach(link => {
-    link.addEventListener('click', () => {
-      if(nav.classList.contains('open')) {
-        nav.classList.remove('open');
-        menuBtn.classList.remove('open');
+      // Update mini-cart badge if exists
+      const miniCart = document.querySelector('.mini-cart span');
+      if(miniCart){
+        const totalQty = Object.values(cart).reduce((a,b)=> a + b.qty, 0);
+        miniCart.textContent = totalQty;
       }
     });
   });
 
+  /* ==========================
+     Smooth Scroll
+  ========================== */
+  const scrollLinks = document.querySelectorAll('nav a, .cta');
+  scrollLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetID = link.getAttribute('href').substring(1);
+      const target = document.getElementById(targetID);
+      if(target){
+        window.scrollTo({top: target.offsetTop - 60, behavior: 'smooth'});
+      }
+    });
+  });
+
+  /* ==========================
+     Newsletter / Contact Form
+  ========================== */
+  const contactForm = document.getElementById('contactForm');
+  if(contactForm){
+    contactForm.addEventListener('submit', e => {
+      e.preventDefault();
+      alert('Thank you! Your message has been recorded (demo).');
+      contactForm.reset();
+    });
+  }
+
+  const newsletterForm = document.getElementById('newsletterForm');
+  if(newsletterForm){
+    newsletterForm.addEventListener('submit', e => {
+      e.preventDefault();
+      alert('Subscribed successfully (demo).');
+      newsletterForm.reset();
+    });
+  }
+
+  /* ==========================
+     Optional: Hero Slider Manual Controls (if needed)
+  ========================== */
+  // You can implement prev/next buttons here if desired
 });
