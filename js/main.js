@@ -259,3 +259,39 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
+// =========================
+// Gallery Click -> Detail Page
+// =========================
+document.addEventListener("DOMContentLoaded", () => {
+  const galleryItems = document.querySelectorAll('.gallery-item');
+
+  galleryItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const title = item.dataset.title;
+      const description = item.dataset.description;
+      const image = item.dataset.image;
+
+      // Pass data via localStorage
+      localStorage.setItem('galleryTitle', title);
+      localStorage.setItem('galleryDesc', description);
+      localStorage.setItem('galleryImage', image);
+
+      window.location.href = 'gallery-detail.html';
+    });
+  });
+
+  // Fill detail page if on gallery-detail.html
+  if(document.getElementById('detailTitle')){
+    const title = localStorage.getItem('galleryTitle');
+    const desc = localStorage.getItem('galleryDesc');
+    const image = localStorage.getItem('galleryImage');
+
+    if(title && desc && image){
+      document.getElementById('detailTitle').textContent = title;
+      document.getElementById('detailDescription').textContent = desc;
+      document.getElementById('detailImage').src = image;
+      document.getElementById('detailImage').alt = title;
+    }
+  }
+});
