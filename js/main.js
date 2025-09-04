@@ -102,3 +102,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
+// Smooth scroll for hero "Enter Farm" button
+const heroBtn = document.querySelector('.hero-btn');
+if (heroBtn) {
+  heroBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(heroBtn.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+}
