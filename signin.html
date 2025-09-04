@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - Potlapalli Farm</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Potlapalli Farm</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="signup.html">Sign Up</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="auth-container">
+    <h2>Sign In to Your Account</h2>
+    <form id="signinForm">
+      <label for="signinEmail">Email</label>
+      <input type="email" id="signinEmail" placeholder="Enter your email" required>
+
+      <label for="signinPassword">Password</label>
+      <input type="password" id="signinPassword" placeholder="Enter your password" required>
+
+      <label>
+        <input type="checkbox" id="rememberMe"> Remember Me
+      </label>
+
+      <button type="submit">Sign In</button>
+    </form>
+    <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+  </main>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+      authDomain: "potlapallifarm.firebaseapp.com",
+      projectId: "potlapallifarm",
+      storageBucket: "potlapallifarm.firebasestorage.app",
+      messagingSenderId: "1017629729159",
+      appId: "1:1017629729159:web:357c420a9de335d427b322"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const signinForm = document.getElementById("signinForm");
+    signinForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("signinEmail").value;
+      const password = document.getElementById("signinPassword").value;
+      const remember = document.getElementById("rememberMe").checked;
+
+      const persistence = remember ? browserLocalPersistence : "session";
+      setPersistence(auth, persistence)
+        .then(() => signInWithEmailAndPassword(auth, email, password))
+        .then(userCredential => {
+          alert("Signin successful!");
+          window.location.href = "index.html"; // redirect to homepage after login
+        })
+        .catch(error => alert(error.message));
+    });
+  </script>
+</body>
+</html>
