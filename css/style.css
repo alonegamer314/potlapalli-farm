@@ -758,3 +758,125 @@ html {
   background: #1e874b;
   transform: scale(1.05);
 }
+
+/* Signup/Signin Modern Layout */
+.auth-page {
+  display: flex;
+  min-height: 80vh;
+}
+
+.auth-left {
+  flex: 1;
+  background: linear-gradient(135deg, #a8e063, #56ab2f);
+  color: #fff;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.auth-left img {
+  max-width: 80%;
+  margin-top: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.auth-right {
+  flex: 1;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 40px;
+}
+
+.auth-right h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  color: #333;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.input-group input[type="email"],
+.input-group input[type="password"] {
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #56ab2f;
+  outline: none;
+  box-shadow: 0 0 5px rgba(86,171,47,0.5);
+}
+
+.remember {
+  flex-direction: row;
+  align-items: center;
+}
+
+.remember label {
+  margin-left: 8px;
+  font-weight: normal;
+}
+
+.btn-primary {
+  background-color: #56ab2f;
+  color: #fff;
+  border: none;
+  padding: 15px;
+  width: 100%;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #3e8e1d;
+}
+
+.auth-footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.auth-footer a {
+  color: #56ab2f;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .auth-page {
+    flex-direction: column;
+  }
+  .auth-left, .auth-right {
+    flex: none;
+    width: 100%;
+    padding: 40px;
+  }
+  .auth-left img {
+    max-width: 60%;
+  }
+}
