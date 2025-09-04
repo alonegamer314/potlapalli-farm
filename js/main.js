@@ -213,3 +213,49 @@ document.addEventListener('DOMContentLoaded', () => {
     alert('Checkout feature coming soon!');
   });
 });
+
+// =========================
+// Gallery Modal & Reveal
+// =========================
+document.addEventListener("DOMContentLoaded", () => {
+
+  // Smooth reveal
+  document.querySelectorAll('.fade-up').forEach(el => {
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('show');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    observer.observe(el);
+  });
+
+  // Gallery modal
+  const modal = document.getElementById('modal');
+  const modalImg = document.getElementById('modalImg');
+  const modalClose = document.getElementById('modalClose');
+
+  document.querySelectorAll('.gallery-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if(modal && modalImg){
+        modal.style.display = 'flex';
+        modalImg.src = item.dataset.full;
+      }
+    });
+  });
+
+  if(modalClose){
+    modalClose.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+  }
+
+  if(modal){
+    modal.addEventListener('click', e => {
+      if(e.target === modal) modal.style.display = 'none';
+    });
+  }
+
+});
