@@ -702,3 +702,34 @@ html {
   max-width: 700px;
   margin: 0 auto;
 }
+
+/* ==========================
+   Auth Buttons (Sign In / Sign Up / Profile / Logout)
+========================== */
+.header-actions #authButtons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.header-actions #authButtons .auth-btn {
+  padding: 0.5rem 1.2rem;
+  background: #27ae60;
+  color: #fff;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.header-actions #authButtons .auth-btn:hover {
+  background: #1e874b;
+  transform: scale(1.05);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .header-actions #authButtons {
+    display: none; /* hide in mobile, you can add inside mobile menu if needed */
+  }
+}
