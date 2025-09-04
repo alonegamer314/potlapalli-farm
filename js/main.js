@@ -13,6 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
       menuBtn.classList.toggle("open");
     });
   }
+// Close mobile menu when clicking a link or auth button
+document.querySelectorAll('#nav a, #mobileAuthButtons a').forEach(link => {
+  link.addEventListener('click', () => {
+    nav.classList.remove('open');
+    menuBtn.classList.remove('open');
+  });
+});
 
   // =========================
   // Hero section overlay animation (if needed)
