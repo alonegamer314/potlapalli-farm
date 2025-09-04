@@ -378,3 +378,64 @@ footer {
   .deal-cards { flex-direction: column; }
   .testimonial-slider { overflow-x: scroll; }
 }
+
+/* ==========================
+   Hero Section Fix
+========================== */
+.hero {
+  position: relative;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: url('assets/images/farm-hero.jpg') center/cover no-repeat;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.35); /* slightly darker overlay for readability */
+  z-index: 1;
+}
+
+.hero .hero-card {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  max-width: 700px;
+  text-align: center;
+}
+
+.hero .hero-card h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 15px rgba(0,0,0,0.6);
+}
+
+.hero .hero-card p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero .hero-card .cta {
+  background: #27ae60;
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #fff;
+  transition: all 0.3s;
+}
+.hero .hero-card .cta:hover {
+  background: #1e874b;
+  transform: scale(1.05);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .hero .hero-card h1 { font-size: 2rem; }
+  .hero .hero-card p { font-size: 1rem; }
+}
