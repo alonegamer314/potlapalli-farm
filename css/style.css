@@ -90,7 +90,7 @@ header .logo img {
   align-items: center;
   text-align: center;
   /* Fix the image path relative to css folder */
-  background-image: url('../assets/images/farm-hero.jpg');
+  background-image: url('/assets/images/farm-hero.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
