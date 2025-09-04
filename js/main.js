@@ -80,3 +80,64 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// Mini Cart Functionality
+const cartBtn = document.getElementById('cartBtn');
+const miniCart = document.getElementById('miniCart');
+const closeCart = document.getElementById('closeCart');
+const cartItemsContainer = miniCart.querySelector('.cart-items');
+const cartTotalEl = document.getElementById('cartTotal');
+
+const getCart = () => JSON.parse(localStorage.getItem('potlapalli_cart_v1') || '{}');
+const saveCart = (c) => localStorage.setItem('potlapalli_cart_v1', JSON.stringify(c));
+
+const updateMiniCart = () => {
+  const cart = getCart();
+  cartItemsContainer.innerHTML = '';
+  let total = 0;
+  Object.values(cart).forEach(item => {
+    total += item.price * item.qty;
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `<span>${item.name} x ${item.qty}</span><span>₹${item.price*item.qty}</span>`;
+    cartItemsContainer.appendChild(div);
+  });
+  cartTotalEl.textContent = `₹${total}`;
+};
+
+// Toggle Mini Cart
+cartBtn.addEventListener('click', () => {
+  miniCart.classList.toggle('open');
+  updateMiniCart();
+});
+closeCart.addEventListener('click', () => miniCart.classList.remove('open'));
+
+// Update cart automatically when adding items
+document.querySelectorAll('.add-to-cart').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const card = btn.closest('.card');
+    if (!card) return;
+    const id = card.dataset.id;
+    const name = card.dataset.name;
+    const price = parseFloat(card.dataset.price) || 0;
+    const cart = getCart();
+    if (!cart[id]) cart[id] = { id, name, price, qty: 0 };
+    cart[id].qty += 1;
+    saveCart(cart);
+    updateMiniCart();
+
+    // feedback
+    const old = btn.innerHTML;
+    btn.innerHTML = 'Added ✓';
+    setTimeout(() => btn.innerHTML = old, 900);
+  });
+});
+
+// Smooth Scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
