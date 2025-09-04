@@ -18,10 +18,12 @@
       </div>
 
       <nav class="nav" id="nav">
-        <a href="#home">Home</a>
-        <a href="#products">Products</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
       </nav>
 
       <div class="header-actions">
@@ -33,28 +35,23 @@
 
   <!-- Hero Section -->
   <section class="hero" id="home">
-    <div class="hero-card container fade-up">
-      <h1>Farm-fresh Purity — Delivered</h1>
+    <div class="fade-up">
+      <h2>Farm-fresh Purity — Delivered</h2>
       <p>Family-run Potlapalli Farm brings premium goat meat, free-range chicken, organic eggs and fresh milk directly to your kitchen — raised responsibly, delivered chilled.</p>
-      <div style="margin-top:14px">
-        <a class="cta" href="#products">Explore Products</a>
-      </div>
+      <a class="btn" href="#products">Explore Products</a>
     </div>
   </section>
 
-  <!-- Products -->
- <section class="section" id="products">
-  <div class="container">
-    <div class="center">
-      <div class="title">Our Bestsellers</div>
-      <p class="small">Vacuum sealed • Cold chain delivery • No antibiotics</p>
-    </div>
+  <!-- Products Section -->
+  <section class="section products" id="products">
+    <div class="container">
+      <h3 class="fade-up">Our Bestsellers</h3>
+      <p class="small fade-up">Vacuum sealed • Cold chain delivery • No antibiotics</p>
 
-    <div class="product-grid" style="margin-top:22px">
-      <!-- product 1 -->
-      <div class="card" data-id="goat-01" data-name="Premium Goat Meat" data-price="850">
-        <img src="assets/images/goat.jpg" alt="Premium Goat Meat">
-        <div class="card-body">
+      <div class="product-grid">
+        <!-- Product 1 -->
+        <div class="product-card card fade-up" data-id="goat-01" data-name="Premium Goat Meat" data-price="850">
+          <img src="assets/images/goat.jpg" alt="Premium Goat Meat">
           <h4>Premium Goat Meat</h4>
           <p>Free-range, hormone-free and vacuum packed for freshness.</p>
           <div class="card-foot">
@@ -62,12 +59,10 @@
             <button class="btn add-to-cart">Add</button>
           </div>
         </div>
-      </div>
 
-      <!-- product 2 -->
-      <div class="card" data-id="chicken-01" data-name="Country Chicken" data-price="320">
-        <img src="assets/images/chicken.jpg" alt="Country Chicken">
-        <div class="card-body">
+        <!-- Product 2 -->
+        <div class="product-card card fade-up" data-id="chicken-01" data-name="Country Chicken" data-price="320">
+          <img src="assets/images/chicken.jpg" alt="Country Chicken">
           <h4>Country Chicken</h4>
           <p>Native breed, rich in flavor — no antibiotics.</p>
           <div class="card-foot">
@@ -75,12 +70,10 @@
             <button class="btn add-to-cart">Add</button>
           </div>
         </div>
-      </div>
 
-      <!-- product 3 -->
-      <div class="card" data-id="eggs-01" data-name="Farm Eggs" data-price="8">
-        <img src="assets/images/eggs.jpg" alt="Country Eggs">
-        <div class="card-body">
+        <!-- Product 3 -->
+        <div class="product-card card fade-up" data-id="eggs-01" data-name="Farm Eggs" data-price="8">
+          <img src="assets/images/eggs.jpg" alt="Country Eggs">
           <h4>Country Eggs</h4>
           <p>Fresh daily — deep orange yolks packed in eco boxes.</p>
           <div class="card-foot">
@@ -88,12 +81,10 @@
             <button class="btn add-to-cart">Add</button>
           </div>
         </div>
-      </div>
 
-      <!-- product 4 -->
-      <div class="card" data-id="milk-01" data-name="Goat Milk" data-price="60">
-        <img src="assets/images/milk.jpg" alt="Fresh Goat Milk">
-        <div class="card-body">
+        <!-- Product 4 -->
+        <div class="product-card card fade-up" data-id="milk-01" data-name="Goat Milk" data-price="60">
+          <img src="assets/images/milk.jpg" alt="Fresh Goat Milk">
           <h4>Fresh Goat Milk</h4>
           <p>Collected daily and bottled with care.</p>
           <div class="card-foot">
@@ -103,34 +94,34 @@
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
+  <!-- About Section -->
+  <section class="section fade-up" id="about">
+    <div class="container">
+      <h3>About Potlapalli Farm</h3>
+      <p>We are a family farm in Andhra Pradesh raising livestock with ethical care. Our focus is on taste, animal welfare, and sustainability — every product tells our story.</p>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="section fade-up contact" id="contact">
+    <div class="container">
+      <h3>Contact Us</h3>
+      <p class="small">For orders & wholesale enquiries, message us on WhatsApp or use the form below.</p>
+
+      <form id="contactForm" style="max-width:680px;margin:18px auto;display:flex;flex-direction:column;gap:12px">
+        <input name="name" type="text" placeholder="Your name" required>
+        <input name="email" type="email" placeholder="Email" required>
+        <textarea name="message" placeholder="Message" required style="height:120px"></textarea>
+        <button class="btn">Send Message</button>
+      </form>
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer>
     <p>© 2025 Potlapalli Farm. All rights reserved.</p>
-    <section class="about" id="about">
-  <div class="container">
-    <div class="title center">About Potlapalli Farm</div>
-    <p class="fade-up">We are a family farm in Andhra Pradesh raising livestock with ethical care. Our focus is on taste, animal welfare and sustainability — every product tells our story.</p>
-  </div>
-</section>
-
-<section class="contact" id="contact">
-  <div class="container center">
-    <div class="title">Contact Us</div>
-    <p class="small">For orders & wholesale enquiries, message us on WhatsApp or use the form below.</p>
-
-    <form id="contactForm" style="max-width:680px;margin:18px auto;display:flex;flex-direction:column;gap:12px">
-      <input name="name" type="text" placeholder="Your name" required style="padding:12px;border-radius:10px;border:1px solid #e6e6e6">
-      <input name="email" type="email" placeholder="Email" required style="padding:12px;border-radius:10px;border:1px solid #e6e6e6">
-      <textarea name="message" placeholder="Message" required style="padding:12px;border-radius:10px;border:1px solid #e6e6e6;height:120px"></textarea>
-      <button class="btn">Send Message</button>
-    </form>
-  </div>
-</section>
-
   </footer>
 </body>
 </html>
