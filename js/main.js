@@ -1,109 +1,102 @@
 /* js/main.js */
-document.addEventListener('DOMContentLoaded', () => {
+
+document.addEventListener("DOMContentLoaded", () => {
 
   // =========================
   // Mobile menu toggle
   // =========================
-  const menuBtn = document.getElementById('menuBtn');
-  const nav = document.querySelector('nav');
+  const menuBtn = document.getElementById("menuBtn");
+  const nav = document.getElementById("nav");
   if (menuBtn && nav) {
-    menuBtn.addEventListener('click', () => {
-      nav.classList.toggle('open');
-      menuBtn.classList.toggle('open');
+    menuBtn.addEventListener("click", () => {
+      nav.classList.toggle("open");
+      menuBtn.classList.toggle("open");
     });
   }
 
   // =========================
-  // Hero Slider
+  // Hero section overlay animation (if needed)
   // =========================
-  const slides = document.querySelectorAll('.slide');
-  let currentSlide = 0;
-  const slideInterval = 5000;
-
-  if (slides.length > 0) {
-    slides[currentSlide].classList.add('active'); // show first slide immediately
-
-    setInterval(() => {
-      slides[currentSlide].classList.remove('active');
-      currentSlide = (currentSlide + 1) % slides.length;
-      slides[currentSlide].classList.add('active');
-    }, slideInterval);
+  // You can extend this if you want a slider
+  const hero = document.querySelector(".hero");
+  if (hero) {
+    hero.classList.add("show");
   }
 
   // =========================
-  // Reveal on scroll
+  // Fade-up scroll animations
   // =========================
   const reveal = (el) => {
     const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('show');
+          entry.target.classList.add("show");
           obs.unobserve(entry.target);
         }
       });
     }, { threshold: 0.15 });
     observer.observe(el);
   };
-  document.querySelectorAll('.fade-up').forEach(reveal);
+  document.querySelectorAll(".fade-up").forEach(reveal);
 
   // =========================
-  // Simple Cart (localStorage)
+  // Product Quantity & Cart
   // =========================
-  const CART_KEY = 'potlapalli_cart_v1';
-  const addButtons = document.querySelectorAll('.add-to-cart');
-  const cartCountEl = document.getElementById('cartCount');
+  const cartCount = document.getElementById("cartCount");
 
-  const getCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '{}');
-  const saveCart = (c) => localStorage.setItem(CART_KEY, JSON.stringify(c));
-  const updateCartCount = () => {
-    const cart = getCart();
-    const totalQty = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
-    if (cartCountEl) cartCountEl.textContent = totalQty;
-  };
+  document.querySelectorAll(".product-card").forEach(card => {
+    const qtyInput = card.querySelector(".qty");
+    const minusBtn = card.querySelector(".minus");
+    const plusBtn = card.querySelector(".plus");
+    const addBtn = card.querySelector(".add-to-cart-btn");
 
-  addButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const card = btn.closest('.card');
-      if (!card) return;
-      const id = card.dataset.id;
-      const name = card.dataset.name;
-      const price = parseFloat(card.dataset.price) || 0;
-      const cart = getCart();
-      if (!cart[id]) cart[id] = { id, name, price, qty: 0 };
-      cart[id].qty += 1;
-      saveCart(cart);
-      updateCartCount();
+    // Increase quantity
+    plusBtn.addEventListener("click", () => {
+      qtyInput.value = parseInt(qtyInput.value) + 1;
+    });
 
-      // Feedback animation
-      const oldText = btn.innerHTML;
-      btn.innerHTML = 'Added ✓';
-      setTimeout(() => btn.innerHTML = oldText, 900);
+    // Decrease quantity
+    minusBtn.addEventListener("click", () => {
+      if (parseInt(qtyInput.value) > 0) {
+        qtyInput.value = parseInt(qtyInput.value) - 1;
+      }
+    });
+
+    // Add to cart
+    addBtn.addEventListener("click", () => {
+      const qty = parseInt(qtyInput.value);
+      if (qty > 0) {
+        cartCount.textContent = parseInt(cartCount.textContent) + qty;
+        qtyInput.value = 0; // reset quantity after adding
+
+        // Small feedback animation
+        const oldText = addBtn.innerHTML;
+        addBtn.innerHTML = "Added ✓";
+        setTimeout(() => addBtn.innerHTML = oldText, 900);
+      }
     });
   });
 
-  // Initialize cart count on load
-  updateCartCount();
-
   // =========================
-  // Contact form demo submit
+  // Contact Form Submit
   // =========================
-  const form = document.getElementById('contactForm');
-  if (form) {
-    form.addEventListener('submit', (e) => {
+  const contactForm = document.getElementById("contactForm");
+  if (contactForm) {
+    contactForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      alert('Thanks! Your message has been recorded.');
-      form.reset();
+      alert("Thanks! Your message has been recorded.");
+      contactForm.reset();
     });
   }
 
   // =========================
-  // Newsletter signup demo
+  // Newsletter Signup Submit
   // =========================
-  const newsletterForm = document.getElementById('newsletterForm');
+  const newsletterForm = document.getElementById("newsletterForm");
   if (newsletterForm) {
-    newsletterForm.addEventListener('submit', (e) => {
+    newsletterForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      alert('Subscribed successfully!');
+      alert("Subscribed successfully!");
       newsletterForm.reset();
     });
   }
