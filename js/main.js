@@ -112,3 +112,19 @@ if (heroBtn) {
     if (target) target.scrollIntoView({ behavior: 'smooth' });
   });
 }
+
+// =========================
+// Fade-up animation for gallery
+// =========================
+const revealGallery = (el) => {
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('show');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  observer.observe(el);
+};
+document.querySelectorAll('.fade-up').forEach(revealGallery);
