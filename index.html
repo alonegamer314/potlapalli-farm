@@ -10,23 +10,35 @@
 </head>
 <body>
   <!-- Header -->
-  <header>
-    <h1>Potlapalli Farm</h1>
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Products</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </nav>
+  <header class="header">
+    <div class="container header-inner">
+      <div class="logo">
+        <img src="assets/images/logo.png" alt="Potlapalli Farm logo" onerror="this.style.display='none'">
+        <span>Potlapalli Farm</span>
+      </div>
+
+      <nav class="nav" id="nav">
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+        <a class="cta" href="#products">Shop Now</a>
+      </div>
+    </div>
   </header>
 
   <!-- Hero Section -->
-  <section class="hero">
-    <div>
-      <h2>Fresh, Organic, and Premium Farm Produce Delivered to Your Doorstep</h2>
-      <button class="btn">Shop Now</button>
+  <section class="hero" id="home">
+    <div class="hero-card container fade-up">
+      <h1>Farm-fresh Purity — Delivered</h1>
+      <p>Family-run Potlapalli Farm brings premium goat meat, free-range chicken, organic eggs and fresh milk directly to your kitchen — raised responsibly, delivered chilled.</p>
+      <div style="margin-top:14px">
+        <a class="cta" href="#products">Explore Products</a>
+      </div>
     </div>
   </section>
 
