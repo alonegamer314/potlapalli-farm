@@ -733,3 +733,28 @@ html {
     display: none; /* hide in mobile, you can add inside mobile menu if needed */
   }
 }
+/* ==========================
+   Mobile Auth Buttons
+========================== */
+.mobile-auth {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 1rem 0;
+}
+
+.mobile-auth .auth-btn {
+  padding: 0.6rem 1.5rem;
+  background: #27ae60;
+  color: #fff;
+  border-radius: 50px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.mobile-auth .auth-btn:hover {
+  background: #1e874b;
+  transform: scale(1.05);
+}
