@@ -1,86 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Potlapalli Farm Gallery – See our farm, livestock, and fresh products." />
-  <title>Gallery - Potlapalli Farm</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <style>
-    /* Gallery specific styles */
-    .gallery-container {
-      padding: 3rem 5%;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.8rem;
-    }
-    .gallery-item {
-      position: relative;
-      overflow: hidden;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .gallery-item:hover {
-      transform: scale(1.03);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    }
-    .gallery-item img {
-      width: 100%;
-      display: block;
-      object-fit: cover;
-      height: 200px;
-    }
-    .gallery-caption {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      padding: 0.8rem;
-      background: rgba(0,0,0,0.6);
-      color: #fff;
-      text-align: center;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: background 0.3s;
-    }
-    .gallery-item:hover .gallery-caption {
-      background: rgba(0,0,0,0.8);
-    }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Potlapalli Farm - Gallery</title>
 
-    /* Modal styles */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 2000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-content {
-      max-width: 90%;
-      max-height: 90%;
-      border-radius: 10px;
-      box-shadow: 0 6px 25px rgba(0,0,0,0.3);
-    }
-    .modal-close {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 2rem;
-      color: #fff;
-      cursor: pointer;
-    }
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
 
-    @media (max-width: 768px) {
-      .gallery-item img { height: 150px; }
-    }
-  </style>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- JS -->
+  <script src="js/main.js" defer></script>
 </head>
 <body>
 
@@ -88,90 +20,70 @@
   <header class="header">
     <div class="container header-inner">
       <div class="logo">
-        <img src="assets/logo.png" alt="Potlapalli Farm Logo" />
+        <img src="assets/logo.png" alt="Potlapalli Farm Logo">
         <span>Potlapalli Farm</span>
       </div>
-      <nav class="nav" id="nav">
+
+      <nav class="nav">
         <a href="index.html">Home</a>
-        <a href="gallery.html" class="active">Gallery</a>
-        <a href="cart.html">Cart</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="#contact">Contact</a>
       </nav>
+
       <div class="header-actions">
-        <button class="menu-btn" id="menuBtn">☰</button>
-        <div class="mini-cart"><a href="cart.html">🛒 <span id="cartCount">0</span></a></div>
+        <div class="mini-cart">
+          <a href="cart.html">🛒 <span id="cartCount">0</span></a>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- Gallery Section -->
-  <section class="gallery-container fade-up">
-    <div class="gallery-item" data-full="assets/images/farm1.jpg">
-      <img src="assets/images/farm1.jpg" alt="Goats grazing on the farm">
-      <div class="gallery-caption">Goats grazing on the farm</div>
-    </div>
-    <div class="gallery-item" data-full="assets/images/farm2.jpg">
-      <img src="assets/images/farm2.jpg" alt="Fresh country chicken">
-      <div class="gallery-caption">Fresh country chicken</div>
-    </div>
-    <div class="gallery-item" data-full="assets/images/farm3.jpg">
-      <img src="assets/images/farm3.jpg" alt="Organic eggs packed carefully">
-      <div class="gallery-caption">Organic eggs packed carefully</div>
-    </div>
-    <div class="gallery-item" data-full="assets/images/farm4.jpg">
-      <img src="assets/images/farm4.jpg" alt="Daily milk collection">
-      <div class="gallery-caption">Daily milk collection</div>
-    </div>
-    <div class="gallery-item" data-full="assets/images/farm5.jpg">
-      <img src="assets/images/farm5.jpg" alt="Farm landscapes">
-      <div class="gallery-caption">Farm landscapes</div>
-    </div>
-    <!-- Add more gallery items as needed -->
-  </section>
+  <!-- =========================
+       Gallery Section
+  ========================= -->
+  <section class="gallery-section">
+    <div class="container">
+      <h2>Our Farm Gallery</h2>
+      <p>Click on any image to view details.</p>
 
-  <!-- Modal for full image -->
-  <div class="modal" id="modal">
-    <span class="modal-close" id="modalClose">&times;</span>
-    <img class="modal-content" id="modalImg">
-  </div>
+      <div class="gallery-container">
+
+        <!-- Gallery Item 1 -->
+        <div class="gallery-item" data-title="Happy Goats" data-description="Our free-range goats roaming happily on the farm." data-image="assets/images/gallery/goat1.jpg">
+          <img src="assets/images/gallery/goat1_thumb.jpg" alt="Happy Goats">
+          <div class="gallery-caption">Happy Goats</div>
+        </div>
+
+        <!-- Gallery Item 2 -->
+        <div class="gallery-item" data-title="Organic Vegetables" data-description="Freshly harvested organic vegetables ready for delivery." data-image="assets/images/gallery/veggies1.jpg">
+          <img src="assets/images/gallery/veggies1_thumb.jpg" alt="Organic Vegetables">
+          <div class="gallery-caption">Organic Vegetables</div>
+        </div>
+
+        <!-- Gallery Item 3 -->
+        <div class="gallery-item" data-title="Country Chicken" data-description="Native breed chickens enjoying our open pasture." data-image="assets/images/gallery/chicken1.jpg">
+          <img src="assets/images/gallery/chicken1_thumb.jpg" alt="Country Chicken">
+          <div class="gallery-caption">Country Chicken</div>
+        </div>
+
+        <!-- Gallery Item 4 -->
+        <div class="gallery-item" data-title="Fresh Milk" data-description="Milking goats daily to provide fresh, pure milk." data-image="assets/images/gallery/milk1.jpg">
+          <img src="assets/images/gallery/milk1_thumb.jpg" alt="Fresh Milk">
+          <div class="gallery-caption">Fresh Milk</div>
+        </div>
+
+        <!-- Add more items as needed -->
+
+      </div>
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer>
-    <div class="container center">
+    <div class="container">
       <p>© 2025 Potlapalli Farm. All rights reserved.</p>
     </div>
   </footer>
 
-  <!-- JS -->
-  <script>
-    // Smooth reveal
-    document.querySelectorAll('.fade-up').forEach(el => {
-      const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-          if(entry.isIntersecting){
-            entry.target.classList.add('show');
-            obs.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.15 });
-      observer.observe(el);
-    });
-
-    // Modal logic
-    const modal = document.getElementById('modal');
-    const modalImg = document.getElementById('modalImg');
-    const modalClose = document.getElementById('modalClose');
-    document.querySelectorAll('.gallery-item').forEach(item => {
-      item.addEventListener('click', () => {
-        modal.style.display = 'flex';
-        modalImg.src = item.dataset.full;
-      });
-    });
-    modalClose.addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
-    modal.addEventListener('click', e => {
-      if(e.target === modal) modal.style.display = 'none';
-    });
-  </script>
 </body>
 </html>
