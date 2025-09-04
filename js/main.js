@@ -18,21 +18,27 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================
   const slides = document.querySelectorAll('.slide');
   let currentSlide = 0;
-  const slideInterval = setInterval(() => {
-    slides[currentSlide].classList.remove('active');
-    currentSlide = (currentSlide + 1) % slides.length;
-    slides[currentSlide].classList.add('active');
-  }, 5000); // 5 seconds per slide
+  const slideInterval = 5000;
+
+  if (slides.length > 0) {
+    slides[currentSlide].classList.add('active'); // show first slide immediately
+
+    setInterval(() => {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }, slideInterval);
+  }
 
   // =========================
   // Reveal on scroll
   // =========================
   const reveal = (el) => {
     const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { 
-          e.target.classList.add('show'); 
-          obs.unobserve(e.target); 
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          obs.unobserve(entry.target);
         }
       });
     }, { threshold: 0.15 });
@@ -45,9 +51,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================
   const CART_KEY = 'potlapalli_cart_v1';
   const addButtons = document.querySelectorAll('.add-to-cart');
+  const cartCountEl = document.getElementById('cartCount');
 
   const getCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '{}');
   const saveCart = (c) => localStorage.setItem(CART_KEY, JSON.stringify(c));
+  const updateCartCount = () => {
+    const cart = getCart();
+    const totalQty = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+    if (cartCountEl) cartCountEl.textContent = totalQty;
+  };
 
   addButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -60,16 +72,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!cart[id]) cart[id] = { id, name, price, qty: 0 };
       cart[id].qty += 1;
       saveCart(cart);
+      updateCartCount();
 
-      // Feedback
-      const old = btn.innerHTML;
+      // Feedback animation
+      const oldText = btn.innerHTML;
       btn.innerHTML = 'Added ✓';
-      setTimeout(() => btn.innerHTML = old, 900);
+      setTimeout(() => btn.innerHTML = oldText, 900);
     });
   });
 
+  // Initialize cart count on load
+  updateCartCount();
+
   // =========================
-  // Optional: Safe form submit (demo only)
+  // Contact form demo submit
   // =========================
   const form = document.getElementById('contactForm');
   if (form) {
