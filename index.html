@@ -1,62 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Potlapalli Farm – Premium farm-fresh goat meat, chicken, eggs, and milk." />
-  <title>Potlapalli Farm</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <script src="js/main.js" defer></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Potlapalli Farm – Premium farm-fresh goat meat, chicken, eggs, and milk.">
+<title>Potlapalli Farm</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<style>
+/* ===== RESET & BASE ===== */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+body { background:#f9f9f9; color:#333; line-height:1.6; }
+a { text-decoration:none; color: inherit; }
+img { max-width:100%; display:block; }
+
+/* ===== HEADER ===== */
+header { position:fixed; top:0; width:100%; background:#fff; z-index:999; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+.header-inner { display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:auto; padding:1rem 2rem; }
+.logo { display:flex; align-items:center; font-weight:700; font-size:1.3rem; gap:0.5rem; color:#2c3e50; }
+nav { display:flex; gap:1rem; }
+nav a { font-weight:500; transition:0.3s; }
+nav a:hover { color:#27ae60; }
+.header-actions { display:flex; align-items:center; gap:1rem; }
+.cta { padding:0.5rem 1rem; background:#27ae60; color:#fff; border-radius:5px; font-weight:600; transition:0.3s; }
+.cta:hover { background:#219150; }
+.menu-btn { display:none; font-size:1.5rem; cursor:pointer; background:none; border:none; }
+.mini-cart { cursor:pointer; font-size:1.2rem; }
+
+/* ===== HERO SLIDER ===== */
+.hero { margin-top:80px; position:relative; overflow:hidden; }
+.hero-slider { position:relative; }
+.hero-slider .slide { position:absolute; width:100%; height:90vh; background-size:cover; background-position:center; opacity:0; transition:opacity 1s ease; display:flex; align-items:center; justify-content:center; }
+.hero-slider .slide.active { opacity:1; }
+.slide-content { background:rgba(0,0,0,0.45); color:#fff; padding:2rem; border-radius:10px; text-align:center; max-width:600px; }
+.slide-content h1 { font-family:'Playfair Display', serif; font-size:2.8rem; margin-bottom:1rem; line-height:1.2; }
+.slide-content p { font-size:1.1rem; margin-bottom:1.5rem; }
+.slide-content .cta { font-size:1rem; }
+
+/* ===== SEARCH BAR ===== */
+.search-bar { margin:2rem auto; max-width:600px; display:flex; justify-content:center; }
+.search-bar input { width:100%; padding:0.8rem 1rem; border:1px solid #ccc; border-radius:5px; font-size:1rem; }
+
+/* ===== SECTIONS ===== */
+.section { padding:4rem 2rem; }
+.section.center { text-align:center; }
+
+/* ===== PRODUCTS ===== */
+.product-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:2rem; margin-top:2rem; }
+.card { background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.1); transition:0.3s; position:relative; display:flex; flex-direction:column; }
+.card:hover { transform:translateY(-5px); box-shadow:0 5px 15px rgba(0,0,0,0.2); }
+.card img { height:200px; object-fit:cover; }
+.card-body { padding:1rem; flex:1; display:flex; flex-direction:column; justify-content:space-between; }
+.card-body h4 { font-weight:600; margin-bottom:0.5rem; }
+.card-body p { font-size:0.9rem; margin-bottom:1rem; }
+.card-foot { display:flex; justify-content:space-between; align-items:center; margin-top:auto; }
+.price { font-weight:700; color:#27ae60; }
+.btn.add-to-cart { padding:0.5rem 1rem; background:#27ae60; color:#fff; border:none; border-radius:5px; cursor:pointer; transition:0.3s; }
+.btn.add-to-cart:hover { background:#219150; }
+.badge { position:absolute; top:10px; left:10px; background:#e67e22; color:#fff; padding:0.3rem 0.6rem; font-size:0.8rem; border-radius:3px; }
+.badge.best-seller { background:#e74c3c; }
+.badge.organic { background:#27ae60; }
+.badge.new { background:#3498db; }
+
+/* ===== DEALS ===== */
+.deal-cards { display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-top:2rem; }
+.deal-card { background:#27ae60; color:#fff; padding:1.5rem; border-radius:10px; flex:1; min-width:250px; transition:0.3s; text-align:center; }
+.deal-card:hover { background:#219150; }
+
+/* ===== ABOUT ===== */
+.about p { max-width:700px; margin:auto; font-size:1rem; line-height:1.8; }
+
+/* ===== TESTIMONIALS ===== */
+.testimonial-slider { display:flex; overflow-x:auto; gap:2rem; padding-top:2rem; scroll-behavior:smooth; }
+.testimonial { min-width:250px; background:#fff; padding:1.5rem; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+.testimonial p { font-style:italic; margin-bottom:1rem; }
+.testimonial span { font-weight:600; color:#27ae60; }
+
+/* ===== CONTACT ===== */
+.contact-form, .newsletter { display:flex; flex-direction:column; gap:1rem; max-width:400px; margin:auto; margin-top:2rem; }
+.contact-form input, .contact-form textarea, .newsletter input { padding:0.8rem; border:1px solid #ccc; border-radius:5px; width:100%; }
+.contact-form button, .newsletter button { padding:0.8rem; border:none; border-radius:5px; background:#27ae60; color:#fff; font-weight:600; cursor:pointer; transition:0.3s; }
+.contact-form button:hover, .newsletter button:hover { background:#219150; }
+.social-links { margin-top:1rem; font-size:0.9rem; }
+.social-links a { color:#27ae60; margin:0 0.5rem; transition:0.3s; }
+.social-links a:hover { color:#219150; }
+
+/* ===== FOOTER ===== */
+footer { background:#2c3e50; color:#fff; padding:2rem 1rem; text-align:center; margin-top:2rem; }
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){
+  .hero-slider .slide-content { max-width:500px; padding:1.5rem; }
+}
+@media(max-width:768px){
+  nav { display:none; flex-direction:column; gap:1rem; background:#fff; position:absolute; top:80px; right:0; width:200px; padding:1rem; box-shadow:-2px 0 10px rgba(0,0,0,0.1); }
+  nav.open { display:flex; }
+  .menu-btn { display:block; }
+  .hero-slider .slide-content h1 { font-size:2rem; }
+  .product-grid { grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; }
+}
+@media(max-width:480px){
+  .hero-slider .slide-content h1 { font-size:1.6rem; }
+  .slide-content p { font-size:0.95rem; }
+}
+</style>
 </head>
+
 <body>
-
-  <!-- Header / Navbar -->
-  <header class="header">
-    <div class="container header-inner">
-      <div class="logo">
-        <img src="assets/images/logo.png" alt="Potlapalli Farm logo" onerror="this.style.display='none'">
-        <span>Potlapalli Farm</span>
-      </div>
-
-      <nav class="nav" id="nav">
-        <a href="#home">Home</a>
-        <a href="#products">Products</a>
-        <a href="#deals">Deals</a>
-        <a href="#about">About</a>
-        <a href="#testimonials">Testimonials</a>
-        <a href="#contact">Contact</a>
-      </nav>
-
-      <div class="header-actions">
-        <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
-        <a class="cta" href="#products">Shop Now</a>
-        <div class="mini-cart" id="miniCart">
-          🛒 <span id="cartCount">0</span>
-        </div>
-      </div>
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <img src="assets/images/logo.png" alt="Potlapalli Farm logo" onerror="this.style.display='none'">
+      <span>Potlapalli Farm</span>
     </div>
-  </header>
+    <nav id="nav">
+      <a href="#home">Home</a>
+      <a href="#products">Products</a>
+      <a href="#deals">Deals</a>
+      <a href="#about">About</a>
+      <a href="#testimonials">Testimonials</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <button class="menu-btn" id="menuBtn">☰</button>
+      <a class="cta" href="#products">Shop Now</a>
+      <div class="mini-cart" id="miniCart">🛒 <span id="cartCount">0</span></div>
+    </div>
+  </div>
+</header>
 
-
-<!-- Hero Section -->
+<!-- HERO -->
 <section class="hero" id="home">
   <div class="hero-slider">
-    <div class="slide active" style="background-image: url('assets/images/farm-hero1.jpg');">
+    <div class="slide active" style="background-image:url('assets/images/farm-hero1.jpg')">
       <div class="slide-content">
         <h1>Fresh, Organic & Premium Goat Meat</h1>
         <p>Farm-fresh, hormone-free, and responsibly raised — delivered chilled to your doorstep.</p>
         <a class="cta" href="#products">Shop Goat Meat</a>
       </div>
     </div>
-    <div class="slide" style="background-image: url('assets/images/farm-hero2.jpg');">
+    <div class="slide" style="background-image:url('assets/images/farm-hero2.jpg')">
       <div class="slide-content">
         <h1>Country Chicken & Farm Eggs</h1>
         <p>Organic, free-range, and rich in flavor — straight from our farm to your kitchen.</p>
         <a class="cta" href="#products">Shop Chicken & Eggs</a>
       </div>
     </div>
-    <div class="slide" style="background-image: url('assets/images/farm-hero3.jpg');">
+    <div class="slide" style="background-image:url('assets/images/farm-hero3.jpg')">
       <div class="slide-content">
         <h1>Fresh Goat Milk</h1>
         <p>Collected daily, bottled with care — freshness you can taste.</p>
@@ -66,156 +157,126 @@
   </div>
 </section>
 
+<!-- SEARCH -->
+<section class="search-bar container fade-up">
+  <input type="text" id="searchInput" placeholder="Search products..." />
+</section>
 
-  <!-- Search / Filter Bar -->
-  <section class="search-bar container fade-up">
-    <input type="text" id="searchInput" placeholder="Search products..." />
-  </section>
-
-  <!-- Products Section -->
-  <section class="section products" id="products">
-    <div class="container">
-      <div class="center">
-        <h3>Our Bestsellers</h3>
-        <p class="small">Vacuum sealed • Cold chain delivery • No antibiotics</p>
-      </div>
-
-      <div class="product-grid" id="productGrid">
-        <!-- Product 1 -->
-        <div class="card" data-id="goat-01" data-name="Premium Goat Meat" data-price="850">
-          <div class="badge best-seller">Best Seller</div>
-          <img src="assets/images/goat.jpg" alt="Premium Goat Meat">
-          <div class="card-body">
-            <h4>Premium Goat Meat</h4>
-            <p>Free-range, hormone-free and vacuum packed for freshness.</p>
-            <div class="card-foot">
-              <div class="price">₹850/kg</div>
-              <button class="btn add-to-cart">Add</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Product 2 -->
-        <div class="card" data-id="chicken-01" data-name="Country Chicken" data-price="320">
-          <div class="badge organic">Organic</div>
-          <img src="assets/images/chicken.jpg" alt="Country Chicken">
-          <div class="card-body">
-            <h4>Country Chicken</h4>
-            <p>Native breed, rich in flavor — no antibiotics.</p>
-            <div class="card-foot">
-              <div class="price">₹320/kg</div>
-              <button class="btn add-to-cart">Add</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Product 3 -->
-        <div class="card" data-id="eggs-01" data-name="Farm Eggs" data-price="8">
-          <div class="badge new">New</div>
-          <img src="assets/images/eggs.jpg" alt="Country Eggs">
-          <div class="card-body">
-            <h4>Country Eggs</h4>
-            <p>Fresh daily — deep orange yolks packed in eco boxes.</p>
-            <div class="card-foot">
-              <div class="price">₹8 / egg</div>
-              <button class="btn add-to-cart">Add</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Product 4 -->
-        <div class="card" data-id="milk-01" data-name="Goat Milk" data-price="60">
-          <img src="assets/images/milk.jpg" alt="Fresh Goat Milk">
-          <div class="card-body">
-            <h4>Fresh Goat Milk</h4>
-            <p>Collected daily and bottled with care.</p>
-            <div class="card-foot">
-              <div class="price">₹60 / L</div>
-              <button class="btn add-to-cart">Add</button>
-            </div>
+<!-- PRODUCTS -->
+<section class="section products" id="products">
+  <div class="container">
+    <div class="center">
+      <h3>Our Bestsellers</h3>
+      <p class="small">Vacuum sealed • Cold chain delivery • No antibiotics</p>
+    </div>
+    <div class="product-grid" id="productGrid">
+      <!-- Product Example -->
+      <div class="card" data-id="goat-01" data-name="Premium Goat Meat" data-price="850">
+        <div class="badge best-seller">Best Seller</div>
+        <img src="assets/images/goat.jpg" alt="Premium Goat Meat">
+        <div class="card-body">
+          <h4>Premium Goat Meat</h4>
+          <p>Free-range, hormone-free and vacuum packed for freshness.</p>
+          <div class="card-foot">
+            <div class="price">₹850/kg</div>
+            <button class="btn add-to-cart">Add</button>
           </div>
         </div>
       </div>
+      <!-- Add other products similarly -->
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Deals / Promotions -->
-  <section class="section deals" id="deals">
-    <div class="container center">
-      <h3>Current Deals</h3>
-      <div class="deal-cards">
-        <div class="deal-card fade-up">
-          <h4>Buy 2 kg Goat Meat, Get 1 Egg Box Free!</h4>
-        </div>
-        <div class="deal-card fade-up">
-          <h4>Free Delivery on Orders Above ₹1500</h4>
-        </div>
+<!-- DEALS -->
+<section class="section deals" id="deals">
+  <div class="container center">
+    <h3>Current Deals</h3>
+    <div class="deal-cards">
+      <div class="deal-card">Buy 2 kg Goat Meat, Get 1 Egg Box Free!</div>
+      <div class="deal-card">Free Delivery on Orders Above ₹1500</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section about" id="about">
+  <div class="container center">
+    <h3>About Potlapalli Farm</h3>
+    <p>We are a family farm in Andhra Pradesh raising livestock with ethical care. Our focus is on taste, animal welfare, and sustainability — every product tells our story.</p>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testimonials" id="testimonials">
+  <div class="container center">
+    <h3>Customer Testimonials</h3>
+    <div class="testimonial-slider">
+      <div class="testimonial">
+        <p>"The goat meat was fresh and delicious. Fast delivery!"</p>
+        <span>- Ramesh K.</span>
+      </div>
+      <div class="testimonial">
+        <p>"Love the organic eggs, always get them for my family."</p>
+        <span>- Priya S.</span>
+      </div>
+      <div class="testimonial">
+        <p>"Country chicken tastes like it’s straight from the farm."</p>
+        <span>- Anil T.</span>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- About Section -->
-  <section class="section about" id="about">
-    <div class="container center fade-up">
-      <h3>About Potlapalli Farm</h3>
-      <p>We are a family farm in Andhra Pradesh raising livestock with ethical care. Our focus is on taste, animal welfare, and sustainability — every product tells our story.</p>
+<!-- CONTACT -->
+<section class="section contact" id="contact">
+  <div class="container center">
+    <h3>Contact Us</h3>
+    <p>For orders & wholesale enquiries, message us on WhatsApp or use the form below.</p>
+    <form id="contactForm" class="contact-form">
+      <input name="name" type="text" placeholder="Your name" required>
+      <input name="email" type="email" placeholder="Email" required>
+      <textarea name="message" placeholder="Message" required></textarea>
+      <button class="btn">
+      <button class="btn">Send Message</button>
+    </form>
+
+    <div class="newsletter">
+      <h4>Subscribe to our newsletter</h4>
+      <input type="email" placeholder="Enter your email">
+      <button class="btn">Subscribe</button>
     </div>
-  </section>
 
-  <!-- Testimonials Carousel -->
-  <section class="section testimonials" id="testimonials">
-    <div class="container center fade-up">
-      <h3>Customer Testimonials</h3>
-      <div class="testimonial-slider">
-        <div class="testimonial">
-          <p>"The goat meat was fresh and delicious. Fast delivery!"</p>
-          <span>- Ramesh K.</span>
-        </div>
-        <div class="testimonial">
-          <p>"Love the organic eggs, always get them for my family."</p>
-          <span>- Priya S.</span>
-        </div>
-        <div class="testimonial">
-          <p>"Country chicken tastes like it’s straight from the farm."</p>
-          <span>- Anil T.</span>
-        </div>
-      </div>
+    <div class="social-links">
+      <a href="#" target="_blank">Facebook</a> |
+      <a href="#" target="_blank">Instagram</a> |
+      <a href="#" target="_blank">WhatsApp</a>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Contact / Newsletter -->
-  <section class="section contact" id="contact">
-    <div class="container center fade-up">
-      <h3>Contact Us</h3>
-      <p>For orders & wholesale enquiries, message us on WhatsApp or use the form below.</p>
+<!-- FOOTER -->
+<footer>
+  <div class="container center">
+    <p>© 2025 Potlapalli Farm. All rights reserved.</p>
+  </div>
+</footer>
 
-      <form id="contactForm" class="contact-form">
-        <input name="name" type="text" placeholder="Your name" required>
-        <input name="email" type="email" placeholder="Email" required>
-        <textarea name="message" placeholder="Message" required></textarea>
-        <button class="btn">Send Message</button>
-      </form>
+<!-- HERO SLIDER JS -->
+<script>
+const slides = document.querySelectorAll('.hero-slider .slide');
+let currentSlide = 0;
+setInterval(() => {
+  slides[currentSlide].classList.remove('active');
+  currentSlide = (currentSlide + 1) % slides.length;
+  slides[currentSlide].classList.add('active');
+}, 5000);
 
-      <div class="newsletter">
-        <h4>Subscribe to our newsletter</h4>
-        <input type="email" placeholder="Enter your email">
-        <button class="btn">Subscribe</button>
-      </div>
-
-      <div class="social-links">
-        <a href="#" target="_blank">Facebook</a> |
-        <a href="#" target="_blank">Instagram</a> |
-        <a href="#" target="_blank">WhatsApp</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container center">
-      <p>© 2025 Potlapalli Farm. All rights reserved.</p>
-    </div>
-  </footer>
+// Mobile menu toggle
+const menuBtn = document.getElementById('menuBtn');
+const nav = document.getElementById('nav');
+menuBtn.addEventListener('click', () => nav.classList.toggle('open'));
+</script>
 
 </body>
 </html>
