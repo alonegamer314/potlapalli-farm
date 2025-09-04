@@ -1,129 +1,95 @@
 /* js/main.js */
 document.addEventListener('DOMContentLoaded', () => {
-  /* ==========================
-     Mobile Menu Toggle
-  ========================== */
+
+  // =========================
+  // Mobile menu toggle
+  // =========================
   const menuBtn = document.getElementById('menuBtn');
-  const nav = document.getElementById('nav');
-  if(menuBtn && nav){
+  const nav = document.querySelector('nav');
+  if (menuBtn && nav) {
     menuBtn.addEventListener('click', () => {
       nav.classList.toggle('open');
       menuBtn.classList.toggle('open');
     });
   }
 
-  /* ==========================
-     Hero Slider Auto-Rotation
-  ========================== */
+  // =========================
+  // Hero Slider
+  // =========================
   const slides = document.querySelectorAll('.slide');
   let currentSlide = 0;
-  const slideInterval = 5000; // 5s
-
-  function showSlide(index){
-    slides.forEach((s,i) => {
-      s.classList.toggle('active', i === index);
-    });
-  }
-
-  function nextSlide(){
+  const slideInterval = setInterval(() => {
+    slides[currentSlide].classList.remove('active');
     currentSlide = (currentSlide + 1) % slides.length;
-    showSlide(currentSlide);
-  }
+    slides[currentSlide].classList.add('active');
+  }, 5000); // 5 seconds per slide
 
-  if(slides.length > 0){
-    showSlide(currentSlide);
-    setInterval(nextSlide, slideInterval);
-  }
-
-  /* ==========================
-     Fade-Up Scroll Animations
-  ========================== */
-  const fadeElements = document.querySelectorAll('.fade-up');
-  const revealOnScroll = (el) => {
+  // =========================
+  // Reveal on scroll
+  // =========================
+  const reveal = (el) => {
     const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){
-          entry.target.classList.add('show');
-          obs.unobserve(entry.target);
+      entries.forEach(e => {
+        if (e.isIntersecting) { 
+          e.target.classList.add('show'); 
+          obs.unobserve(e.target); 
         }
       });
-    }, {threshold: 0.15});
+    }, { threshold: 0.15 });
     observer.observe(el);
-  }
-  fadeElements.forEach(revealOnScroll);
+  };
+  document.querySelectorAll('.fade-up').forEach(reveal);
 
-  /* ==========================
-     Mini-Cart / Add to Cart
-  ========================== */
+  // =========================
+  // Simple Cart (localStorage)
+  // =========================
   const CART_KEY = 'potlapalli_cart_v1';
   const addButtons = document.querySelectorAll('.add-to-cart');
+
   const getCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '{}');
   const saveCart = (c) => localStorage.setItem(CART_KEY, JSON.stringify(c));
 
   addButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const card = btn.closest('.card');
-      if(!card) return;
+      if (!card) return;
       const id = card.dataset.id;
       const name = card.dataset.name;
       const price = parseFloat(card.dataset.price) || 0;
       const cart = getCart();
-      if(!cart[id]) cart[id] = {id, name, price, qty: 0};
+      if (!cart[id]) cart[id] = { id, name, price, qty: 0 };
       cart[id].qty += 1;
       saveCart(cart);
 
-      // Feedback animation
-      const oldText = btn.innerHTML;
+      // Feedback
+      const old = btn.innerHTML;
       btn.innerHTML = 'Added ✓';
-      setTimeout(()=> btn.innerHTML = oldText, 1000);
-
-      // Update mini-cart badge if exists
-      const miniCart = document.querySelector('.mini-cart span');
-      if(miniCart){
-        const totalQty = Object.values(cart).reduce((a,b)=> a + b.qty, 0);
-        miniCart.textContent = totalQty;
-      }
+      setTimeout(() => btn.innerHTML = old, 900);
     });
   });
 
-  /* ==========================
-     Smooth Scroll
-  ========================== */
-  const scrollLinks = document.querySelectorAll('nav a, .cta');
-  scrollLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
+  // =========================
+  // Optional: Safe form submit (demo only)
+  // =========================
+  const form = document.getElementById('contactForm');
+  if (form) {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const targetID = link.getAttribute('href').substring(1);
-      const target = document.getElementById(targetID);
-      if(target){
-        window.scrollTo({top: target.offsetTop - 60, behavior: 'smooth'});
-      }
-    });
-  });
-
-  /* ==========================
-     Newsletter / Contact Form
-  ========================== */
-  const contactForm = document.getElementById('contactForm');
-  if(contactForm){
-    contactForm.addEventListener('submit', e => {
-      e.preventDefault();
-      alert('Thank you! Your message has been recorded (demo).');
-      contactForm.reset();
+      alert('Thanks! Your message has been recorded.');
+      form.reset();
     });
   }
 
+  // =========================
+  // Newsletter signup demo
+  // =========================
   const newsletterForm = document.getElementById('newsletterForm');
-  if(newsletterForm){
-    newsletterForm.addEventListener('submit', e => {
+  if (newsletterForm) {
+    newsletterForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      alert('Subscribed successfully (demo).');
+      alert('Subscribed successfully!');
       newsletterForm.reset();
     });
   }
 
-  /* ==========================
-     Optional: Hero Slider Manual Controls (if needed)
-  ========================== */
-  // You can implement prev/next buttons here if desired
 });
