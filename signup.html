@@ -7,9 +7,13 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
   <header>
-    <div class="container">
-      <h1>Potlapalli Farm</h1>
+    <div class="container header-inner">
+      <div class="logo">
+        <img src="assets/logo.png" alt="Potlapalli Farm Logo">
+        <span>Potlapalli Farm</span>
+      </div>
       <nav>
         <a href="index.html">Home</a>
         <a href="signin.html">Sign In</a>
@@ -38,8 +42,9 @@
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
+    // Your Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
       authDomain: "potlapallifarm.firebaseapp.com",
@@ -49,6 +54,7 @@
       appId: "1:1017629729159:web:357c420a9de335d427b322"
     };
 
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
@@ -59,33 +65,18 @@
       const password = document.getElementById("signupPassword").value;
       const remember = document.getElementById("rememberMe").checked;
 
-      const persistence = remember ? browserLocalPersistence : "session";
+      // Set persistence
+      const persistence = remember ? browserLocalPersistence : browserSessionPersistence;
+
       setPersistence(auth, persistence)
         .then(() => createUserWithEmailAndPassword(auth, email, password))
         .then(userCredential => {
           alert("Signup successful!");
-          window.location.href = "index.html"; // redirect to homepage after signup
+          window.location.href = "index.html"; // redirect to homepage
         })
         .catch(error => alert(error.message));
     });
   </script>
-<script type="module">
-  // Import Firebase functions
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-
-  // Your Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-    authDomain: "potlapallifarm.firebaseapp.com",
-    projectId: "potlapallifarm",
-    storageBucket: "potlapallifarm.firebasestorage.app",
-    messagingSenderId: "1017629729159",
-    appId: "1:1017629729159:web:357c420a9de335d427b322"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
 
 </body>
 </html>
