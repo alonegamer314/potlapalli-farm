@@ -1,79 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Potlapalli Farm – Premium farm-fresh goat meat, chicken, eggs, and milk. Ethically raised, responsibly delivered.">
-  <meta name="keywords" content="Potlapalli Farm, Goat Meat, Country Chicken, Organic Eggs, Fresh Milk, Ethical Farming, Andhra Pradesh">
-  <meta name="author" content="Potlapalli Farm">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Potlapalli Farm – Premium farm-fresh goat meat, chicken, eggs, and milk." />
   <title>Potlapalli Farm</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css">
-
-  <!-- JS -->
+  <link rel="stylesheet" href="css/style.css" />
   <script src="js/main.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- ======================
-       Header / Navbar
-  ====================== -->
+  <!-- Header / Navbar -->
   <header class="header">
     <div class="container header-inner">
       <div class="logo">
-        <img src="assets/images/logo.png" alt="Potlapalli Farm Logo" onerror="this.style.display='none'">
+        <img src="assets/images/logo.png" alt="Potlapalli Farm logo" onerror="this.style.display='none'">
         <span>Potlapalli Farm</span>
       </div>
 
       <nav class="nav" id="nav">
-        <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#products">Products</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#deals">Deals</a>
+        <a href="#about">About</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#contact">Contact</a>
       </nav>
 
       <div class="header-actions">
-        <button class="menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
         <a class="cta" href="#products">Shop Now</a>
+        <div class="mini-cart" id="miniCart">
+          🛒 <span id="cartCount">0</span>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- ======================
-       Hero Section
-  ====================== -->
+  <!-- Hero Slider -->
   <section class="hero" id="home">
-    <div class="hero-content fade-up">
-      <h1>Farm-Fresh Purity Delivered</h1>
-      <p>Family-run Potlapalli Farm brings premium goat meat, free-range chicken, organic eggs, and fresh milk directly to your kitchen — ethically raised, responsibly delivered.</p>
-      <a class="cta" href="#products">Explore Products</a>
+    <div class="hero-slider fade-up">
+      <div class="slide" style="background-image:url('assets/images/farm-hero1.jpg')">
+        <div class="slide-content">
+          <h1>Fresh Organic Goat Meat</h1>
+          <p>From farm to your plate — responsibly raised and delivered chilled.</p>
+          <a class="cta" href="#products">Shop Goat Meat</a>
+        </div>
+      </div>
+      <div class="slide" style="background-image:url('assets/images/farm-hero2.jpg')">
+        <div class="slide-content">
+          <h1>Free-range Country Chicken</h1>
+          <p>Native breed chickens raised naturally, full of flavor.</p>
+          <a class="cta" href="#products">Shop Chicken</a>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- ======================
-       Products Section
-  ====================== -->
+  <!-- Search / Filter Bar -->
+  <section class="search-bar container fade-up">
+    <input type="text" id="searchInput" placeholder="Search products..." />
+  </section>
+
+  <!-- Products Section -->
   <section class="section products" id="products">
     <div class="container">
-      <div class="center fade-up">
-        <h2>Our Bestsellers</h2>
-        <p class="small">Vacuum-sealed • Cold chain delivery • No antibiotics</p>
+      <div class="center">
+        <h3>Our Bestsellers</h3>
+        <p class="small">Vacuum sealed • Cold chain delivery • No antibiotics</p>
       </div>
 
-      <div class="product-grid fade-up">
+      <div class="product-grid" id="productGrid">
         <!-- Product 1 -->
-        <div class="product-card card" data-id="goat-01" data-name="Premium Goat Meat" data-price="850">
+        <div class="card" data-id="goat-01" data-name="Premium Goat Meat" data-price="850">
+          <div class="badge best-seller">Best Seller</div>
           <img src="assets/images/goat.jpg" alt="Premium Goat Meat">
           <div class="card-body">
             <h4>Premium Goat Meat</h4>
-            <p>Free-range, hormone-free, vacuum packed for freshness.</p>
+            <p>Free-range, hormone-free and vacuum packed for freshness.</p>
             <div class="card-foot">
               <div class="price">₹850/kg</div>
               <button class="btn add-to-cart">Add</button>
@@ -82,7 +87,8 @@
         </div>
 
         <!-- Product 2 -->
-        <div class="product-card card" data-id="chicken-01" data-name="Country Chicken" data-price="320">
+        <div class="card" data-id="chicken-01" data-name="Country Chicken" data-price="320">
+          <div class="badge organic">Organic</div>
           <img src="assets/images/chicken.jpg" alt="Country Chicken">
           <div class="card-body">
             <h4>Country Chicken</h4>
@@ -95,11 +101,12 @@
         </div>
 
         <!-- Product 3 -->
-        <div class="product-card card" data-id="eggs-01" data-name="Farm Eggs" data-price="8">
+        <div class="card" data-id="eggs-01" data-name="Farm Eggs" data-price="8">
+          <div class="badge new">New</div>
           <img src="assets/images/eggs.jpg" alt="Country Eggs">
           <div class="card-body">
             <h4>Country Eggs</h4>
-            <p>Fresh daily — deep orange yolks packed in eco-friendly boxes.</p>
+            <p>Fresh daily — deep orange yolks packed in eco boxes.</p>
             <div class="card-foot">
               <div class="price">₹8 / egg</div>
               <button class="btn add-to-cart">Add</button>
@@ -108,7 +115,7 @@
         </div>
 
         <!-- Product 4 -->
-        <div class="product-card card" data-id="milk-01" data-name="Goat Milk" data-price="60">
+        <div class="card" data-id="milk-01" data-name="Goat Milk" data-price="60">
           <img src="assets/images/milk.jpg" alt="Fresh Goat Milk">
           <div class="card-body">
             <h4>Fresh Goat Milk</h4>
@@ -123,43 +130,81 @@
     </div>
   </section>
 
-  <!-- ======================
-       About Section
-  ====================== -->
-  <section class="section about" id="about">
-    <div class="container center fade-up">
-      <h2>About Potlapalli Farm</h2>
-      <p>We are a family farm in Andhra Pradesh raising livestock ethically. Our focus is on taste, animal welfare, and sustainability — every product tells our story.</p>
+  <!-- Deals / Promotions -->
+  <section class="section deals" id="deals">
+    <div class="container center">
+      <h3>Current Deals</h3>
+      <div class="deal-cards">
+        <div class="deal-card fade-up">
+          <h4>Buy 2 kg Goat Meat, Get 1 Egg Box Free!</h4>
+        </div>
+        <div class="deal-card fade-up">
+          <h4>Free Delivery on Orders Above ₹1500</h4>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- ======================
-       Contact Section
-  ====================== -->
+  <!-- About Section -->
+  <section class="section about" id="about">
+    <div class="container center fade-up">
+      <h3>About Potlapalli Farm</h3>
+      <p>We are a family farm in Andhra Pradesh raising livestock with ethical care. Our focus is on taste, animal welfare, and sustainability — every product tells our story.</p>
+    </div>
+  </section>
+
+  <!-- Testimonials Carousel -->
+  <section class="section testimonials" id="testimonials">
+    <div class="container center fade-up">
+      <h3>Customer Testimonials</h3>
+      <div class="testimonial-slider">
+        <div class="testimonial">
+          <p>"The goat meat was fresh and delicious. Fast delivery!"</p>
+          <span>- Ramesh K.</span>
+        </div>
+        <div class="testimonial">
+          <p>"Love the organic eggs, always get them for my family."</p>
+          <span>- Priya S.</span>
+        </div>
+        <div class="testimonial">
+          <p>"Country chicken tastes like it’s straight from the farm."</p>
+          <span>- Anil T.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / Newsletter -->
   <section class="section contact" id="contact">
     <div class="container center fade-up">
-      <h2>Contact Us</h2>
-      <p class="small">For orders & wholesale enquiries, message us on WhatsApp or use the form below.</p>
+      <h3>Contact Us</h3>
+      <p>For orders & wholesale enquiries, message us on WhatsApp or use the form below.</p>
 
-      <form id="contactForm">
+      <form id="contactForm" class="contact-form">
         <input name="name" type="text" placeholder="Your name" required>
         <input name="email" type="email" placeholder="Email" required>
         <textarea name="message" placeholder="Message" required></textarea>
         <button class="btn">Send Message</button>
       </form>
+
+      <div class="newsletter">
+        <h4>Subscribe to our newsletter</h4>
+        <input type="email" placeholder="Enter your email">
+        <button class="btn">Subscribe</button>
+      </div>
+
+      <div class="social-links">
+        <a href="#" target="_blank">Facebook</a> |
+        <a href="#" target="_blank">Instagram</a> |
+        <a href="#" target="_blank">WhatsApp</a>
+      </div>
     </div>
   </section>
 
-  <!-- ======================
-       Footer
-  ====================== -->
+  <!-- Footer -->
   <footer>
-    <div class="container center fade-up">
+    <div class="container center">
       <p>© 2025 Potlapalli Farm. All rights reserved.</p>
-      <p>Follow us on 
-        <a href="#" target="_blank">Instagram</a> • 
-        <a href="#" target="_blank">Facebook</a>
-      </p>
     </div>
   </footer>
 
