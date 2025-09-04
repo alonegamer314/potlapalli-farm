@@ -2,188 +2,188 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Potlapalli Farm – Premium farm-fresh goat meat, chicken, eggs & milk. Sustainable farm produce direct to your home.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Potlapalli Farm – Premium farm-fresh goat meat, chicken, eggs, and milk.">
   <title>Potlapalli Farm</title>
+  <link rel="stylesheet" href="css/style.css" />
   <style>
-    * {margin: 0; padding: 0; box-sizing: border-box;}
-    body {
-      font-family: 'Helvetica Neue', sans-serif;
-      background: #ffffff;
-      color: #1a1a1a;
-      line-height: 1.6;
-      font-size: 18px;
-      overflow-x: hidden;
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
     }
+    body {
+      background: #ffffff;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    /* Navbar */
     header {
-      background: #f8f9fa;
-      padding: 20px 50px;
+      background: #f8f8f8;
+      border-bottom: 1px solid #ddd;
+      padding: 1rem 5%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
     }
     header h1 {
-      font-size: 28px;
-      font-weight: bold;
-      color: #2e7d32;
+      font-size: 1.8rem;
+      color: #2c3e50;
       letter-spacing: 1px;
     }
     nav ul {
-      list-style: none;
       display: flex;
-      gap: 30px;
+      list-style: none;
+      gap: 2rem;
     }
-    nav ul li a {
+    nav a {
       text-decoration: none;
-      color: #1a1a1a;
+      color: #2c3e50;
       font-weight: 500;
-      transition: color 0.3s ease;
+      transition: color 0.3s;
     }
-    nav ul li a:hover {
-      color: #2e7d32;
+    nav a:hover {
+      color: #27ae60;
     }
+
+    /* Hero Section */
     .hero {
-      background: url('https://images.unsplash.com/photo-1615486364546-f67d6f1b8f8c') center/cover no-repeat;
+      background: url('assets/images/farm-hero.jpg') center/cover no-repeat;
       height: 90vh;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       text-align: center;
       color: #fff;
-      padding: 0 20px;
+      padding: 0 1rem;
     }
     .hero h2 {
-      font-size: 60px;
-      font-weight: 700;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      font-size: 3rem;
+      font-weight: bold;
+      max-width: 700px;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
     }
-    .section {
-      padding: 100px 50px;
-      max-width: 1200px;
-      margin: auto;
+    .btn {
+      background: #27ae60;
+      padding: 0.8rem 2rem;
+      color: #fff;
+      font-size: 1rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: background 0.3s;
     }
-    .section h3 {
-      font-size: 36px;
-      margin-bottom: 20px;
-      color: #2e7d32;
+    .btn:hover {
+      background: #1e874b;
     }
+
+    /* Product Section */
     .products {
+      padding: 4rem 5%;
+      background: #f9f9f9;
+      text-align: center;
+    }
+    .products h3 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      color: #2c3e50;
+    }
+    .product-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 40px;
+      gap: 2rem;
     }
-    .product {
+    .product-card {
       background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       overflow: hidden;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s;
     }
-    .product img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-    }
-    .product-content {
-      padding: 20px;
-    }
-    .product-content h4 {
-      font-size: 22px;
-      margin-bottom: 10px;
-      color: #333;
-    }
-    .product-content p {
-      color: #555;
-    }
-    .product:hover {
+    .product-card:hover {
       transform: translateY(-10px);
     }
-    footer {
-      background: #f1f1f1;
-      padding: 40px;
-      text-align: center;
-      font-size: 16px;
+    .product-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .product-card h4 {
+      margin: 1rem;
+      font-size: 1.3rem;
+      color: #2c3e50;
+    }
+    .product-card p {
+      margin: 0 1rem 1rem;
       color: #555;
     }
-    @media (max-width: 768px) {
-      header, .section {
-        padding: 20px;
-      }
-      .hero h2 {
-        font-size: 40px;
-      }
+
+    /* Footer */
+    footer {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 1.5rem 0;
+      margin-top: 3rem;
     }
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header>
     <h1>Potlapalli Farm</h1>
     <nav>
       <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#products">Products</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Products</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
       </ul>
     </nav>
   </header>
 
-  <section class="hero" id="home">
-    <h2>Farm Fresh Goodness, Delivered</h2>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div>
+      <h2>Fresh, Organic, and Premium Farm Produce Delivered to Your Doorstep</h2>
+      <button class="btn">Shop Now</button>
+    </div>
   </section>
 
-  <section class="section" id="about">
-    <h3>About Us</h3>
-    <p>At Potlapalli Farm, we bring you premium goat meat, country chicken, fresh eggs, and goat milk straight from our farm in Andhra Pradesh. Our animals are raised naturally on open pastures without harmful chemicals, ensuring the highest quality and taste for your family.</p>
-  </section>
-
-  <section class="section" id="products">
-    <h3>Our Products</h3>
-    <div class="products">
-      <div class="product">
-        <img src="https://images.unsplash.com/photo-1556910101-6c1b8f8c5c4b" alt="Goat Meat">
-        <div class="product-content">
-          <h4>Goat Meat</h4>
-          <p>₹850/kg - Fresh, tender goat meat from free-range goats.</p>
-        </div>
+  <!-- Products -->
+  <section class="products">
+    <h3>Our Bestsellers</h3>
+    <div class="product-grid">
+      <div class="product-card">
+        <img src="assets/images/goat.jpg" alt="Goat Meat">
+        <h4>Fresh Goat Meat</h4>
+        <p>Tender and premium-quality goat meat, naturally raised.</p>
       </div>
-      <div class="product">
-        <img src="https://images.unsplash.com/photo-1506619216599-9d16d0903dfd" alt="Country Chicken">
-        <div class="product-content">
-          <h4>Country Chicken</h4>
-          <p>₹320/kg - Naturally raised country chickens for a rich taste.</p>
-        </div>
+      <div class="product-card">
+        <img src="assets/images/chicken.jpg" alt="Chicken">
+        <h4>Farm Chicken</h4>
+        <p>Healthy, organic chicken directly from our farm.</p>
       </div>
-      <div class="product">
-        <img src="https://images.unsplash.com/photo-1582198339143-2fef8b50f084" alt="Fresh Eggs">
-        <div class="product-content">
-          <h4>Fresh Eggs</h4>
-          <p>₹8/egg - Nutrient-rich eggs with golden yolks.</p>
-        </div>
+      <div class="product-card">
+        <img src="assets/images/eggs.jpg" alt="Eggs">
+        <h4>Organic Eggs</h4>
+        <p>Free-range eggs rich in nutrients and taste.</p>
       </div>
-      <div class="product">
-        <img src="https://images.unsplash.com/photo-1528825871115-3581a5387919" alt="Goat Milk">
-        <div class="product-content">
-          <h4>Goat Milk</h4>
-          <p>₹60/L - Fresh goat milk, high in nutrition and easy to digest.</p>
-        </div>
+      <div class="product-card">
+        <img src="assets/images/milk.jpg" alt="Milk">
+        <h4>Fresh Cow Milk</h4>
+        <p>Pure, fresh milk sourced daily from local farms.</p>
       </div>
     </div>
   </section>
 
-  <section class="section" id="contact">
-    <h3>Contact Us</h3>
-    <p>📞 Phone: +91 9876543210</p>
-    <p>📧 Email: info@potlapallifarm.com</p>
-    <p>📍 Location: Andhra Pradesh, India</p>
-  </section>
-
+  <!-- Footer -->
   <footer>
-    &copy; 2025 Potlapalli Farm. All rights reserved.
+    <p>© 2025 Potlapalli Farm. All rights reserved.</p>
   </footer>
 </body>
 </html>
