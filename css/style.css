@@ -665,7 +665,7 @@ footer {
 .person-image-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem; /* Add space below image */
 }
 
 .person-image-container img {
@@ -684,5 +684,5 @@ footer {
 
 /* Adjust person-card padding */
 .person-card {
-  padding: 60px 2rem 2rem; /* More top padding */
+  padding: 70px 2rem 2rem; /* Extra top padding for image */
 }
