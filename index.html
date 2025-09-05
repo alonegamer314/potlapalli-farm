@@ -30,40 +30,48 @@
 <body>
 
   <!-- =========================
-       Header / Navbar
-  ========================= -->
-  <header class="header">
-    <div class="container header-inner">
-      <div class="logo">
-        <a href="index.html" aria-label="Home">
-          <img src="assets/logo.png" alt="Potlapalli Farm Logo" onerror="this.style.display='none'" />
-          <span>Potlapalli Farm</span>
+   Header / Navbar
+========================== -->
+<header class="header">
+  <div class="container header-inner">
+    <div class="logo">
+      <a href="index.html" aria-label="Home">
+        <img src="assets/logo.png" alt="Potlapalli Farm Logo" onerror="this.style.display='none'" />
+        <span>Potlapalli Farm</span>
+      </a>
+    </div>
+
+    <!-- Desktop Nav -->
+    <nav class="nav" id="nav" role="navigation">
+      <a href="#home">Home</a>
+      <a href="#products">Products</a>
+      <a href="#deals">Deals</a>
+      <a href="about.html">About</a>
+      <a href="#testimonials">Testimonials</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <!-- Right Side Actions -->
+    <div class="header-actions">
+      <!-- Hamburger Menu Button (Mobile) -->
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
+
+      <!-- Mini Cart -->
+      <div class="mini-cart" id="miniCart">
+        <a href="cart.html" aria-label="Shopping cart">
+          <i class="fas fa-shopping-cart"></i> 
+          <span id="cartCount">0</span>
         </a>
       </div>
-      <nav class="nav" id="nav" role="navigation">
-        <a href="#home">Home</a>
-        <a href="#products">Products</a>
-        <a href="#deals">Deals</a>
-        <a href="about.html">About</a>
-        <a href="#testimonials">Testimonials</a>
-        <a href="#contact">Contact</a>
-      </nav>
 
-      <div class="header-actions">
-        <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
-        <div class="mini-cart" id="miniCart">
-          <a href="cart.html" aria-label="Shopping cart">
-            🛒 <span id="cartCount">0</span>
-          </a>
-        </div>
-        <!-- Auth buttons -->
-        <div id="authButtons">
-          <a href="signin.html" class="auth-btn">Sign In</a>
-          <a href="signup.html" class="auth-btn">Sign Up</a>
-        </div>
+      <!-- Auth Buttons -->
+      <div id="authButtons">
+        <a href="signin.html" class="auth-btn">Sign In</a>
+        <a href="signup.html" class="auth-btn">Sign Up</a>
       </div>
     </div>
-  </header>
+  </div>
+</header>
 
   <!-- =========================
        Hero Section
