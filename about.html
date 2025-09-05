@@ -77,19 +77,13 @@
     .person-card {
       background: #fff;
       border-radius: 20px;
-      padding: 3rem 2rem;
+      padding: 70px 2rem 2rem;
       max-width: 700px;
       margin: 0 auto;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
       position: relative;
       overflow: hidden;
       text-align: center;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .person-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.15);
     }
 
     .person-card img {
@@ -98,9 +92,12 @@
       border-radius: 50%;
       object-fit: cover;
       border: 6px solid #27ae60;
-      margin: -80px auto 1.5rem;
-      display: block;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
     }
 
     .person-card h3 {
@@ -126,6 +123,80 @@
 
     .person-paragraphs p {
       margin-bottom: 1.2rem;
+    }
+
+    /* =========================
+       Our Divisions Section
+       ========================= */
+    .divisions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.8rem;
+      margin-top: 2rem;
+    }
+
+    .division-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+
+    .division-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
+
+    .division-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .division-content {
+      padding: 1.5rem;
+    }
+
+    .division-card h4 {
+      font-size: 1.3rem;
+      color: #2c3e50;
+      margin-bottom: 0.8rem;
+    }
+
+    .division-card p {
+      color: #555;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn-know-more {
+      display: inline-block;
+      background: #27ae60;
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+
+    .btn-know-more:hover {
+      background: #1e874b;
+      transform: scale(1.05);
+    }
+
+    .coming-soon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #e74c3c;
+      color: #fff;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 50px;
+      font-weight: 600;
     }
 
     /* Values Grid */
@@ -246,13 +317,21 @@
       .about-hero p {
         font-size: 1.1rem;
       }
+      .about-section {
+        padding: 3rem 0;
+      }
+      .person-card {
+        padding: 70px 1.5rem 1.5rem;
+      }
       .person-paragraphs {
-        text-align: center;
         padding: 0 1rem;
       }
       .cta-btns {
         flex-direction: column;
         align-items: center;
+      }
+      .cta-section {
+        padding: 4rem 1rem;
       }
     }
   </style>
@@ -290,7 +369,7 @@
   </section>
 
   <!-- =========================
-       Our Story
+       Our Journey
   ========================= -->
   <section class="about-section fade-up">
     <h2>Our Journey</h2>
@@ -364,6 +443,55 @@
         <p>
           Under his leadership, Potlapalli Farm delivers freshness, transparency, and health to every household. His journey proves that with passion and perseverance, farming can be both noble and modern.
         </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       Our Divisions
+  ========================= -->
+  <section class="about-section fade-up">
+    <h2>Our Farm Divisions</h2>
+    <div class="divisions-grid">
+      <!-- Dairy Division -->
+      <div class="division-card">
+        <img src="assets/images/dairy.jpg" alt="Dairy Division" />
+        <div class="division-content">
+          <h4>Dairy Division</h4>
+          <p>Fresh goat milk, collected daily and bottled with care.</p>
+          <a href="dairy.html" class="btn-know-more">Know More</a>
+        </div>
+      </div>
+
+      <!-- Poultry Division -->
+      <div class="division-card">
+        <img src="assets/images/poultry.jpg" alt="Poultry Division" />
+        <div class="division-content">
+          <h4>Poultry Division</h4>
+          <p>Native country chicken and farm-fresh eggs, no antibiotics.</p>
+          <a href="poultry.html" class="btn-know-more">Know More</a>
+        </div>
+      </div>
+
+      <!-- Goat Division -->
+      <div class="division-card">
+        <img src="assets/images/goat.jpg" alt="Goat Division" />
+        <div class="division-content">
+          <h4>Goat Division</h4>
+          <p>Free-range goats, hormone-free meat, vacuum-packed for freshness.</p>
+          <a href="goat.html" class="btn-know-more">Know More</a>
+        </div>
+      </div>
+
+      <!-- Mushroom (Coming Soon) -->
+      <div class="division-card">
+        <img src="assets/images/mushroom.jpg" alt="Mushroom Division" />
+        <div class="division-content">
+          <h4>Mushroom Cultivation</h4>
+          <p>Organic mushroom farming — coming soon!</p>
+          <span class="coming-soon">Coming Soon</span>
+          <a href="mushroom.html" class="btn-know-more">Know More</a>
+        </div>
       </div>
     </div>
   </section>
