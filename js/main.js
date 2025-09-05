@@ -473,3 +473,14 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', handleScroll);
   window.addEventListener('DOMContentLoaded', handleScroll);
 });
+
+// Update cart count on page load
+function updateCartCount() {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+  const countEl = document.getElementById('cartCount');
+  if (countEl) countEl.textContent = totalItems;
+}
+
+// Call on page load
+document.addEventListener('DOMContentLoaded', updateCartCount);
