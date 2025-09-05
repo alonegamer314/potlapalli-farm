@@ -421,20 +421,26 @@ function updateCartCount() {
 function changeQty(id, delta) {
   const input = document.getElementById(`qty-${id}`);
   let qty = parseInt(input.value);
-  qty = Math.max(1, qty + delta); // Prevents going below 1
+  qty = Math.max(0, qty + delta); // Prevents going below 1
   input.value = qty;
 }
 
 // =========================
 // 4. ADD TO CART (with quantity)
 // =========================
+// Add to cart with selected quantity
 function addToCartFromInput(id) {
   const input = document.getElementById(`qty-${id}`);
   const qty = parseInt(input.value);
 
+  if (qty <= 0) {
+    alert("Please select a quantity greater than 0.");
+    return;
+  }
+
   const cart = getCart();
   const existing = cart.find(item => item.id === id);
-
+  
   if (existing) {
     existing.qty += qty;
   } else {
@@ -443,8 +449,8 @@ function addToCartFromInput(id) {
 
   saveCart(cart);
   updateCartCount();
-  input.value = 1; // Reset to 1 after adding
-  alert(`Added ${qty} unit(s) of ${products[id].name} to cart!`);
+  input.value = 0; // Reset to 0 after adding
+  alert(`Added ${qty} kg of ${products[id].name} to cart!`);
 }
 
 // =========================
