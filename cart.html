@@ -17,7 +17,7 @@
 
   <style>
     /* =========================
-       Cart Page Styles
+       Cart Page Styles - God Tier
        ========================= */
     .cart-page {
       background: #f2faf5;
@@ -68,13 +68,12 @@
       transition: all 0.3s ease;
     }
 
-    .cart-item:hover {
-      background: #f8fdf9;
-      transform: translateY(-2px);
-    }
-
     .cart-item:last-child {
       border-bottom: none;
+    }
+
+    .cart-item:hover {
+      background: #f8fdf9;
     }
 
     .cart-item img {
@@ -191,7 +190,6 @@
       max-width: 380px;
       margin-left: auto;
       border: 1px solid #e8f5ec;
-      backdrop-filter: blur(10px);
     }
 
     .cart-summary h3 {
@@ -261,17 +259,6 @@
     .btn-primary:hover {
       background: #1e874b;
       transform: scale(1.04);
-    }
-
-    /* Confetti Animation (Optional Fun) */
-    .celebrate {
-      animation: celebrate 0.5s ease-in-out;
-    }
-
-    @keyframes celebrate {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
     }
 
     /* Responsive */
@@ -358,10 +345,10 @@
   </main>
 
   <!-- =========================
-       Cart Logic (Only in cart.html)
+       Cart Logic - God Tier
   ========================= -->
   <script>
-    // Product Database
+    // Product Database (must match index.html)
     const products = {
       goat: { name: "Premium Goat Meat", price: 850 },
       chicken: { name: "Country Chicken", price: 320 },
@@ -386,7 +373,7 @@
       localStorage.setItem('cart', JSON.stringify(cart));
     }
 
-    // Update cart count in header (from main.js)
+    // Update cart count in header
     function updateCartCount() {
       const cart = getCart();
       const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
@@ -407,7 +394,10 @@
       let total = 0;
       cartItemsEl.innerHTML = '';
 
-      cart.forEach(item => {
+      // Sort by product name for consistent order
+      const sortedCart = [...cart].sort((a, b) => products[a.id].name.localeCompare(products[b.id].name));
+
+      sortedCart.forEach(item => {
         const product = products[item.id];
         const itemTotal = product.price * item.qty;
         total += itemTotal;
@@ -433,7 +423,7 @@
 
       // Update summary
       summaryRowsEl.innerHTML = '';
-      cart.forEach(item => {
+      sortedCart.forEach(item => {
         const product = products[item.id];
         const row = document.createElement('div');
         row.classList.add('summary-row');
@@ -445,7 +435,7 @@
       cartSummaryEl.style.display = 'block';
     }
 
-    // Update quantity in cart
+    // Update quantity
     function updateQty(id, change) {
       const cart = getCart();
       const item = cart.find(item => item.id === id);
@@ -475,12 +465,6 @@
         saveCart(cart);
         updateCartCount();
         renderCart();
-        
-        // Optional: Celebrate removal
-        document.querySelector('.cart-page').classList.add('celebrate');
-        setTimeout(() => {
-          document.querySelector('.cart-page').classList.remove('celebrate');
-        }, 500);
       }
     }
 
@@ -491,4 +475,3 @@
 
 </body>
 </html>
-
