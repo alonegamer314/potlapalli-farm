@@ -1,1 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Learn the story of Potlapalli Farm — our journey, vision, and commitment to fresh, organic farm produce." />
+  <title>About Us - Potlapalli Farm</title>
 
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    /* =========================
+       About Page Styles
+       ========================= */
+    .about-page {
+      background: #fff;
+      color: #222;
+      line-height: 1.8;
+    }
+
+    .about-hero {
+      height: 90vh;
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('assets/images/farm-wide.jpg') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      position: relative;
+    }
+
+    .about-hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .about-hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    }
+
+    .about-hero p {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+    }
+
+    .about-hero a {
+      margin: 0.5rem;
+    }
+
+    /* Section Spacing */
+    .about-section {
+      padding: 5rem 0;
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .about-section h2 {
+      font-size: 2.2rem;
+      color: #2c3e50;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Person Card */
+    .person-card {
+      background: #f9f9f9;
+      border-radius: 18px;
+      padding: 3rem 2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .person-card img {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 6px solid #27ae60;
+      margin: -80px auto 1.5rem;
+      display: block;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    }
+
+    .person-card h3 {
+      font-size: 1.8rem;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+
+    .person-card .role {
+      color: #27ae60;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .person-paragraphs {
+      text-align: left;
+      line-height: 1.9;
+      color: #444;
+      font-size: 1.05rem;
+      padding: 0 1.5rem;
+    }
+
+    .person-paragraphs p {
+      margin-bottom: 1.2rem; /* 2-3 line breaks visually */
+    }
+
+    /* Values Grid */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.8rem;
+      margin-top: 2rem;
+    }
+
+    .value-card {
+      background: #fff;
+      padding: 1.8rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+    }
+
+    .value-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
+
+    .value-card i {
+      font-size: 2.2rem;
+      color: #27ae60;
+      margin-bottom: 0.8rem;
+    }
+
+    .value-card h4 {
+      font-size: 1.3rem;
+      color: #2c3e50;
+      margin-bottom: 0.6rem;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, #a8e063, #56ab2f);
+      color: #fff;
+      text-align: center;
+      padding: 6rem 1rem;
+    }
+
+    .cta-section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: #fff;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-btns {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-light {
+      background: #fff;
+      color: #27ae60;
+      padding: 0.9rem 2.2rem;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 50px;
+      display: inline-block;
+      transition: all 0.3s;
+      font-size: 1.1rem;
+    }
+
+    .btn-light:hover {
+      background: #f0f0f0;
+      transform: scale(1.05);
+    }
+
+    .btn-outline-white {
+      background: transparent;
+      color: #fff;
+      border: 2px solid #fff;
+      padding: 0.9rem 2.2rem;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 50px;
+      display: inline-block;
+      transition: all 0.3s;
+      font-size: 1.1rem;
+    }
+
+    .btn-outline-white:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.05);
+    }
+
+    /* Fade-up Animation */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease;
+    }
+
+    .fade-up.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .about-hero h1 {
+        font-size: 2.5rem;
+      }
+      .about-hero p {
+        font-size: 1.1rem;
+      }
+      .person-paragraphs {
+        text-align: center;
+        padding: 0 1rem;
+      }
+      .cta-btns {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body class="about-page">
+
+  <!-- =========================
+       Header
+  ========================= -->
+  <header>
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html">
+          <img src="assets/logo.png" alt="Potlapalli Farm Logo" />
+          <span>Potlapalli Farm</span>
+        </a>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="signin.html">Sign In</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- =========================
+       Hero Section
+  ========================= -->
+  <section class="about-hero">
+    <div class="about-hero-content fade-up">
+      <h1>About Potlapalli Farm</h1>
+      <p>Where Freshness Meets Tradition — A Story of Soil, Sweat, and Sustainability</p>
+      <a href="index.html#products" class="hero-btn">Our Products</a>
+      <a href="contact.html" class="btn-outline">Visit Us</a>
+    </div>
+  </section>
+
+  <!-- =========================
+       Our Story
+  ========================= -->
+  <section class="about-section fade-up">
+    <h2>Our Journey</h2>
+    <p>
+      Potlapalli Farm began in 2009 as a dream — to create a farm where animals are treated with respect, food is grown without chemicals, and families can trust what they eat.
+    </p>
+    <br><br>
+    <p>
+      Located in the serene countryside of Andhra Pradesh, our 15-acre farm is home to free-range goats, native chickens, and healthy dairy animals. We use organic fodder, natural hygiene, and sustainable practices to ensure every product — from milk to meat — is pure and nutritious.
+    </p>
+    <br><br>
+    <p>
+      Today, we deliver fresh produce directly to homes across Tirupati, Bangalore, and Hyderabad — cutting out middlemen, reducing carbon footprint, and bringing farm-fresh goodness to your table.
+    </p>
+    <br><br>
+    <p>
+      Every drop of milk, every egg, every cut of meat is handled with care — because we believe food should be honest, healthy, and full of life.
+    </p>
+  </section>
+
+  <!-- =========================
+       The Visionary
+  ========================= -->
+  <section class="about-section fade-up">
+    <div class="person-card">
+      <img src="assets/images/visionary.jpg" alt="Dr. Srinivas Potlapalli" />
+      <h3>Dr. Srinivas Potlapalli</h3>
+      <div class="role">The Visionary</div>
+      <div class="person-paragraphs">
+        <p>
+          <!-- Paste Paragraph 1 for Visionary here -->
+        </p>
+        <br><br>
+        <p>
+          <!-- Paste Paragraph 2 for Visionary here -->
+        </p>
+        <br><br>
+        <p>
+          <!-- Paste Paragraph 3 for Visionary here -->
+        </p>
+        <br><br>
+        <p>
+          <!-- Paste Paragraph 4 for Visionary here -->
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       The Founder
+  ========================= -->
+  <section class="about-section fade-up">
+    <div class="person-card">
+      <img src="assets/images/founder.jpg" alt="Ravi Potlapalli" />
+      <h3>Ravi Potlapalli</h3>
+      <div class="role">The Founder</div>
+      <div class="person-paragraphs">
+        <p>
+          <!-- Paste Paragraph 1 for Founder here -->
+        </p>
+        <br><br>
+        <p>
+          <!-- Paste Paragraph 2 for Founder here -->
+        </p>
+        <br><br>
+        <p>
+          <!-- Paste Paragraph 3 for Founder here -->
+        </p>
+        <br><br>
+        <p>
+          <!-- Paste Paragraph 4 for Founder here -->
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       Our Values
+  ========================= -->
+  <section class="about-section fade-up">
+    <h2>Our Core Values</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <i class="fas fa-leaf"></i>
+        <h4>Organic</h4>
+        <p>No pesticides, no hormones, no antibiotics — just pure, natural farming.</p>
+      </div>
+      <div class="value-card">
+        <i class="fas fa-heart"></i>
+        <h4>Animal Welfare</h4>
+        <p>Free-range, stress-free, and loved. Happy animals = healthy food.</p>
+      </div>
+      <div class="value-card">
+        <i class="fas fa-truck"></i>
+        <h4>Farm-Fresh Delivery</h4>
+        <p>From farm to your fridge in under 24 hours — no cold storage delays.</p>
+      </div>
+      <div class="value-card">
+        <i class="fas fa-hand-holding-heart"></i>
+        <h4>Support Local</h4>
+        <p>We empower small farmers and ethical practices across the region.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       CTA Section
+  ========================= -->
+  <section class="cta-section fade-up">
+    <h2>Join Our Farm Family</h2>
+    <p>
+      Subscribe for weekly fresh deliveries, farm updates, and exclusive offers.
+    </p>
+    <div class="cta-btns">
+      <a href="index.html#products" class="btn-light">Shop Fresh</a>
+      <a href="contact.html" class="btn-outline-white">Contact Us</a>
+    </div>
+  </section>
+
+  <!-- =========================
+       Footer
+  ========================= -->
+  <footer>
+    <div class="container">
+      <p>© 2025 Potlapalli Farm. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- =========================
+       Scroll Animation Script
+  ========================= -->
+  <script>
+    const fadeElements = document.querySelectorAll('.fade-up');
+    
+    const fadeIn = (element) => {
+      element.classList.add('show');
+    };
+
+    const handleScroll = () => {
+      fadeElements.forEach(el => {
+        const elementTop = el.getBoundingClientRect().top;
+        if (elementTop < window.innerHeight - 150) {
+          fadeIn(el);
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('DOMContentLoaded', handleScroll);
+  </script>
+
+</body>
+</html>
