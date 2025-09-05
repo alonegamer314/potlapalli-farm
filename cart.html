@@ -20,10 +20,11 @@
        Cart Page Styles
        ========================= */
     .cart-page {
-      background: #f9f9f9;
+      background: #f2faf5;
       padding: 4rem 0;
       min-height: 100vh;
       font-family: 'Inter', sans-serif;
+      color: #222;
     }
 
     .cart-container {
@@ -52,8 +53,8 @@
     /* Cart Items */
     .cart-items {
       background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
       overflow: hidden;
       margin-bottom: 2rem;
     }
@@ -64,15 +65,16 @@
       padding: 1.4rem;
       border-bottom: 1px solid #eee;
       gap: 1.2rem;
-      transition: background 0.3s;
-    }
-
-    .cart-item:last-child {
-      border-bottom: none;
+      transition: all 0.3s ease;
     }
 
     .cart-item:hover {
       background: #f8fdf9;
+      transform: translateY(-2px);
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
     }
 
     .cart-item img {
@@ -144,14 +146,14 @@
       font-size: 0.9rem;
       cursor: pointer;
       transition: all 0.3s;
-      padding: 0.2rem 0.6rem;
+      padding: 0.3rem 0.8rem;
       border-radius: 6px;
+      font-weight: 500;
     }
 
     .remove-btn:hover {
       background: #fdecea;
       color: #c0392b;
-      text-decoration: none;
     }
 
     .item-total {
@@ -164,7 +166,7 @@
     /* Empty Cart */
     .empty-cart {
       text-align: center;
-      padding: 4rem 1rem;
+      padding: 5rem 1rem;
       color: #666;
     }
 
@@ -183,12 +185,13 @@
     /* Cart Summary */
     .cart-summary {
       background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-      padding: 2.2rem;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      padding: 2.4rem;
       max-width: 380px;
       margin-left: auto;
       border: 1px solid #e8f5ec;
+      backdrop-filter: blur(10px);
     }
 
     .cart-summary h3 {
@@ -260,12 +263,23 @@
       transform: scale(1.04);
     }
 
+    /* Confetti Animation (Optional Fun) */
+    .celebrate {
+      animation: celebrate 0.5s ease-in-out;
+    }
+
+    @keyframes celebrate {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .cart-summary {
         max-width: 100%;
         margin: 0;
-        border-radius: 12px;
+        border-radius: 14px;
       }
       .cart-actions {
         flex-direction: column;
@@ -347,7 +361,7 @@
        Cart Logic (Only in cart.html)
   ========================= -->
   <script>
-    // This uses functions from js/main.js
+    // Product Database
     const products = {
       goat: { name: "Premium Goat Meat", price: 850 },
       chicken: { name: "Country Chicken", price: 320 },
@@ -355,14 +369,35 @@
       milk: { name: "Fresh Goat Milk", price: 60 }
     };
 
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    // DOM Elements
     const cartItemsEl = document.getElementById('cartItems');
     const emptyCartEl = document.getElementById('emptyCart');
     const cartSummaryEl = document.getElementById('cartSummary');
     const summaryRowsEl = document.getElementById('summaryRows');
     const cartTotalEl = document.getElementById('cartTotal');
 
+    // Get cart from localStorage
+    function getCart() {
+      return JSON.parse(localStorage.getItem('cart')) || [];
+    }
+
+    // Save cart
+    function saveCart(cart) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    // Update cart count in header (from main.js)
+    function updateCartCount() {
+      const cart = getCart();
+      const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+      const countEl = document.getElementById('cartCount');
+      if (countEl) countEl.textContent = totalItems;
+    }
+
+    // Render cart
     function renderCart() {
+      const cart = getCart();
+
       if (cart.length === 0) {
         emptyCartEl.style.display = 'block';
         cartSummaryEl.style.display = 'none';
@@ -410,41 +445,48 @@
       cartSummaryEl.style.display = 'block';
     }
 
+    // Update quantity in cart
     function updateQty(id, change) {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const cart = getCart();
       const item = cart.find(item => item.id === id);
       if (item) {
         item.qty += change;
-        if (item.qty <= 0) {
+        if (item.qty < 0) item.qty = 0;
+        if (item.qty === 0) {
           removeItem(id);
         } else {
-          localStorage.setItem('cart', JSON.stringify(cart));
+          saveCart(cart);
           renderCart();
         }
       }
     }
 
+    // Remove item with confirmation
     function removeItem(id) {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const cart = getCart();
+      const product = products[id];
+
+      const confirmed = confirm(`Are you sure you want to remove ${product.name} from your cart?`);
+      if (!confirmed) return;
+
       const index = cart.findIndex(item => item.id === id);
       if (index !== -1) {
         cart.splice(index, 1);
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount(); // from main.js
+        saveCart(cart);
+        updateCartCount();
         renderCart();
+        
+        // Optional: Celebrate removal
+        document.querySelector('.cart-page').classList.add('celebrate');
+        setTimeout(() => {
+          document.querySelector('.cart-page').classList.remove('celebrate');
+        }, 500);
       }
     }
 
     // Initial render
     renderCart();
-
-    // Make sure updateCartCount is available
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
-      const countEl = document.getElementById('cartCount');
-      if (countEl) countEl.textContent = totalItems;
-    }
+    updateCartCount();
   </script>
 
 </body>
