@@ -1762,3 +1762,34 @@ footer {
     transform: scale(1.05);
   }
 }
+
+/* =========================
+   Mini Cart Styling
+   ========================= */
+.mini-cart a {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 1rem;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.mini-cart i {
+  color: #27ae60;
+  font-size: 1.2rem;
+}
+
+#cartCount {
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: #27ae60;
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
