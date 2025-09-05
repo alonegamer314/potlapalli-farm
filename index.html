@@ -4,136 +4,150 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Potlapalli Farm – Fresh farm produce: goat meat, poultry, eggs, milk and more." />
+  <meta name="theme-color" content="#2c786c" />
+  <meta name="author" content="Potlapalli Farm" />
+  <meta property="og:title" content="Potlapalli Farm" />
+  <meta property="og:description" content="Fresh, Organic & Premium Farm Products Delivered to Your Doorstep" />
+  <meta property="og:image" content="assets/images/og-image.jpg" />
+  <meta property="og:url" content="https://potlapallifarm.com" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="assets/favicon.ico" />
   <title>Potlapalli Farm</title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css" />
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- JS -->
-  <script src="js/main.js" defer></script>
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Smooth Scroll -->
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
 </head>
 <body>
 
   <!-- =========================
        Header / Navbar
   ========================= -->
-<header class="header">
-  <div class="container header-inner">
-    <div class="logo">
-      <img src="assets/logo.png" alt="Potlapalli Farm Logo" onerror="this.style.display='none'" />
-      <span>Potlapalli Farm</span>
-    </div>
-    <nav class="nav" id="nav">
-      <a href="#home">Home</a>
-      <a href="#products">Products</a>
-      <a href="#deals">Deals</a>
-      <a href="#about">About</a>
-      <a href="#testimonials">Testimonials</a>
-      <a href="#contact">Contact</a>
-    </nav>
-
-    <div class="header-actions">
-      <button class="menu-btn" id="menuBtn">☰</button>
-      <div class="mini-cart" id="miniCart">
-        <a href="cart.html">🛒 <span id="cartCount">0</span></a>
+  <header class="header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html" aria-label="Home">
+          <img src="assets/logo.png" alt="Potlapalli Farm Logo" onerror="this.style.display='none'" />
+          <span>Potlapalli Farm</span>
+        </a>
       </div>
-      <!-- Auth buttons -->
-      <div id="authButtons">
-        <a href="signin.html" class="auth-btn" id="signinBtn">Sign In</a>
-        <a href="signup.html" class="auth-btn" id="signupBtn">Sign Up</a>
+      <nav class="nav" id="nav" role="navigation">
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#deals">Deals</a>
+        <a href="#about">About</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
+        <div class="mini-cart" id="miniCart">
+          <a href="cart.html" aria-label="Shopping cart">
+            🛒 <span id="cartCount">0</span>
+          </a>
+        </div>
+        <!-- Auth buttons -->
+        <div id="authButtons">
+          <a href="signin.html" class="auth-btn">Sign In</a>
+          <a href="signup.html" class="auth-btn">Sign Up</a>
+        </div>
       </div>
     </div>
-  </div>
-</header>
-
+  </header>
 
   <!-- =========================
-     Hero Section
-========================= -->
-<section class="hero" id="home">
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <h1>Welcome to Potlapalli Farm</h1>
-    <p>Fresh, Organic & Premium Farm Products Delivered to Your Doorstep</p>
-    <a href="#products" class="hero-btn">Enter Farm</a>
-  </div>
-</section>
+       Hero Section
+  ========================= -->
+  <section class="hero" id="home">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Welcome to Potlapalli Farm</h1>
+      <p>Fresh, Organic & Premium Farm Products Delivered to Your Doorstep</p>
+      <a href="#products" class="hero-btn">Enter Farm</a>
+    </div>
+  </section>
 
   <!-- =========================
-       Products Section (placeholder)
+       Products Section
   ========================= -->
   <section class="section products" id="products">
     <div class="container">
       <h2>Our Products</h2>
       <p>Explore our range of farm fresh products.</p>
       <div class="product-grid">
-       <!-- Product 1: Goat Meat -->
-<div class="product-card" data-id="goat-01" data-price="850">
-  <img src="assets/images/goat.jpg" alt="Premium Goat Meat">
-  <h3>Premium Goat Meat</h3>
-  <p>Free-range, hormone-free and vacuum packed for freshness.</p>
-  <div class="product-controls">
-    <button class="qty-btn minus">−</button>
-    <input type="text" class="qty" value="0" readonly>
-    <button class="qty-btn plus">+</button>
-  </div>
-  <div class="product-footer">
-    <span class="price">₹850/kg</span>
-    <button class="add-to-cart-btn">Add to Cart</button>
-  </div>
-</div>
+        <!-- Product 1: Goat Meat -->
+        <div class="product-card" data-id="goat-01" data-price="850">
+          <img src="assets/images/goat.jpg" alt="Premium Goat Meat">
+          <h3>Premium Goat Meat</h3>
+          <p>Free-range, hormone-free and vacuum packed for freshness.</p>
+          <div class="product-controls">
+            <button class="qty-btn minus">−</button>
+            <input type="text" class="qty" value="0" readonly>
+            <button class="qty-btn plus">+</button>
+          </div>
+          <div class="product-footer">
+            <span class="price">₹850/kg</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+        </div>
 
-<!-- Product 2: Country Chicken -->
-<div class="product-card" data-id="chicken-01" data-price="320">
-  <img src="assets/images/chicken.jpg" alt="Country Chicken">
-  <h3>Country Chicken</h3>
-  <p>Native breed, rich in flavor — no antibiotics.</p>
-  <div class="product-controls">
-    <button class="qty-btn minus">−</button>
-    <input type="text" class="qty" value="0" readonly>
-    <button class="qty-btn plus">+</button>
-  </div>
-  <div class="product-footer">
-    <span class="price">₹320/kg</span>
-    <button class="add-to-cart-btn">Add to Cart</button>
-  </div>
-</div>
+        <!-- Product 2: Country Chicken -->
+        <div class="product-card" data-id="chicken-01" data-price="320">
+          <img src="assets/images/chicken.jpg" alt="Country Chicken">
+          <h3>Country Chicken</h3>
+          <p>Native breed, rich in flavor — no antibiotics.</p>
+          <div class="product-controls">
+            <button class="qty-btn minus">−</button>
+            <input type="text" class="qty" value="0" readonly>
+            <button class="qty-btn plus">+</button>
+          </div>
+          <div class="product-footer">
+            <span class="price">₹320/kg</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+        </div>
 
-<!-- Product 3: Farm Eggs -->
-<div class="product-card" data-id="eggs-01" data-price="8">
-  <img src="assets/images/eggs.jpg" alt="Farm Eggs">
-  <h3>Farm Eggs</h3>
-  <p>Fresh daily — deep orange yolks packed in eco boxes.</p>
-  <div class="product-controls">
-    <button class="qty-btn minus">−</button>
-    <input type="text" class="qty" value="0" readonly>
-    <button class="qty-btn plus">+</button>
-  </div>
-  <div class="product-footer">
-    <span class="price">₹8 / egg</span>
-    <button class="add-to-cart-btn">Add to Cart</button>
-  </div>
-</div>
+        <!-- Product 3: Farm Eggs -->
+        <div class="product-card" data-id="eggs-01" data-price="8">
+          <img src="assets/images/eggs.jpg" alt="Farm Eggs">
+          <h3>Farm Eggs</h3>
+          <p>Fresh daily — deep orange yolks packed in eco boxes.</p>
+          <div class="product-controls">
+            <button class="qty-btn minus">−</button>
+            <input type="text" class="qty" value="0" readonly>
+            <button class="qty-btn plus">+</button>
+          </div>
+          <div class="product-footer">
+            <span class="price">₹8 / egg</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+        </div>
 
-<!-- Product 4: Goat Milk -->
-<div class="product-card" data-id="milk-01" data-price="60">
-  <img src="assets/images/milk.jpg" alt="Fresh Goat Milk">
-  <h3>Fresh Goat Milk</h3>
-  <p>Collected daily and bottled with care.</p>
-  <div class="product-controls">
-    <button class="qty-btn minus">−</button>
-    <input type="text" class="qty" value="0" readonly>
-    <button class="qty-btn plus">+</button>
-  </div>
-  <div class="product-footer">
-    <span class="price">₹60 / L</span>
-    <button class="add-to-cart-btn">Add to Cart</button>
-  </div>
-</div>
-
+        <!-- Product 4: Goat Milk -->
+        <div class="product-card" data-id="milk-01" data-price="60">
+          <img src="assets/images/milk.jpg" alt="Fresh Goat Milk">
+          <h3>Fresh Goat Milk</h3>
+          <p>Collected daily and bottled with care.</p>
+          <div class="product-controls">
+            <button class="qty-btn minus">−</button>
+            <input type="text" class="qty" value="0" readonly>
+            <button class="qty-btn plus">+</button>
+          </div>
+          <div class="product-footer">
+            <span class="price">₹60 / L</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -146,45 +160,119 @@
       <p>© 2025 Potlapalli Farm. All rights reserved.</p>
     </div>
   </footer>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-    authDomain: "potlapallifarm.firebaseapp.com",
-    projectId: "potlapallifarm",
-    storageBucket: "potlapallifarm.firebasestorage.app",
-    messagingSenderId: "1017629729159",
-    appId: "1:1017629729159:web:357c420a9de335d427b322"
-  };
+  <!-- Firebase Auth -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+      authDomain: "potlapallifarm.firebaseapp.com",
+      projectId: "potlapallifarm",
+      storageBucket: "potlapallifarm.firebasestorage.app",
+      messagingSenderId: "1017629729159",
+      appId: "1:1017629729159:web:357c420a9de335d427b322"
+    };
 
-  const authButtonsDiv = document.getElementById("authButtons");
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      // User is signed in, show Profile and Logout instead
-      authButtonsDiv.innerHTML = `
-        <a href="profile.html" class="auth-btn">Profile</a>
-        <a href="#" id="logoutBtn" class="auth-btn">Logout</a>
-      `;
-      document.getElementById("logoutBtn").addEventListener("click", () => {
-        signOut(auth).then(() => {
-          alert("Logged out successfully!");
-          location.reload();
+    const authButtonsDiv = document.getElementById("authButtons");
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        authButtonsDiv.innerHTML = `
+          <a href="profile.html" class="auth-btn">Profile</a>
+          <a href="#" id="logoutBtn" class="auth-btn">Logout</a>
+        `;
+        document.getElementById("logoutBtn").addEventListener("click", (e) => {
+          e.preventDefault();
+          signOut(auth).then(() => {
+            alert("Logged out successfully!");
+            location.reload();
+          }).catch((error) => {
+            console.error("Logout error:", error);
+          });
         });
+      } else {
+        authButtonsDiv.innerHTML = `
+          <a href="signin.html" class="auth-btn">Sign In</a>
+          <a href="signup.html" class="auth-btn">Sign Up</a>
+        `;
+      }
+    });
+  </script>
+
+  <!-- Inline Script for Cart & UI -->
+  <script>
+    // Update cart count on page load
+    document.addEventListener("DOMContentLoaded", () => {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById("cartCount").textContent = cartCount;
+    });
+
+    // Quantity buttons
+    document.querySelectorAll('.qty-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const productCard = this.closest('.product-card');
+        const qtyInput = productCard.querySelector('.qty');
+        let qty = parseInt(qtyInput.value);
+
+        if (this.classList.contains('plus')) {
+          qty += 1;
+        } else if (this.classList.contains('minus')) {
+          qty = Math.max(0, qty - 1);
+        }
+
+        qtyInput.value = qty;
       });
-    } else {
-      // User not signed in, show Sign In / Sign Up
-      authButtonsDiv.innerHTML = `
-        <a href="signin.html" class="auth-btn">Sign In</a>
-        <a href="signup.html" class="auth-btn">Sign Up</a>
-      `;
+    });
+
+    // Add to Cart
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const productCard = this.closest('.product-card');
+        const id = productCard.dataset.id;
+        const price = parseFloat(productCard.dataset.price);
+        const name = productCard.querySelector('h3').textContent;
+        const qty = parseInt(productCard.querySelector('.qty').value);
+
+        if (qty <= 0) {
+          alert("Please select a quantity.");
+          return;
+        }
+
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const existing = cart.find(item => item.id === id);
+
+        if (existing) {
+          existing.qty += qty;
+        } else {
+          cart.push({ id, name, price, qty });
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        // Update cart count
+        const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
+        document.getElementById("cartCount").textContent = cartCount;
+
+        alert(`${qty} x ${name} added to cart!`);
+      });
+    });
+
+    // Mobile Menu Toggle
+    const menuBtn = document.getElementById("menuBtn");
+    const nav = document.getElementById("nav");
+
+    if (menuBtn && nav) {
+      menuBtn.addEventListener("click", () => {
+        nav.classList.toggle("active");
+      });
     }
-  });
-</script>
+  </script>
+
 </body>
 </html>
