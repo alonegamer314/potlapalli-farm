@@ -1,61 +1,71 @@
-/* js/main.js */
-
+// Single DOMContentLoaded wrapper
 document.addEventListener("DOMContentLoaded", () => {
-
-  // =========================
-  // Mobile menu toggle
-  // =========================
+  /* =========================
+     Mobile Menu Toggle
+  ========================= */
   const menuBtn = document.getElementById("menuBtn");
   const nav = document.getElementById("nav");
+
   if (menuBtn && nav) {
     menuBtn.addEventListener("click", () => {
-      nav.classList.toggle("open");
-      menuBtn.classList.toggle("open");
+      nav.classList.toggle("active");
+    });
+
+    // Close mobile menu when clicking any nav link
+    nav.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        nav.classList.remove("active");
+      });
     });
   }
-// Close mobile menu when clicking a link or auth button
-document.querySelectorAll('#nav a, #mobileAuthButtons a').forEach(link => {
-  link.addEventListener('click', () => {
-    nav.classList.remove('open');
-    menuBtn.classList.remove('open');
-  });
-});
 
-  // =========================
-  // Hero section overlay animation (if needed)
-  // =========================
-  // You can extend this if you want a slider
-  const hero = document.querySelector(".hero");
-  if (hero) {
-    hero.classList.add("show");
-  }
+  /* =========================
+     Fade-up Scroll Animations
+  ========================= */
+  const revealElements = () => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("show");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
 
-  // =========================
-  // Fade-up scroll animations
-  // =========================
-  const reveal = (el) => {
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("show");
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    observer.observe(el);
+    document.querySelectorAll(".fade-up").forEach((el) => observer.observe(el));
   };
-  document.querySelectorAll(".fade-up").forEach(reveal);
 
-  // =========================
-  // Product Quantity & Cart
-  // =========================
-  const cartCount = document.getElementById("cartCount");
+  // Run once
+  revealElements();
 
-  document.querySelectorAll(".product-card").forEach(card => {
+  /* =========================
+     Product Quantity & Cart Logic
+  ========================= */
+  const cartCountEl = document.getElementById("cartCount");
+
+  // Update cart count on page load
+  const updateCartCount = () => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+    if (cartCountEl) cartCountEl.textContent = totalItems;
+  };
+
+  // Initialize cart count
+  updateCartCount();
+
+  // Handle each product card
+  document.querySelectorAll(".product-card").forEach((card) => {
     const qtyInput = card.querySelector(".qty");
     const minusBtn = card.querySelector(".minus");
     const plusBtn = card.querySelector(".plus");
-    const addBtn = card.querySelector(".add-to-cart-btn");
+    const addToCartBtn = card.querySelector(".add-to-cart-btn");
+
+    const productId = card.dataset.id;
+    const productPrice = parseFloat(card.dataset.price);
+    const productName = card.querySelector("h3").textContent;
 
     // Increase quantity
     plusBtn.addEventListener("click", () => {
@@ -64,29 +74,44 @@ document.querySelectorAll('#nav a, #mobileAuthButtons a').forEach(link => {
 
     // Decrease quantity
     minusBtn.addEventListener("click", () => {
-      if (parseInt(qtyInput.value) > 0) {
-        qtyInput.value = parseInt(qtyInput.value) - 1;
+      const qty = parseInt(qtyInput.value);
+      if (qty > 0) {
+        qtyInput.value = qty - 1;
       }
     });
 
-    // Add to cart
-    addBtn.addEventListener("click", () => {
+    // Add to Cart
+    addToCartBtn.addEventListener("click", () => {
       const qty = parseInt(qtyInput.value);
-      if (qty > 0) {
-        cartCount.textContent = parseInt(cartCount.textContent) + qty;
-        qtyInput.value = 0; // reset quantity after adding
+      if (qty <= 0) return alert("Please select a quantity.");
 
-        // Small feedback animation
-        const oldText = addBtn.innerHTML;
-        addBtn.innerHTML = "Added ✓";
-        setTimeout(() => addBtn.innerHTML = oldText, 900);
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existingItem = cart.find((item) => item.id === productId);
+
+      if (existingItem) {
+        existingItem.qty += qty;
+      } else {
+        cart.push({ id: productId, name: productName, price: productPrice, qty });
       }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+
+      // Feedback animation
+      const originalText = addToCartBtn.textContent;
+      addToCartBtn.textContent = "Added ✓";
+      setTimeout(() => {
+        addToCartBtn.textContent = originalText;
+      }, 900);
+
+      // Reset input
+      qtyInput.value = "0";
     });
   });
 
-  // =========================
-  // Contact Form Submit
-  // =========================
+  /* =========================
+     Contact Form Handler
+  ========================= */
   const contactForm = document.getElementById("contactForm");
   if (contactForm) {
     contactForm.addEventListener("submit", (e) => {
@@ -96,9 +121,9 @@ document.querySelectorAll('#nav a, #mobileAuthButtons a').forEach(link => {
     });
   }
 
-  // =========================
-  // Newsletter Signup Submit
-  // =========================
+  /* =========================
+     Newsletter Form Handler
+  ========================= */
   const newsletterForm = document.getElementById("newsletterForm");
   if (newsletterForm) {
     newsletterForm.addEventListener("submit", (e) => {
@@ -108,205 +133,85 @@ document.querySelectorAll('#nav a, #mobileAuthButtons a').forEach(link => {
     });
   }
 
-});
+  /* =========================
+     Gallery Modal (if exists)
+  ========================= */
+  const modal = document.getElementById("modal");
+  const modalImg = document.getElementById("modalImg");
+  const modalClose = document.getElementById("modalClose");
 
-// Smooth scroll for hero "Enter Farm" button
-const heroBtn = document.querySelector('.hero-btn');
-if (heroBtn) {
-  heroBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    const target = document.querySelector(heroBtn.getAttribute('href'));
-    if (target) target.scrollIntoView({ behavior: 'smooth' });
-  });
-}
+  if (modal && modalImg && modalClose) {
+    // Open modal on gallery item click
+    document.querySelectorAll(".gallery-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        const fullImage = item.dataset.full || item.querySelector("img").src;
+        modal.style.display = "flex";
+        modalImg.src = fullImage;
+      });
+    });
 
-// =========================
-// Fade-up animation for gallery
-// =========================
-const revealGallery = (el) => {
-  const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('show');
-        obs.unobserve(entry.target);
+    // Close modal on X
+    modalClose.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+    // Close modal if clicking outside image
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.style.display = "none";
       }
-    });
-  }, { threshold: 0.15 });
-  observer.observe(el);
-};
-document.querySelectorAll('.fade-up').forEach(revealGallery);
-
-document.addEventListener('DOMContentLoaded', () => {
-  const CART_KEY = 'potlapalli_cart_v1';
-  const cartItemsContainer = document.getElementById('cartItems');
-  const cartTotalEl = document.getElementById('cartTotal');
-
-  const getCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '{}');
-  const saveCart = (cart) => localStorage.setItem(CART_KEY, JSON.stringify(cart));
-
-  const renderCart = () => {
-    const cart = getCart();
-    cartItemsContainer.innerHTML = '';
-    let total = 0;
-
-    Object.values(cart).forEach(item => {
-      const itemTotal = item.price * item.qty;
-      total += itemTotal;
-
-      const card = document.createElement('div');
-      card.className = 'cart-item';
-      card.innerHTML = `
-        <img src="assets/images/${item.id.split('-')[0]}.jpg" alt="${item.name}">
-        <div class="cart-item-details">
-          <h4>${item.name}</h4>
-          <p>Price: ₹${item.price}</p>
-          <div class="quantity-controls">
-            <button class="minus">−</button>
-            <input type="text" value="${item.qty}" readonly>
-            <button class="plus">+</button>
-          </div>
-          <p>Subtotal: ₹<span class="itemSubtotal">${itemTotal}</span></p>
-          <button class="remove-item">Remove</button>
-        </div>
-      `;
-      cartItemsContainer.appendChild(card);
-
-      // Quantity buttons
-      const minusBtn = card.querySelector('.minus');
-      const plusBtn = card.querySelector('.plus');
-      const qtyInput = card.querySelector('input');
-      const subtotalEl = card.querySelector('.itemSubtotal');
-      const removeBtn = card.querySelector('.remove-item');
-
-      minusBtn.addEventListener('click', () => {
-        if(item.qty > 1) {
-          item.qty--;
-          qtyInput.value = item.qty;
-          subtotalEl.textContent = item.price * item.qty;
-          saveCart(cart);
-          updateTotal();
-        }
-      });
-
-      plusBtn.addEventListener('click', () => {
-        item.qty++;
-        qtyInput.value = item.qty;
-        subtotalEl.textContent = item.price * item.qty;
-        saveCart(cart);
-        updateTotal();
-      });
-
-      removeBtn.addEventListener('click', () => {
-        delete cart[item.id];
-        saveCart(cart);
-        renderCart();
-        updateTotal();
-      });
-    });
-
-    cartTotalEl.textContent = total;
-  };
-
-  const updateTotal = () => {
-    const cart = getCart();
-    let total = 0;
-    Object.values(cart).forEach(item => total += item.price * item.qty);
-    cartTotalEl.textContent = total;
-  };
-
-  renderCart();
-
-  document.getElementById('checkoutBtn').addEventListener('click', () => {
-    alert('Checkout feature coming soon!');
-  });
-});
-
-// =========================
-// Gallery Modal & Reveal
-// =========================
-document.addEventListener("DOMContentLoaded", () => {
-
-  // Smooth reveal
-  document.querySelectorAll('.fade-up').forEach(el => {
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){
-          entry.target.classList.add('show');
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    observer.observe(el);
-  });
-
-  // Gallery modal
-  const modal = document.getElementById('modal');
-  const modalImg = document.getElementById('modalImg');
-  const modalClose = document.getElementById('modalClose');
-
-  document.querySelectorAll('.gallery-item').forEach(item => {
-    item.addEventListener('click', () => {
-      if(modal && modalImg){
-        modal.style.display = 'flex';
-        modalImg.src = item.dataset.full;
-      }
-    });
-  });
-
-  if(modalClose){
-    modalClose.addEventListener('click', () => {
-      modal.style.display = 'none';
     });
   }
 
-  if(modal){
-    modal.addEventListener('click', e => {
-      if(e.target === modal) modal.style.display = 'none';
-    });
-  }
+  /* =========================
+     Gallery Detail Page (if on gallery-detail.html)
+  ========================= */
+  if (document.getElementById("detailTitle")) {
+    const title = localStorage.getItem("galleryTitle");
+    const desc = localStorage.getItem("galleryDesc");
+    const image = localStorage.getItem("galleryImage");
 
-});
-
-// =========================
-// Gallery Click -> Detail Page
-// =========================
-document.addEventListener("DOMContentLoaded", () => {
-  const galleryItems = document.querySelectorAll('.gallery-item');
-
-  galleryItems.forEach(item => {
-    item.addEventListener('click', () => {
-      const title = item.dataset.title;
-      const description = item.dataset.description;
-      const image = item.dataset.image;
-
-      // Pass data via localStorage
-      localStorage.setItem('galleryTitle', title);
-      localStorage.setItem('galleryDesc', description);
-      localStorage.setItem('galleryImage', image);
-
-      window.location.href = 'gallery-detail.html';
-    });
-  });
-
-  // Fill detail page if on gallery-detail.html
-  if(document.getElementById('detailTitle')){
-    const title = localStorage.getItem('galleryTitle');
-    const desc = localStorage.getItem('galleryDesc');
-    const image = localStorage.getItem('galleryImage');
-
-    if(title && desc && image){
-      document.getElementById('detailTitle').textContent = title;
-      document.getElementById('detailDescription').textContent = desc;
-      document.getElementById('detailImage').src = image;
-      document.getElementById('detailImage').alt = title;
+    if (title && desc && image) {
+      document.getElementById("detailTitle").textContent = title;
+      document.getElementById("detailDescription").textContent = desc;
+      document.getElementById("detailImage").src = image;
+      document.getElementById("detailImage").alt = title;
+    } else {
+      // Fallback if no data
+      document.getElementById("detailTitle").textContent = "Gallery Detail";
+      document.getElementById("detailDescription").textContent =
+        "No data available.";
     }
   }
+
+  /* =========================
+     Gallery Click -> Detail Page
+  ========================= */
+  document.querySelectorAll(".gallery-item").forEach((item) => {
+    item.addEventListener("click", () => {
+      const title = item.dataset.title || "Untitled";
+      const description = item.dataset.description || "No description.";
+      const image = item.querySelector("img").src;
+
+      localStorage.setItem("galleryTitle", title);
+      localStorage.setItem("galleryDesc", description);
+      localStorage.setItem("galleryImage", image);
+
+      window.location.href = "gallery-detail.html";
+    });
+  });
 });
 
-// Toggle mobile nav
-const menuBtn = document.getElementById("menuBtn");
-const nav = document.getElementById("nav");
-
-menuBtn.addEventListener("click", () => {
-  nav.classList.toggle("show");
-});
+/* =========================
+   Smooth Scroll for Hero Button (outside DOMContentLoaded for safety)
+========================= */
+const heroBtn = document.querySelector(".hero-btn");
+if (heroBtn) {
+  heroBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const target = document.querySelector(heroBtn.getAttribute("href"));
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
+  });
+}
