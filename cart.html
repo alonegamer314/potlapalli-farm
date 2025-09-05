@@ -411,3 +411,92 @@
 
 </body>
 </html>
+
+<script>
+  // These functions are only needed on cart.html
+
+  function renderCart() {
+    const cart = getCart();
+    const cartItemsEl = document.getElementById('cartItems');
+    const emptyCartEl = document.getElementById('emptyCart');
+    const cartSummaryEl = document.getElementById('cartSummary');
+    const summaryRowsEl = document.getElementById('summaryRows');
+    const cartTotalEl = document.getElementById('cartTotal');
+
+    if (!cartItemsEl) return;
+
+    if (cart.length === 0) {
+      emptyCartEl.style.display = 'block';
+      cartSummaryEl.style.display = 'none';
+      return;
+    }
+
+    let total = 0;
+    cartItemsEl.innerHTML = '';
+
+    cart.forEach(item => {
+      const product = products[item.id];
+      const itemTotal = product.price * item.qty;
+      total += itemTotal;
+
+      const itemEl = document.createElement('div');
+      itemEl.classList.add('cart-item');
+      itemEl.innerHTML = `
+        <img src="assets/images/${item.id}.jpg" alt="${product.name}">
+        <div class="item-details">
+          <h4>${product.name}</h4>
+          <div class="price">₹${product.price} per unit</div>
+          <div class="quantity-controls">
+            <button class="qty-btn" onclick="updateQty('${item.id}', -1)">−</button>
+            <span class="qty">${item.qty}</span>
+            <button class="qty-btn" onclick="updateQty('${item.id}', 1)">+</button>
+            <button class="remove-btn" onclick="removeItem('${item.id}')">Remove</button>
+          </div>
+        </div>
+        <div class="item-total">₹${itemTotal}</div>
+      `;
+      cartItemsEl.appendChild(itemEl);
+    });
+
+    // Update summary
+    summaryRowsEl.innerHTML = '';
+    cart.forEach(item => {
+      const product = products[item.id];
+      const row = document.createElement('div');
+      row.classList.add('summary-row');
+      row.textContent = `${product.name} × ${item.qty}`;
+      summaryRowsEl.appendChild(row);
+    });
+
+    cartTotalEl.textContent = `₹${total}`;
+    cartSummaryEl.style.display = 'block';
+  }
+
+  function updateQty(id, change) {
+    const cart = getCart();
+    const item = cart.find(item => item.id === id);
+    if (item) {
+      item.qty += change;
+      if (item.qty <= 0) {
+        removeItem(id);
+      } else {
+        saveCart(cart);
+        renderCart();
+      }
+    }
+  }
+
+  function removeItem(id) {
+    const cart = getCart();
+    const index = cart.findIndex(item => item.id === id);
+    if (index !== -1) {
+      cart.splice(index, 1);
+      saveCart(cart);
+      updateCartCount();
+      renderCart();
+    }
+  }
+
+  // Initial render
+  renderCart();
+</script>
