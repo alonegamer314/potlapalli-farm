@@ -442,11 +442,13 @@ footer {
    About Page Styles
    ========================= */
 .about-page {
-  background: #fff;
+  background: #f2faf5;
   color: #222;
   line-height: 1.8;
+  font-family: 'Inter', sans-serif;
 }
 
+/* Hero Section */
 .about-hero {
   height: 90vh;
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../assets/images/farm-wide.jpg') center/cover no-repeat;
@@ -475,6 +477,7 @@ footer {
   margin-bottom: 2rem;
 }
 
+/* Section Spacing */
 .about-section {
   padding: 5rem 0;
   max-width: 1000px;
@@ -488,50 +491,41 @@ footer {
   margin-bottom: 2.5rem;
 }
 
-/* Person Card */
+/* Person Card - No absolute positioning */
 .person-card {
   background: #fff;
   border-radius: 20px;
-  padding: 70px 2rem 2rem; /* Extra top padding for image */
+  padding: 2rem;
   max-width: 700px;
   margin: 0 auto;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-  position: relative;
-  overflow: hidden;
   text-align: center;
 }
 
-/* Fix: Absolute positioning for perfect alignment */
-.person-card img {
+/* Image Centered on Top */
+.person-card .person-image {
+  display: flex;
+  justify-content: center;
+  margin: -40px auto 1.5rem; /* Lift slightly and add space below */
   width: 160px;
   height: 160px;
   border-radius: 50%;
   object-fit: cover;
   border: 6px solid #27ae60;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-
-  /* Perfect centering */
-  position: absolute;
-  top: 40px;
-  left: 50%;
-  transform: translateX(-50%) translateY(0);
-
-  /* Above the card */
-  z-index: 2;
-
-  /* Smooth hover lift */
-  transition: transform 0.3s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  overflow: hidden;
 }
 
-/* Optional: Slight lift on hover */
-.person-card img:hover {
-  transform: translateX(-50%) translateY(-4px);
+.person-card .person-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .person-card h3 {
   font-size: 1.8rem;
   color: #2c3e50;
-  margin-bottom: 0.4rem;
+  margin: 0 0 0.4rem;
 }
 
 .person-card .role {
@@ -552,6 +546,81 @@ footer {
 .person-paragraphs p {
   margin-bottom: 1.2rem;
 }
+
+/* =========================
+   Our Divisions Section
+   ========================= */
+.divisions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.8rem;
+  margin-top: 2rem;
+}
+
+.division-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+}
+
+.division-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+.division-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.division-content {
+  padding: 1.5rem;
+}
+
+.division-card h4 {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin-bottom: 0.8rem;
+}
+
+.division-card p {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.btn-know-more {
+  display: inline-block;
+  background: #27ae60;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.3s;
+}
+
+.btn-know-more:hover {
+  background: #1e874b;
+  transform: scale(1.05);
+}
+
+.coming-soon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #e74c3c;
+  color: #fff;
+  font-size: 0.8rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 50px;
+  font-weight: 600;
+}
+
 /* Values Grid */
 .values-grid {
   display: grid;
@@ -591,6 +660,7 @@ footer {
   color: #fff;
   text-align: center;
   padding: 6rem 1rem;
+  margin-top: 3rem;
 }
 
 .cta-section h2 {
@@ -661,28 +731,25 @@ footer {
   transform: translateY(0);
 }
 
-/* Person Image Container */
-.person-image-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1.5rem; /* Add space below image */
-}
-
-.person-image-container img {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 6px solid #27ae60;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-  transition: transform 0.3s;
-}
-
-.person-image-container img:hover {
-  transform: scale(1.05);
-}
-
-/* Adjust person-card padding */
-.person-card {
-  padding: 70px 2rem 2rem; /* Extra top padding for image */
+/* Responsive */
+@media (max-width: 768px) {
+  .about-hero h1 {
+    font-size: 2.5rem;
+  }
+  .about-hero p {
+    font-size: 1.1rem;
+  }
+  .about-section {
+    padding: 3rem 0;
+  }
+  .person-paragraphs {
+    padding: 0 1rem;
+  }
+  .cta-btns {
+    flex-direction: column;
+    align-items: center;
+  }
+  .cta-section {
+    padding: 4rem 1rem;
+  }
 }
