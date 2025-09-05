@@ -490,32 +490,48 @@ footer {
 
 /* Person Card */
 .person-card {
-  background: #f9f9f9;
-  border-radius: 18px;
-  padding: 3rem 2rem;
+  background: #fff;
+  border-radius: 20px;
+  padding: 70px 2rem 2rem; /* Extra top padding for image */
   max-width: 700px;
   margin: 0 auto;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
   position: relative;
   overflow: hidden;
   text-align: center;
 }
 
+/* Fix: Absolute positioning for perfect alignment */
 .person-card img {
   width: 160px;
   height: 160px;
   border-radius: 50%;
   object-fit: cover;
   border: 6px solid #27ae60;
-  margin: -80px auto 1.5rem;
-  display: block;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+
+  /* Perfect centering */
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+
+  /* Above the card */
+  z-index: 2;
+
+  /* Smooth hover lift */
+  transition: transform 0.3s ease;
+}
+
+/* Optional: Slight lift on hover */
+.person-card img:hover {
+  transform: translateX(-50%) translateY(-4px);
 }
 
 .person-card h3 {
   font-size: 1.8rem;
   color: #2c3e50;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
 .person-card .role {
@@ -536,7 +552,6 @@ footer {
 .person-paragraphs p {
   margin-bottom: 1.2rem;
 }
-
 /* Values Grid */
 .values-grid {
   display: grid;
