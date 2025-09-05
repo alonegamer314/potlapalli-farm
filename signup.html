@@ -1,82 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up - Potlapalli Farm</title>
-  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
+  <!-- =========================
+       Header
+  ========================= -->
   <header>
     <div class="container header-inner">
       <div class="logo">
-        <img src="assets/logo.png" alt="Potlapalli Farm Logo">
-        <span>Potlapalli Farm</span>
+        <a href="index.html">
+          <img src="assets/logo.png" alt="Potlapalli Farm Logo" onerror="this.style.display='none'" />
+          <span>Potlapalli Farm</span>
+        </a>
       </div>
       <nav>
         <a href="index.html">Home</a>
-        <a href="signin.html">Sign In</a>
+        <a href="signin.html" class="auth-btn">Sign In</a>
       </nav>
     </div>
   </header>
 
-  <main class="auth-container">
-    <h2>Create Your Account</h2>
-    <form id="signupForm">
-      <label for="signupEmail">Email</label>
-      <input type="email" id="signupEmail" placeholder="Enter your email" required>
+  <!-- =========================
+       Auth Page Layout
+  ========================= -->
+  <main class="auth-page">
+    <!-- Left Side: Farm Image + Branding -->
+    <div class="auth-left">
+      <div class="auth-left-content">
+        <h1>Join Our Farm Family</h1>
+        <p>Create an account to enjoy fresh goat meat, eggs, milk, and exclusive deals delivered to your doorstep.</p>
+        <img src="assets/images/farm-family.jpg" alt="Happy family at Potlapalli Farm" />
+      </div>
+    </div>
 
-      <label for="signupPassword">Password</label>
-      <input type="password" id="signupPassword" placeholder="Enter your password" required>
+    <!-- Right Side: Sign Up Form -->
+    <div class="auth-right">
+      <h2>Create Your Account</h2>
+      <form id="signupForm">
+        <div class="input-group">
+          <label for="signupEmail">Email Address</label>
+          <input type="email" id="signupEmail" placeholder="Enter your email" required />
+        </div>
 
-      <label>
-        <input type="checkbox" id="rememberMe"> Remember Me
-      </label>
+        <div class="input-group">
+          <label for="signupPassword">Password</label>
+          <input type="password" id="signupPassword" placeholder="Create a password (6+ characters)" required />
+        </div>
 
-      <button type="submit">Sign Up</button>
-    </form>
-    <p>Already have an account? <a href="signin.html">Sign In</a></p>
+        <div class="input-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" placeholder="Confirm your password" required />
+        </div>
+
+        <div class="remember">
+          <input type="checkbox" id="rememberMe" />
+          <label for="rememberMe">Remember Me</label>
+        </div>
+
+        <button type="submit" class="btn-primary">Sign Up</button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="signin.html">Sign In</a>
+      </div>
+    </div>
   </main>
 
-  <!-- Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-
-    // Your Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-      authDomain: "potlapallifarm.firebaseapp.com",
-      projectId: "potlapallifarm",
-      storageBucket: "potlapallifarm.firebasestorage.app",
-      messagingSenderId: "1017629729159",
-      appId: "1:1017629729159:web:357c420a9de335d427b322"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    const signupForm = document.getElementById("signupForm");
-    signupForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = document.getElementById("signupEmail").value;
-      const password = document.getElementById("signupPassword").value;
-      const remember = document.getElementById("rememberMe").checked;
-
-      // Set persistence
-      const persistence = remember ? browserLocalPersistence : browserSessionPersistence;
-
-      setPersistence(auth, persistence)
-        .then(() => createUserWithEmailAndPassword(auth, email, password))
-        .then(userCredential => {
-          alert("Signup successful!");
-          window.location.href = "index.html"; // redirect to homepage
-        })
-        .catch(error => alert(error.message));
-    });
-  </script>
+  <!-- =========================
+       Firebase Sign-Up Script
+  ========================= -->
+  <script type="module" src="js/signup.js"></script>
 
 </body>
 </html>
