@@ -215,3 +215,174 @@ if (heroBtn) {
     }
   });
 }
+
+// js/main.js
+// Main JavaScript for Potlapalli Farm
+// Handles: Cart, Mobile Menu, Fade-in Animations
+
+// =========================
+// 1. CART SYSTEM
+// =========================
+
+// Product Database (must match HTML)
+const products = {
+  goat: { name: "Premium Goat Meat", price: 850 },
+  chicken: { name: "Country Chicken", price: 320 },
+  eggs: { name: "Farm Eggs", price: 8 },
+  milk: { name: "Fresh Goat Milk", price: 60 }
+};
+
+// Get cart from localStorage
+function getCart() {
+  return JSON.parse(localStorage.getItem('cart')) || [];
+}
+
+// Save cart to localStorage
+function saveCart(cart) {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// Add to Cart (called from index.html)
+function addToCart(productId) {
+  const cart = getCart();
+  const existing = cart.find(item => item.id === productId);
+  
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({ id: productId, qty: 1 });
+  }
+
+  saveCart(cart);
+  updateCartCount();
+  alert(`Added ${products[productId].name} to cart!`);
+}
+
+// Update cart count in header
+function updateCartCount() {
+  const cart = getCart();
+  const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+  const countEl = document.getElementById('cartCount');
+  if (countEl) countEl.textContent = totalItems;
+}
+
+// Render cart on cart.html
+function renderCart() {
+  const cart = getCart();
+  const cartItemsEl = document.getElementById('cartItems');
+  const emptyCartEl = document.getElementById('emptyCart');
+  const cartSummaryEl = document.getElementById('cartSummary');
+  const summaryRowsEl = document.getElementById('summaryRows');
+  const cartTotalEl = document.getElementById('cartTotal');
+
+  if (!cartItemsEl) return; // Only run on cart.html
+
+  if (cart.length === 0) {
+    emptyCartEl.style.display = 'block';
+    cartSummaryEl.style.display = 'none';
+    return;
+  }
+
+  let total = 0;
+  cartItemsEl.innerHTML = '';
+
+  cart.forEach(item => {
+    const product = products[item.id];
+    const itemTotal = product.price * item.qty;
+    total += itemTotal;
+
+    const itemEl = document.createElement('div');
+    itemEl.classList.add('cart-item');
+    itemEl.innerHTML = `
+      <img src="assets/images/${item.id}.jpg" alt="${product.name}">
+      <div class="item-details">
+        <h4>${product.name}</h4>
+        <div class="price">₹${product.price} per unit</div>
+        <div class="quantity-controls">
+          <button class="qty-btn" onclick="updateQty('${item.id}', -1)">−</button>
+          <span class="qty">${item.qty}</span>
+          <button class="qty-btn" onclick="updateQty('${item.id}', 1)">+</button>
+          <button class="remove-btn" onclick="removeItem('${item.id}')">Remove</button>
+        </div>
+      </div>
+      <div class="item-total">₹${itemTotal}</div>
+    `;
+    cartItemsEl.appendChild(itemEl);
+  });
+
+  // Update summary
+  summaryRowsEl.innerHTML = '';
+  cart.forEach(item => {
+    const product = products[item.id];
+    const row = document.createElement('div');
+    row.classList.add('summary-row');
+    row.textContent = `${product.name} × ${item.qty}`;
+    summaryRowsEl.appendChild(row);
+  });
+
+  cartTotalEl.textContent = `₹${total}`;
+  cartSummaryEl.style.display = 'block';
+}
+
+// Update quantity
+function updateQty(id, change) {
+  const cart = getCart();
+  const item = cart.find(item => item.id === id);
+  if (item) {
+    item.qty += change;
+    if (item.qty <= 0) {
+      removeItem(id);
+    } else {
+      saveCart(cart);
+      renderCart();
+    }
+  }
+}
+
+// Remove item
+function removeItem(id) {
+  const cart = getCart();
+  const index = cart.findIndex(item => item.id === id);
+  if (index !== -1) {
+    cart.splice(index, 1);
+    saveCart(cart);
+    renderCart();
+  }
+}
+
+// =========================
+// 2. MOBILE MENU (if you have hamburger)
+// =========================
+
+document.addEventListener('DOMContentLoaded', () => {
+  const menuBtn = document.querySelector('.menu-btn');
+  const nav = document.querySelector('.nav');
+
+  if (menuBtn && nav) {
+    menuBtn.addEventListener('click', () => {
+      nav.classList.toggle('active');
+    });
+  }
+
+  // Initial cart count
+  updateCartCount();
+
+  // Render cart if on cart page
+  if (document.getElementById('cartItems')) {
+    renderCart();
+  }
+
+  // Fade-in animations
+  const fadeElements = document.querySelectorAll('.fade-up');
+  const handleScroll = () => {
+    fadeElements.forEach(el => {
+      const elementTop = el.getBoundingClientRect().top;
+      if (elementTop < window.innerHeight - 150) {
+        el.classList.add('show');
+      }
+    });
+  };
+
+  window.addEventListener('scroll', handleScroll);
+  window.addEventListener('DOMContentLoaded', handleScroll);
+});
