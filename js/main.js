@@ -386,3 +386,84 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', handleScroll);
   window.addEventListener('DOMContentLoaded', handleScroll);
 });
+
+// =========================
+// 1. PRODUCT DATABASE
+// =========================
+const products = {
+  goat: { name: "Premium Goat Meat", price: 850 },
+  chicken: { name: "Country Chicken", price: 320 },
+  eggs: { name: "Farm Eggs", price: 8 },
+  milk: { name: "Fresh Goat Milk", price: 60 }
+};
+
+// =========================
+// 2. CART HELPERS
+// =========================
+function getCart() {
+  return JSON.parse(localStorage.getItem('cart')) || [];
+}
+
+function saveCart(cart) {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function updateCartCount() {
+  const cart = getCart();
+  const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+  const countEl = document.getElementById('cartCount');
+  if (countEl) countEl.textContent = totalItems;
+}
+
+// =========================
+// 3. QUANTITY CONTROLS (on index.html)
+// =========================
+function changeQty(id, delta) {
+  const input = document.getElementById(`qty-${id}`);
+  let qty = parseInt(input.value);
+  qty = Math.max(1, qty + delta); // Prevents going below 1
+  input.value = qty;
+}
+
+// =========================
+// 4. ADD TO CART (with quantity)
+// =========================
+function addToCartFromInput(id) {
+  const input = document.getElementById(`qty-${id}`);
+  const qty = parseInt(input.value);
+
+  const cart = getCart();
+  const existing = cart.find(item => item.id === id);
+
+  if (existing) {
+    existing.qty += qty;
+  } else {
+    cart.push({ id, qty });
+  }
+
+  saveCart(cart);
+  updateCartCount();
+  input.value = 1; // Reset to 1 after adding
+  alert(`Added ${qty} unit(s) of ${products[id].name} to cart!`);
+}
+
+// =========================
+// 5. FADE-IN & INIT
+// =========================
+document.addEventListener('DOMContentLoaded', () => {
+  updateCartCount();
+
+  // Fade-in animations
+  const fadeElements = document.querySelectorAll('.fade-up');
+  const handleScroll = () => {
+    fadeElements.forEach(el => {
+      const elementTop = el.getBoundingClientRect().top;
+      if (elementTop < window.innerHeight - 150) {
+        el.classList.add('show');
+      }
+    });
+  };
+
+  window.addEventListener('scroll', handleScroll);
+  window.addEventListener('DOMContentLoaded', handleScroll);
+});
