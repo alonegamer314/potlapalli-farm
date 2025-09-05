@@ -660,3 +660,29 @@ footer {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Person Image Container */
+.person-image-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.person-image-container img {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid #27ae60;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  transition: transform 0.3s;
+}
+
+.person-image-container img:hover {
+  transform: scale(1.05);
+}
+
+/* Adjust person-card padding */
+.person-card {
+  padding: 60px 2rem 2rem; /* More top padding */
+}
