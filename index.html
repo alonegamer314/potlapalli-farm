@@ -17,6 +17,9 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <!-- CSS -->
   <link rel="stylesheet" href="css/style.css" />
 
@@ -29,49 +32,50 @@
 </head>
 <body>
 
- <!-- =========================
-   Header / Navbar
-========================== -->
-<header class="header">
-  <div class="container header-inner">
-    <div class="logo">
-      <a href="index.html" aria-label="Home">
-        <img src="assets/logo.png" alt="Potlapalli Farm Logo" onerror="this.style.display='none'" />
-        <span>Potlapalli Farm</span>
-      </a>
-    </div>
-
-    <!-- Desktop Nav -->
-    <nav class="nav" id="nav" role="navigation">
-      <a href="#home">Home</a>
-      <a href="#products">Products</a>
-      <a href="#deals">Deals</a>
-      <a href="about.html">About</a>
-      <a href="#testimonials">Testimonials</a>
-      <a href="#contact">Contact</a>
-    </nav>
-
-    <!-- Right Side Actions -->
-    <div class="header-actions">
-      <!-- Hamburger Menu Button (Mobile) -->
-      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
-
-      <!-- Mini Cart -->
-      <div class="mini-cart" id="miniCart">
-        <a href="cart.html" aria-label="Shopping cart">
-          <i class="fas fa-shopping-cart"></i> 
-          <span id="cartCount">0</span>
+  <!-- =========================
+       Header / Navbar
+  ========================= -->
+  <header class="header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html" aria-label="Home">
+          <img src="assets/logo.png" alt="Potlapalli Farm Logo" onerror="this.style.display='none'" />
+          <span>Potlapalli Farm</span>
         </a>
       </div>
 
-      <!-- Auth Buttons -->
-      <div id="authButtons">
-        <a href="signin.html" class="auth-btn">Sign In</a>
-        <a href="signup.html" class="auth-btn">Sign Up</a>
+      <!-- Desktop Nav -->
+      <nav class="nav" id="nav" role="navigation">
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#deals">Deals</a>
+        <a href="about.html">About</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <!-- Right Side Actions -->
+      <div class="header-actions">
+        <!-- Hamburger Menu Button (Mobile) -->
+        <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
+
+        <!-- Mini Cart -->
+        <div class="mini-cart" id="miniCart">
+          <a href="cart.html" aria-label="Shopping cart">
+            <i class="fas fa-shopping-cart"></i> 
+            <span id="cartCount">0</span>
+          </a>
+        </div>
+
+        <!-- Auth Buttons -->
+        <div id="authButtons">
+          <a href="signin.html" class="auth-btn">Sign In</a>
+          <a href="signup.html" class="auth-btn">Sign Up</a>
+        </div>
       </div>
     </div>
-  </div>
-</header>
+  </header>
+
   <!-- =========================
        Hero Section
   ========================= -->
@@ -93,82 +97,87 @@
       <p>Explore our range of farm fresh products.</p>
       <div class="product-grid">
         <!-- Product 1: Goat Meat -->
-<div class="product-card" data-id="goat" data-price="850">
-  <img src="assets/images/goat.jpg" alt="Premium Goat Meat">
-  <h3>Premium Goat Meat</h3>
-  <p>Free-range, hormone-free and vacuum packed for freshness.</p>
-  
-  <!-- Quantity Controls -->
-  <div class="product-controls">
-    <button class="qty-btn minus" onclick="changeQty('goat', -1)">−</button>
-    <input type="text" class="qty" id="qty-goat" value="0" readonly>
-    <button class="qty-btn plus" onclick="changeQty('goat', 1)">+</button>
-  </div>
-  
-  <!-- Price & Add to Cart -->
-  <div class="product-footer">
-    <span class="price">₹850/kg</span>
-    <button onclick="addToCartFromInput('goat')" class="add-to-cart-btn">Add to Cart</button>
-  </div>
-</div>
+        <div class="product-card" data-id="goat" data-price="850">
+          <img src="assets/images/goat.jpg" alt="Premium Goat Meat">
+          <h3>Premium Goat Meat</h3>
+          <p>Free-range, hormone-free and vacuum packed for freshness.</p>
+          
+          <!-- Quantity Controls -->
+          <div class="product-controls">
+            <button class="qty-btn minus" onclick="changeQty('goat', -1)">−</button>
+            <input type="text" class="qty" id="qty-goat" value="0" readonly>
+            <button class="qty-btn plus" onclick="changeQty('goat', 1)">+</button>
+          </div>
+          
+          <!-- Price & Add to Cart -->
+          <div class="product-footer">
+            <span class="price">₹850/kg</span>
+            <button onclick="addToCartFromInput('goat')" class="add-to-cart-btn">Add to Cart</button>
+          </div>
+        </div>
 
         <!-- Product 2: Country Chicken -->
-<div class="product-card" data-id="chicken" data-price="320">
-  <img src="assets/images/chicken.jpg" alt="Country Chicken">
-  <h3>Country Chicken</h3>
-  <p>Native breed, rich in flavor — no antibiotics.</p>
-  
-  <!-- Quantity Controls -->
-  <div class="product-controls">
-    <button class="qty-btn minus" onclick="changeQty('chicken', -1)">−</button>
-    <input type="text" class="qty" id="qty-chicken" value="0" readonly>
-    <button class="qty-btn plus" onclick="changeQty('chicken', 1)">+</button>
-  </div>
-  
-  <!-- Price & Add to Cart -->
-  <div class="product-footer">
-    <span class="price">₹320/kg</span>
-    <button onclick="addToCartFromInput('chicken')" class="add-to-cart-btn">Add to Cart</button>
-  </div>
-</div>
+        <div class="product-card" data-id="chicken" data-price="320">
+          <img src="assets/images/chicken.jpg" alt="Country Chicken">
+          <h3>Country Chicken</h3>
+          <p>Native breed, rich in flavor — no antibiotics.</p>
+          
+          <!-- Quantity Controls -->
+          <div class="product-controls">
+            <button class="qty-btn minus" onclick="changeQty('chicken', -1)">−</button>
+            <input type="text" class="qty" id="qty-chicken" value="0" readonly>
+            <button class="qty-btn plus" onclick="changeQty('chicken', 1)">+</button>
+          </div>
+          
+          <!-- Price & Add to Cart -->
+          <div class="product-footer">
+            <span class="price">₹320/kg</span>
+            <button onclick="addToCartFromInput('chicken')" class="add-to-cart-btn">Add to Cart</button>
+          </div>
+        </div>
 
         <!-- Product 3: Farm Eggs -->
         <div class="product-card" data-id="eggs" data-price="8">
-  <img src="assets/images/eggs.jpg" alt="Farm Eggs">
-  <h3>Farm Eggs</h3>
+          <img src="assets/images/eggs.jpg" alt="Farm Eggs">
+          <h3>Farm Eggs</h3>
           <p>Fresh daily — deep orange yolks packed in eco boxes.</p>
-         <!-- Quantity Controls -->
-  <div class="product-controls">
-    <button class="qty-btn minus" onclick="changeQty('eggs', -1)">−</button>
-    <input type="text" class="qty" id="qty-eggs" value="0" readonly>
-    <button class="qty-btn plus" onclick="changeQty('eggs', 1)">+</button>
-  </div>
+          
+          <!-- Quantity Controls -->
+          <div class="product-controls">
+            <button class="qty-btn minus" onclick="changeQty('eggs', -1)">−</button>
+            <input type="text" class="qty" id="qty-eggs" value="0" readonly>
+            <button class="qty-btn plus" onclick="changeQty('eggs', 1)">+</button>
+          </div>
+          
           <!-- Price & Add to Cart -->
-  <div class="product-footer">
-    <span class="price">₹8/egg</span>
-    <button onclick="addToCartFromInput('eggs')" class="add-to-cart-btn">Add to Cart</button>
-  </div>
-</div>
+          <div class="product-footer">
+            <span class="price">₹8/egg</span>
+            <button onclick="addToCartFromInput('eggs')" class="add-to-cart-btn">Add to Cart</button>
+          </div>
+        </div>
 
-       <!-- Product 4: Goat Milk -->
-<div class="product-card" data-id="milk" data-price="60">
-  <img src="assets/images/milk.jpg" alt="Fresh Goat Milk">
-  <h3>Fresh Goat Milk</h3>
-  <p>Collected daily and bottled with care.</p>
-  
-  <!-- Quantity Controls -->
-  <div class="product-controls">
-    <button class="qty-btn minus" onclick="changeQty('milk', -1)">−</button>
-    <input type="text" class="qty" id="qty-milk" value="0" readonly>
-    <button class="qty-btn plus" onclick="changeQty('milk', 1)">+</button>
-  </div>
-  
-  <!-- Price & Add to Cart -->
-  <div class="product-footer">
-    <span class="price">₹60 / L</span>
-    <button onclick="addToCartFromInput('milk')" class="add-to-cart-btn">Add to Cart</button>
-  </div>
-</div>
+        <!-- Product 4: Goat Milk -->
+        <div class="product-card" data-id="milk" data-price="60">
+          <img src="assets/images/milk.jpg" alt="Fresh Goat Milk">
+          <h3>Fresh Goat Milk</h3>
+          <p>Collected daily and bottled with care.</p>
+          
+          <!-- Quantity Controls -->
+          <div class="product-controls">
+            <button class="qty-btn minus" onclick="changeQty('milk', -1)">−</button>
+            <input type="text" class="qty" id="qty-milk" value="0" readonly>
+            <button class="qty-btn plus" onclick="changeQty('milk', 1)">+</button>
+          </div>
+          
+          <!-- Price & Add to Cart -->
+          <div class="product-footer">
+            <span class="price">₹60 / L</span>
+            <button onclick="addToCartFromInput('milk')" class="add-to-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- =========================
        Footer
@@ -291,6 +300,5 @@
       });
     }
   </script>
-
 </body>
 </html>
