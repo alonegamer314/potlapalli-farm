@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Learn the story of Potlapalli Farm — our journey, vision, and commitment to fresh, organic farm produce." />
+  <meta name="description" content="The story of Potlapalli Farm — where soil, sweat, and sustainability meet." />
   <title>About Us - Potlapalli Farm</title>
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
 
-  <!-- Font Awesome for Icons -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <!-- External CSS -->
@@ -17,10 +17,10 @@
 
   <style>
     /* =========================
-       About Page Styles
+       Clean, Modern About Page
        ========================= */
     .about-page {
-      background: #f2faf5; /* Soft light green – farm freshness */
+      background: #f2faf5;
       color: #222;
       line-height: 1.8;
       font-family: 'Inter', sans-serif;
@@ -35,102 +35,103 @@
       justify-content: center;
       text-align: center;
       color: #fff;
-      position: relative;
-    }
-
-    .about-hero-content {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 1rem;
     }
 
     .about-hero h1 {
-      font-size: 3.5rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 3.8rem;
       margin-bottom: 1rem;
-      text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+      text-shadow: 2px 2px 15px rgba(0,0,0,0.8);
     }
 
     .about-hero p {
-      font-size: 1.3rem;
-      margin-bottom: 2rem;
+      font-size: 1.4rem;
+      max-width: 800px;
+      margin: 0 auto 2rem;
     }
 
-    .about-hero a {
+    .hero-btn, .btn-outline {
       margin: 0.5rem;
+      font-weight: 600;
     }
 
-    /* Section Spacing */
+    /* Section */
     .about-section {
-      padding: 5rem 0;
+      padding: 6rem 0;
       max-width: 1000px;
       margin: 0 auto;
       text-align: center;
     }
 
     .about-section h2 {
-      font-size: 2.2rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
       color: #2c3e50;
-      margin-bottom: 2.5rem;
-    }
-
-    /* Person Card */
-    .person-card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 70px 2rem 2rem; /* Top padding for image */
-      max-width: 700px;
-      margin: 0 auto;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-      position: relative;
-      overflow: hidden;
-      text-align: center;
-    }
-
-    /* Perfectly centered circular image */
-    .person-card img {
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      object-fit: cover;           /* Prevents stretch */
-      border: 6px solid #27ae60;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-
-      /* Absolute centering */
-      position: absolute;
-      top: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
-    }
-
-    .person-card h3 {
-      font-size: 1.8rem;
-      color: #2c3e50;
-      margin-bottom: 0.4rem;
-    }
-
-    .person-card .role {
-      color: #27ae60;
-      font-weight: 600;
-      font-size: 1.1rem;
       margin-bottom: 1.5rem;
     }
 
-    .person-paragraphs {
-      text-align: left;
-      line-height: 1.9;
+    .about-section p {
+      font-size: 1.1rem;
       color: #444;
+      max-width: 800px;
+      margin: 0 auto 1.2rem;
+      line-height: 1.9;
+    }
+
+    /* Team Cards */
+    .team-grid {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin: 3rem 0;
+    }
+
+    .team-card {
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      max-width: 320px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .team-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .team-card img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+    }
+
+    .team-info {
+      padding: 1.5rem;
+    }
+
+    .team-info h3 {
+      font-size: 1.6rem;
+      color: #2c3e50;
+      margin-bottom: 0.3rem;
+    }
+
+    .team-info .role {
+      color: #27ae60;
+      font-weight: 600;
       font-size: 1.05rem;
-      padding: 0 1.5rem;
+      margin-bottom: 1rem;
     }
 
-    .person-paragraphs p {
-      margin-bottom: 1.2rem;
+    .team-info p {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.7;
+      text-align: left;
     }
 
-    /* =========================
-       Our Divisions Section
-       ========================= */
+    /* Divisions Grid */
     .divisions-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -140,36 +141,33 @@
 
     .division-card {
       background: #fff;
-      border-radius: 12px;
+      border-radius: 15px;
       overflow: hidden;
       box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-      transition: transform 0.3s, box-shadow 0.3s;
-      position: relative;
+      transition: transform 0.3s;
     }
 
     .division-card:hover {
       transform: translateY(-8px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
     }
 
     .division-card img {
       width: 100%;
       height: 180px;
-      object-fit: cover;            /* No stretch, no squish */
-      display: block;
+      object-fit: cover;
     }
 
     .division-content {
       padding: 1.5rem;
     }
 
-    .division-card h4 {
+    .division-content h4 {
       font-size: 1.3rem;
       color: #2c3e50;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.6rem;
     }
 
-    .division-card p {
+    .division-content p {
       color: #555;
       font-size: 0.95rem;
       margin-bottom: 1rem;
@@ -242,10 +240,10 @@
       color: #fff;
       text-align: center;
       padding: 6rem 1rem;
-      margin-top: 3rem;
     }
 
     .cta-section h2 {
+      font-family: 'Playfair Display', serif;
       font-size: 2.5rem;
       margin-bottom: 1rem;
     }
@@ -253,7 +251,6 @@
     .cta-section p {
       font-size: 1.2rem;
       margin-bottom: 2rem;
-      color: #fff;
       max-width: 700px;
       margin-left: auto;
       margin-right: auto;
@@ -316,26 +313,21 @@
     /* Responsive */
     @media (max-width: 768px) {
       .about-hero h1 {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
       }
       .about-hero p {
         font-size: 1.1rem;
       }
       .about-section {
-        padding: 3rem 0;
+        padding: 4rem 1rem;
       }
-      .person-card {
-        padding: 70px 1.5rem 1.5rem;
-      }
-      .person-paragraphs {
-        padding: 0 1rem;
+      .team-grid {
+        flex-direction: column;
+        align-items: center;
       }
       .cta-btns {
         flex-direction: column;
         align-items: center;
-      }
-      .cta-section {
-        padding: 4rem 1rem;
       }
     }
   </style>
@@ -363,8 +355,8 @@
   <!-- =========================
        Hero Section
   ========================= -->
-  <section class="about-hero">
-    <div class="about-hero-content fade-up">
+  <section class="about-hero fade-up">
+    <div class="about-hero-content">
       <h1>About Potlapalli Farm</h1>
       <p>Where Freshness Meets Tradition — A Story of Soil, Sweat, and Sustainability</p>
       <a href="index.html#products" class="hero-btn">Our Products</a>
@@ -396,18 +388,18 @@
   </section>
 
   <!-- =========================
-       The Visionary
+       The Visionary & Founder (Team Cards)
   ========================= -->
   <section class="about-section fade-up">
-    <div class="person-card">
-  <div class="person-image-container">
-    <img src="assets/images/visionary.jpg" alt="Mr. Potlapalli Balakrishna" />
-  </div>
-  <div class="person-info">
-    <h3>Mr. Potlapalli Balakrishna</h3>
-    <div class="role">The Visionary</div>
-    <div class="person-paragraphs">
-        <p>
+    <h2>Meet Our Leaders</h2>
+    <div class="team-grid">
+      <!-- Visionary -->
+      <div class="team-card">
+        <img src="assets/images/visionary.jpg" alt="Mr. Potlapalli Balakrishna" />
+        <div class="team-info">
+          <h3>Mr. Potlapalli Balakrishna</h3>
+          <div class="role">The Visionary</div>
+          <p>
           Mr. Potlapalli Balakrishna was born in “Pullalacheruvu” village, Prakasam district, Andhra Pradesh, in 1964. The youngest of five brothers, he was raised in a family deeply rooted in agriculture. His ancestors migrated from Warangal and served as custodians of land and tradition through generations.
         </p>
         <br><br>
@@ -422,23 +414,16 @@
         <p>
           Today, his vision guides every decision — ensuring that Potlapalli Farm remains a symbol of integrity, sustainability, and rural empowerment.
         </p>
+        </div>
       </div>
-    </div>
-  </section>
 
-  <!-- =========================
-       The Founder
-  ========================= -->
-  <section class="about-section fade-up">
-   <div class="person-card">
-  <div class="person-image-container">
-    <img src="assets/images/founder.jpg" alt="Potlapalli Venkateshwara Rao" />
-  </div>
-  <div class="person-info">
-    <h3>Potlapalli Venkateshwara Rao</h3>
-    <div class="role">The Founder</div>
-    <div class="person-paragraphs">
-        <p>
+      <!-- Founder -->
+      <div class="team-card">
+        <img src="assets/images/founder.jpg" alt="Potlapalli Venkateshwara Rao" />
+        <div class="team-info">
+          <h3>Potlapalli Venkateshwara Rao</h3>
+          <div class="role">The Founder</div>
+           <p>
           Potlapalli Venkateshwara Rao is the driving force behind Potlapalli Farm, blending his precision as a Quality Control professional at Dr. Reddy’s Laboratories with a deep passion for sustainable farming.
         </p>
         <br><br>
@@ -453,6 +438,7 @@
         <p>
           Under his leadership, Potlapalli Farm delivers freshness, transparency, and health to every household. His journey proves that with passion and perseverance, farming can be both noble and modern.
         </p>
+        </div>
       </div>
     </div>
   </section>
@@ -463,7 +449,7 @@
   <section class="about-section fade-up">
     <h2>Our Farm Divisions</h2>
     <div class="divisions-grid">
-      <!-- Dairy Division -->
+      <!-- Dairy -->
       <div class="division-card">
         <img src="assets/images/dairy.jpg" alt="Dairy Division" />
         <div class="division-content">
@@ -473,7 +459,7 @@
         </div>
       </div>
 
-      <!-- Poultry Division -->
+      <!-- Poultry -->
       <div class="division-card">
         <img src="assets/images/poultry.jpg" alt="Poultry Division" />
         <div class="division-content">
@@ -483,7 +469,7 @@
         </div>
       </div>
 
-      <!-- Goat Division -->
+      <!-- Goat -->
       <div class="division-card">
         <img src="assets/images/goat.jpg" alt="Goat Division" />
         <div class="division-content">
@@ -493,13 +479,13 @@
         </div>
       </div>
 
-      <!-- Mushroom (Coming Soon) -->
-      <div class="division-card">
+      <!-- Mushroom -->
+      <div class="division-card" style="position: relative;">
         <img src="assets/images/mushroom.jpg" alt="Mushroom Division" />
+        <span class="coming-soon">Coming Soon</span>
         <div class="division-content">
           <h4>Mushroom Cultivation</h4>
           <p>Organic mushroom farming — coming soon!</p>
-          <span class="coming-soon">Coming Soon</span>
           <a href="mushroom.html" class="btn-know-more">Know More</a>
         </div>
       </div>
