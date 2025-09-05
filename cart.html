@@ -3,76 +3,411 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Potlapalli Farm – Your shopping cart for fresh farm products." />
-  <title>Potlapalli Farm Cart</title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css" />
+  <meta name="description" content="Your cart at Potlapalli Farm — fresh goat meat, eggs, milk & more" />
+  <title>Your Cart - Potlapalli Farm</title>
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- JS -->
-  <script src="js/cart.js" defer></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    /* =========================
+       Cart Page Styles
+       ========================= */
+    .cart-page {
+      background: #f9f9f9;
+      padding: 4rem 0;
+      min-height: 100vh;
+    }
+
+    .cart-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .cart-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .cart-header h2 {
+      font-size: 2.5rem;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+
+    .cart-header p {
+      color: #555;
+      font-size: 1.1rem;
+    }
+
+    /* Cart Items */
+    .cart-items {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      padding: 1.2rem;
+      border-bottom: 1px solid #eee;
+      gap: 1rem;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-item img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+
+    .item-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .item-details h4 {
+      font-size: 1.1rem;
+      color: #2c3e50;
+      margin: 0;
+    }
+
+    .item-details .price {
+      color: #27ae60;
+      font-weight: 600;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .qty-btn {
+      width: 34px;
+      height: 34px;
+      background: #27ae60;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .qty-btn:hover {
+      background: #1e874b;
+      transform: scale(1.05);
+    }
+
+    .qty {
+      min-width: 40px;
+      text-align: center;
+      font-weight: 600;
+      color: #222;
+    }
+
+    .remove-btn {
+      color: #e74c3c;
+      background: none;
+      border: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .remove-btn:hover {
+      color: #c0392b;
+      text-decoration: underline;
+    }
+
+    .item-total {
+      font-weight: 600;
+      color: #2c3e50;
+      white-space: nowrap;
+    }
+
+    /* Empty Cart */
+    .empty-cart {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #555;
+    }
+
+    .empty-cart img {
+      max-width: 120px;
+      margin-bottom: 1rem;
+      opacity: 0.6;
+    }
+
+    .empty-cart p {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Cart Summary */
+    .cart-summary {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      padding: 2rem;
+      max-width: 350px;
+      margin-left: auto;
+    }
+
+    .cart-summary h3 {
+      font-size: 1.4rem;
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.8rem;
+      font-size: 1rem;
+    }
+
+    .summary-row:last-child {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 2px solid #27ae60;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    /* CTA Buttons */
+    .cart-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-outline {
+      flex: 1;
+      padding: 0.8rem 1.5rem;
+      text-align: center;
+      background: transparent;
+      border: 2px solid #27ae60;
+      color: #27ae60;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .btn-outline:hover {
+      background: #27ae60;
+      color: #fff;
+    }
+
+    .btn-primary {
+      flex: 1;
+      padding: 0.8rem 1.5rem;
+      text-align: center;
+      background: #27ae60;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .btn-primary:hover {
+      background: #1e874b;
+      transform: scale(1.03);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .cart-summary {
+        max-width: 100%;
+        margin: 0;
+      }
+      .cart-actions {
+        flex-direction: column;
+      }
+      .cart-item {
+        flex-wrap: wrap;
+        text-align: center;
+      }
+      .item-total {
+        margin-left: auto;
+      }
+    }
+  </style>
 </head>
 <body>
 
   <!-- =========================
-       Header / Navbar
+       Header
   ========================= -->
-  <header class="header">
+  <header>
     <div class="container header-inner">
       <div class="logo">
-        <img src="assets/logo.png" alt="Potlapalli Farm Logo" onerror="this.style.display='none'" />
-        <span>Potlapalli Farm</span>
+        <a href="index.html">
+          <img src="assets/logo.png" alt="Potlapalli Farm Logo" />
+          <span>Potlapalli Farm</span>
+        </a>
       </div>
-
-      <nav class="nav" id="nav">
+      <nav>
         <a href="index.html">Home</a>
-        <a href="index.html#products">Products</a>
-        <a href="index.html#deals">Deals</a>
-        <a href="index.html#about">About</a>
-        <a href="index.html#testimonials">Testimonials</a>
-        <a href="index.html#contact">Contact</a>
+        <a href="signin.html">Sign In</a>
       </nav>
-
-      <div class="header-actions">
-        <button class="menu-btn" id="menuBtn">☰</button>
-        <div class="mini-cart" id="miniCart">
-          <a href="cart.html">🛒 <span id="cartCount">0</span></a>
-        </div>
-      </div>
     </div>
   </header>
 
   <!-- =========================
-       Cart Section
+       Cart Page
   ========================= -->
-  <section class="section cart" id="cartSection">
-    <div class="container">
-      <h2>Your Cart</h2>
-      <p>Review your selected products before checkout.</p>
-
-      <div id="cartContainer">
-        <!-- Cart items will be dynamically inserted here -->
+  <main class="cart-page">
+    <div class="cart-container">
+      <div class="cart-header">
+        <h2>Your Cart</h2>
+        <p>Review and edit your fresh farm items</p>
       </div>
 
-      <div id="cartSummary" class="cart-summary">
-        <p>Total Items: <span id="totalItems">0</span></p>
-        <p>Total Price: <span id="totalPrice">₹0</span></p>
-        <button id="checkoutBtn" class="checkout-btn">Checkout</button>
+      <!-- Cart Items -->
+      <div id="cartItems">
+        <!-- Filled by JavaScript -->
+      </div>
+
+      <!-- Empty Cart -->
+      <div id="emptyCart" class="empty-cart" style="display: none;">
+        <img src="assets/empty-cart.png" alt="Empty Cart" onerror="this.src='https://cdn-icons-png.flaticon.com/512/11329/11329679.png'; this.style.maxWidth='100px';">
+        <p>Your cart is empty.</p>
+        <a href="index.html" class="hero-btn">Continue Shopping</a>
+      </div>
+
+      <!-- Cart Summary (Sticky on Desktop) -->
+      <div class="cart-summary" id="cartSummary" style="display: none;">
+        <h3>Order Summary</h3>
+        <div id="summaryRows">
+          <!-- Dynamically added -->
+        </div>
+        <div class="summary-row">
+          <span>Total</span>
+          <span id="cartTotal">₹0</span>
+        </div>
+        <div class="cart-actions">
+          <a href="index.html" class="btn-outline">Continue Shopping</a>
+          <a href="contact.html" class="btn-primary">Place Order</a>
+        </div>
       </div>
     </div>
-  </section>
+  </main>
 
   <!-- =========================
-       Footer
+       Cart Logic
   ========================= -->
-  <footer>
-    <div class="container">
-      <p>© 2025 Potlapalli Farm. All rights reserved.</p>
-    </div>
-  </footer>
+  <script>
+    // Product database (must match index.html)
+    const products = {
+      goat: { name: "Premium Goat Meat", price: 850 },
+      chicken: { name: "Country Chicken", price: 320 },
+      eggs: { name: "Farm Eggs", price: 8 },
+      milk: { name: "Fresh Goat Milk", price: 60 }
+    };
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartItemsEl = document.getElementById('cartItems');
+    const emptyCartEl = document.getElementById('emptyCart');
+    const cartSummaryEl = document.getElementById('cartSummary');
+    const summaryRowsEl = document.getElementById('summaryRows');
+    const cartTotalEl = document.getElementById('cartTotal');
+
+    function renderCart() {
+      if (cart.length === 0) {
+        emptyCartEl.style.display = 'block';
+        cartSummaryEl.style.display = 'none';
+        return;
+      }
+
+      let total = 0;
+      cartItemsEl.innerHTML = '';
+
+      cart.forEach(item => {
+        const product = products[item.id];
+        const itemTotal = product.price * item.qty;
+        total += itemTotal;
+
+        const itemEl = document.createElement('div');
+        itemEl.classList.add('cart-item');
+        itemEl.innerHTML = `
+          <img src="assets/images/${item.id}.jpg" alt="${product.name}">
+          <div class="item-details">
+            <h4>${product.name}</h4>
+            <div class="price">₹${product.price} per unit</div>
+            <div class="quantity-controls">
+              <button class="qty-btn" onclick="updateQty('${item.id}', -1)">−</button>
+              <span class="qty">${item.qty}</span>
+              <button class="qty-btn" onclick="updateQty('${item.id}', 1)">+</button>
+              <button class="remove-btn" onclick="removeItem('${item.id}')">Remove</button>
+            </div>
+          </div>
+          <div class="item-total">₹${itemTotal}</div>
+        `;
+        cartItemsEl.appendChild(itemEl);
+      });
+
+      // Update summary
+      summaryRowsEl.innerHTML = '';
+      cart.forEach(item => {
+        const product = products[item.id];
+        const row = document.createElement('div');
+        row.classList.add('summary-row');
+        row.textContent = `${product.name} × ${item.qty}`;
+        summaryRowsEl.appendChild(row);
+      });
+
+      cartTotalEl.textContent = `₹${total}`;
+      cartSummaryEl.style.display = 'block';
+    }
+
+    function updateQty(id, change) {
+      const item = cart.find(item => item.id === id);
+      if (item) {
+        item.qty += change;
+        if (item.qty <= 0) {
+          removeItem(id);
+        } else {
+          localStorage.setItem('cart', JSON.stringify(cart));
+          renderCart();
+        }
+      }
+    }
+
+    function removeItem(id) {
+      const index = cart.findIndex(item => item.id === id);
+      if (index !== -1) {
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCart();
+      }
+    }
+
+    // Initial render
+    renderCart();
+  </script>
 
 </body>
 </html>
