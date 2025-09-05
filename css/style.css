@@ -1793,3 +1793,80 @@ footer {
   align-items: center;
   justify-content: center;
 }
+
+/* =========================
+   Cart Summary Fix - No Green Line
+========================== */
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+  font-size: 1rem;
+  color: #444;
+}
+
+.summary-row:last-child {
+  margin-top: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 2px solid #27ae60;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* Fix Total Alignment */
+.summary-row:last-child span:first-child {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.summary-row:last-child span:last-child {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* Buttons - Professional Look */
+.cart-actions {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 1.8rem;
+}
+
+.btn-outline {
+  flex: 1;
+  padding: 0.9rem 1.6rem;
+  text-align: center;
+  background: transparent;
+  border: 2px solid #27ae60;
+  color: #27ae60;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+  background: #27ae60;
+  color: #fff;
+}
+
+.btn-primary {
+  flex: 1;
+  padding: 0.9rem 1.6rem;
+  text-align: center;
+  background: #27ae60;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #1e874b;
+  transform: scale(1.04);
+}
