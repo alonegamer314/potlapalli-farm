@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Potlapalli Farm</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <title>Your Profile - Potlapalli Farm</title>
+
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
     <style>
         :root {
             --primary-color: #27ae60; --secondary-color: #2c3e50; --background-light: #f8f9fa;
@@ -13,28 +16,33 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; }
         body { background: var(--background-light); color: var(--text-dark); line-height: 1.6; }
-        main > section { display: none; }
-        main > section.active { display: block; }
-
-        /* Header, Nav, Product, Auth, and other styles from previous versions are included here... */
-        .header { background: var(--white); border-bottom: 1px solid var(--border-light); padding: 1rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+
+        /* Header */
+        .header { background: var(--white); border-bottom: 1px solid var(--border-light); padding: 1rem 0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); }
         .header-inner { display: flex; justify-content: space-between; align-items: center; }
-        .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; cursor: pointer; }
-        .nav a { cursor: pointer; }
-        
-        /* Profile Page Styles */
-        .profile-container { display: flex; gap: 2rem; }
-        .profile-sidebar { width: 250px; background: var(--white); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: fit-content; }
-        .profile-main { flex: 1; background: var(--white); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; }
+        .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
+        .logo img { height: 50px; width: 50px; border-radius: 8px; object-fit: cover; }
+        .header-nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; }
+
+        /* Profile Page Layout */
+        .profile-page { padding: 4rem 1rem; }
+        .profile-container { display: flex; gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .profile-sidebar { flex-shrink: 0; width: 250px; background: var(--white); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: fit-content; }
+        .profile-sidebar h3 { font-size: 1.2rem; color: var(--secondary-color); margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); }
         .profile-nav a { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: #333; text-decoration: none; border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.3s; }
         .profile-nav a:hover, .profile-nav a.active { background: var(--primary-color); color: var(--white); }
-        .profile-main > div { display: none; } .profile-main > div.active { display: block; }
-        .profile-info { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; }
-        .profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 1.8rem; font-weight: 600; }
-        .profile-details p { margin: 0.2rem 0; }
-        .btn-edit { background: var(--primary-color); color: var(--white); border: none; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.9rem; cursor: pointer; margin-left: auto; }
-        
+        .profile-main { flex: 1; background: var(--white); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; }
+        .profile-main > div { display: none; }
+        .profile-main > div.active { display: block; }
+        .section-title { font-size: 1.8rem; color: var(--secondary-color); margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); font-family: 'Playfair Display', serif; }
+        .profile-info { display: flex; align-items: center; gap: 1.5rem; }
+        .profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 2rem; font-weight: 600; flex-shrink: 0; }
+        .profile-details h4 { font-size: 1.5rem; color: var(--secondary-color); }
+        .profile-details p { color: var(--text-light); margin: 0.3rem 0; }
+        .btn-edit { background: var(--primary-color); color: var(--white); border: none; padding: 0.6rem 1.2rem; border-radius: 50px; font-size: 0.9rem; cursor: pointer; margin-left: auto; transition: background-color 0.3s; }
+        .btn-edit:hover { background-color: #1e874b; }
+
         /* Modal Styles */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.show { display: flex; opacity: 1; }
@@ -44,85 +52,108 @@
         .modal-header h2 { font-size: 1.8rem; }
         .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
         .modal-body .input-group { margin-bottom: 1rem; }
+        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; }
         .auth-btn-primary { width: 100%; background-color: var(--primary-color); color: #fff; border: none; padding: 14px; font-size: 1.1rem; font-weight: 600; border-radius: 8px; cursor: pointer; }
         
+        /* Auth Wall for non-logged in users */
+        #auth-wall { text-align: center; padding: 4rem 1rem; }
+        #auth-wall h2 { font-size: 2rem; color: var(--secondary-color); margin-bottom: 1rem; }
+        #auth-wall p { margin-bottom: 1.5rem; }
+        #auth-wall a { color: var(--primary-color); font-weight: 600; }
+
+
         .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: #333; color: var(--white); padding: 15px 25px; border-radius: 50px; z-index: 2001; transition: bottom 0.5s ease; }
-        .toast.show { bottom: 20px; }
-        .toast.error { background-color: var(--danger-color); }
+        .toast.show { bottom: 20px; } .toast.error { background-color: var(--danger-color); }
+        
+        @media (max-width: 768px) {
+            .profile-container { flex-direction: column; }
+            .profile-sidebar { width: 100%; }
+        }
     </style>
 </head>
 <body>
-    <header class="header"><!-- Header content from previous steps --></header>
 
-    <main>
-        <!-- Home, About, Cart, Signin, Signup sections from previous steps -->
-        
-        <section id="page-profile">
-            <div class="section">
-                <div class="container profile-container">
-                    <div class="profile-sidebar">
-                        <h3>Your Account</h3>
-                        <div class="profile-nav">
-                            <a class="profile-tab active" data-tab="info"><i class="fas fa-user"></i> Profile</a>
-                            <a class="profile-tab" data-tab="orders"><i class="fas fa-box"></i> Orders</a>
-                            <a id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <header class="header">
+        <div class="container header-inner">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="https://placehold.co/100x100/27ae60/FFFFFF?text=PF" alt="Logo"/>
+                    <span>Potlapalli Farm</span>
+                </a>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html">Back to Shop</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <div class="profile-page">
+            <div class="profile-container">
+                <div class="profile-sidebar">
+                    <h3>Your Account</h3>
+                    <div class="profile-nav">
+                        <a class="profile-tab active" data-tab="info"><i class="fas fa-user"></i> Profile</a>
+                        <a class="profile-tab" data-tab="orders"><i class="fas fa-box"></i> Orders</a>
+                        <a class="profile-tab" data-tab="addresses"><i class="fas fa-map-marker-alt"></i> Addresses</a>
+                        <a id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+                <div class="profile-main">
+                    <div id="tab-info" class="active">
+                         <h2 class="section-title">My Profile</h2>
+                         <div class="profile-info">
+                            <div class="profile-avatar" id="profileAvatar"></div>
+                            <div class="profile-details">
+                                <h4 id="profileName">Loading...</h4>
+                                <p id="profileEmail"></p>
+                                <p id="profilePhone"></p>
+                            </div>
+                            <button class="btn-edit" id="editProfileBtn">Edit Info</button>
                         </div>
                     </div>
-                    <div class="profile-main">
-                        <div id="tab-info" class="active">
-                             <div class="profile-info">
-                                <div class="profile-avatar" id="profileAvatar"></div>
-                                <div class="profile-details">
-                                    <h4 id="profileName">Loading...</h4>
-                                    <p id="profileEmail"></p>
-                                    <p id="profilePhone"></p>
-                                </div>
-                                <button class="btn-edit" id="editProfileBtn">Edit Info</button>
-                            </div>
-                        </div>
-                        <div id="tab-orders">
-                            <h2>Recent Orders</h2>
-                            <p>Your order history will appear here.</p>
-                        </div>
+                    <div id="tab-orders">
+                        <h2 class="section-title">Recent Orders</h2>
+                        <p>Your order history will appear here.</p>
+                    </div>
+                    <div id="tab-addresses">
+                        <h2 class="section-title">Your Addresses</h2>
+                        <p>Your saved addresses will appear here.</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 
-    <!-- Edit Profile Modal -->
+    <div id="auth-wall" style="display: none;">
+        <div class="container">
+            <h2>Access Denied</h2>
+            <p>You must be signed in to view your profile page.</p>
+            <a href="index.html">Return to Homepage</a>
+        </div>
+    </div>
+
     <div id="editProfileModal" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2>Edit Profile</h2>
-                <button class="close-modal" id="closeModalBtn">&times;</button>
-            </div>
+            <div class="modal-header"><h2>Edit Profile</h2><button class="close-modal" id="closeModalBtn">&times;</button></div>
             <div class="modal-body">
                 <form id="editProfileForm">
-                    <div class="input-group">
-                        <label for="editName">Full Name</label>
-                        <input type="text" id="editName" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="editPhone">Phone Number</label>
-                        <input type="tel" id="editPhone" placeholder="e.g., +919876543210">
-                    </div>
+                    <div class="input-group"><label for="editName">Full Name</label><input type="text" id="editName" required></div>
+                    <div class="input-group"><label for="editPhone">Phone Number</label><input type="tel" id="editPhone" placeholder="e.g., +919876543210"></div>
                     <button type="submit" class="auth-btn-primary">Save Changes</button>
                 </form>
             </div>
         </div>
     </div>
     
-    <footer><!-- Footer content --></footer>
     <div id="toast" class="toast"></div>
 
     <script type="module">
-        // --- Firebase SDKs ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         
-        // --- Firebase Initialization ---
         const firebaseConfig = {
             apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
             authDomain: "potlapallifarm.firebaseapp.com",
@@ -136,8 +167,8 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- DOM Elements ---
-        const authActions = document.getElementById('auth-actions');
+        const mainContent = document.getElementById('main-content');
+        const authWall = document.getElementById('auth-wall');
         const profileNameEl = document.getElementById('profileName');
         const profileEmailEl = document.getElementById('profileEmail');
         const profilePhoneEl = document.getElementById('profilePhone');
@@ -148,59 +179,60 @@
         const editPhoneInput = document.getElementById('editPhone');
         const toastEl = document.getElementById('toast');
         
-        // --- Functions ---
-        function showPage(pageId) { /* ... same as before ... */ }
-        function showToast(message, isError = false) { /* ... same as before ... */ }
+        function showToast(message, isError = false) {
+            toastEl.textContent = message;
+            toastEl.className = isError ? 'toast show error' : 'toast show';
+            setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+        }
 
-        async function fetchUserProfile(userId) {
-            const userDocRef = doc(db, "users", userId);
-            const docSnap = await getDoc(userDocRef);
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                profileNameEl.textContent = userData.name;
-                profileEmailEl.textContent = `📧 ${userData.email}`;
-                profilePhoneEl.textContent = userData.phone ? `📞 ${userData.phone}` : '📞 Add phone number';
-                profileAvatarEl.textContent = (userData.name || 'A')[0].toUpperCase();
-            } else {
-                console.log("No such user profile!");
+        async function fetchUserProfile(user) {
+            const userDocRef = doc(db, "users", user.uid);
+            try {
+                const docSnap = await getDoc(userDocRef);
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    profileNameEl.textContent = userData.name || user.displayName;
+                    profileEmailEl.textContent = `📧 ${userData.email || user.email}`;
+                    profilePhoneEl.textContent = userData.phone ? `📞 ${userData.phone}` : '📞 Add phone number';
+                    profileAvatarEl.textContent = (userData.name || user.email || 'A')[0].toUpperCase();
+                } else {
+                    profileNameEl.textContent = user.displayName || "Farm User";
+                    profileEmailEl.textContent = `📧 ${user.email}`;
+                    profilePhoneEl.textContent = '📞 Add phone number';
+                    profileAvatarEl.textContent = (user.displayName || user.email || 'A')[0].toUpperCase();
+                }
+            } catch (error) {
+                showToast("Could not load profile data.", true);
             }
         }
         
         onAuthStateChanged(auth, user => {
             if (user) {
-                authActions.innerHTML = `<a class="auth-btn" data-page="profile">Profile</a>`;
-                fetchUserProfile(user.uid);
+                mainContent.style.display = 'block';
+                authWall.style.display = 'none';
+                fetchUserProfile(user);
             } else {
-                authActions.innerHTML = `<a class="auth-btn" data-page="signin">Sign In</a>`;
+                mainContent.style.display = 'none';
+                authWall.style.display = 'block';
             }
-        });
-
-        document.getElementById('signupForm').addEventListener('submit', e => {
-            e.preventDefault();
-            const name = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-
-            createUserWithEmailAndPassword(auth, email, password)
-                .then(userCredential => {
-                    const user = userCredential.user;
-                    const userDocRef = doc(db, "users", user.uid);
-                    setDoc(userDocRef, { name: name, email: user.email, phone: '' });
-                    return updateProfile(user, { displayName: name });
-                })
-                .then(() => { showToast('Account created!'); showPage('home'); })
-                .catch(err => showToast(`Error: ${err.message}`, true));
         });
         
         document.getElementById('editProfileBtn').addEventListener('click', () => {
-             const user = auth.currentUser;
-             if (!user) return;
              editNameInput.value = profileNameEl.textContent;
-             editPhoneInput.value = profilePhoneEl.textContent.startsWith('📞') ? profilePhoneEl.textContent.replace('📞 ', '') : '';
+             const currentPhone = profilePhoneEl.textContent;
+             editPhoneInput.value = currentPhone.startsWith('📞') ? currentPhone.replace('📞 ', '').replace('Add phone number', '') : '';
              editProfileModal.classList.add('show');
         });
         
         document.getElementById('closeModalBtn').addEventListener('click', () => editProfileModal.classList.remove('show'));
+        
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => { 
+                showToast('Signed out successfully.');
+            }).catch(error => {
+                showToast('Error signing out.', true);
+            });
+        });
 
         editProfileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -213,18 +245,27 @@
             try {
                 const userDocRef = doc(db, "users", user.uid);
                 await setDoc(userDocRef, { name: newName, phone: newPhone }, { merge: true });
-                if(user.displayName !== newName) await updateProfile(user, { displayName: newName });
+                if(user.displayName !== newName) {
+                    await updateProfile(user, { displayName: newName });
+                }
                 
-                showToast('Profile updated successfully!');
-                fetchUserProfile(user.uid);
+                showToast('Profile updated!');
+                fetchUserProfile(user);
                 editProfileModal.classList.remove('show');
             } catch (error) {
                 showToast(`Error: ${error.message}`, true);
             }
         });
 
-        // --- Event Listeners & Init ---
-        // Includes full navigation, cart, etc. from the previous master file.
+        document.querySelectorAll('.profile-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.querySelectorAll('.profile-main > div').forEach(content => {
+                    content.classList.toggle('active', content.id === `tab-${tab.dataset.tab}`);
+                });
+            });
+        });
     </script>
 </body>
 </html>
