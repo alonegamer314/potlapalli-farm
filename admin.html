@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel - Potlapalli Farm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary-color: #27ae60; --secondary-color: #2c3e50; --background-light: #f8f9fa;
+            --text-dark: #333; --white: #fff; --border-light: #e0e0e0; --danger-color: #e74c3c;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--background-light); color: var(--text-dark); }
+        .container { width: 95%; max-width: 1400px; margin: 0 auto; }
+
+        #admin-login-view { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .login-box { background: var(--white); padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .login-box h1 { margin-bottom: 2rem; }
+        .input-group { margin-bottom: 1.5rem; text-align: left; }
+        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; }
+        .btn { width: 100%; padding: 1rem; background: var(--primary-color); color: var(--white); border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; }
+        
+        #admin-dashboard-view { display: none; }
+        .admin-header { background: var(--secondary-color); color: var(--white); padding: 1rem; }
+        .admin-header .container { display: flex; justify-content: space-between; align-items: center; }
+        .admin-header h1 { font-size: 1.5rem; }
+        #logoutBtn { background: var(--danger-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+
+        .dashboard-main { padding: 2rem 0; }
+        .dashboard-main h2 { margin-bottom: 1.5rem; }
+
+        .order-table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .order-table th, .order-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-light); }
+        .order-table th { background: #f9fafb; font-weight: 600; }
+        .order-table select { padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; }
+        .order-table .items-preview { font-size: 0.9rem; color: #555; max-width: 300px; }
+        
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background-color: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 2000; transition: all 0.5s; }
+        .toast.show { bottom: 20px; }
+        .toast.error { background-color: var(--danger-color); }
+    </style>
+</head>
+<body>
+    <div id="admin-login-view">
+        <div class="login-box">
+            <h1>Admin Login</h1>
+            <form id="adminLoginForm">
+                <div class="input-group"><label for="adminEmail">Email</label><input type="email" id="adminEmail" required></div>
+                <div class="input-group"><label for="adminPassword">Password</label><input type="password" id="adminPassword" required></div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-dashboard-view">
+        <header class="admin-header">
+            <div class="container"><h1>Potlapalli Farm - Dashboard</h1><button id="logoutBtn">Logout</button></div>
+        </header>
+        <main class="dashboard-main">
+            <div class="container">
+                <h2>Incoming Orders</h2>
+                <table class="order-table">
+                    <thead><tr><th>Order ID</th><th>Customer</th><th>Details</th><th>Total</th><th>Status</th></tr></thead>
+                    <tbody id="orders-tbody"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, getDocs, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+            authDomain: "potlapallifarm.firebaseapp.com",
+            projectId: "potlapallifarm",
+            storageBucket: "potlapallifarm.firebasestorage.app",
+            messagingSenderId: "1017629729159",
+            appId: "1:1017629729159:web:357c420a9de335d427b322"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const loginView = document.getElementById('admin-login-view');
+        const dashboardView = document.getElementById('admin-dashboard-view');
+        const ordersTbody = document.getElementById('orders-tbody');
+        const loginForm = document.getElementById('adminLoginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const toastEl = document.getElementById('toast');
+        
+        function showToast(message, isError = false) {
+            toastEl.textContent = message;
+            toastEl.className = isError ? 'toast show error' : 'toast show';
+            setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+        }
+
+        async function checkAdminRole(user) {
+            const userDocRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(userDocRef);
+            return docSnap.exists() && docSnap.data().role === 'admin';
+        }
+
+        async function loadOrders() {
+            const ordersQuery = query(collection(db, "orders"), orderBy("orderDate", "desc"));
+            const querySnapshot = await getDocs(ordersQuery);
+            const orders = [];
+            querySnapshot.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
+            
+            ordersTbody.innerHTML = orders.map(order => `
+                <tr>
+                    <td>#${order.id.slice(-6).toUpperCase()}</td>
+                    <td>${order.customerName}<br><small>${order.phone}</small></td>
+                    <td class="items-preview">${order.items.map(i => `${i.name} x ${i.quantity}`).join(', ')}</td>
+                    <td>₹${order.totalAmount}</td>
+                    <td>
+                        <select class="status-select" data-order-id="${order.id}">
+                            <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
+                            <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                            <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                            <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                        </select>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function updateOrderStatus(orderId, newStatus) {
+            const orderRef = doc(db, 'orders', orderId);
+            try {
+                await updateDoc(orderRef, { status: newStatus });
+                showToast('Status updated!');
+            } catch (error) {
+                showToast('Error updating status.', true);
+            }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const isAdmin = await checkAdminRole(user);
+                if (isAdmin) {
+                    loginView.style.display = 'none';
+                    dashboardView.style.display = 'block';
+                    loadOrders();
+                } else {
+                    signOut(auth);
+                    showToast("Access Denied: Not an admin account.", true);
+                }
+            } else {
+                loginView.style.display = 'flex';
+                dashboardView.style.display = 'none';
+            }
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            signInWithEmailAndPassword(auth, email, password)
+              .catch(err => showToast("Login Failed: Invalid credentials.", true));
+        });
+
+        logoutBtn.addEventListener('click', () => signOut(auth));
+        
+        ordersTbody.addEventListener('change', (e) => {
+            if (e.target.classList.contains('status-select')) {
+                const orderId = e.target.dataset.orderId;
+                const newStatus = e.target.value;
+                updateOrderStatus(orderId, newStatus);
+            }
+        });
+    </script>
+</body>
+</html>
+
