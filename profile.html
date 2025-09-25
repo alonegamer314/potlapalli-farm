@@ -62,7 +62,6 @@
         #auth-wall p { margin-bottom: 1.5rem; }
         #auth-wall a { color: var(--primary-color); font-weight: 600; }
 
-
         .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: #333; color: var(--white); padding: 15px 25px; border-radius: 50px; z-index: 2001; transition: bottom 0.5s ease; }
         .toast.show { bottom: 20px; } .toast.error { background-color: var(--danger-color); }
         
@@ -95,7 +94,7 @@
                     <h3>Your Account</h3>
                     <div class="profile-nav">
                         <a class="profile-tab active" data-tab="info"><i class="fas fa-user"></i> Profile</a>
-                        <a class="profile-tab" data-tab="orders"><i class="fas fa-box"></i> Orders</a>
+                        <a href="orders.html" class="profile-tab"><i class="fas fa-box"></i> Orders</a>
                         <a class="profile-tab" data-tab="addresses"><i class="fas fa-map-marker-alt"></i> Addresses</a>
                         <a id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
                     </div>
@@ -113,6 +112,7 @@
                             <button class="btn-edit" id="editProfileBtn">Edit Info</button>
                         </div>
                     </div>
+                    <!-- This 'tab-orders' div is now effectively unused by the sidebar but can remain for structure -->
                     <div id="tab-orders">
                         <h2 class="section-title">Recent Orders</h2>
                         <p>Your order history will appear here.</p>
@@ -258,13 +258,16 @@
         });
 
         document.querySelectorAll('.profile-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                document.querySelectorAll('.profile-main > div').forEach(content => {
-                    content.classList.toggle('active', content.id === `tab-${tab.dataset.tab}`);
+            // Only add click listener if it's NOT a link to a new page
+            if (!tab.hasAttribute('href')) {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.querySelectorAll('.profile-main > div').forEach(content => {
+                        content.classList.toggle('active', content.id === `tab-${tab.dataset.tab}`);
+                    });
                 });
-            });
+            }
         });
     </script>
 </body>
