@@ -1,86 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sign Up - Potlapalli Farm</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - Potlapalli Farm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #27ae60; --secondary-color: #2c3e50; --background-light: #f8f9fa;
+            --text-dark: #333; --text-light: #555; --white: #fff; --border-light: #eee; --danger-color: #e74c3c;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; }
+        body { background: var(--background-light); }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+        
+        .auth-page { display: flex; min-height: 100vh; }
+        .auth-left { flex: 1; background: linear-gradient(135deg, #a8e063, #56ab2f); color: var(--white); padding: 40px; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+        .auth-left h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 1rem; }
+        .auth-left p { font-size: 1.1rem; opacity: 0.9; max-width: 400px; margin: 0 auto; }
+        .auth-right { flex: 1.2; display: flex; flex-direction: column; justify-content: center; padding: 40px 60px; background: var(--white); }
+        .auth-form-container { max-width: 450px; margin: 0 auto; width: 100%; }
+        .auth-form-container h2 { font-family: 'Playfair Display', serif; color: var(--secondary-color); font-size: 2.2rem; margin-bottom: 2rem; text-align: center; }
+        
+        .input-group { position: relative; margin-bottom: 1.5rem; }
+        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark); }
+        .input-group input { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; transition: all 0.3s; }
+        .input-group input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1); }
+        
+        .password-strength { height: 5px; background: #eee; border-radius: 5px; margin-top: 8px; display: flex; }
+        .strength-bar { height: 100%; width: 0; border-radius: 5px; transition: all 0.3s; }
+        .strength-bar.weak { background: #e74c3c; }
+        .strength-bar.medium { background: #f39c12; }
+        .strength-bar.strong { background: var(--primary-color); }
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        .terms { display: flex; align-items: center; margin-bottom: 1.5rem; }
+        .terms input { margin-right: 10px; }
+        .terms label { font-size: 0.9rem; } .terms label a { color: var(--primary-color); text-decoration: none; }
+        
+        .auth-btn-primary { width: 100%; background-color: var(--primary-color); color: #fff; border: none; padding: 16px; font-size: 1.1rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; }
+        .auth-btn-primary:hover { background-color: #1e874b; transform: translateY(-2px); }
+        .auth-btn-primary:disabled { background-color: #95a5a6; cursor: not-allowed; }
 
-  <!-- External CSS -->
-  <link rel="stylesheet" href="css/style.css" />
+        .error-message { color: var(--danger-color); font-size: 0.9rem; margin-top: 5px; min-height: 1.2em; }
+        .auth-footer { margin-top: 2rem; text-align: center; } .auth-footer a { color: var(--primary-color); font-weight: 600; }
+        
+        @media (max-width: 992px) {
+            .auth-page { flex-direction: column; }
+            .auth-left { display: none; }
+            .auth-right { padding: 40px 20px; }
+        }
+    </style>
 </head>
 <body>
-
-  <!-- =========================
-       Header
-  ========================= -->
-  <header>
-    <div class="container header-inner">
-      <div class="logo">
-        <a href="index.html">
-          <img src="assets/logo.png" alt="Potlapalli Farm Logo" onerror="this.style.display='none'" />
-          <span>Potlapalli Farm</span>
-        </a>
-      </div>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="signin.html" class="auth-btn">Sign In</a>
-      </nav>
+    <div class="auth-page">
+        <div class="auth-left">
+            <div>
+                <h1>Join Our Farm Family</h1>
+                <p>Create an account to enjoy fresh goat meat, eggs, milk, and exclusive deals delivered to your doorstep.</p>
+            </div>
+        </div>
+        <div class="auth-right">
+            <div class="auth-form-container">
+                <h2>Create Your Account</h2>
+                <form id="signupForm" novalidate>
+                    <div class="input-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" required />
+                    </div>
+                    <div class="input-group">
+                        <label for="signupEmail">Email Address</label>
+                        <input type="email" id="signupEmail" required />
+                    </div>
+                    <div class="input-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" required />
+                        <div class="password-strength">
+                            <div class="strength-bar" id="strengthBar"></div>
+                        </div>
+                         <div class="error-message" id="passwordError"></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" required />
+                         <div class="error-message" id="confirmPasswordError"></div>
+                    </div>
+                    <div class="terms">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">I agree to the <a href="#">Terms of Service</a></label>
+                    </div>
+                    <button type="submit" class="auth-btn-primary" id="submitBtn">Create Account</button>
+                </form>
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="#">Sign In</a></p>
+                </div>
+            </div>
+        </div>
     </div>
-  </header>
 
-  <!-- =========================
-       Auth Page Layout
-  ========================= -->
-  <main class="auth-page">
-    <!-- Left Side: Farm Image + Branding -->
-    <div class="auth-left">
-      <div class="auth-left-content">
-        <h1>Join Our Farm Family</h1>
-        <p>Create an account to enjoy fresh goat meat, eggs, milk, and exclusive deals delivered to your doorstep.</p>
-        <img src="assets/images/farm-family.jpg" alt="Happy family at Potlapalli Farm" />
-      </div>
-    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+            authDomain: "potlapallifarm.firebaseapp.com",
+            projectId: "potlapallifarm",
+            storageBucket: "potlapallifarm.firebasestorage.app",
+            messagingSenderId: "1017629729159",
+            appId: "1:1017629729159:web:357c420a9de335d427b322"
+        };
 
-    <!-- Right Side: Sign Up Form -->
-    <div class="auth-right">
-      <h2>Create Your Account</h2>
-      <form id="signupForm">
-        <div class="input-group">
-          <label for="signupEmail">Email Address</label>
-          <input type="email" id="signupEmail" placeholder="Enter your email" required />
-        </div>
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
-        <div class="input-group">
-          <label for="signupPassword">Password</label>
-          <input type="password" id="signupPassword" placeholder="Create a password (6+ characters)" required />
-        </div>
+        const form = document.getElementById('signupForm');
+        const nameInput = document.getElementById('signupName');
+        const emailInput = document.getElementById('signupEmail');
+        const passwordInput = document.getElementById('signupPassword');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const termsCheckbox = document.getElementById('terms');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        const passwordError = document.getElementById('passwordError');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
+        const strengthBar = document.getElementById('strengthBar');
 
-        <div class="input-group">
-          <label for="confirmPassword">Confirm Password</label>
-          <input type="password" id="confirmPassword" placeholder="Confirm your password" required />
-        </div>
+        function validatePasswords() {
+            const pass = passwordInput.value;
+            const confirmPass = confirmPasswordInput.value;
+            let isValid = true;
 
-        <div class="remember">
-          <input type="checkbox" id="rememberMe" />
-          <label for="rememberMe">Remember Me</label>
-        </div>
+            // Password strength
+            let strength = 0;
+            if (pass.length >= 8) strength++;
+            if (pass.match(/[a-z]/) && pass.match(/[A-Z]/)) strength++;
+            if (pass.match(/[0-9]/)) strength++;
+            
+            strengthBar.classList.remove('weak', 'medium', 'strong');
+            if (pass.length > 0) {
+                if (strength === 1) { strengthBar.classList.add('weak'); strengthBar.style.width = '33%'; }
+                if (strength === 2) { strengthBar.classList.add('medium'); strengthBar.style.width = '66%'; }
+                if (strength === 3) { strengthBar.classList.add('strong'); strengthBar.style.width = '100%'; }
+            } else {
+                 strengthBar.style.width = '0%';
+            }
 
-        <button type="submit" class="btn-primary">Sign Up</button>
-      </form>
+            if (pass.length > 0 && pass.length < 8) {
+                passwordError.textContent = 'Password must be at least 8 characters.';
+                isValid = false;
+            } else {
+                passwordError.textContent = '';
+            }
 
-      <div class="auth-footer">
-        Already have an account? <a href="signin.html">Sign In</a>
-      </div>
-    </div>
-  </main>
+            // Confirm password
+            if (confirmPass.length > 0 && pass !== confirmPass) {
+                confirmPasswordError.textContent = 'Passwords do not match.';
+                isValid = false;
+            } else {
+                confirmPasswordError.textContent = '';
+            }
+            return isValid;
+        }
+        
+        passwordInput.addEventListener('input', validatePasswords);
+        confirmPasswordInput.addEventListener('input', validatePasswords);
 
-  <!-- =========================
-       Firebase Sign-Up Script
-  ========================= -->
-  <script type="module" src="js/signup.js"></script>
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!validatePasswords() || !form.checkValidity() || !termsCheckbox.checked) {
+                alert('Please correct the errors and agree to the terms.');
+                return;
+            }
 
+            const name = nameInput.value;
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating Account...';
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then(userCredential => updateProfile(userCredential.user, { displayName: name }))
+                .then(() => {
+                    alert('Account created successfully! Welcome to the farm.');
+                    // In a real app, you would redirect to the home page
+                    // window.location.href = 'index.html'; 
+                })
+                .catch(error => {
+                    if (error.code === 'auth/email-already-in-use') {
+                        alert('This email address is already registered.');
+                    } else {
+                        alert(`An error occurred: ${error.message}`);
+                    }
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Create Account';
+                });
+        });
+    </script>
 </body>
 </html>
