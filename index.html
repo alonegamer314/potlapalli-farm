@@ -12,28 +12,35 @@
 
     <style>
         :root {
-            --primary-color: #27ae60; --secondary-color: #2c3e50; --background-light: #f8f9fa;
-            --text-dark: #333; --text-light: #555; --white: #fff; --border-light: #e0e0e0; --danger-color: #e74c3c;
+            --primary-color: #27ae60;
+            --secondary-color: #2c3e50;
+            --background-light: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #555;
+            --white: #fff;
+            --border-light: #e0e0e0;
+            --danger-color: #e74c3c;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         html { scroll-behavior: smooth; }
         body { background-color: var(--white); color: var(--text-dark); line-height: 1.6; }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
-        main > section { display: none; }
-        main > section.active { display: block; }
 
         /* --- Header --- */
         .header { background: var(--white); border-bottom: 1px solid var(--border-light); padding: 1rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .header-inner { display: flex; justify-content: space-between; align-items: center; }
-        .logo a { cursor: pointer; display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
+        .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
         .logo img { height: 50px; }
         .nav { display: flex; gap: 1.8rem; }
-        .nav a { cursor: pointer; text-decoration: none; color: var(--text-dark); font-weight: 500; transition: color 0.3s ease; position: relative; padding-bottom: 5px; }
-        .nav a.active-link { color: var(--primary-color); font-weight: 700; }
+        .nav a { text-decoration: none; color: var(--text-dark); font-weight: 500; transition: color 0.3s ease; position: relative; padding-bottom: 5px; }
+        .nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%; background-color: var(--primary-color); transition: all 0.3s ease; }
+        .nav a:hover { color: var(--primary-color); }
+        .nav a:hover::after { width: 100%; left: 0; }
         .header-actions { display: flex; align-items: center; gap: 1.2rem; }
-        .mini-cart a { cursor: pointer; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--text-dark); }
+        .mini-cart a { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--text-dark); }
         #cartCount { background: var(--danger-color); color: white; border-radius: 50%; padding: 2px 7px; font-size: 0.8rem; font-weight: 600; }
-        .auth-btn { cursor: pointer; padding: 0.6rem 1.2rem; background: var(--primary-color); color: var(--white); border-radius: 50px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .auth-btn { padding: 0.6rem 1.2rem; background: var(--primary-color); color: var(--white); border-radius: 50px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .auth-btn:hover { background: #1e874b; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(39, 174, 96, 0.2); }
         .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; }
 
         /* --- Hero Slider --- */
@@ -42,16 +49,31 @@
         .hero-slide { min-width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 1rem; }
         .hero-slide::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.3)); }
         .hero-slide img { position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
-        .hero-content { position: relative; z-index: 2; max-width: 800px; animation: fadeIn 1s 0.5s forwards; opacity: 0; transform: translateY(20px); }
+        .hero-content { position: relative; z-index: 2; max-width: 800px; opacity: 0; transform: translateY(20px); animation: fadeIn 1s 0.5s forwards; }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
-        .hero-content h1, .section-header h2, .profile-main h2, .auth-form h2 { font-family: 'Playfair Display', serif; }
-
+        .hero-content h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .hero-content p { font-size: clamp(1rem, 2.5vw, 1.2rem); margin-bottom: 2rem; }
+        .hero-btn { display: inline-block; background: var(--primary-color); padding: 0.9rem 2.5rem; font-size: 1.1rem; font-weight: 600; border-radius: 50px; text-decoration: none; color: var(--white); transition: all 0.3s; }
+        .hero-btn:hover { background: #1e874b; transform: scale(1.05); }
+        .slider-nav { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; gap: 12px; }
+        .slider-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .slider-dot.active { background: var(--white); transform: scale(1.2); }
+        
         /* --- General Section Styling --- */
         .section { padding: 6rem 1rem; }
         .section-header { text-align: center; margin-bottom: 3.5rem; }
+        .section-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 2.8rem); color: var(--secondary-color); margin-bottom: 0.5rem; }
+        .section-header p { font-size: 1.1rem; color: var(--text-light); max-width: 600px; margin: 0 auto; }
         .animated-section { opacity: 0; transform: translateY(40px); transition: all 0.8s ease-out; }
         .animated-section.visible { opacity: 1; transform: translateY(0); }
 
+        /* --- Why Choose Us Section --- */
+        #why-choose-us { background: var(--background-light); }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+        .feature-card { text-align: center; }
+        .feature-card .icon { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem; }
+        .feature-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        
         /* --- Product Grid --- */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem; }
         .product-card { background: var(--white); border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s, box-shadow 0.3s; }
@@ -60,152 +82,173 @@
         .product-content { padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; }
         .product-content h3 { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
         .product-content p { color: var(--text-light); flex-grow: 1; margin-bottom: 1.5rem; }
+        .product-footer { margin-top: auto; }
         .price-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .price { font-weight: 700; font-size: 1.3rem; color: var(--secondary-color); }
+        .price small { font-size: 0.9rem; font-weight: 500; color: var(--text-light); }
         .quantity-controls { display: flex; align-items: center; gap: 0.8rem; }
         .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border-light); background-color: #f4f4f5; cursor: pointer; font-size: 1.2rem; }
         .qty { font-weight: 600; font-size: 1.1rem; }
         .add-to-cart-btn { background: var(--primary-color); color: var(--white); border: none; padding: 0.8rem 1.5rem; border-radius: 50px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 1rem; }
         
-        /* --- Auth Pages --- */
-        .auth-page-section { display: flex; min-height: calc(100vh - 82px); }
-        .auth-left { flex: 1; background: linear-gradient(135deg, #a8e063, #56ab2f); color: var(--white); padding: 40px; display: flex; flex-direction: column; justify-content: center; text-align: center; }
-        .auth-right { flex: 1.2; display: flex; flex-direction: column; justify-content: center; padding: 40px; background: var(--white); }
-        .auth-form { max-width: 400px; margin: 0 auto; width: 100%; }
-        .input-group { margin-bottom: 1.2rem; } .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
-        .input-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; }
-        .auth-btn-primary { width: 100%; background: var(--primary-color); color: #fff; border: none; padding: 14px; font-size: 1.1rem; border-radius: 8px; cursor: pointer; }
-        .auth-footer a { color: var(--primary-color); cursor: pointer; }
+        /* --- Testimonials --- */
+        #testimonials { background: var(--secondary-color); color: var(--white); }
+        #testimonials .section-header h2 { color: var(--white); }
+        .testimonial-card { background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 12px; }
+        .testimonial-card p { font-style: italic; margin-bottom: 1rem; font-size: 1.1rem; }
+        .testimonial-author { font-weight: 600; text-align: right; }
 
-        /* --- Profile Page --- */
-        .profile-container { display: flex; gap: 2rem; }
-        .profile-sidebar { flex-shrink: 0; width: 250px; background: var(--white); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: fit-content; }
-        .profile-main { flex: 1; background: var(--white); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; }
-        .profile-nav a { cursor: pointer; display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; text-decoration: none; border-radius: 8px; margin-bottom: 0.5rem; color: #333; }
-        .profile-nav a.active, .profile-nav a:hover { background: var(--primary-color); color: var(--white); }
-        .profile-main > div { display: none; } .profile-main > div.active { display: block; }
-        .profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 2rem; }
+        /* --- How It Works --- */
+        .how-it-works-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; text-align: center; }
+        .step-card .icon { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem; }
+        .step-card h3 { margin-bottom: 0.5rem; }
 
-        /* --- Other sections (Testimonials, Footer, Modals etc.) --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-        .modal-overlay.show { display: flex; opacity: 1; }
-        .modal-content { background: var(--white); padding: 2rem; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s ease; }
-        .modal-overlay.show .modal-content { transform: scale(1); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
-        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background-color: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 2000; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-        .toast.show { bottom: 20px; }
+        /* --- Footer --- */
+        footer { background: #1e293b; color: #cbd5e1; padding: 4rem 1rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+        .footer-col h4 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--white); }
+        .footer-col p, .footer-col a { color: #94a3b8; text-decoration: none; }
+        .footer-col a { display: block; margin-bottom: 0.5rem; transition: color 0.3s; }
+        .footer-col a:hover { color: var(--white); }
+        .footer-bottom { text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #334155; }
         
+        /* --- Toast Notification --- */
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background-color: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 2000; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .toast.show { bottom: 20px; }
+
+        /* --- Responsive Design --- */
         @media (max-width: 768px) {
             .nav { display: none; position: absolute; top: 75px; right: 20px; background: var(--white); flex-direction: column; padding: 1rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
             .nav.active { display: flex; }
             .menu-btn { display: block; }
-            .auth-page-section { flex-direction: column; } .auth-left { display: none; }
-            .profile-container { flex-direction: column; } .profile-sidebar { width: 100%; }
         }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="container header-inner">
-            <div class="logo"><a data-page="home"><img src="https://placehold.co/100x100/27ae60/FFFFFF?text=PF" alt="Logo"/><span>Potlapalli Farm</span></a></div>
+            <div class="logo"><a href="index.html"><img src="https://placehold.co/100x100/27ae60/FFFFFF?text=PF" alt="Logo"/><span>Potlapalli Farm</span></a></div>
             <nav class="nav" id="nav">
-                <a class="nav-link" data-page="home">Home</a>
-                <a class="nav-link" data-page="about">About</a>
-                <a class="nav-link" data-page="orders">My Orders</a>
+                <a href="#home">Home</a><a href="#products">Products</a><a href="about.html">About</a><a href="#contact">Contact</a>
             </nav>
             <div class="header-actions">
-                <div class="mini-cart"><a data-page="cart"><i class="fas fa-shopping-cart"></i><span id="cartCount">0</span></a></div>
-                <div id="auth-actions"><a class="auth-btn" data-page="signin">Sign In</a></div>
+                <div class="mini-cart"><a href="cart.html"><i class="fas fa-shopping-cart"></i><span id="cartCount">0</span></a></div>
+                <div id="authButtons"><a href="signin.html" class="auth-btn">Sign In</a></div>
                 <button class="menu-btn" id="menuBtn">☰</button>
             </div>
         </div>
     </header>
 
     <main>
-        <section id="page-home" class="active"><!-- Full Home Page HTML is now here --></section>
-        <section id="page-about"><!-- Full About Page HTML is now here --></section>
-        <section id="page-cart"><!-- Full Cart Page HTML is now here --></section>
-        <section id="page-orders"><!-- Full Orders Page HTML is now here --></section>
-        <section id="page-checkout"><!-- Full Checkout Page HTML is now here --></section>
-        <section id="page-signin"><!-- Full Sign In Page HTML is now here --></section>
-        <section id="page-signup"><!-- Full Sign Up Page HTML is now here --></section>
-        <section id="page-profile"><!-- Full Profile Page HTML is now here --></section>
+        <section class="hero" id="home">
+            <div class="hero-slider">
+                <div class="hero-slide active"><img src="https://placehold.co/1920x1080/a8e063/FFFFFF?text=Farm+Fresh" alt="Lush green farm fields"><div class="hero-content"><h1>Farm Freshness, Delivered.</h1><p>The best of nature, from our farm to your family.</p><a href="#products" class="hero-btn">Shop Now</a></div></div>
+                <div class="hero-slide"><img src="https://placehold.co/1920x1080/56ab2f/FFFFFF?text=Organic+Goodness" alt="Close-up of fresh vegetables"><div class="hero-content"><h1>Pure, Organic Goodness</h1><p>No chemicals, no compromises. Just honest, healthy food.</p><a href="about.html" class="hero-btn">Our Story</a></div></div>
+            </div>
+            <div class="slider-nav"></div>
+        </section>
+
+        <section id="why-choose-us" class="section animated-section">
+            <div class="container">
+                <div class="section-header"><h2>Why Potlapalli Farm?</h2></div>
+                <div class="features-grid">
+                    <div class="feature-card"><div class="icon"><i class="fas fa-leaf"></i></div><h3>100% Organic</h3><p>Grown naturally without any harmful pesticides or chemicals.</p></div>
+                    <div class="feature-card"><div class="icon"><i class="fas fa-truck"></i></div><h3>Directly From Farm</h3><p>We harvest, pack, and deliver, ensuring maximum freshness.</p></div>
+                    <div class="feature-card"><div class="icon"><i class="fas fa-heart"></i></div><h3>Ethically Raised</h3><p>Our animals are free-range, grass-fed, and treated with care.</p></div>
+                    <div class="feature-card"><div class="icon"><i class="fas fa-shield-alt"></i></div><h3>Quality Assured</h3><p>Hygienically packed to preserve nutrition and taste.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="products">
+            <div class="container">
+                <div class="section-header"><h2>Our Fresh Produce</h2><p>Handpicked and curated with care, from our fields to your plate.</p></div>
+                <div class="product-grid" id="product-grid"></div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="section animated-section" style="background-color: var(--background-light);">
+            <div class="container">
+                <div class="section-header"><h2>How It Works</h2></div>
+                <div class="how-it-works-grid">
+                    <div class="step-card"><div class="icon"><i class="fas fa-mouse-pointer"></i></div><h3>1. You Order Online</h3><p>Browse our fresh selection and place your order with a few clicks.</p></div>
+                    <div class="step-card"><div class="icon"><i class="fas fa-tractor"></i></div><h3>2. We Harvest & Pack</h3><p>We harvest your produce fresh from the farm only after you order.</p></div>
+                    <div class="step-card"><div class="icon"><i class="fas fa-shipping-fast"></i></div><h3>3. We Deliver Fresh</h3><p>Your order is delivered to your doorstep, ensuring peak freshness.</p></div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="testimonials" class="section animated-section">
+            <div class="container">
+                 <div class="section-header"><h2>What Our Customers Say</h2></div>
+                 <div class="testimonial-card">
+                     <p>"The best goat meat I've had in years! The freshness is unparalleled. You can truly taste the difference. Highly recommended!"</p>
+                     <div class="testimonial-author">- Priya S, Hyderabad</div>
+                 </div>
+            </div>
+        </section>
     </main>
 
-    <footer id="contact"><!-- Full Footer HTML is now here --></footer>
+    <footer id="contact">
+        <div class="container">
+             <div class="footer-grid">
+                <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farm is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
+                <div class="footer-col"><h4>Quick Links</h4><a href="#home">Home</a><a href="#products">Products</a><a href="about.html">About</a></div>
+                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Village, AP<br>Email: contact@potlapallifarm.com<br>Phone: +91 98765 43210</p></div>
+                <div class="footer-col"><h4>Follow Us</h4><a href="#">Facebook</a><a href="#">Instagram</a></div>
+             </div>
+             <div class="footer-bottom"><p>© 2025 Potlapalli Farm. All Rights Reserved.</p></div>
+        </div>
+    </footer>
     <div id="toast" class="toast"></div>
-    <!-- All Modals (Edit Profile, Track Order, etc.) are included here -->
 
     <script type="module">
-        // --- Firebase SDKs ---
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, addDoc, serverTimestamp, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        
-        // --- Firebase Initialization ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-            authDomain: "potlapallifarm.firebaseapp.com",
-            projectId: "potlapallifarm",
-            storageBucket: "potlapallifarm.firebasestorage.app",
-            messagingSenderId: "1017629729159",
-            appId: "1:1017629729159:web:357c420a9de335d427b322"
-        };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // --- Global State & DOM Elements ---
-        let cart = [];
-        let currentUser = null;
-        const main = document.querySelector('main');
-        const authActions = document.getElementById('auth-actions');
-        const cartCountEl = document.getElementById('cartCount');
-        const toastEl = document.getElementById('toast');
-        
         const products = [
             { id: 'goat', name: 'Premium Goat Meat', price: 850, unit: '/kg', image: 'https://placehold.co/600x450/e8f5e9/333333?text=Goat+Meat' },
             { id: 'chicken', name: 'Country Chicken', price: 320, unit: '/kg', image: 'https://placehold.co/600x450/fff9c4/333333?text=Chicken' },
             { id: 'eggs', name: 'Farm Eggs (Dozen)', price: 96, unit: '/dozen', image: 'https://placehold.co/600x450/ffe0b2/333333?text=Farm+Eggs' },
             { id: 'milk', name: 'Fresh Goat Milk', price: 60, unit: '/L', image: 'https://placehold.co/600x450/f5f5f5/333333?text=Goat+Milk' }
         ];
-
-        // --- Core Navigation ---
-        function showPage(pageId) {
-            main.querySelectorAll('section').forEach(p => p.classList.toggle('active', p.id === `page-${pageId}`));
-            document.querySelectorAll('.nav a').forEach(l => l.classList.toggle('active-link', l.dataset.page === pageId));
-            window.scrollTo(0, 0);
-            
-            if (pageId === 'cart') renderCart();
-            if (pageId === 'checkout') renderCheckout();
-            if (pageId === 'orders' && currentUser) loadOrders(currentUser.uid);
-            if (pageId === 'profile' && currentUser) fetchUserProfile(currentUser.uid);
-        }
-
-        // --- All Functions Are Now Fully Implemented ---
-        function onAuthStateChangedHandler(user) {
-            currentUser = user;
-            if (authActions) {
-                if (user) {
-                    authActions.innerHTML = `<a data-page="profile" class="auth-btn">Profile</a>`;
-                } else {
-                    authActions.innerHTML = `<a data-page="signin" class="auth-btn">Sign In</a>`;
-                }
-            }
-            updateCartCount();
-        }
         
         const CART_KEY = 'potlapalliCart';
+        const cartCountEl = document.getElementById('cartCount');
+        const productGrid = document.getElementById('product-grid');
+        const toastEl = document.getElementById('toast');
+
+        function showToast(message) {
+            toastEl.textContent = message;
+            toastEl.classList.add('show');
+            setTimeout(() => { toastEl.classList.remove('show'); }, 3000);
+        }
+
         function updateCartCount() {
-            const cartData = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-            const totalItems = cartData.reduce((sum, item) => sum + item.quantity, 0);
+            const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             if (cartCountEl) cartCountEl.textContent = totalItems;
         }
 
-        function renderProducts() {
-            const productGrid = document.getElementById('page-home').querySelector('.product-grid');
-            if (!productGrid) return;
+        function handleAddToCart(productId, quantity) {
+            if (quantity <= 0) {
+                showToast("Please select a quantity greater than zero.");
+                return;
+            }
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ ...product, quantity: quantity });
+            }
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+            updateCartCount();
+            showToast(`${quantity} x ${product.name} added to cart!`);
+        }
+
+        if (productGrid) {
             productGrid.innerHTML = products.map(product => `
                 <div class="product-card" data-id="${product.id}">
                     <img src="${product.image}" alt="${product.name}">
@@ -226,69 +269,48 @@
                     </div>
                 </div>
             `).join('');
-        }
-        
-        function handleAddToCart(productId, quantity) {
-             if (quantity <= 0) { return; }
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-            let localCart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-            const existingItem = localCart.find(item => item.id === productId);
-            if (existingItem) { existingItem.quantity += quantity; } 
-            else { localCart.push({ ...product, quantity: quantity }); }
-            localStorage.setItem(CART_KEY, JSON.stringify(localCart));
-            updateCartCount();
-            showToast(`${quantity} x ${product.name} added to cart!`);
-        }
 
-        function renderCart() { /* ... full, working cart render logic ... */ }
-        function renderCheckout() { /* ... full, working checkout render logic ... */ }
-        async function loadOrders(userId) { /* ... full, working order history logic ... */ }
-        async function fetchUserProfile(userId) { /* ... full, working profile logic ... */ }
-        function showToast(message) {
-            toastEl.textContent = message;
-            toastEl.classList.add('show');
-            setTimeout(() => { toastEl.classList.remove('show'); }, 3000);
-        }
-        
-        // --- Master Event Listener ---
-        document.body.addEventListener('click', e => {
-            const pageTarget = e.target.closest('[data-page]');
-            if (pageTarget) {
-                e.preventDefault();
-                const pageId = pageTarget.dataset.page;
-                const protectedPages = ['profile', 'orders', 'checkout'];
-                if (protectedPages.includes(pageId) && !currentUser) {
-                    showPage('signin');
-                } else {
-                    showPage(pageId);
-                }
-            }
-
-            const card = e.target.closest('.product-card');
-            if(card) {
+            productGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.product-card');
+                if (!card) return;
                 const qtyEl = card.querySelector('.qty');
                 let quantity = parseInt(qtyEl.textContent);
                 if (e.target.classList.contains('plus-btn')) { quantity++; } 
                 else if (e.target.classList.contains('minus-btn')) { quantity = Math.max(1, quantity - 1); } 
                 else if (e.target.classList.contains('add-to-cart-btn')) { handleAddToCart(card.dataset.id, quantity); }
                 qtyEl.textContent = quantity;
-            }
-        });
-
-        function init() {
-            onAuthStateChanged(auth, onAuthStateChangedHandler);
-            // Populate all page sections with their HTML
-            document.getElementById('page-home').innerHTML = `<!-- All HTML for the home page -->`;
-            // ... and so on for all other pages ...
-            renderProducts();
-            cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-            updateCartCount();
-            showPage('home');
+            });
+        }
+        
+        const slider = document.querySelector('.hero-slider');
+        const slides = document.querySelectorAll('.hero-slide');
+        const sliderNav = document.querySelector('.slider-nav');
+        let currentIndex = 0;
+        if (slides.length > 1) {
+            slides.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.classList.add('slider-dot');
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => { currentIndex = i; updateSlider(); });
+                sliderNav.appendChild(dot);
+            });
+            const updateSlider = () => {
+                slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+                document.querySelectorAll('.slider-dot').forEach((d,i) => d.classList.toggle('active', i === currentIndex));
+            };
+            setInterval(() => { currentIndex = (currentIndex + 1) % slides.length; updateSlider(); }, 5000);
         }
 
-        init();
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.animated-section, .product-card').forEach(el => observer.observe(el));
+        
+        const menuBtn = document.getElementById("menuBtn");
+        const nav = document.getElementById("nav");
+        if (menuBtn && nav) { menuBtn.addEventListener("click", () => nav.classList.toggle("active")); }
+
+        updateCartCount();
     </script>
 </body>
 </html>
-
