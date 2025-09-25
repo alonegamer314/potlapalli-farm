@@ -23,30 +23,35 @@
         .page-title { font-family: 'Playfair Display', serif; color: var(--secondary-color); text-align: center; margin-bottom: 2.5rem; }
         .checkout-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; align-items: flex-start; }
         .checkout-form, .order-summary { background: var(--white); border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); padding: 2rem; }
-        .form-section { margin-bottom: 2rem; }
         .form-section h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--secondary-color); border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem; }
         .input-group { margin-bottom: 1rem; }
         .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
-        .input-group input, .input-group textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; }
-        .payment-options .option { display: flex; align-items: center; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 0.8rem; cursor: pointer; }
-        .payment-options .option.selected { border-color: var(--primary-color); background: #f2faf5; border-width: 2px; }
+        .input-group input, .input-group textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; }
+        .payment-options .option { display: flex; align-items: center; padding: 1rem; border: 2px solid #ccc; border-radius: 8px; margin-bottom: 0.8rem; cursor: pointer; transition: all 0.2s; }
+        .payment-options .option.selected { border-color: var(--primary-color); background: #f2faf5; }
         .payment-options input[type="radio"] { margin-right: 1rem; }
-        .payment-details { padding: 1rem; background: #f9f9f9; border-radius: 8px; margin-top: 0.5rem; }
         .order-summary-item { display: flex; justify-content: space-between; margin-bottom: 0.8rem; }
         .summary-total { margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--secondary-color); font-weight: 700; font-size: 1.2rem; }
-        .btn-primary { width: 100%; background: var(--primary-color); color: var(--white); border: none; padding: 1rem; font-size: 1.2rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background 0.3s; }
-        .btn-primary:disabled { background: #bdc3c7; cursor: not-allowed; }
-        .order-success { text-align: center; padding: 4rem 2rem; }
+        .btn-primary { width: 100%; background: var(--primary-color); color: var(--white); border: none; padding: 1rem; font-size: 1.2rem; font-weight: 600; border-radius: 8px; cursor: pointer; }
+        .btn-primary:disabled { background: #bdc3c7; }
+        .order-success { text-align: center; padding: 4rem 2rem; background: var(--white); border-radius: 12px; }
         .order-success .icon { font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem; }
-        .contact-section { background: var(--white); padding: 4rem 1rem; margin-top: 4rem; text-align: center; }
+        .contact-section { background: var(--white); padding: 4rem 1rem; margin-top: 4rem; text-align: center; border-radius: 12px; }
         .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
-        .contact-card { padding: 1.5rem; } .contact-card i { font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem; }
-        .toast { /* Toast styles */ }
+        .contact-card a { text-decoration: none; color: var(--text-dark); }
+        .contact-card i { font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem; }
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 15px 25px; border-radius: 50px; z-index: 1001; transition: bottom 0.5s ease; }
+        .toast.show { bottom: 20px; } .toast.error { background: var(--danger-color); }
         @media (max-width: 992px) { .checkout-layout { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <header class="header"><!-- Header HTML --></header>
+    <header class="header">
+        <div class="container header-inner">
+            <div class="logo"><a href="index.html"><img src="https://placehold.co/100x100/27ae60/FFFFFF?text=PF" alt="Logo"/><span>Potlapalli Farm</span></a></div>
+            <nav class="header-nav"><a href="index.html">Back to Shop</a></nav>
+        </div>
+    </header>
 
     <main id="main-content" class="checkout-page">
         <div class="container">
@@ -55,30 +60,26 @@
                 <div class="checkout-layout">
                     <div class="checkout-form">
                         <form id="checkoutForm">
-                            <div class="form-section">
-                                <h3><i class="fas fa-user-circle"></i> Personal Information</h3>
+                            <div class="form-section"><h3><i class="fas fa-user-circle"></i> Personal Information</h3>
                                 <div class="input-group"><label for="fullName">Full Name</label><input type="text" id="fullName" required></div>
                                 <div class="input-group"><label for="phone">Phone Number</label><input type="tel" id="phone" required></div>
                             </div>
-                            <div class="form-section">
-                                <h3><i class="fas fa-map-marker-alt"></i> Delivery Address</h3>
+                            <div class="form-section"><h3><i class="fas fa-map-marker-alt"></i> Delivery Address</h3>
                                 <div class="input-group"><label for="address">Street Address</label><textarea id="address" rows="3" required></textarea></div>
                             </div>
-                            <div class="form-section">
-                                <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+                            <div class="form-section"><h3><i class="fas fa-credit-card"></i> Payment Method</h3>
                                 <div class="payment-options" id="paymentOptions">
-                                    <label class="option" for="cod"><input type="radio" id="cod" name="payment" value="COD" checked>Cash on Delivery</label>
-                                    <label class="option" for="upi"><input type="radio" id="upi" name="payment" value="UPI">UPI / Credit Card</label>
-                                    <div id="upi-details" class="payment-details" style="display:none;"><p>After placing the order, you will be redirected to our secure payment partner to complete the payment.</p></div>
+                                    <label class="option selected" for="cod"><input type="radio" id="cod" name="payment" value="COD" checked>Cash on Delivery</label>
+                                    <label class="option" for="upi"><input type="radio" id="upi" name="payment" value="UPI" disabled>UPI / Credit Card (Coming Soon)</label>
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div class="order-summary">
                         <h3>Your Order</h3>
-                        <div id="summary-items"></div>
+                        <div id="summary-items"><p>Loading cart...</p></div>
                         <hr>
-                        <div class="order-summary-item summary-total"><span>Total</span><span id="summary-total"></span></div>
+                        <div class="order-summary-item summary-total"><span>Total</span><span id="summary-total">₹0</span></div>
                         <button class="btn-primary" id="placeOrderBtn">Place Final Order</button>
                     </div>
                 </div>
@@ -88,11 +89,34 @@
                 <h2>Order Placed Successfully!</h2>
                 <p>Thank you for your purchase. Your Order ID is <strong id="orderId"></strong>.</p>
                 <p>We will contact you shortly to confirm the delivery details.</p>
-                <a href="index.html" class="btn btn-primary">Continue Shopping</a>
+                <a href="orders.html" class="btn-primary" style="display:inline-block; text-decoration:none; margin-top:1rem;">View My Orders</a>
             </div>
         </div>
     </main>
-    <section class="contact-section"><!-- Contact Section HTML --></section>
+
+    <section class="contact-section">
+        <div class="container">
+            <h2>Need Help? Contact Us</h2>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <a href="tel:+919876543210">
+                        <i class="fas fa-phone"></i><h3>Call Us</h3><p>+91 98765 43210</p>
+                    </a>
+                </div>
+                <div class="contact-card">
+                    <a href="https://wa.me/919876543210" target="_blank">
+                        <i class="fab fa-whatsapp"></i><h3>WhatsApp</h3><p>Chat with us live</p>
+                    </a>
+                </div>
+                <div class="contact-card">
+                     <a href="https://maps.google.com/?q=Potlapalli+Farm" target="_blank">
+                        <i class="fas fa-map-marked-alt"></i><h3>Our Farm</h3><p>Potlapalli Village, Andhra Pradesh</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <div id="toast" class="toast"></div>
 
     <script type="module">
@@ -112,7 +136,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- DOM Elements ---
         const summaryItemsEl = document.getElementById('summary-items');
         const summaryTotalEl = document.getElementById('summary-total');
         const placeOrderBtn = document.getElementById('placeOrderBtn');
@@ -120,15 +143,20 @@
         const phoneInput = document.getElementById('phone');
         const addressInput = document.getElementById('address');
         const paymentOptions = document.getElementById('paymentOptions');
+        const checkoutView = document.getElementById('checkout-view');
+        const toastEl = document.getElementById('toast');
         
         let cart = [];
         let currentUser = null;
 
+        function showToast(message, isError = false) { /* ... */ }
+
         function renderSummary() {
+            // FIX: Use the correct localStorage key
             cart = JSON.parse(localStorage.getItem('potlapalliCart')) || [];
+
             if (cart.length === 0) {
-                // Redirect or show error if cart is empty
-                document.getElementById('checkout-view').innerHTML = '<p>Your cart is empty. Please add items to checkout.</p>';
+                checkoutView.innerHTML = `<div style="text-align:center; padding: 4rem 1rem; background:var(--white); border-radius:12px;"><h2>Your cart is empty</h2><p>Please add items from the shop before checking out.</p><a href="index.html" style="text-decoration:none; color:var(--primary-color); font-weight:600;">Go to Shop</a></div>`;
                 return;
             }
             summaryItemsEl.innerHTML = cart.map(item => `<div class="order-summary-item"><span>${item.name} x ${item.quantity}</span><span>₹${item.price * item.quantity}</span></div>`).join('');
@@ -147,6 +175,10 @@
         }
 
         async function placeOrder() {
+            if (!fullNameInput.value || !phoneInput.value || !addressInput.value) {
+                showToast("Please fill in all personal and address details.", true);
+                return;
+            }
             placeOrderBtn.disabled = true;
             placeOrderBtn.textContent = 'Placing Order...';
 
@@ -165,12 +197,11 @@
             try {
                 const docRef = await addDoc(collection(db, "orders"), orderData);
                 document.getElementById('orderId').textContent = docRef.id.slice(-6).toUpperCase();
-                document.getElementById('checkout-view').style.display = 'none';
+                checkoutView.style.display = 'none';
                 document.getElementById('success-view').style.display = 'block';
-                localStorage.removeItem('potlapalliCart'); // Clear cart
+                localStorage.removeItem('potlapalliCart');
             } catch (error) {
-                console.error("Error writing document: ", error);
-                // showToast('Failed to place order. Please try again.', true);
+                showToast('Failed to place order. Please try again.', true);
             } finally {
                 placeOrderBtn.disabled = false;
                 placeOrderBtn.textContent = 'Place Final Order';
@@ -180,23 +211,21 @@
         onAuthStateChanged(auth, user => {
             if (user) {
                 currentUser = user;
+                document.getElementById('main-content').style.display = 'block';
                 prefillUserDetails(user.uid);
                 renderSummary();
             } else {
-                // Handle not logged in user
-                document.getElementById('main-content').innerHTML = '<h2>Access Denied</h2><p>Please sign in to proceed with checkout.</p>';
+                document.getElementById('main-content').innerHTML = '<div style="text-align:center; padding: 4rem 1rem;"><h2>Access Denied</h2><p>Please <a href="index.html">sign in</a> to proceed with checkout.</p></div>';
             }
         });
         
         paymentOptions.addEventListener('change', e => {
             document.querySelectorAll('.payment-options .option').forEach(el => el.classList.remove('selected'));
             e.target.closest('.option').classList.add('selected');
-            document.getElementById('upi-details').style.display = (e.target.value === 'UPI') ? 'block' : 'none';
         });
 
         placeOrderBtn.addEventListener('click', placeOrder);
     </script>
 </body>
 </html>
-
 
