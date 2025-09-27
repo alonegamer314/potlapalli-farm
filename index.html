@@ -179,42 +179,75 @@
         .toast.show { bottom: 20px; }
         body.nav-open { overflow: hidden; }
 
-        /* --- 8. Responsive Design --- */
-        @media (max-width: 992px) {
-            .nav-links {
-                position: fixed;
-                top: 0;
-                right: 0;
-                width: 300px;
-                height: 100vh;
-                background: var(--white);
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 2.5rem;
-                transform: translateX(100%);
-                transition: transform 0.4s ease-in-out;
-                box-shadow: -5px 0 25px rgba(0,0,0,0.1);
-            }
-            .nav-links.active { transform: translateX(0); }
-            .nav-links a { font-size: 1.3rem; color: var(--secondary-color); }
-            .menu-btn { display: block; z-index: 1001; }
-            .header:not(.scrolled) .menu-btn { color: var(--white); }
-            .header.scrolled .menu-btn { color: var(--secondary-color); }
-        }
+      /* --- 8. Responsive Design --- */
+@media (max-width: 992px) {
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 100vh;
+        background: var(--white);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2.5rem;
+        transform: translateX(100%);
+        transition: transform 0.4s ease-in-out;
+        box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+    }
+    .nav-links.active { transform: translateX(0); }
+    .nav-links a { font-size: 1.3rem; color: var(--secondary-color); }
+    .menu-btn { display: block; z-index: 1001; }
+    .header:not(.scrolled) .menu-btn { color: var(--white); }
+    .header.scrolled .menu-btn { color: var(--secondary-color); }
+}
 
-        @media (max-width: 768px) {
-            .section { padding: 4rem 0; }
-            .header-actions { gap: 1rem; }
-            .auth-btn { display: none; } /* Hide sign-in text on smaller screens */
-        }
-        
-        @media (max-width: 480px) {
-            .logo span { display: none; } /* Hide logo text on very small screens */
-            .hero-content h1 { font-size: 2.2rem; }
-            .hero-content p { font-size: 1rem; }
-            .footer-grid { grid-template-columns: 1fr; }
-        }
+@media (max-width: 768px) {
+    .section { padding: 4rem 0; }
+    .header-actions { gap: 1rem; }
+    .auth-btn { display: none; } /* Hide sign-in text on smaller screens */
+
+    /* --- MOBILE HOMESCREEN ENHANCEMENTS --- */
+    .header {
+        /* Add a semi-transparent background from the start on mobile */
+        background-color: rgba(44, 62, 80, 0.5); 
+        /* Add a modern "frosted glass" effect */
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px); /* For Safari browser support */
+        /* Use the smaller padding from the start */
+        padding: 0.75rem 0;
+    }
+
+    /* Ensure the header text/icons are always white and readable */
+    .header:not(.scrolled) .logo a, 
+    .header:not(.scrolled) .header-actions a, 
+    .header:not(.scrolled) .menu-btn {
+        color: var(--white);
+        text-shadow: none; /* Remove shadow as the background provides contrast */
+    }
+    
+    /* Make the hero text pop more */
+    .hero-content h1 {
+        text-shadow: 0 3px 15px rgba(0,0,0,0.6);
+    }
+
+    /* Make the button stand out */
+    .hero-btn {
+        box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+        transform: scale(0.95);
+    }
+    .hero-btn:hover {
+        transform: scale(1.0); /* Enlarge slightly on hover */
+    }
+}
+
+@media (max-width: 480px) {
+    .logo span { display: none; } /* Hide logo text on very small screens */
+    .hero-content h1 { font-size: 2.2rem; }
+    .hero-content p { font-size: 1rem; }
+    .footer-grid { grid-template-columns: 1fr; } 
+}
     </style>
 </head>
 <body>
