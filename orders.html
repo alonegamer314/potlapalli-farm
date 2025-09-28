@@ -21,7 +21,7 @@
             --status-delivered: #d4edda; --status-delivered-text: #155724;
             --status-cancelled: #f8d7da; --status-cancelled-text: #721c24;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; }
         html { scroll-behavior: smooth; }
         body { background: var(--background-light); color: var(--text-dark); line-height: 1.6; }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
@@ -140,15 +140,7 @@
         <li id="logout-mobile-li" style="display:none;"><a href="#" id="logoutBtnMobile">Logout</a></li>
     </ul>
 
-    <main class="orders-page" id="main-content">
-        <div class="container">
-            <h1 class="page-title">My Orders</h1>
-            <div class="order-list" id="order-list">
-                <div class="loading-state"><i class="fas fa-spinner loading-spinner"></i><p>Loading your orders...</p></div>
-            </div>
-        </div>
-    </main>
-    
+    <main class="orders-page" id="main-content"></main>
     <div id="auth-wall" style="display: none;"></div>
     <div id="toast" class="toast"></div>
 
@@ -209,9 +201,22 @@
         let allOrders = [];
         let unsubscribeOrders = null;
 
-        function showToast(message, isError = false) { /* ... */ }
-        function generateOrderTagline(items) { /* ... */ }
+        function showToast(message, isError = false) { 
+            toastEl.textContent = message;
+            toastEl.className = isError ? 'toast show error' : 'toast show';
+            setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+        }
         
+        function generateOrderTagline(items) {
+            const hasGoat = items.some(item => item.id === 'goat');
+            const hasChicken = items.some(item => item.id === 'chicken');
+            const hasEggs = items.some(item => item.id === 'eggs');
+            if (hasGoat) return "Ready for a legendary curry night!";
+            if (hasChicken) return "The perfect centerpiece for a family feast.";
+            if (hasEggs) return "Your healthy breakfast awaits.";
+            return "Enjoy the fresh taste of the farm!";
+        }
+
         function renderOrders(orders) {
             const orderListContainer = document.querySelector('#main-content .order-list');
             if (!orderListContainer) return;
@@ -258,10 +263,41 @@
             `;}).join('');
         }
 
-        function renderTrackingTimeline(orderId) { /* ... */ }
-        function renderDetailsModal(orderId) { /* ... */ }
-        async function cancelOrder(orderId) { /* ... */ }
-        function reOrder(orderId) { /* ... */ }
+        function renderTrackingTimeline(orderId) { 
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            const statuses = ['Processing', 'Shipped', 'Delivered'];
+            const currentIndex = statuses.indexOf(order.status);
+            trackingModal.querySelector('#tracking-timeline-list').innerHTML = statuses.map((s, i) => `<li class="tracking-step ${i <= currentIndex ? 'completed' : ''}"><div class="icon"><i class="fas fa-${i <= currentIndex ? 'check' : 'box'}"></i></div><div class="details"><h4>${s}</h4></div></li>`).join('');
+            trackingModal.classList.add('show');
+        }
+        function renderDetailsModal(orderId) { 
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            const detailsBody = detailsModal.querySelector('#details-modal-body');
+            detailsBody.innerHTML = `
+                <div style="text-align:left;">
+                    <p><strong>Order ID:</strong> #${order.id.slice(-6).toUpperCase()}</p>
+                    <p><strong>Total:</strong> ₹${order.totalAmount}</p>
+                    <hr style="margin:1rem 0;">
+                    ${order.items.map(item => `<p>${item.name} x ${item.quantity} - ₹${item.price * item.quantity}</p>`).join('')}
+                </div>`;
+            detailsModal.classList.add('show');
+        }
+        async function cancelOrder(orderId) { 
+            const orderRef = doc(db, 'orders', orderId);
+            try {
+                await updateDoc(orderRef, { status: 'Cancelled' });
+                showToast('Order cancelled successfully.');
+            } catch (error) { showToast('Failed to cancel order.', true); }
+        }
+        function reOrder(orderId) { 
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            localStorage.setItem('potlapalliCart', JSON.stringify(order.items));
+            showToast('Items added back to your cart!');
+            setTimeout(() => window.location.href = 'cart.html', 1000);
+        }
 
         function listenToOrders(userId) {
             const orderListContainer = document.getElementById('order-list');
@@ -294,25 +330,38 @@
             const button = e.target.closest('button');
             if (!button) return;
             const orderId = button.dataset.orderId;
-            if (!orderId) return;
-
-            if (button.classList.contains('track-order-btn')) renderTrackingTimeline(orderId);
-            if (button.classList.contains('view-details-btn')) renderDetailsModal(orderId);
-            if (button.classList.contains('re-order-btn')) reOrder(orderId);
-            if (button.classList.contains('cancel-order-btn')) {
-                cancelConfirmModal.dataset.orderId = orderId;
-                cancelConfirmModal.classList.add('show');
+            if (orderId) {
+                if (button.classList.contains('track-order-btn')) renderTrackingTimeline(orderId);
+                if (button.classList.contains('view-details-btn')) renderDetailsModal(orderId);
+                if (button.classList.contains('re-order-btn')) reOrder(orderId);
+                if (button.classList.contains('cancel-order-btn')) {
+                    cancelConfirmModal.dataset.orderId = orderId;
+                    cancelConfirmModal.classList.add('show');
+                }
             }
         });
         
         document.querySelectorAll('.close-modal, #cancelModalCloseBtn').forEach(btn => btn.addEventListener('click', e => e.target.closest('.modal-overlay').classList.remove('show')));
-        document.getElementById('cancelModalConfirmBtn').addEventListener('click', () => { /* ... cancel logic ... */ });
+        document.getElementById('cancelModalConfirmBtn').addEventListener('click', () => {
+             const orderId = cancelConfirmModal.dataset.orderId;
+            if (orderId) {
+                cancelOrder(orderId);
+                cancelConfirmModal.classList.remove('show');
+            }
+        });
         
         const menuIcon = menuBtn.querySelector('i');
         menuBtn.addEventListener("click", () => {
             const isActive = navLinks.classList.toggle("active");
             document.body.classList.toggle("nav-open");
             menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                document.body.classList.remove('nav-open');
+                menuIcon.className = 'fas fa-bars';
+            });
         });
     </script>
 </body>
