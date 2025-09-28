@@ -1,342 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sign In - Potlapalli Farm</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In - Potlapalli Farm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --primary-color: #27ae60; --secondary-color: #2c3e50; --white: #fff;
+            --background-light: #f8f9fa; --danger-color: #e74c3c;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--background-light); }
+        .auth-page { display: flex; min-height: 100vh; }
 
-  <!-- External CSS -->
-  <link rel="stylesheet" href="css/style.css" />
+        .auth-left {
+            flex: 1;
+            background: linear-gradient(135deg, #a8e063, #56ab2f);
+            color: var(--white);
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .auth-left h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 1rem; }
+        .auth-left p { font-size: 1.1rem; max-width: 400px; }
 
-  <style>
-    /* =========================
-       Auth Page Specific Styles
-    ========================= */
-    .auth-page {
-      display: flex;
-      min-height: 100vh;
-      font-family: 'Inter', sans-serif;
-    }
+        .auth-right {
+            flex: 1.2;
+            background-color: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 40px;
+        }
+        .auth-form-container { width: 100%; max-width: 400px; margin: 0 auto; }
+        .auth-form-container h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 2rem; color: var(--secondary-color); }
+        
+        .input-group { position: relative; margin-bottom: 1.5rem; }
+        .input-group label { margin-bottom: 0.5rem; font-weight: 500; color: #333; display: block; }
+        .input-group input {
+            width: 100%;
+            padding: 14px 40px 14px 16px; /* Add padding for the icon */
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .input-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.1);
+        }
+        .password-toggle {
+            position: absolute;
+            top: 45px;
+            right: 15px;
+            cursor: pointer;
+            color: #999;
+        }
 
-    .auth-left {
-      flex: 1;
-      background: linear-gradient(135deg, #a8e063, #56ab2f);
-      color: #fff;
-      padding: 60px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
+        .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .remember-me { display: flex; align-items: center; gap: 0.5rem; }
+        .forgot-password a { color: var(--primary-color); text-decoration: none; }
+        
+        .btn-primary {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .btn-primary:hover { background-color: #1e874b; transform: translateY(-2px); }
 
-    .auth-left::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: url('../assets/images/farm-field.jpg') center/cover no-repeat;
-      opacity: 0.3;
-      z-index: 1;
-    }
+        .auth-footer { margin-top: 2rem; text-align: center; }
+        .auth-footer a { color: var(--primary-color); font-weight: 600; text-decoration: none; }
+        
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 1001; transition: bottom 0.5s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .toast.show { bottom: 20px; }
+        .toast.error { background: var(--danger-color); }
 
-    .auth-left-content {
-      position: relative;
-      z-index: 2;
-      max-width: 500px;
-    }
-
-    .auth-left h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      font-weight: 700;
-    }
-
-    .auth-left p {
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-      opacity: 0.9;
-    }
-
-    .auth-left img {
-      max-width: 80%;
-      margin-top: 20px;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
-
-    .auth-right {
-      flex: 1;
-      background-color: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 60px 40px;
-    }
-
-    .auth-right h2 {
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-      color: #2c3e50;
-      font-weight: 600;
-    }
-
-    .input-group {
-      margin-bottom: 1.2rem;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .input-group label {
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: #333;
-    }
-
-    .input-group input[type="email"],
-    .input-group input[type="password"] {
-      padding: 12px 16px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .input-group input:focus {
-      border-color: #27ae60;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
-    }
-
-    .remember {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .remember input {
-      margin-right: 8px;
-    }
-
-    .remember label {
-      font-size: 0.95rem;
-      color: #555;
-    }
-
-    .forgot-password {
-      text-align: right;
-      margin-bottom: 1rem;
-    }
-
-    .forgot-password a {
-      font-size: 0.95rem;
-      color: #27ae60;
-      text-decoration: none;
-    }
-
-    .forgot-password a:hover {
-      text-decoration: underline;
-    }
-
-    .btn-primary {
-      background-color: #27ae60;
-      color: #fff;
-      border: none;
-      padding: 14px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .btn-primary:hover {
-      background-color: #1e874b;
-      transform: translateY(-2px);
-    }
-
-    .auth-footer {
-      margin-top: 1.5rem;
-      text-align: center;
-      color: #555;
-      font-size: 0.95rem;
-    }
-
-    .auth-footer a {
-      color: #27ae60;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .auth-footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .auth-page {
-        flex-direction: column;
-      }
-      .auth-left, .auth-right {
-        flex: none;
-        width: 100%;
-        padding: 40px 20px;
-      }
-      .auth-left h1 {
-        font-size: 2rem;
-      }
-      .auth-left p {
-        font-size: 1rem;
-      }
-      .auth-left img {
-        max-width: 60%;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .auth-right, .auth-left {
-        padding: 20px;
-      }
-      .auth-right h2 {
-        font-size: 1.7rem;
-      }
-    }
-  </style>
+        @media (max-width: 900px) {
+            .auth-page { flex-direction: column; }
+            .auth-left { display: none; } /* Hide decorative panel on mobile */
+            .auth-right { padding: 40px 20px; }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- =========================
-       Header
-  ========================= -->
-  <header>
-    <div class="container header-inner">
-      <div class="logo">
-        <a href="index.html">
-          <img src="assets/logo.png" alt="Potlapalli Farm Logo" onerror="this.style.display='none'" />
-          <span>Potlapalli Farm</span>
-        </a>
-      </div>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="signup.html" class="auth-btn">Sign Up</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- =========================
-       Auth Page Layout
-  ========================= -->
-  <main class="auth-page">
-    <!-- Left Side: Farm Image + Branding -->
-    <div class="auth-left">
-      <div class="auth-left-content">
-        <h1>Welcome Back</h1>
-        <p>Sign in to manage your orders, track deliveries, and enjoy exclusive farm deals.</p>
-        <img src="assets/images/goat-family.jpg" alt="Happy goats on Potlapalli Farm" />
-      </div>
-    </div>
-
-    <!-- Right Side: Sign In Form -->
-    <div class="auth-right">
-      <h2>Sign In to Your Account</h2>
-      <form id="signinForm">
-        <div class="input-group">
-          <label for="signinEmail">Email Address</label>
-          <input type="email" id="signinEmail" placeholder="Enter your email" required />
+    <main class="auth-page">
+        <div class="auth-left">
+            <div class="auth-left-content">
+                <h1>Welcome Back</h1>
+                <p>Sign in to manage your orders, track deliveries, and enjoy exclusive farm deals.</p>
+            </div>
         </div>
+        <div class="auth-right">
+            <div class="auth-form-container">
+                <h2>Sign In to Your Account</h2>
+                <form id="signinForm" novalidate>
+                    <div class="input-group">
+                        <label for="signinEmail">Email Address</label>
+                        <input type="email" id="signinEmail" placeholder="Enter your email" required />
+                    </div>
 
-        <div class="input-group">
-          <label for="signinPassword">Password</label>
-          <input type="password" id="signinPassword" placeholder="Enter your password" required />
+                    <div class="input-group">
+                        <label for="signinPassword">Password</label>
+                        <input type="password" id="signinPassword" placeholder="Enter your password" required />
+                        <i class="fas fa-eye password-toggle" id="passwordToggle"></i>
+                    </div>
+
+                    <div class="form-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="rememberMe" />
+                            <label for="rememberMe">Remember Me</label>
+                        </div>
+                        <div class="forgot-password">
+                            <a href="#">Forgot Password?</a>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Sign In</button>
+                </form>
+
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+                </div>
+            </div>
         </div>
+    </main>
+    
+    <div id="toast" class="toast"></div>
 
-        <div class="remember">
-          <input type="checkbox" id="rememberMe" />
-          <label for="rememberMe">Remember Me</label>
-        </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-        <div class="forgot-password">
-          <a href="#" id="forgotPassword">Forgot Password?</a>
-        </div>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+            authDomain: "potlapallifarm.firebaseapp.com",
+            projectId: "potlapallifarm",
+            storageBucket: "potlapallifarm.firebasestorage.app",
+            messagingSenderId: "1017629729159",
+            appId: "1:1017629729159:web:357c420a9de335d427b322",
+        };
 
-        <button type="submit" class="btn-primary">Sign In</button>
-      </form>
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
-      <div class="auth-footer">
-        Don't have an account? <a href="signup.html">Sign Up</a>
-      </div>
-    </div>
-  </main>
+        const signinForm = document.getElementById("signinForm");
+        const passwordInput = document.getElementById("signinPassword");
+        const passwordToggle = document.getElementById("passwordToggle");
+        const toastEl = document.getElementById('toast');
 
-  <!-- =========================
-       Firebase Authentication
-  ========================= -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      setPersistence,
-      browserLocalPersistence,
-      browserSessionPersistence,
-    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-      authDomain: "potlapallifarm.firebaseapp.com",
-      projectId: "potlapallifarm",
-      storageBucket: "potlapallifarm.firebasestorage.app",
-      messagingSenderId: "1017629729159",
-      appId: "1:1017629729159:web:357c420a9de335d427b322",
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    const signinForm = document.getElementById("signinForm");
-
-    signinForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = document.getElementById("signinEmail").value.trim();
-      const password = document.getElementById("signinPassword").value;
-      const remember = document.getElementById("rememberMe").checked;
-
-      if (!email || !password) {
-        alert("Please fill in all fields.");
-        return;
-      }
-
-      const persistence = remember ? browserLocalPersistence : browserSessionPersistence;
-
-      setPersistence(auth, persistence)
-        .then(() => signInWithEmailAndPassword(auth, email, password))
-        .then((userCredential) => {
-          alert("Signed in successfully!");
-          window.location.href = "index.html";
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
-            alert("Invalid email or password.");
-          } else if (errorCode === 'auth/invalid-email') {
-            alert("Please enter a valid email.");
-          } else {
-            alert("Error: " + error.message);
-          }
+        function showToast(message, isError = false) {
+            toastEl.textContent = message;
+            toastEl.className = isError ? 'toast show error' : 'toast show';
+            setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+        }
+        
+        passwordToggle.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            // Toggle the icon
+            passwordToggle.classList.toggle('fa-eye');
+            passwordToggle.classList.toggle('fa-eye-slash');
         });
-    });
 
-    // Forgot Password Placeholder
-    document.getElementById("forgotPassword").addEventListener("click", (e) => {
-      e.preventDefault();
-      alert("Password reset feature coming soon! Contact support for help.");
-    });
-  </script>
+        signinForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("signinEmail").value.trim();
+            const password = passwordInput.value;
+            const remember = document.getElementById("rememberMe").checked;
+
+            if (!email || !password) {
+                showToast("Please fill in all fields.", true);
+                return;
+            }
+
+            const persistence = remember ? browserLocalPersistence : browserSessionPersistence;
+
+            setPersistence(auth, persistence)
+                .then(() => signInWithEmailAndPassword(auth, email, password))
+                .then((userCredential) => {
+                    showToast("Signed in successfully! Redirecting...");
+                    setTimeout(() => { window.location.href = "index.html"; }, 1500);
+                })
+                .catch((error) => {
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                        showToast("Invalid email or password.", true);
+                    } else {
+                        showToast("An error occurred. Please try again.", true);
+                    }
+                    console.error("Firebase Signin Error:", error);
+                });
+        });
+    </script>
 
 </body>
 </html>
