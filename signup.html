@@ -3,201 +3,268 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up - Potlapalli Farm</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <title>Sign In - Potlapalli Farm</title>
+    <meta name="description" content="Sign in to your Potlapalli Farms account to manage orders and track deliveries." />
+    
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
     <style>
         :root {
-            --primary-color: #27ae60; --secondary-color: #2c3e50; --background-light: #f8f9fa;
-            --text-dark: #333; --text-light: #555; --white: #fff; --border-light: #eee; --danger-color: #e74c3c;
+            --primary-color: #27ae60; --secondary-color: #2c3e50; --white: #fff;
+            --background-light: #f8f9fa; --danger-color: #e74c3c; --border-light: #e0e0e0;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; }
-        body { background: var(--background-light); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--background-light); }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
-        
+        a, button { transition: all 0.3s ease; }
+        body.nav-open { overflow: hidden; }
+
+        /* --- 2. Header & Navigation (Homepage Style) --- */
+        .header { background: var(--white); border-bottom: 1px solid var(--border-light); padding: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .header-inner { display: flex; justify-content: space-between; align-items: center; }
+        .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
+        .logo img { height: 50px; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--text-dark); text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative; }
+        .header-actions { display: flex; align-items: center; gap: 1.5rem; }
+        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--text-dark); }
+        #cartCount { position: absolute; top: -8px; right: -10px; background-color: var(--danger-color); color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
+        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; }
+        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--secondary-color); }
+
+        /* --- 3. Main Auth Page Layout --- */
         .auth-page { display: flex; min-height: 100vh; }
-        .auth-left { flex: 1; background: linear-gradient(135deg, #a8e063, #56ab2f); color: var(--white); padding: 40px; display: flex; flex-direction: column; justify-content: center; text-align: center; }
-        .auth-left h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 1rem; }
-        .auth-left p { font-size: 1.1rem; opacity: 0.9; max-width: 400px; margin: 0 auto; }
-        .auth-right { flex: 1.2; display: flex; flex-direction: column; justify-content: center; padding: 40px 60px; background: var(--white); }
-        .auth-form-container { max-width: 450px; margin: 0 auto; width: 100%; }
-        .auth-form-container h2 { font-family: 'Playfair Display', serif; color: var(--secondary-color); font-size: 2.2rem; margin-bottom: 2rem; text-align: center; }
+        .auth-left { flex: 1; background: linear-gradient(135deg, #a8e063, #56ab2f); color: var(--white); padding: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .auth-left h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 1rem; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .auth-left p { font-size: 1.1rem; max-width: 400px; opacity: 0.9; }
+        .auth-right { flex: 1.2; background-color: var(--white); display: flex; flex-direction: column; justify-content: center; padding: 60px 40px; }
+        .auth-form-container { width: 100%; max-width: 400px; margin: 0 auto; }
+        .auth-form-container h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 2rem; color: var(--secondary-color); text-align: center; }
         
         .input-group { position: relative; margin-bottom: 1.5rem; }
-        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark); }
-        .input-group input { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; transition: all 0.3s; }
-        .input-group input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1); }
-        
-        .password-strength { height: 5px; background: #eee; border-radius: 5px; margin-top: 8px; display: flex; }
-        .strength-bar { height: 100%; width: 0; border-radius: 5px; transition: all 0.3s; }
-        .strength-bar.weak { background: #e74c3c; }
-        .strength-bar.medium { background: #f39c12; }
-        .strength-bar.strong { background: var(--primary-color); }
+        .input-group label { margin-bottom: 0.5rem; font-weight: 500; color: #333; display: block; }
+        .input-group input { width: 100%; padding: 14px 40px 14px 16px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease; }
+        .input-group input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.1); }
+        .password-toggle { position: absolute; top: 45px; right: 15px; cursor: pointer; color: #999; }
 
-        .terms { display: flex; align-items: center; margin-bottom: 1.5rem; }
-        .terms input { margin-right: 10px; }
-        .terms label { font-size: 0.9rem; } .terms label a { color: var(--primary-color); text-decoration: none; }
+        .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .remember-me { display: flex; align-items: center; gap: 0.5rem; }
+        .forgot-password a { color: var(--primary-color); text-decoration: none; cursor: pointer; }
         
-        .auth-btn-primary { width: 100%; background-color: var(--primary-color); color: #fff; border: none; padding: 16px; font-size: 1.1rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; }
-        .auth-btn-primary:hover { background-color: #1e874b; transform: translateY(-2px); }
-        .auth-btn-primary:disabled { background-color: #95a5a6; cursor: not-allowed; }
+        .btn-primary { width: 100%; background-color: var(--primary-color); color: #fff; border: none; padding: 16px; font-size: 1.1rem; font-weight: 600; border-radius: 8px; cursor: pointer; }
+        .btn-primary:hover { background-color: #1e874b; transform: translateY(-2px); }
 
-        .error-message { color: var(--danger-color); font-size: 0.9rem; margin-top: 5px; min-height: 1.2em; }
-        .auth-footer { margin-top: 2rem; text-align: center; } .auth-footer a { color: var(--primary-color); font-weight: 600; }
+        .auth-footer { margin-top: 2rem; text-align: center; }
+        .auth-footer a { color: var(--primary-color); font-weight: 600; text-decoration: none; }
         
+        /* --- 4. Modals & Utilities --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content { background: var(--white); padding: 2rem; border-radius: 15px; width: 90%; max-width: 500px; text-align: center; }
+        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; position: absolute; top: 15px; right: 20px; }
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 1001; transition: bottom 0.5s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .toast.show { bottom: 20px; }
+        .toast.error { background: var(--danger-color); }
+        
+        /* --- 5. Responsive Design --- */
         @media (max-width: 992px) {
-            .auth-page { flex-direction: column; }
+            .nav-links {
+                position: fixed; top: 0; right: 0; width: 300px; height: 100vh;
+                background-color: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+                border-left: 1px solid rgba(255, 255, 255, 0.2);
+                flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+                transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            }
+            .nav-links.active { transform: translateX(0); }
+            .nav-links a { font-size: 1.5rem; font-weight: 600; color: var(--secondary-color); }
+            .menu-btn { display: block; }
+            .header-nav { display: none; }
             .auth-left { display: none; }
             .auth-right { padding: 40px 20px; }
         }
+
+        /* --- 6. Footer --- */
+        footer { background: #1e2d3b; color: #cbd5e1; padding: 5rem 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
+        .footer-col h4 { font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--white); }
+        .footer-col p, .footer-col a { color: #94a3b8; text-decoration: none; }
+        .footer-col a { display: block; margin-bottom: 0.75rem; }
+        .footer-col a:hover { color: var(--white); padding-left: 5px; }
+        .footer-bottom { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #334155; font-size: 0.9rem; }
     </style>
 </head>
 <body>
-    <div class="auth-page">
+    <header class="header">
+        <div class="container header-inner">
+            <div class="logo"><a href="index.html"><img src="assets/logo.png" alt="Logo"/><span>Potlapalli Farms</span></a></div>
+            <nav class="header-nav">
+                <a href="index.html">Shop</a>
+                <a href="profile.html">My Account</a>
+                <a href="cart.html"><i class="fas fa-shopping-cart"></i><span id="cartCount">0</span></a>
+            </nav>
+            <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+    <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="profile.html">My Profile</a></li>
+        <li><a href="cart.html">My Cart</a></li>
+    </ul>
+
+    <main class="auth-page">
         <div class="auth-left">
-            <div>
-                <h1>Join Our Farm Family</h1>
-                <p>Create an account to enjoy fresh goat meat, eggs, milk, and exclusive deals delivered to your doorstep.</p>
+            <div class="auth-left-content">
+                <h1>Welcome Back</h1>
+                <p>Sign in to manage your orders, track deliveries, and enjoy exclusive farm deals.</p>
             </div>
         </div>
         <div class="auth-right">
             <div class="auth-form-container">
-                <h2>Create Your Account</h2>
-                <form id="signupForm" novalidate>
+                <h2>Log In to Your Account</h2>
+                <form id="signinForm" novalidate>
                     <div class="input-group">
-                        <label for="signupName">Full Name</label>
-                        <input type="text" id="signupName" required />
-                    </div>
-                    <div class="input-group">
-                        <label for="signupEmail">Email Address</label>
-                        <input type="email" id="signupEmail" required />
+                        <label for="signinEmail">Email Address</label>
+                        <input type="email" id="signinEmail" placeholder="Enter your email" required />
                     </div>
                     <div class="input-group">
-                        <label for="signupPassword">Password</label>
-                        <input type="password" id="signupPassword" required />
-                        <div class="password-strength">
-                            <div class="strength-bar" id="strengthBar"></div>
-                        </div>
-                         <div class="error-message" id="passwordError"></div>
+                        <label for="signinPassword">Password</label>
+                        <input type="password" id="signinPassword" placeholder="Enter your password" required />
+                        <i class="fas fa-eye password-toggle" id="passwordToggle"></i>
                     </div>
-                    <div class="input-group">
-                        <label for="confirmPassword">Confirm Password</label>
-                        <input type="password" id="confirmPassword" required />
-                         <div class="error-message" id="confirmPasswordError"></div>
+                    <div class="form-options">
+                        <div class="remember-me"><input type="checkbox" id="rememberMe" /><label for="rememberMe">Remember Me</label></div>
+                        <div class="forgot-password"><a id="forgotPasswordLink">Forgot Password?</a></div>
                     </div>
-                    <div class="terms">
-                        <input type="checkbox" id="terms" required>
-                        <label for="terms">I agree to the <a href="#">Terms of Service</a></label>
-                    </div>
-                    <button type="submit" class="auth-btn-primary" id="submitBtn">Create Account</button>
+                    <button type="submit" class="btn-primary">Log In</button>
                 </form>
-                <div class="auth-footer">
-                    <p>Already have an account? <a href="#">Sign In</a></p>
-                </div>
+                <div class="auth-footer"><p>Don't have an account? <a href="signup.html">Sign Up</a></p></div>
+            </div>
+        </div>
+    </main>
+    
+    <div id="toast" class="toast"></div>
+    <div id="forgotPasswordModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header"><h2>Reset Password</h2><button class="close-modal">&times;</button></div>
+            <div class="modal-body">
+                <p>Enter your email address and we'll send you a link to reset your password.</p>
+                <form id="resetPasswordForm">
+                    <div class="input-group"><label for="resetEmail">Email Address</label><input type="email" id="resetEmail" required /></div>
+                    <button type="submit" class="btn-primary">Send Reset Link</button>
+                </form>
             </div>
         </div>
     </div>
+    
+    <footer id="contact">
+        <div class="container">
+             <div class="footer-grid">
+                <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce.</p></div>
+                <div class="footer-col"><h4>Quick Links</h4><a href="index.html">Home</a><a href="profile.html">My Account</a><a href="cart.html">Cart</a></div>
+                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Village, AP<br>Email: contact@potlapallifarm.com<br>Phone: +91 98765 43210</p></div>
+             </div>
+             <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
+        </div>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        
+        import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
             authDomain: "potlapallifarm.firebaseapp.com",
             projectId: "potlapallifarm",
             storageBucket: "potlapallifarm.firebasestorage.app",
             messagingSenderId: "1017629729159",
-            appId: "1:1017629729159:web:357c420a9de335d427b322"
+            appId: "1:1017629729159:web:357c420a9de335d427b322",
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        const form = document.getElementById('signupForm');
-        const nameInput = document.getElementById('signupName');
-        const emailInput = document.getElementById('signupEmail');
-        const passwordInput = document.getElementById('signupPassword');
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-        const termsCheckbox = document.getElementById('terms');
-        const submitBtn = document.getElementById('submitBtn');
-        
-        const passwordError = document.getElementById('passwordError');
-        const confirmPasswordError = document.getElementById('confirmPasswordError');
-        const strengthBar = document.getElementById('strengthBar');
+        const signinForm = document.getElementById("signinForm");
+        const passwordInput = document.getElementById("signinPassword");
+        const passwordToggle = document.getElementById("passwordToggle");
+        const forgotPasswordLink = document.getElementById("forgotPasswordLink");
+        const forgotPasswordModal = document.getElementById("forgotPasswordModal");
+        const resetPasswordForm = document.getElementById("resetPasswordForm");
+        const toastEl = document.getElementById('toast');
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('nav-links');
 
-        function validatePasswords() {
-            const pass = passwordInput.value;
-            const confirmPass = confirmPasswordInput.value;
-            let isValid = true;
-
-            // Password strength
-            let strength = 0;
-            if (pass.length >= 8) strength++;
-            if (pass.match(/[a-z]/) && pass.match(/[A-Z]/)) strength++;
-            if (pass.match(/[0-9]/)) strength++;
-            
-            strengthBar.classList.remove('weak', 'medium', 'strong');
-            if (pass.length > 0) {
-                if (strength === 1) { strengthBar.classList.add('weak'); strengthBar.style.width = '33%'; }
-                if (strength === 2) { strengthBar.classList.add('medium'); strengthBar.style.width = '66%'; }
-                if (strength === 3) { strengthBar.classList.add('strong'); strengthBar.style.width = '100%'; }
-            } else {
-                 strengthBar.style.width = '0%';
-            }
-
-            if (pass.length > 0 && pass.length < 8) {
-                passwordError.textContent = 'Password must be at least 8 characters.';
-                isValid = false;
-            } else {
-                passwordError.textContent = '';
-            }
-
-            // Confirm password
-            if (confirmPass.length > 0 && pass !== confirmPass) {
-                confirmPasswordError.textContent = 'Passwords do not match.';
-                isValid = false;
-            } else {
-                confirmPasswordError.textContent = '';
-            }
-            return isValid;
+        function showToast(message, isError = false) {
+            toastEl.textContent = message;
+            toastEl.className = isError ? 'toast show error' : 'toast show';
+            setTimeout(() => { toastEl.className = 'toast'; }, 3000);
         }
         
-        passwordInput.addEventListener('input', validatePasswords);
-        confirmPasswordInput.addEventListener('input', validatePasswords);
+        passwordToggle.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            passwordToggle.classList.toggle('fa-eye');
+            passwordToggle.classList.toggle('fa-eye-slash');
+        });
 
-        form.addEventListener('submit', (e) => {
+        signinForm.addEventListener("submit", (e) => {
             e.preventDefault();
-            if (!validatePasswords() || !form.checkValidity() || !termsCheckbox.checked) {
-                alert('Please correct the errors and agree to the terms.');
+            const email = document.getElementById("signinEmail").value.trim();
+            const password = passwordInput.value;
+            const remember = document.getElementById("rememberMe").checked;
+
+            if (!email || !password) {
+                showToast("Please fill in all fields.", true);
                 return;
             }
 
-            const name = nameInput.value;
-            const email = emailInput.value;
-            const password = passwordInput.value;
+            const persistence = remember ? browserLocalPersistence : browserSessionPersistence;
 
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Creating Account...';
-
-            createUserWithEmailAndPassword(auth, email, password)
-                .then(userCredential => updateProfile(userCredential.user, { displayName: name }))
+            setPersistence(auth, persistence)
+                .then(() => signInWithEmailAndPassword(auth, email, password))
                 .then(() => {
-                    alert('Account created successfully! Welcome to the farm.');
-                    // In a real app, you would redirect to the home page
-                    // window.location.href = 'index.html'; 
+                    showToast("Signed in successfully! Redirecting...");
+                    setTimeout(() => { window.location.href = "index.html"; }, 1500);
                 })
-                .catch(error => {
-                    if (error.code === 'auth/email-already-in-use') {
-                        alert('This email address is already registered.');
+                .catch((error) => {
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                        showToast("Invalid email or password.", true);
                     } else {
-                        alert(`An error occurred: ${error.message}`);
+                        showToast("An error occurred. Please try again.", true);
                     }
-                })
-                .finally(() => {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Create Account';
                 });
         });
+
+        forgotPasswordLink.addEventListener('click', () => forgotPasswordModal.classList.add('show'));
+        forgotPasswordModal.querySelector('.close-modal').addEventListener('click', () => forgotPasswordModal.classList.remove('show'));
+
+        resetPasswordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('resetEmail').value.trim();
+            if(!email) {
+                showToast("Please enter your email address.", true);
+                return;
+            }
+            sendPasswordResetEmail(auth, email)
+                .then(() => {
+                    forgotPasswordModal.classList.remove('show');
+                    showToast("Password reset email sent! Please check your inbox.");
+                })
+                .catch((error) => {
+                    showToast("Could not send reset email. Please check the address.", true);
+                });
+        });
+
+        // Mobile Menu Logic
+        const menuIcon = menuBtn.querySelector('i');
+        menuBtn.addEventListener("click", () => {
+            const isActive = navLinks.classList.toggle("active");
+            document.body.classList.toggle("nav-open");
+            menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
+        });
     </script>
+
 </body>
 </html>
+
