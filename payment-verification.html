@@ -1,464 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Complete Payment - Potlapalli Farm</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    :root {
-      --primary-color: #27ae60;
-      --secondary-color: #2c3e50;
-      --white: #fff;
-      --background-light: #f8f9fa;
-      --text-dark: #333;
-      --danger-color: #e74c3c;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background-color: var(--background-light);
-      font-family: 'Inter', sans-serif;
-      text-align: center;
-      padding: 2rem;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .payment-container {
-      max-width: 600px;
-      margin: 0 auto;
-      background: var(--white);
-      padding: 2.5rem;
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    h1 {
-      font-family: 'Playfair Display', serif;
-      color: var(--secondary-color);
-      margin-bottom: 1rem;
-    }
-    .instructions {
-      color: #555;
-      margin-bottom: 1.5rem;
-      line-height: 1.7;
-    }
-    .amount-display {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--primary-color);
-      margin-bottom: 1.5rem;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complete Payment - Potlapalli Farm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary-color: #27ae60; --secondary-color: #2c3e50; --white: #fff;
+            --background-light: #f8f9fa; --text-dark: #333; --danger-color: #e74c3c;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--background-light); font-family: 'Inter', sans-serif; text-align: center; padding: 2rem; }
+        .payment-container { max-width: 600px; margin: 0 auto; background: var(--white); padding: 2.5rem; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        h1 { font-family: 'Playfair Display', serif; color: var(--secondary-color); margin-bottom: 1rem; }
+        .instructions { color: #555; margin-bottom: 1.5rem; line-height: 1.7; }
+        .amount-display { font-size: 2.5rem; font-weight: 700; color: var(--primary-color); margin-bottom: 1.5rem; }
+        
+        .qr-code-container { margin: 2rem auto; padding: 1rem; border: 1px solid #eee; border-radius: 12px; max-width: 280px; }
+        .qr-code-container img { width: 100%; height: auto; border-radius: 8px; }
+        .qr-code-container p { font-size: 0.9rem; margin-top: 1rem; }
+        
+        .order-code-box { background: #f0fff4; border: 2px dashed var(--primary-color); border-radius: 12px; padding: 1rem; margin: 1.5rem auto; max-width: 350px; }
+        .order-code-box p { margin: 0; color: var(--text-dark); font-weight: 500; }
+        .order-code { font-size: 2rem; font-weight: 700; letter-spacing: 0.5rem; color: var(--secondary-color); margin-top: 0.5rem; }
 
-    .qr-code-container {
-      margin: 2rem auto;
-      padding: 1rem;
-      border: 1px solid #eee;
-      border-radius: 12px;
-      max-width: 280px;
-    }
-    .qr-code-container img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-    }
-    .qr-code-container p {
-      font-size: 0.9rem;
-      margin-top: 1rem;
-    }
-
-    .order-code-box {
-      background: #f0fff4;
-      border: 2px dashed var(--primary-color);
-      border-radius: 12px;
-      padding: 1rem;
-      margin: 1.5rem auto;
-      max-width: 350px;
-    }
-    .order-code-box p {
-      margin: 0;
-      color: var(--text-dark);
-      font-weight: 500;
-    }
-    .order-code {
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: 0.5rem;
-      color: var(--secondary-color);
-      margin-top: 0.5rem;
-    }
-
-    .payment-apps {
-      margin-top: 2rem;
-    }
-    .payment-apps p {
-      font-weight: 500;
-      margin-bottom: 1rem;
-    }
-    .app-icons {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.5rem;
-    }
-    .app-icon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
-      color: var(--text-dark);
-      user-select: none;
-      cursor: pointer;
-    }
-    .app-icon img {
-      height: 50px;
-      width: 50px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
-    }
-    .app-icon:hover img {
-      transform: scale(1.1);
-    }
-    .app-icon span {
-      font-size: 0.8rem;
-      margin-top: 0.5rem;
-    }
-
-    .btn {
-      display: inline-block;
-      width: 100%;
-      padding: 1rem;
-      text-decoration: none;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      user-select: none;
-    }
-    .btn-primary {
-      background: var(--primary-color);
-      color: var(--white);
-      border: 2px solid var(--primary-color);
-    }
-    .btn-secondary {
-      background: var(--secondary-color);
-      color: var(--white);
-      border: none;
-    }
-    .verification-form {
-      margin-top: 2.5rem;
-      border-top: 1px solid #eee;
-      padding-top: 2rem;
-      text-align: left;
-      max-width: 350px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .input-group {
-      margin-bottom: 1rem;
-      text-align: left;
-    }
-    .input-group label {
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-    .input-group input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      text-align: center;
-      font-size: 1.5rem;
-      letter-spacing: 0.5rem;
-      text-transform: uppercase;
-      user-select: text;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: var(--secondary-color);
-      color: var(--white);
-      padding: 1rem 1.5rem;
-      border-radius: 50px;
-      z-index: 2000;
-      transition: all 0.5s;
-      user-select: none;
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    .toast.show {
-      bottom: 20px;
-    }
-    .toast.error {
-      background-color: var(--danger-color);
-    }
-
-    #auth-wall {
-      text-align: center;
-      font-size: 1.5rem;
-      color: var(--secondary-color);
-      font-weight: 600;
-    }
-  </style>
+        .payment-apps { margin-top: 2rem; }
+        .payment-apps p { font-weight: 500; margin-bottom: 1rem; }
+        .app-icons { display: flex; justify-content: center; gap: 1.5rem; }
+        .app-icon { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-dark); }
+        .app-icon img { height: 50px; width: 50px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.3s; }
+        .app-icon:hover img { transform: scale(1.1); }
+        .app-icon span { font-size: 0.8rem; margin-top: 0.5rem; }
+        
+        .btn { display: inline-block; width: 100%; padding: 1rem; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; }
+        .btn-primary { background: var(--primary-color); color: var(--white); border: 2px solid var(--primary-color); }
+        .verification-form { margin-top: 2.5rem; border-top: 1px solid #eee; padding-top: 2rem; }
+        .input-group { margin-bottom: 1rem; text-align: left; }
+        .input-group label { font-weight: 500; margin-bottom: 0.5rem; display: block; }
+        .input-group input { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 8px; text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem; text-transform: uppercase; }
+        .btn-secondary { background: var(--secondary-color); color: var(--white); border: none; }
+        
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background-color: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 2000; transition: all 0.5s; }
+        .toast.show { bottom: 20px; }
+        .toast.error { background-color: var(--danger-color); }
+    </style>
 </head>
 <body>
-  <main id="main-content">
-    <div id="payment-view" style="display: none;">
-      <div class="payment-container">
-        <h1>Almost There!</h1>
-        <p class="instructions">Your order is saved. Please scan the QR code with any UPI app or use the buttons below to pay:</p>
-        <div class="amount-display" id="paymentAmount">₹0.00</div>
+    <main id="main-content">
+        <div id="payment-view" style="display: none;">
+            <div class="payment-container">
+                <h1>Almost There!</h1>
+                <p class="instructions">Your order is saved. Please scan the QR code with any UPI app to complete the payment of:</p>
+                <div class="amount-display" id="paymentAmount">₹0.00</div>
+                
+                <div class="qr-code-container">
+                    <img id="qrCodeImg" src="https://placehold.co/250x250/eee/333?text=Loading+QR" alt="Scan to Pay">
+                    <p>Scan with GPay, PhonePe, Paytm, etc.</p>
+                </div>
 
-        <div class="qr-code-container">
-          <img id="qrCodeImg" src="https://placehold.co/250x250/eee/333?text=Loading+QR" alt="Scan to Pay" />
-          <p>Scan with GPay, PhonePe, Paytm, etc.</p>
-        </div>
+                <div class="order-code-box">
+                    <p>IMPORTANT: Add this 4-Character Code to your UPI payment notes/remarks:</p>
+                    <div class="order-code" id="orderCode">----</div>
+                </div>
 
-        <div class="order-code-box">
-          <p><strong>IMPORTANT:</strong> Add this 4-Character Code to your UPI payment notes/remarks:</p>
-          <div class="order-code" id="orderCode">----</div>
-        </div>
-
-        <div class="payment-apps">
-          <p>Or open your favorite app to pay (Android only):</p>
-          <div class="app-icons">
-            <a href="#" id="gpayLink" class="app-icon" title="Pay with Google Pay" rel="noopener noreferrer" target="_blank" aria-label="Google Pay">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_logo.svg/2560px-Google_Pay_logo.svg.png" alt="Google Pay" />
-              <span>Google Pay</span>
-            </a>
-            <a href="#" id="phonepeLink" class="app-icon" title="Pay with PhonePe" rel="noopener noreferrer" target="_blank" aria-label="PhonePe">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" alt="PhonePe" />
-              <span>PhonePe</span>
-            </a>
-            <a href="#" id="paytmLink" class="app-icon" title="Pay with Paytm" rel="noopener noreferrer" target="_blank" aria-label="Paytm">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/2560px-Paytm_Logo_%28standalone%29.svg.png" alt="Paytm" />
-              <span>Paytm</span>
-            </a>
-          </div>
-          <p style="font-size: 0.85rem; color: #777;">*If the app doesn't open, please open it manually and scan the QR code above.</p>
-        </div>
-
-        <div class="verification-form">
-          <form id="verifyForm" autocomplete="off" spellcheck="false" novalidate>
-            <div class="input-group">
-              <label for="paymentCodeInput">After paying, enter the 4-Character Code here to confirm:</label>
-              <input
-                type="text"
-                id="paymentCodeInput"
-                maxlength="4"
-                required
-                pattern="[A-Za-z0-9]{4}"
-                placeholder="e.g. ABCD"
-                aria-describedby="codeHelp"
-              />
+                <div class="payment-apps">
+                    <p>Or pay with your favorite app (mobile only):</p>
+                    <div class="app-icons">
+                        <a href="#" id="gpayLink" class="app-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_logo.svg/2560px-Google_Pay_logo.svg.png" alt="GPay"><span>Google Pay</span></a>
+                        <a href="#" id="phonepeLink" class="app-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" alt="PhonePe"><span>PhonePe</span></a>
+                        <a href="#" id="paytmLink" class="app-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/2560px-Paytm_Logo_%28standalone%29.svg.png" alt="Paytm"><span>Paytm</span></a>
+                    </div>
+                </div>
+                
+                <div class="verification-form">
+                    <form id="verifyForm">
+                        <div class="input-group">
+                            <label for="paymentCodeInput">After paying, enter the 4-Character Code here to confirm:</label>
+                            <input type="text" id="paymentCodeInput" maxlength="4" required>
+                        </div>
+                        <button type="submit" class="btn btn-secondary">I Have Paid & Confirmed</button>
+                    </form>
+                </div>
             </div>
-            <button type="submit" class="btn btn-secondary">I Have Paid & Confirmed</button>
-          </form>
         </div>
-      </div>
-    </div>
+        <div id="success-view" style="display:none;">
+            <div class="payment-container">
+                <h1><i class="fas fa-check-circle" style="color: #27ae60;"></i> Thank You!</h1>
+                <p>Your payment confirmation has been submitted.</p>
+                <p>We will verify it and update your order status to "Processing" shortly.</p>
+                <a href="orders.html" class="btn btn-primary" style="margin-top: 1.5rem;">View My Orders</a>
+            </div>
+        </div>
+        <div id="auth-wall" style="display: block;">
+             <div class="payment-container"><h1>Verifying User...</h1></div>
+        </div>
+    </main>
 
-    <div id="success-view" style="display:none;">
-      <div class="payment-container">
-        <h1><i class="fas fa-check-circle" style="color: var(--primary-color);"></i> Thank You!</h1>
-        <p>Your payment confirmation has been submitted.</p>
-        <p>We will verify it and update your order status to <strong>Processing</strong> shortly.</p>
-        <a href="orders.html" class="btn btn-primary" style="margin-top: 1.5rem;">View My Orders</a>
-      </div>
-    </div>
+    <div id="toast" class="toast"></div>
 
-    <div id="auth-wall" style="display: block;">
-      <div class="payment-container"><h1>Verifying User...</h1></div>
-    </div>
-  </main>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+            authDomain: "potlapallifarm.firebaseapp.com",
+            projectId: "potlapallifarm",
+            storageBucket: "potlapallifarm.firebasestorage.app",
+            messagingSenderId: "1017629729159",
+            appId: "1:1017629729159:web:357c420a9de335d427b322"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
-    import {
-      getAuth,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      getDoc,
-      updateDoc,
-      collection,
-      addDoc,
-      query,
-      where,
-      getDocs,
-    } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js";
+        const YOUR_UPI_ID = "9100065979@axl"; 
+        const YOUR_NAME = "Potlapalli Farms";
 
-    // Your Firebase config here - replace with your own config:
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY_HERE",
-      authDomain: "YOUR_AUTH_DOMAIN_HERE",
-      projectId: "YOUR_PROJECT_ID_HERE",
-      storageBucket: "YOUR_STORAGE_BUCKET_HERE",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID_HERE",
-      appId: "YOUR_APP_ID_HERE",
-    };
+        const paymentAmountEl = document.getElementById('paymentAmount');
+        const verifyForm = document.getElementById('verifyForm');
+        const paymentCodeInput = document.getElementById('paymentCodeInput');
+        const orderCodeEl = document.getElementById('orderCode');
+        const paymentView = document.getElementById('payment-view');
+        const successView = document.getElementById('success-view');
+        const authWall = document.getElementById('auth-wall');
+        const toastEl = document.getElementById('toast');
+        const qrCodeImg = document.getElementById('qrCodeImg');
+        
+        const gpayLink = document.getElementById('gpayLink');
+        const phonepeLink = document.getElementById('phonepeLink');
+        const paytmLink = document.getElementById('paytmLink');
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId');
+        const amount = urlParams.get('amount');
+        const paymentCode = orderId ? orderId.slice(-4).toUpperCase() : null;
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const db = getFirestore();
-
-    // Helper toast
-    const toast = document.getElementById("toast");
-    function showToast(message, isError = false) {
-      toast.textContent = message;
-      toast.className = "toast show" + (isError ? " error" : "");
-      setTimeout(() => {
-        toast.className = "toast";
-      }, 3500);
-    }
-
-    // Parse URL params for orderID (replace 'oid' with your actual query param name)
-    const urlParams = new URLSearchParams(window.location.search);
-    const orderId = urlParams.get("oid");
-    if (!orderId) {
-      alert("No order ID specified in URL.");
-      throw new Error("Missing order ID");
-    }
-
-    // Elements
-    const paymentView = document.getElementById("payment-view");
-    const successView = document.getElementById("success-view");
-    const authWall = document.getElementById("auth-wall");
-    const paymentAmountEl = document.getElementById("paymentAmount");
-    const qrCodeImg = document.getElementById("qrCodeImg");
-    const orderCodeEl = document.getElementById("orderCode");
-
-    const gpayLink = document.getElementById("gpayLink");
-    const phonepeLink = document.getElementById("phonepeLink");
-    const paytmLink = document.getElementById("paytmLink");
-
-    const verifyForm = document.getElementById("verifyForm");
-    const paymentCodeInput = document.getElementById("paymentCodeInput");
-
-    let orderData = null;
-
-    // Generate QR Code URL using Google Chart API
-    // This uses a UPI deep link string
-    function generateUpiQrCode(upiId, name, amount, transactionNote) {
-      const upiString = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(name)}&am=${encodeURIComponent(amount)}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
-      // Google Chart API for QR code
-      const qrUrl = `https://chart.googleapis.com/chart?cht=qr&chs=250x250&chl=${encodeURIComponent(upiString)}`;
-      return qrUrl;
-    }
-
-    // Generate UPI intent link for Android apps
-    function generateUpiIntent(upiId, name, amount, transactionNote, packageName) {
-      const base = `pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(name)}&am=${encodeURIComponent(amount)}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
-      return `intent://${base}#Intent;scheme=upi;package=${packageName};end`;
-    }
-
-    // Show payment data
-    function renderPaymentInfo(data) {
-      paymentAmountEl.textContent = `₹${Number(data.amount).toFixed(2)}`;
-      orderCodeEl.textContent = data.code.toUpperCase();
-
-      // QR code
-      qrCodeImg.src = generateUpiQrCode(data.upiId, data.upiName, data.amount, `Order ${data.code}`);
-
-      // UPI Intent URLs for apps
-      gpayLink.href = generateUpiIntent(data.upiId, data.upiName, data.amount, `Order ${data.code}`, "com.google.android.apps.nbu.paisa.user");
-      phonepeLink.href = generateUpiIntent(data.upiId, data.upiName, data.amount, `Order ${data.code}`, "com.phonepe.app");
-      paytmLink.href = generateUpiIntent(data.upiId, data.upiName, data.amount, `Order ${data.code}`, "net.one97.paytm");
-    }
-
-    // Firebase: fetch order details by orderId and current user
-    async function fetchOrder() {
-      if (!auth.currentUser) return;
-
-      try {
-        const orderRef = doc(db, "orders", orderId);
-        const orderSnap = await getDoc(orderRef);
-
-        if (!orderSnap.exists()) {
-          showToast("Order not found.", true);
-          return;
+        function showToast(message, isError = false) {
+            toastEl.textContent = message;
+            toastEl.className = isError ? 'toast show error' : 'toast show';
+            setTimeout(() => { toastEl.className = 'toast'; }, 3000);
         }
 
-        const data = orderSnap.data();
-        if (data.uid !== auth.currentUser.uid) {
-          showToast("You are not authorized to view this order.", true);
-          return;
-        }
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                authWall.style.display = 'none';
+                if (orderId && amount && paymentCode) {
+                    paymentView.style.display = 'block';
+                    paymentAmountEl.textContent = `₹${parseFloat(amount).toFixed(2)}`;
+                    orderCodeEl.textContent = paymentCode;
+                    
+                    const transactionNote = `Order #${paymentCode}`;
+                    const upiString = `upi://pay?pa=${YOUR_UPI_ID}&pn=${encodeURIComponent(YOUR_NAME)}&am=${amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
+                    
+                    gpayLink.href = upiString;
+                    phonepeLink.href = upiString;
+                    paytmLink.href = upiString;
 
-        // Sample expected order fields:
-        // code (string), amount (number), upiId (string), upiName (string), status (string)
-        orderData = data;
-        renderPaymentInfo(orderData);
-        paymentView.style.display = "block";
-        authWall.style.display = "none";
-      } catch (error) {
-        showToast("Failed to fetch order details.", true);
-        console.error(error);
-      }
-    }
+                    const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
+                    qrCodeImg.src = qrApiUrl;
 
-    // Handle confirmation form submission
-    verifyForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const enteredCode = paymentCodeInput.value.trim().toUpperCase();
-      if (enteredCode.length !== 4 || !/^[A-Z0-9]{4}$/.test(enteredCode)) {
-        showToast("Please enter a valid 4-character code.", true);
-        return;
-      }
-      if (!orderData) {
-        showToast("Order data not loaded yet.", true);
-        return;
-      }
-
-      if (enteredCode !== orderData.code.toUpperCase()) {
-        showToast("The code does not match your order code.", true);
-        return;
-      }
-
-      try {
-        const orderRef = doc(db, "orders", orderId);
-
-        await updateDoc(orderRef, {
-          status: "Processing",
-          paymentConfirmed: true,
-          paymentConfirmedAt: new Date(),
+                } else {
+                    paymentView.innerHTML = '<h1>Error: Invalid order details.</h1>';
+                    paymentView.style.display = 'block';
+                }
+            } else {
+                authWall.innerHTML = '<div class="payment-container"><h1>Access Denied</h1><p>You must be signed in to confirm a payment.</p><a href="index.html" class="btn btn-primary" style="width:auto; display:inline-block;">Return to Homepage</a></div>';
+                authWall.style.display = 'block';
+                paymentView.style.display = 'none';
+            }
         });
 
-        paymentView.style.display = "none";
-        successView.style.display = "block";
-      } catch (error) {
-        showToast("Failed to update payment status. Please try again.", true);
-        console.error(error);
-      }
-    });
-
-    // Firebase Auth state change
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        authWall.style.display = "none";
-        fetchOrder();
-      } else {
-        // Show a friendly auth message or redirect to login
-        authWall.innerHTML = `<div class="payment-container">
-          <h1>Please Log In to continue</h1>
-          <p><a href="login.html" class="btn btn-primary">Go to Login</a></p>
-        </div>`;
-      }
-    });
-  </script>
+        verifyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const enteredCode = paymentCodeInput.value.trim().toUpperCase();
+            if (enteredCode !== paymentCode) {
+                showToast("The code does not match the order code.", true);
+                return;
+            }
+            
+            const orderRef = doc(db, "orders", orderId);
+            try {
+                await updateDoc(orderRef, {
+                    status: "Payment Verification",
+                    paymentCode: enteredCode
+                });
+                paymentView.style.display = 'none';
+                successView.style.display = 'block';
+            } catch (error) {
+                console.error("Error updating order:", error);
+                showToast("Could not submit confirmation. Please contact support.", true);
+            }
+        });
+    </script>
 </body>
 </html>
+
