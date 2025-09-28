@@ -17,30 +17,42 @@
 
         #admin-login-view { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
         .login-box { background: var(--white); padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        .login-box h1 { margin-bottom: 2rem; }
+        .login-box h1 { margin-bottom: 2rem; color: var(--secondary-color); }
         .input-group { margin-bottom: 1.5rem; text-align: left; }
         .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
         .input-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; }
         .btn { width: 100%; padding: 1rem; background: var(--primary-color); color: var(--white); border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; }
         
         #admin-dashboard-view { display: none; }
-        .admin-header { background: var(--secondary-color); color: var(--white); padding: 1rem; }
-        .admin-header .container { display: flex; justify-content: space-between; align-items: center; }
-        .admin-header h1 { font-size: 1.5rem; }
-        #logoutBtn { background: var(--danger-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+        .admin-layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 240px; background: var(--secondary-color); color: #ecf0f1; padding: 1.5rem; display: flex; flex-direction: column; }
+        .sidebar-header { padding-bottom: 1.5rem; border-bottom: 1px solid #34495e; }
+        .sidebar-header h2 { color: var(--white); text-align: center; }
+        .sidebar-nav { margin-top: 2rem; }
+        .sidebar-nav a { display: flex; align-items: center; gap: 1rem; color: #bdc3c7; text-decoration: none; padding: 0.9rem 1rem; border-radius: 8px; margin-bottom: 0.5rem; transition: all 0.3s ease; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background: #34495e; color: var(--white); }
+        .sidebar-footer { margin-top: auto; }
+        .sidebar-footer button { width: 100%; background: var(--danger-color); color: white; border: none; padding: 0.8rem; border-radius: 8px; cursor: pointer; }
+        
+        .main-content { flex: 1; padding: 2rem; overflow-x: auto; }
+        .main-content > div { display: none; }
+        .main-content > div.active { display: block; }
 
-        .dashboard-main { padding: 2rem 0; }
-        .dashboard-main h2 { margin-bottom: 1.5rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+        .stat-card { background: var(--white); padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .stat-card h3 { font-size: 1rem; color: #555; margin-bottom: 0.5rem; }
+        .stat-card .value { font-size: 2rem; font-weight: 700; color: var(--primary-color); }
 
-        .order-table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .order-table th, .order-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-light); }
-        .order-table th { background: #f9fafb; font-weight: 600; }
-        .order-table select { padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; }
-        .order-table .items-preview { font-size: 0.9rem; color: #555; max-width: 300px; }
+        .table-container { background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .table-toolbar { padding: 1rem; }
+        .table-toolbar input { padding: 0.8rem; border: 1px solid #ccc; border-radius: 6px; min-width: 300px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-light); vertical-align: top; }
+        th { background: #f9fafb; font-weight: 600; }
+        .customer-details small { display: block; } .customer-details .address { font-style: italic; }
         
         .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background-color: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 2000; transition: all 0.5s; }
-        .toast.show { bottom: 20px; }
-        .toast.error { background-color: var(--danger-color); }
+        .toast.show { bottom: 20px; } .toast.error { background-color: var(--danger-color); }
     </style>
 </head>
 <body>
@@ -56,18 +68,48 @@
     </div>
 
     <div id="admin-dashboard-view">
-        <header class="admin-header">
-            <div class="container"><h1>Potlapalli Farm - Dashboard</h1><button id="logoutBtn">Logout</button></div>
-        </header>
-        <main class="dashboard-main">
-            <div class="container">
-                <h2>Incoming Orders</h2>
-                <table class="order-table">
-                    <thead><tr><th>Order ID</th><th>Customer</th><th>Details</th><th>Total</th><th>Status</th></tr></thead>
-                    <tbody id="orders-tbody"></tbody>
-                </table>
-            </div>
-        </main>
+        <div class="admin-layout">
+            <aside class="sidebar">
+                <div class="sidebar-header"><h2>Admin Panel</h2></div>
+                <nav class="sidebar-nav">
+                    <a href="#" class="nav-link active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    <a href="#" class="nav-link" data-tab="orders"><i class="fas fa-box"></i> Orders</a>
+                    <a href="#" class="nav-link" data-tab="customers"><i class="fas fa-users"></i> Customers</a>
+                    <a href="#" class="nav-link" data-tab="products"><i class="fas fa-leaf"></i> Products</a>
+                </nav>
+                <div class="sidebar-footer"><button id="logoutBtn">Logout</button></div>
+            </aside>
+            <main class="main-content">
+                <div id="tab-dashboard" class="active">
+                    <h2>Dashboard</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card"><h3>Total Revenue</h3><div class="value" id="total-revenue">₹0</div></div>
+                        <div class="stat-card"><h3>Total Orders</h3><div class="value" id="total-orders">0</div></div>
+                        <div class="stat-card"><h3>New Customers</h3><div class="value" id="total-customers">0</div></div>
+                        <div class="stat-card"><h3>Orders to Process</h3><div class="value" id="orders-to-process">0</div></div>
+                    </div>
+                </div>
+                <div id="tab-orders">
+                     <h2>Manage Orders</h2>
+                     <div class="table-container">
+                         <div class="table-toolbar"><input type="text" id="order-search" placeholder="Search by Order ID or Customer..."></div>
+                         <table><thead><tr><th>Order ID</th><th>Customer Details</th><th>Items</th><th>Total</th><th>Status</th></tr></thead><tbody id="orders-tbody"></tbody></table>
+                     </div>
+                </div>
+                <div id="tab-customers">
+                     <h2>Customer List</h2>
+                     <div class="table-container">
+                         <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th></tr></thead><tbody id="customers-tbody"></tbody></table>
+                     </div>
+                </div>
+                <div id="tab-products">
+                    <h2>Product List</h2>
+                     <div class="table-container">
+                         <table><thead><tr><th>Product Name</th><th>Price</th><th>Unit</th></tr></thead><tbody id="products-tbody"></tbody></table>
+                     </div>
+                </div>
+            </main>
+        </div>
     </div>
 
     <div id="toast" class="toast"></div>
@@ -89,93 +131,103 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // ... All DOM element selectors ...
         const loginView = document.getElementById('admin-login-view');
         const dashboardView = document.getElementById('admin-dashboard-view');
-        const ordersTbody = document.getElementById('orders-tbody');
         const loginForm = document.getElementById('adminLoginForm');
         const logoutBtn = document.getElementById('logoutBtn');
         const toastEl = document.getElementById('toast');
-        
+        let allOrders = [];
+        let allCustomers = [];
+
         function showToast(message, isError = false) {
             toastEl.textContent = message;
             toastEl.className = isError ? 'toast show error' : 'toast show';
             setTimeout(() => { toastEl.className = 'toast'; }, 3000);
         }
 
-        async function checkAdminRole(user) {
-            const userDocRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(userDocRef);
-            return docSnap.exists() && docSnap.data().role === 'admin';
+        function showTab(tabId) {
+            document.querySelectorAll('.main-content > div').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            document.querySelectorAll('.sidebar-nav a').forEach(link => link.classList.toggle('active', link.dataset.tab === tabId));
+        }
+        
+        async function loadDashboardStats() {
+            document.getElementById('total-revenue').textContent = `₹${allOrders.reduce((sum, o) => sum + o.totalAmount, 0)}`;
+            document.getElementById('total-orders').textContent = allOrders.length;
+            document.getElementById('total-customers').textContent = allCustomers.length;
+            document.getElementById('orders-to-process').textContent = allOrders.filter(o => o.status === 'Processing').length;
         }
 
-        async function loadOrders() {
-            const ordersQuery = query(collection(db, "orders"), orderBy("orderDate", "desc"));
-            const querySnapshot = await getDocs(ordersQuery);
-            const orders = [];
-            querySnapshot.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
-            
-            ordersTbody.innerHTML = orders.map(order => `
+        function renderOrders(ordersToRender) {
+            const ordersTbody = document.getElementById('orders-tbody');
+            ordersTbody.innerHTML = ordersToRender.map(order => `
                 <tr>
                     <td>#${order.id.slice(-6).toUpperCase()}</td>
-                    <td>${order.customerName}<br><small>${order.phone}</small></td>
+                    <td class="customer-details">
+                        ${order.customerName}
+                        <small>${order.phone}</small>
+                        <small class="address">${order.address}</small>
+                    </td>
                     <td class="items-preview">${order.items.map(i => `${i.name} x ${i.quantity}`).join(', ')}</td>
                     <td>₹${order.totalAmount}</td>
                     <td>
                         <select class="status-select" data-order-id="${order.id}">
+                            <option value="Pending Payment" ${order.status === 'Pending Payment' ? 'selected' : ''}>Pending</option>
+                            <option value="Payment Verification" ${order.status === 'Payment Verification' ? 'selected' : ''}>Verify</option>
                             <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
                             <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
                             <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
                             <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
                         </select>
                     </td>
-                </tr>
-            `).join('');
+                </tr>`).join('');
         }
 
-        async function updateOrderStatus(orderId, newStatus) {
-            const orderRef = doc(db, 'orders', orderId);
-            try {
-                await updateDoc(orderRef, { status: newStatus });
-                showToast('Status updated!');
-            } catch (error) {
-                showToast('Error updating status.', true);
-            }
+        async function loadOrders() { 
+            const ordersQuery = query(collection(db, "orders"), orderBy("orderDate", "desc"));
+            const querySnapshot = await getDocs(ordersQuery);
+            allOrders = [];
+            querySnapshot.forEach(doc => allOrders.push({ id: doc.id, ...doc.data() }));
+            renderOrders(allOrders);
         }
-
+        
+        async function loadCustomers() {
+            const usersQuery = query(collection(db, "users"));
+            const querySnapshot = await getDocs(usersQuery);
+            allCustomers = [];
+            querySnapshot.forEach(doc => allCustomers.push({ id: doc.id, ...doc.data() }));
+            document.getElementById('customers-tbody').innerHTML = allCustomers.map(c => `<tr><td>${c.name}</td><td>${c.email}</td><td>${c.phone || 'N/A'}</td></tr>`).join('');
+        }
+        
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const isAdmin = await checkAdminRole(user);
+                const isAdmin = await getDoc(doc(db, "users", user.uid)).then(snap => snap.exists() && snap.data().role === 'admin');
                 if (isAdmin) {
                     loginView.style.display = 'none';
                     dashboardView.style.display = 'block';
-                    loadOrders();
+                    await Promise.all([loadOrders(), loadCustomers()]);
+                    await loadDashboardStats();
                 } else {
                     signOut(auth);
-                    showToast("Access Denied: Not an admin account.", true);
+                    showToast("Access Denied", true);
                 }
             } else {
                 loginView.style.display = 'flex';
                 dashboardView.style.display = 'none';
             }
         });
-
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('adminEmail').value;
-            const password = document.getElementById('adminPassword').value;
-            signInWithEmailAndPassword(auth, email, password)
-              .catch(err => showToast("Login Failed: Invalid credentials.", true));
-        });
-
-        logoutBtn.addEventListener('click', () => signOut(auth));
         
-        ordersTbody.addEventListener('change', (e) => {
-            if (e.target.classList.contains('status-select')) {
-                const orderId = e.target.dataset.orderId;
-                const newStatus = e.target.value;
-                updateOrderStatus(orderId, newStatus);
-            }
+        document.getElementById('order-search').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filteredOrders = allOrders.filter(o => o.id.toLowerCase().includes(query) || o.customerName.toLowerCase().includes(query));
+            renderOrders(filteredOrders);
         });
+        
+        // All other event listeners
+        document.querySelector('.sidebar-nav').addEventListener('click', e => { e.preventDefault(); const link = e.target.closest('.nav-link'); if (link) showTab(link.dataset.tab); });
+        loginForm.addEventListener('submit', (e) => { e.preventDefault(); signInWithEmailAndPassword(auth, adminEmail.value, adminPassword.value).catch(err => showToast("Login Failed", true)); });
+        logoutBtn.addEventListener('click', () => signOut(auth));
     </script>
 </body>
 </html>
