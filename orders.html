@@ -9,13 +9,13 @@
     <style>
         :root {
             --primary-color: #27ae60; --secondary-color: #2c3e50; --background-light: #f8f9fa;
-            --text-dark: #333; --text-light: #555; --white: #fff; --border-light: #eee; --danger-color: #e74c3c;
+            --text-dark: #333; --text-light: #555; --white: #fff; --border-light: #e0e0e0; --danger-color: #e74c3c;
             --status-processing: #d1ecf1; --status-processing-text: #0c5460;
             --status-shipped: #fff3cd; --status-shipped-text: #856404;
             --status-delivered: #d4edda; --status-delivered-text: #155724;
             --status-cancelled: #f8d7da; --status-cancelled-text: #721c24;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--background-light); color: var(--text-dark); line-height: 1.6; }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
 
@@ -26,12 +26,12 @@
         .header-nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; }
 
         .orders-page { padding: 4rem 1rem; }
-        .page-title { font-family: 'Playfair Display', serif; color: var(--secondary-color); text-align: center; margin-bottom: 2.5rem; }
+        .page-title { font-family: 'Playfair Display', serif; color: var(--secondary-color); text-align: center; margin-bottom: 2.5rem; font-size: 2.8rem; }
         
         .order-list { display: flex; flex-direction: column; gap: 1.5rem; }
         .order-card { background: var(--white); border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); overflow: hidden; transition: box-shadow 0.3s; }
         .order-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
-        .order-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #fdfdfd; border-bottom: 1px solid var(--border-light); }
+        .order-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #fdfdfd; border-bottom: 1px solid var(--border-light); flex-wrap: wrap; gap: 0.5rem; }
         .order-header div { font-size: 0.9rem; }
         .order-id { font-weight: 700; color: var(--secondary-color); }
         .order-date { color: var(--text-light); }
@@ -42,80 +42,72 @@
         .order-status.Cancelled { background: var(--status-cancelled); color: var(--status-cancelled-text); }
 
         .order-body { padding: 1.5rem; }
-        .order-items { display: flex; gap: 1rem; }
-        .order-item-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
+        .order-items { display: flex; gap: 1rem; align-items: center; }
+        .order-item-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 2px solid var(--border-light); }
         .order-summary { font-weight: 600; font-size: 1.1rem; color: var(--secondary-color); margin-bottom: 1.5rem; }
         
-        .order-footer { display: flex; justify-content: flex-end; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: #fdfdfd; border-top: 1px solid var(--border-light); }
-        .btn { padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: 600; text-decoration: none; text-align: center; border: 2px solid transparent; cursor: pointer; transition: all 0.3s; }
+        .order-footer { display: flex; justify-content: flex-end; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: #fdfdfd; border-top: 1px solid var(--border-light); flex-wrap: wrap; }
+        .btn { padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: 600; text-decoration: none; text-align: center; border: 2px solid transparent; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
         .btn-outline { border-color: var(--secondary-color); color: var(--secondary-color); }
         .btn-outline:hover { background: var(--secondary-color); color: var(--white); }
         .btn-primary { background: var(--primary-color); color: var(--white); }
-        .btn-primary:hover { background: #1e874b; }
+        .btn-primary:hover { background: #1e874b; transform: translateY(-2px); }
         .btn-danger { background: var(--danger-color); color: var(--white); }
-        .btn-danger:disabled { background: #ccc; }
+        .btn-danger:disabled { background: #ccc; cursor: not-allowed; }
         
         .no-orders { text-align: center; padding: 4rem; background: var(--white); border-radius: 12px; }
+        .no-orders h3 { font-family: 'Playfair Display', serif; }
 
-        /* Modal Styles */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.show { display: flex; opacity: 1; }
-        .modal-content { background: var(--white); padding: 2rem; border-radius: 15px; width: 90%; max-width: 500px; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-content { background: var(--white); padding: 2rem; border-radius: 15px; width: 90%; max-width: 500px; text-align: center; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; text-align: left; }
         .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
-        .tracking-timeline { list-style: none; padding: 0; }
+        .modal-body .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+        
+        .tracking-timeline { list-style: none; padding: 0; text-align: left; }
         .tracking-step { display: flex; position: relative; padding-bottom: 2rem; } .tracking-step:last-child { padding-bottom: 0; }
         .tracking-step::before { content: ''; position: absolute; left: 20px; top: 0; height: 100%; width: 2px; background: #ddd; }
         .tracking-step .icon { width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; z-index: 1; transition: background-color 0.3s; }
         .tracking-step.completed .icon { background: var(--primary-color); color: white; }
         .tracking-step .details { padding-left: 1.5rem; }
         
-        .toast { /* ... same as before ... */ }
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 2001; transition: all 0.5s ease; }
+        .toast.show { bottom: 20px; }
+        .toast.error { background: var(--danger-color); }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <div class="container header-inner">
-            <div class="logo"><a href="index.html"><img src="https://placehold.co/100x100/27ae60/FFFFFF?text=PF" alt="Logo"/><span>Potlapalli Farm</span></a></div>
-            <nav class="header-nav"><a href="profile.html">My Account</a></nav>
-        </div>
-    </header>
+    <header class="header"><!-- Header --></header>
 
     <main class="orders-page" id="main-content">
         <div class="container">
             <h1 class="page-title">My Orders</h1>
-            <div class="order-list" id="order-list">
-                <!-- Orders will be loaded here by JavaScript -->
-                <p>Loading your orders...</p>
-            </div>
+            <div class="order-list" id="order-list"><p>Loading your orders...</p></div>
         </div>
     </main>
     
     <div id="auth-wall" style="display: none;"><!-- Auth Wall HTML --></div>
     <div id="toast" class="toast"></div>
 
-    <!-- Order Tracking Modal -->
+    <!-- Modals -->
     <div id="trackingModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header"><h2>Track Order</h2><button class="close-modal">&times;</button></div>
-            <div class="modal-body"><ul class="tracking-timeline" id="tracking-timeline-list"></ul></div>
-        </div>
+        <div class="modal-content"><div class="modal-header"><h2>Track Order</h2><button class="close-modal">&times;</button></div><div class="modal-body"><ul class="tracking-timeline" id="tracking-timeline-list"></ul></div></div>
+    </div>
+    <div id="detailsModal" class="modal-overlay">
+        <div class="modal-content"><div class="modal-header"><h2>Order Details</h2><button class="close-modal">&times;</button></div><div class="modal-body" id="details-modal-body"></div></div>
+    </div>
+    <div id="cancelConfirmModal" class="modal-overlay">
+        <div class="modal-content"><div class="modal-header"><h2>Are you sure?</h2><button class="close-modal">&times;</button></div><div class="modal-body"><p>This order will be cancelled. This action cannot be undone.</p><div class="btn-group"><button class="btn btn-outline" id="cancelModalCloseBtn">Keep Order</button><button class="btn btn-danger" id="cancelModalConfirmBtn">Yes, Cancel</button></div></div></div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         
-        const firebaseConfig = {
-            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-            authDomain: "potlapallifarm.firebaseapp.com",
-            projectId: "potlapallifarm",
-            storageBucket: "potlapallifarm.firebasestorage.app",
-            messagingSenderId: "1017629729159",
-            appId: "1:1017629729159:web:357c420a9de335d427b322"
-        };
+        const firebaseConfig = { /* Your Config Here */ };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -123,13 +115,16 @@
         const mainContent = document.getElementById('main-content');
         const orderListEl = document.getElementById('order-list');
         const trackingModal = document.getElementById('trackingModal');
-        const trackingTimelineList = document.getElementById('tracking-timeline-list');
+        const detailsModal = document.getElementById('detailsModal');
+        const cancelConfirmModal = document.getElementById('cancelConfirmModal');
+        const toastEl = document.getElementById('toast');
+        let allOrders = [];
 
-        function showToast(message, isError = false) { /* ... same as before ... */ }
+        function showToast(message, isError = false) { /* ... */ }
 
         function renderOrders(orders) {
             if (orders.length === 0) {
-                orderListEl.innerHTML = `<div class="no-orders"><h3>No Orders Found</h3><p>You haven't placed any orders yet. Start shopping!</p></div>`;
+                orderListEl.innerHTML = `<div class="no-orders"><h3>No Orders Found</h3><p>You haven't placed any orders yet. <a href="index.html">Start shopping!</a></p></div>`;
                 return;
             }
             orderListEl.innerHTML = orders.map(order => `
@@ -143,80 +138,103 @@
                     </div>
                     <div class="order-body">
                         <div class="order-summary">${order.items.length} items totaling ₹${order.totalAmount}</div>
-                        <div class="order-items">
-                            ${order.items.slice(0, 3).map(item => `<img class="order-item-img" src="${item.image}" alt="${item.name}">`).join('')}
-                            ${order.items.length > 3 ? `<span>+${order.items.length - 3} more</span>` : ''}
-                        </div>
+                        <div class="order-items">${order.items.slice(0, 5).map(item => `<img class="order-item-img" src="${item.image}" alt="${item.name}" title="${item.name}">`).join('')}</div>
                     </div>
                     <div class="order-footer">
+                        <button class="btn btn-outline view-details-btn" data-order-id="${order.id}">View Details</button>
                         <button class="btn btn-outline track-order-btn" data-order-id="${order.id}">Track Order</button>
-                        <button class="btn btn-danger cancel-order-btn" data-order-id="${order.id}" ${order.status !== 'Processing' ? 'disabled' : ''}>Cancel Order</button>
+                        <button class="btn btn-primary re-order-btn" data-order-id="${order.id}">Re-Order</button>
+                        <button class="btn btn-danger cancel-order-btn" data-order-id="${order.id}" ${order.status !== 'Processing' ? 'disabled' : ''}>Cancel</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function renderTrackingTimeline(status) {
+        function renderTrackingTimeline(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
             const statuses = ['Processing', 'Shipped', 'Delivered'];
-            const currentIndex = statuses.indexOf(status);
-            trackingTimelineList.innerHTML = statuses.map((s, index) => `
-                <li class="tracking-step ${index <= currentIndex ? 'completed' : ''}">
-                    <div class="icon"><i class="fas fa-${index <= currentIndex ? 'check' : 'box'}"></i></div>
-                    <div class="details"><h4>${s}</h4></div>
-                </li>
-            `).join('');
+            const currentIndex = statuses.indexOf(order.status);
+            trackingModal.querySelector('#tracking-timeline-list').innerHTML = statuses.map((s, i) => `<li class="tracking-step ${i <= currentIndex ? 'completed' : ''}"><div class="icon"><i class="fas fa-${i <= currentIndex ? 'check' : 'box'}"></i></div><div class="details"><h4>${s}</h4></div></li>`).join('');
             trackingModal.classList.add('show');
         }
 
+        function renderDetailsModal(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            const detailsBody = detailsModal.querySelector('#details-modal-body');
+            detailsBody.innerHTML = `
+                <div style="text-align:left;">
+                    <p><strong>Order ID:</strong> #${order.id.slice(-6).toUpperCase()}</p>
+                    <p><strong>Total:</strong> ₹${order.totalAmount}</p>
+                    <hr style="margin:1rem 0;">
+                    ${order.items.map(item => `<p>${item.name} x ${item.quantity} - ₹${item.price * item.quantity}</p>`).join('')}
+                </div>`;
+            detailsModal.classList.add('show');
+        }
+
         async function cancelOrder(orderId) {
-            if (!confirm('Are you sure you want to cancel this order? This cannot be undone.')) return;
             const orderRef = doc(db, 'orders', orderId);
             try {
                 await updateDoc(orderRef, { status: 'Cancelled' });
                 showToast('Order cancelled successfully.');
-                onAuthStateChanged(auth, user => { if(user) loadOrders(user.uid); }); // Reload orders
-            } catch (error) {
-                showToast('Failed to cancel order.', true);
-            }
+                loadOrders(auth.currentUser.uid);
+            } catch (error) { showToast('Failed to cancel order.', true); }
+        }
+
+        function reOrder(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            localStorage.setItem('potlapalliCart', JSON.stringify(order.items));
+            showToast('Items added back to your cart!');
+            setTimeout(() => window.location.href = 'cart.html', 1000);
         }
 
         async function loadOrders(userId) {
-            const ordersQuery = query(collection(db, "orders"), where("userId", "==", userId));
+            const ordersQuery = query(collection(db, "orders"), where("userId", "==", userId), orderBy("orderDate", "desc"));
             try {
                 const querySnapshot = await getDocs(ordersQuery);
-                const orders = [];
-                querySnapshot.forEach((doc) => orders.push({ id: doc.id, ...doc.data() }));
-                renderOrders(orders.sort((a,b) => b.orderDate - a.orderDate));
-            } catch (error) {
-                orderListEl.innerHTML = `<p>Error loading orders.</p>`;
-            }
+                allOrders = [];
+                querySnapshot.forEach((doc) => allOrders.push({ id: doc.id, ...doc.data() }));
+                renderOrders(allOrders);
+            } catch (error) { console.error(error); }
         }
         
         onAuthStateChanged(auth, user => {
-            if (user) {
-                loadOrders(user.uid);
-            } else {
-                mainContent.innerHTML = `<div id="auth-wall"><h2>Access Denied</h2><p>Please sign in to view your orders.</p></div>`;
-            }
+            if (user) { loadOrders(user.uid); } 
+            else { mainContent.innerHTML = `<div id="auth-wall"><h2>Access Denied</h2><p>Please sign in to view your orders.</p></div>`; }
         });
 
         orderListEl.addEventListener('click', e => {
-            const orderId = e.target.dataset.orderId;
+            const button = e.target.closest('button');
+            if (!button) return;
+            const orderId = button.dataset.orderId;
             if (!orderId) return;
 
-            if (e.target.classList.contains('track-order-btn')) {
-                const orderStatus = e.target.closest('.order-card').querySelector('.order-status').textContent;
-                renderTrackingTimeline(orderStatus);
-            }
-            if (e.target.classList.contains('cancel-order-btn')) {
-                cancelOrder(orderId);
+            if (button.classList.contains('track-order-btn')) renderTrackingTimeline(orderId);
+            if (button.classList.contains('view-details-btn')) renderDetailsModal(orderId);
+            if (button.classList.contains('re-order-btn')) reOrder(orderId);
+            if (button.classList.contains('cancel-order-btn')) {
+                cancelConfirmModal.dataset.orderId = orderId;
+                cancelConfirmModal.classList.add('show');
             }
         });
         
-        trackingModal.querySelector('.close-modal').addEventListener('click', () => trackingModal.classList.remove('show'));
-
+        document.querySelectorAll('.close-modal').forEach(btn => btn.addEventListener('click', () => {
+            trackingModal.classList.remove('show');
+            detailsModal.classList.remove('show');
+            cancelConfirmModal.classList.remove('show');
+        }));
+        
+        document.getElementById('cancelModalConfirmBtn').addEventListener('click', () => {
+            const orderId = cancelConfirmModal.dataset.orderId;
+            if (orderId) {
+                cancelOrder(orderId);
+                cancelConfirmModal.classList.remove('show');
+            }
+        });
+        document.getElementById('cancelModalCloseBtn').addEventListener('click', () => cancelConfirmModal.classList.remove('show'));
     </script>
 </body>
 </html>
-
 
