@@ -15,7 +15,7 @@
             --status-delivered: #d4edda; --status-delivered-text: #155724;
             --status-cancelled: #f8d7da; --status-cancelled-text: #721c24;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; }
         body { background: var(--background-light); color: var(--text-dark); line-height: 1.6; }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
 
@@ -107,7 +107,14 @@
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, collection, query, where, getDocs, doc, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         
-        const firebaseConfig = { /* Your Config Here */ };
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+            authDomain: "potlapallifarm.firebaseapp.com",
+            projectId: "potlapallifarm",
+            storageBucket: "potlapallifarm.firebasestorage.app",
+            messagingSenderId: "1017629729159",
+            appId: "1:1017629729159:web:357c420a9de335d427b322"
+        };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -120,7 +127,11 @@
         const toastEl = document.getElementById('toast');
         let allOrders = [];
 
-        function showToast(message, isError = false) { /* ... */ }
+        function showToast(message, isError = false) { 
+            toastEl.textContent = message;
+            toastEl.className = isError ? 'toast show error' : 'toast show';
+            setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+        }
 
         function renderOrders(orders) {
             if (orders.length === 0) {
@@ -201,8 +212,13 @@
         }
         
         onAuthStateChanged(auth, user => {
-            if (user) { loadOrders(user.uid); } 
-            else { mainContent.innerHTML = `<div id="auth-wall"><h2>Access Denied</h2><p>Please sign in to view your orders.</p></div>`; }
+            if (user) { 
+                mainContent.style.display = 'block';
+                loadOrders(user.uid); 
+            } 
+            else { 
+                mainContent.innerHTML = `<div id="auth-wall" style="text-align:center; padding: 4rem;"><h2>Access Denied</h2><p>Please sign in to view your orders.</p><a href="index.html">Return to Homepage</a></div>`; 
+            }
         });
 
         orderListEl.addEventListener('click', e => {
@@ -220,10 +236,8 @@
             }
         });
         
-        document.querySelectorAll('.close-modal').forEach(btn => btn.addEventListener('click', () => {
-            trackingModal.classList.remove('show');
-            detailsModal.classList.remove('show');
-            cancelConfirmModal.classList.remove('show');
+        document.querySelectorAll('.close-modal').forEach(btn => btn.addEventListener('click', (e) => {
+            e.target.closest('.modal-overlay').classList.remove('show');
         }));
         
         document.getElementById('cancelModalConfirmBtn').addEventListener('click', () => {
