@@ -133,67 +133,105 @@
         body.nav-open { overflow: hidden; }
 
         /* --- 8. Responsive Design --- */
-        @media (max-width: 992px) {
-            .nav-links {
-                position: fixed;
-                top: 0;
-                right: 0;
-                width: 300px;
-                height: 100vh;
-                background: var(--white);
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 2.5rem;
-                transform: translateX(100%);
-                transition: transform 0.4s ease-in-out;
-                box-shadow: -5px 0 25px rgba(0,0,0,0.1);
-            }
-            .nav-links.active { transform: translateX(0); }
-            .nav-links a { font-size: 1.3rem; color: var(--secondary-color); }
-            .menu-btn { display: block; z-index: 1001; }
-            #desktop-auth { display: none; }
-        }
+        /* --- 8. Ultimate Responsive Design & Artistic Mobile Menu --- */
+@media (max-width: 992px) {
+    .nav-links {
+        /* Full-screen overlay for a modern feel */
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        
+        /* THE ARTISTIC BLUR EFFECT */
+        background-color: rgba(255, 255, 255, 0.15); /* Semi-transparent white */
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px); /* For Safari browser support */
+        
+        /* Layout for the links inside the menu */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2.5rem;
+        
+        /* Animation: Slide in from the right */
+        transform: translateX(100%);
+        transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .nav-links.active {
+        transform: translateX(0); /* This brings the menu on-screen */
+    }
+
+    .nav-links a {
+        font-size: 1.8rem; /* Bigger, easier-to-tap links */
+        font-weight: 600;
+        color: var(--secondary-color); /* Dark text for readability on the blur */
+        text-shadow: none; /* Remove the shadow that was for the transparent header */
+    }
+    
+    /* Make auth buttons visible inside the slide-out menu */
+    .nav-links #mobile-auth, .nav-links #mobile-auth-signup {
+        display: block;
+        margin-top: 1rem;
+    }
+    .nav-links .auth-btn {
+         padding: 0.8rem 2.5rem;
+    }
+
+    .menu-btn {
+        display: block;
+        z-index: 1001; /* Ensure it stays on top of the blurred menu */
+    }
+
+    /* Hide the desktop auth buttons on smaller screens */
+    #desktop-auth {
+        display: none;
+    }
+}
     </style>
 </head>
 <body>
     <header class="header" id="header">
-        <div class="container header-inner">
-            <div class="logo">
-                <a href="index.html">
-                    <img src="assets/logo.png" alt="Potlapalli Farms Logo"/>
-                    <span>Potlapalli Farms</span>
+    <div class="container header-inner">
+        <div class="logo">
+            <a href="index.html">
+                <img src="assets/logo.png" alt="Potlapalli Farms Logo"/>
+                <span>Potlapalli Farms</span>
+            </a>
+        </div>
+        
+        <nav>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#products">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <!-- Mobile-only Auth Buttons -->
+                <li id="mobile-auth" style="display:none;"><a href="signin.html" class="auth-btn">Sign In</a></li>
+                <li id="mobile-auth-signup" style="display:none;"><a href="signup.html" class="auth-btn">Sign Up</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-actions">
+            <div class="mini-cart">
+                <a href="cart.html" aria-label="View shopping cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount">0</span>
                 </a>
             </div>
-            
-            <nav>
-                <ul class="nav-links" id="nav-links">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#products">Products</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li id="mobile-auth" style="display:none;"><a href="signin.html" class="auth-btn">Sign In</a></li>
-                    <li id="mobile-auth-signup" style="display:none;"><a href="signup.html" class="auth-btn">Sign Up</a></li>
-                </ul>
-            </nav>
-
-            <div class="header-actions">
-                <div class="mini-cart">
-                    <a href="cart.html" aria-label="View shopping cart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cartCount">0</span>
-                    </a>
-                </div>
-                <div id="desktop-auth">
-                     <div id="authButtons"><a href="signin.html" class="auth-btn">Sign In</a></div>
-                </div>
-                <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
-                    <i class="fas fa-bars"></i>
-                </button>
+            <!-- Desktop-only Auth Buttons -->
+            <div id="desktop-auth">
+                 <div id="authButtons"><a href="signin.html" class="auth-btn">Sign In</a></div>
             </div>
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
-    </header>
-
+    </div>
+</header>
+    
     <main>
         <section class="hero" id="home">
             <div class="hero-slider">
@@ -399,28 +437,34 @@
         };
 
         // --- 7. Mobile Navigation ---
-        const initMobileNav = () => {
-            if (!menuBtn || !navLinks) return;
-            const menuIcon = menuBtn.querySelector('i');
-            const mobileAuth = document.getElementById("mobile-auth");
-            const mobileAuthSignup = document.getElementById("mobile-auth-signup");
-            
-            menuBtn.addEventListener("click", () => {
-                const isActive = navLinks.classList.toggle("active");
-                document.body.classList.toggle("nav-open");
-                menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
-                if(mobileAuth) mobileAuth.style.display = isActive ? 'block' : 'none';
-                if(mobileAuthSignup) mobileAuthSignup.style.display = isActive ? 'block' : 'none';
-            });
+        // --- 7. Ultimate Mobile Navigation ---
+const initMobileNav = () => {
+    if (!menuBtn || !navLinks) return;
+    const menuIcon = menuBtn.querySelector('i');
+    const mobileAuth = document.getElementById("mobile-auth");
+    const mobileAuthSignup = document.getElementById("mobile-auth-signup");
+    
+    menuBtn.addEventListener("click", () => {
+        const isActive = navLinks.classList.toggle("active");
+        document.body.classList.toggle("nav-open");
+        // Animate icon from bars to close (X)
+        menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
+        // Show auth buttons inside the menu
+        if(mobileAuth) mobileAuth.style.display = isActive ? 'block' : 'none';
+        if(mobileAuthSignup) mobileAuthSignup.style.display = isActive ? 'block' : 'none';
+    });
 
-            navLinks.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    navLinks.classList.remove('active');
-                    document.body.classList.remove('nav-open');
-                    menuIcon.className = 'fas fa-bars';
-                });
-            });
-        };
+    // Close menu when a link is clicked
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (navLinks.classList.contains("active")) {
+                navLinks.classList.remove('active');
+                document.body.classList.remove('nav-open');
+                menuIcon.className = 'fas fa-bars';
+            }
+        });
+    });
+};
 
         // --- 8. Event Listeners ---
         if (productGrid) {
