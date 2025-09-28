@@ -140,11 +140,18 @@
         <li id="logout-mobile-li" style="display:none;"><a href="#" id="logoutBtnMobile">Logout</a></li>
     </ul>
 
-    <main class="orders-page" id="main-content"></main>
+    <main class="orders-page" id="main-content">
+        <div class="container">
+            <h1 class="page-title">My Orders</h1>
+            <div class="order-list" id="order-list">
+                <div class="loading-state"><i class="fas fa-spinner loading-spinner"></i><p>Loading your orders...</p></div>
+            </div>
+        </div>
+    </main>
+    
     <div id="auth-wall" style="display: none;"></div>
     <div id="toast" class="toast"></div>
 
-    <!-- All Modals are here -->
     <div id="trackingModal" class="modal-overlay">
         <div class="modal-content"><div class="modal-header"><h2>Track Order</h2><button class="close-modal">&times;</button></div><div class="modal-body"><ul class="tracking-timeline" id="tracking-timeline-list"></ul></div></div>
     </div>
@@ -155,7 +162,24 @@
         <div class="modal-content" style="text-align:center;"><div class="modal-header"><h2>Are you sure?</h2><button class="close-modal">&times;</button></div><div class="modal-body"><p>This order will be cancelled. This action cannot be undone.</p><div class="btn-group"><button class="btn btn-outline" id="cancelModalCloseBtn">Keep Order</button><button class="btn btn-danger" id="cancelModalConfirmBtn">Yes, Cancel</button></div></div></div>
     </div>
     
-    <footer id="contact"><!-- Full Footer HTML Here --></footer>
+    <section class="random-click-section">
+        <div class="random-click-card">
+            <h3>Random Click</h3>
+            <img src="https://placehold.co/400x400/e8f5e9/333?text=Happy+Goat" alt="A happy goat at Potlapalli Farm">
+            <p>Photo by: Sidhard</p>
+        </div>
+    </section>
+    
+    <footer id="contact">
+        <div class="container">
+             <div class="footer-grid">
+                <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
+                <div class="footer-col"><h4>Quick Links</h4><a href="index.html">Home</a><a href="profile.html">My Account</a><a href="cart.html">Cart</a></div>
+                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Village, AP<br>Email: contact@potlapallifarm.com<br>Phone: +91 98765 43210</p></div>
+             </div>
+             <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
+        </div>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -183,11 +207,57 @@
         const navLinks = document.getElementById('nav-links');
         const logoutMobileLi = document.getElementById('logout-mobile-li');
         let allOrders = [];
-        let unsubscribeOrders = null; // To hold the listener function
+        let unsubscribeOrders = null;
 
         function showToast(message, isError = false) { /* ... */ }
         function generateOrderTagline(items) { /* ... */ }
-        function renderOrders(orders) { /* ... */ }
+        
+        function renderOrders(orders) {
+            const orderListContainer = document.querySelector('#main-content .order-list');
+            if (!orderListContainer) return;
+            if (orders.length === 0) {
+                orderListContainer.innerHTML = `<div class="no-orders"><h3>No Orders Found</h3><p>You haven't placed any orders yet. <a href="index.html">Start shopping!</a></p></div>`;
+                return;
+            }
+            orderListContainer.innerHTML = orders.map(order => {
+                const orderTimestamp = new Date(order.orderDate.seconds * 1000);
+                const formattedDate = orderTimestamp.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                const formattedTime = orderTimestamp.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true });
+                const tagline = generateOrderTagline(order.items);
+                return `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <div class="order-id">Order #${order.id.slice(-6).toUpperCase()}</div>
+                            <div class="order-date">Placed on: ${formattedDate} at ${formattedTime}</div>
+                        </div>
+                        <div class="order-status ${order.status}">${order.status}</div>
+                    </div>
+                    <div class="order-body">
+                        <ul class="order-items-list">
+                            ${order.items.map(item => `
+                                <li class="order-item">
+                                    <img class="order-item-img" src="${item.image}" alt="${item.name}">
+                                    <div class="order-item-details">
+                                        <span class="order-item-name">${item.name}</span>
+                                        <span class="order-item-qty">Quantity: ${item.quantity}</span>
+                                    </div>
+                                </li>
+                            `).join('')}
+                        </ul>
+                        <div class="order-summary-total">Total: ₹${order.totalAmount}</div>
+                        <p class="order-tagline">"${tagline}"</p>
+                    </div>
+                    <div class="order-footer">
+                        <button class="btn btn-outline view-details-btn" data-order-id="${order.id}">View Details</button>
+                        <button class="btn btn-outline track-order-btn" data-order-id="${order.id}">Track Order</button>
+                        <button class="btn btn-primary re-order-btn" data-order-id="${order.id}">Re-Order</button>
+                        <button class="btn btn-danger cancel-order-btn" data-order-id="${order.id}" ${order.status !== 'Processing' ? 'disabled' : ''}>Cancel</button>
+                    </div>
+                </div>
+            `;}).join('');
+        }
+
         function renderTrackingTimeline(orderId) { /* ... */ }
         function renderDetailsModal(orderId) { /* ... */ }
         async function cancelOrder(orderId) { /* ... */ }
@@ -197,12 +267,9 @@
             const orderListContainer = document.getElementById('order-list');
             const ordersQuery = query(collection(db, "orders"), where("userId", "==", userId), orderBy("orderDate", "desc"));
             
-            // THE FIX IS HERE: Use onSnapshot for live updates
             unsubscribeOrders = onSnapshot(ordersQuery, (querySnapshot) => {
                 allOrders = [];
-                querySnapshot.forEach((doc) => {
-                    allOrders.push({ id: doc.id, ...doc.data() });
-                });
+                querySnapshot.forEach((doc) => allOrders.push({ id: doc.id, ...doc.data() }));
                 renderOrders(allOrders);
             }, (error) => {
                 console.error("Firebase Query Error:", error);
@@ -213,23 +280,34 @@
         onAuthStateChanged(auth, user => {
             if (user) { 
                 mainContent.innerHTML = `<div class="container"><h1 class="page-title">My Orders</h1><div class="order-list" id="order-list"><div class="loading-state"><i class="fas fa-spinner loading-spinner"></i><p>Loading your orders...</p></div></div></div>`;
-                if (unsubscribeOrders) unsubscribeOrders(); // Stop any previous listener
+                if (unsubscribeOrders) unsubscribeOrders();
                 listenToOrders(user.uid); 
                 logoutMobileLi.style.display = 'block';
             } else { 
-                if (unsubscribeOrders) unsubscribeOrders(); // Stop listening when logged out
+                if (unsubscribeOrders) unsubscribeOrders();
                 mainContent.innerHTML = `<div id="auth-wall" class="container" style="display:block; text-align:center; padding: 4rem 1rem;"><h2>Access Denied</h2><p>Please sign in to view your orders.</p><a href="index.html" style="color:var(--primary-color);">Return to Homepage</a></div>`; 
                 logoutMobileLi.style.display = 'none';
             }
         });
         
-        mainContent.addEventListener('click', e => { /* ... event delegation for buttons ... */ });
+        mainContent.addEventListener('click', e => { 
+            const button = e.target.closest('button');
+            if (!button) return;
+            const orderId = button.dataset.orderId;
+            if (!orderId) return;
+
+            if (button.classList.contains('track-order-btn')) renderTrackingTimeline(orderId);
+            if (button.classList.contains('view-details-btn')) renderDetailsModal(orderId);
+            if (button.classList.contains('re-order-btn')) reOrder(orderId);
+            if (button.classList.contains('cancel-order-btn')) {
+                cancelConfirmModal.dataset.orderId = orderId;
+                cancelConfirmModal.classList.add('show');
+            }
+        });
         
         document.querySelectorAll('.close-modal, #cancelModalCloseBtn').forEach(btn => btn.addEventListener('click', e => e.target.closest('.modal-overlay').classList.remove('show')));
-        
         document.getElementById('cancelModalConfirmBtn').addEventListener('click', () => { /* ... cancel logic ... */ });
         
-        // --- Mobile Menu ---
         const menuIcon = menuBtn.querySelector('i');
         menuBtn.addEventListener("click", () => {
             const isActive = navLinks.classList.toggle("active");
