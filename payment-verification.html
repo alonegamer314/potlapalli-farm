@@ -195,4 +195,33 @@
           paymentView.style.display = 'block';
         }
       } else {
-        authWall.innerHTML = '<div class="payment-container"><h1>Access Denied</h1><p>You
+        authWall.innerHTML = '<div class="payment-container"><h1>Access Denied</h1><p>You must be logged in to complete payment.</p></div>';
+      }
+    });
+
+    verifyForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const enteredCode = paymentCodeInput.value.trim().toUpperCase();
+
+      if (enteredCode !== paymentCode) {
+        showToast("Incorrect code entered. Please check and try again.", true);
+        return;
+      }
+
+      try {
+        const orderDocRef = doc(db, 'orders', orderId);
+        await updateDoc(orderDocRef, {
+          paymentConfirmed: true,
+          paymentDate: new Date(),
+          paymentCodeEntered: enteredCode
+        });
+        paymentView.style.display = 'none';
+        successView.style.display = 'block';
+      } catch (err) {
+        console.error(err);
+        showToast("Error updating payment confirmation. Please try again.", true);
+      }
+    });
+  </script>
+</body>
+</html>
