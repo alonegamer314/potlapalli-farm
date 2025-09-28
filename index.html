@@ -1,621 +1,592 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Potlapalli Farms - Fresh & Organic Produce Delivered</title>
-    <meta name="description" content="Experience the taste of freshness. Potlapalli Farms deliver premium, organic goat meat, country chicken, and farm-fresh eggs directly to your doorstep." />
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Potlapalli Farms - Fresh & Organic Produce Delivered</title>
+    <meta name="description" content="Experience the taste of freshness. Potlapalli Farms deliver premium, organic goat meat, country chicken, and farm-fresh eggs directly to your doorstep." />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    <style>
-        /* --- 1. Foundational Styles & Variables --- */
-        :root {
-            --primary-color: #27ae60;
-            --primary-color-dark: #1e874b;
-            --secondary-color: #2c3e50;
-            --background-light: #f8f9fa;
-            --text-dark: #333;
-            --text-light: #555;
-            --white: #fff;
-            --border-light: #e0e0e0;
-            --shadow-light: rgba(0,0,0,0.08);
-            --shadow-dark: rgba(0,0,0,0.12);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        html { scroll-behavior: smooth; }
-        body { background-color: var(--white); color: var(--text-dark); line-height: 1.6; }
-        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
-        img { max-width: 100%; display: block; }
-        a, button { transition: all 0.3s ease; }
+    <style>
+        /* --- 1. Foundational Styles & Variables --- */
+        :root {
+            --primary-color: #27ae60;
+            --primary-color-dark: #1e874b;
+            --secondary-color: #2c3e50;
+            --background-light: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #555;
+            --white: #fff;
+            --border-light: #e0e0e0;
+            --shadow-light: rgba(0,0,0,0.08);
+            --shadow-dark: rgba(0,0,0,0.12);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--white); color: var(--text-dark); line-height: 1.6; }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+        img { max-width: 100%; display: block; }
+        a, button { transition: all 0.3s ease; }
 
-        /* --- 2. Header & Navigation --- */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            padding: 1rem 0;
-            background-color: transparent;
-            transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease;
-        }
-        .header.scrolled {
-            background-color: var(--white);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-            padding: 0.75rem 0;
-        }
-        .header-inner {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo a {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--secondary-color);
-            text-decoration: none;
-        }
-        .logo img { height: 40px; }
-        .header.scrolled .logo a, .header.scrolled .header-actions a, .header.scrolled .menu-btn { color: var(--secondary-color); }
-        .header:not(.scrolled) .logo a, .header:not(.scrolled) .header-actions a, .header:not(.scrolled) .menu-btn { color: var(--white); text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        .header:not(.scrolled) .mini-cart span { background-color: var(--white); color: var(--primary-color); }
+        /* --- 2. Header & Navigation --- */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+            background-color: transparent;
+            transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease;
+        }
+        .header.scrolled {
+            background-color: var(--white);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            padding: 0.75rem 0;
+        }
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+        .logo img { height: 40px; }
+        .header.scrolled .logo a, .header.scrolled .header-actions a, .header.scrolled .menu-btn { color: var(--secondary-color); }
+        .header:not(.scrolled) .logo a, .header:not(.scrolled) .header-actions a, .header:not(.scrolled) .menu-btn { color: var(--white); text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .header:not(.scrolled) .mini-cart span { background-color: var(--white); color: var(--primary-color); }
 
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a { color: inherit; text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative; }
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary-color);
-            transition: width 0.3s ease;
-        }
-        .nav-links a:hover::after { width: 100%; }
-        
-        .header-actions { display: flex; align-items: center; gap: 1.5rem; }
-        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; }
-        .mini-cart span {
-            position: absolute;
-            top: -8px;
-            right: -10px;
-            background-color: var(--primary-color);
-            color: var(--white);
-            font-size: 0.7rem;
-            font-weight: 600;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; }
-        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: inherit; text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative; }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after { width: 100%; }
+        
+        .header-actions { display: flex; align-items: center; gap: 1.5rem; }
+        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; }
+        .mini-cart span {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; }
+        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; }
 
-        /* --- 3. Hero Slider --- */
-        .hero { position: relative; height: 100vh; color: var(--white); overflow: hidden; }
-        .hero-slider { display: flex; height: 100%; transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1); }
-        .hero-slide { min-width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 1rem; }
-        .hero-slide::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.3)); }
-        .hero-slide img { position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
-        .hero-content { position: relative; z-index: 2; max-width: 800px; animation: fadeIn 1s 0.5s forwards; opacity: 0; transform: translateY(20px); }
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
-        .hero-content h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 6vw, 4.5rem); margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .hero-content p { font-size: clamp(1.1rem, 2.5vw, 1.3rem); margin-bottom: 2.5rem; }
-        .hero-btn { display: inline-block; background: var(--primary-color); padding: 1rem 3rem; font-size: 1.1rem; font-weight: 600; border-radius: 50px; text-decoration: none; color: var(--white); }
-        .hero-btn:hover { background: var(--primary-color-dark); transform: scale(1.05); }
-        .slider-nav { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; gap: 12px; }
-        .slider-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; }
-        .slider-dot.active { background: var(--white); transform: scale(1.2); }
+        /* --- 3. Hero Slider --- */
+        .hero { position: relative; height: 100vh; color: var(--white); overflow: hidden; }
+        .hero-slider { display: flex; height: 100%; transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1); }
+        .hero-slide { min-width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 1rem; }
+        .hero-slide::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.3)); }
+        .hero-slide img { position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+        .hero-content { position: relative; z-index: 2; max-width: 800px; animation: fadeIn 1s 0.5s forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        .hero-content h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 6vw, 4.5rem); margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .hero-content p { font-size: clamp(1.1rem, 2.5vw, 1.3rem); margin-bottom: 2.5rem; }
+        .hero-btn { display: inline-block; background: var(--primary-color); padding: 1rem 3rem; font-size: 1.1rem; font-weight: 600; border-radius: 50px; text-decoration: none; color: var(--white); }
+        .hero-btn:hover { background: var(--primary-color-dark); transform: scale(1.05); }
+        .slider-nav { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; gap: 12px; }
+        .slider-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; }
+        .slider-dot.active { background: var(--white); transform: scale(1.2); }
 
-        /* --- 4. General Section Styling --- */
-        .section { padding: 6rem 0; }
-        .section-header { text-align: center; margin-bottom: 4rem; }
-        .section-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 4vw, 3rem); color: var(--secondary-color); margin-bottom: 0.75rem; }
-        .section-header p { font-size: 1.1rem; color: var(--text-light); max-width: 600px; margin: 0 auto; }
-        .animated-section { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
-        .animated-section.visible { opacity: 1; transform: translateY(0); }
+        /* --- 4. General Section Styling --- */
+        .section { padding: 6rem 0; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 4vw, 3rem); color: var(--secondary-color); margin-bottom: 0.75rem; }
+        .section-header p { font-size: 1.1rem; color: var(--text-light); max-width: 600px; margin: 0 auto; }
+        .animated-section { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .animated-section.visible { opacity: 1; transform: translateY(0); }
 
-        /* --- 5. Features, Products, How-it-works Grids --- */
-        .features-grid, .product-grid, .how-it-works-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2.5rem;
-        }
-        #why-choose-us { background: var(--background-light); }
-        .feature-card, .step-card { text-align: center; }
-        .feature-card .icon, .step-card .icon { font-size: 3rem; color: var(--primary-color); margin-bottom: 1.5rem; }
-        .feature-card h3, .step-card h3 { font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--secondary-color); }
+        /* --- 5. Features, Products, How-it-works Grids --- */
+        .features-grid, .product-grid, .how-it-works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+        #why-choose-us { background: var(--background-light); }
+        .feature-card, .step-card { text-align: center; }
+        .feature-card .icon, .step-card .icon { font-size: 3rem; color: var(--primary-color); margin-bottom: 1.5rem; }
+        .feature-card h3, .step-card h3 { font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--secondary-color); }
 
-        .product-card {
-            background: var(--white);
-            border-radius: 16px;
-            box-shadow: 0 8px 30px var(--shadow-light);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transform: translateY(0);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-        }
-        .product-card:hover { transform: translateY(-10px); box-shadow: 0 12px 35px var(--shadow-dark); }
-        .product-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
-        .product-content { padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; }
-        .product-content h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--secondary-color); }
-        .product-content p { color: var(--text-light); flex-grow: 1; margin-bottom: 1.5rem; font-size: 0.95rem; }
-        .price-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
-        .price { font-weight: 700; font-size: 1.4rem; color: var(--secondary-color); }
-        .price small { font-size: 0.9rem; font-weight: 500; color: var(--text-light); }
-        .quantity-controls { display: flex; align-items: center; gap: 1rem; }
-        .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-light); background-color: var(--background-light); cursor: pointer; font-size: 1.3rem; color: var(--secondary-color); }
-        .qty-btn:hover { background-color: #e9ecef; }
-        .qty { font-weight: 600; font-size: 1.2rem; }
-        .add-to-cart-btn { background: var(--primary-color); color: var(--white); border: none; padding: 0.9rem 1.5rem; border-radius: 50px; cursor: pointer; font-weight: 600; width: 100%; font-size: 1rem; }
-        .add-to-cart-btn:hover { background: var(--primary-color-dark); }
+        .product-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px var(--shadow-light);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(0);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .product-card:hover { transform: translateY(-10px); box-shadow: 0 12px 35px var(--shadow-dark); }
+        .product-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+        .product-content { padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; }
+        .product-content h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--secondary-color); }
+        .product-content p { color: var(--text-light); flex-grow: 1; margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .price-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+        .price { font-weight: 700; font-size: 1.4rem; color: var(--secondary-color); }
+        .price small { font-size: 0.9rem; font-weight: 500; color: var(--text-light); }
+        .quantity-controls { display: flex; align-items: center; gap: 1rem; }
+        .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-light); background-color: var(--background-light); cursor: pointer; font-size: 1.3rem; color: var(--secondary-color); }
+        .qty-btn:hover { background-color: #e9ecef; }
+        .qty { font-weight: 600; font-size: 1.2rem; }
+        .add-to-cart-btn { background: var(--primary-color); color: var(--white); border: none; padding: 0.9rem 1.5rem; border-radius: 50px; cursor: pointer; font-weight: 600; width: 100%; font-size: 1rem; }
+        .add-to-cart-btn:hover { background: var(--primary-color-dark); }
 
-        /* --- 6. Testimonials & Footer --- */
-        #testimonials { background: var(--secondary-color); color: var(--white); }
-        #testimonials .section-header h2, #testimonials .section-header p { color: var(--white); }
-        .testimonial-card { background: rgba(255,255,255,0.1); padding: 2.5rem; border-radius: 12px; max-width: 800px; margin: 0 auto; text-align: center; }
-        .testimonial-card p { font-style: italic; margin-bottom: 1.5rem; font-size: 1.2rem; line-height: 1.7; }
-        .testimonial-author { font-weight: 600; font-size: 1rem; }
-        #how-it-works { background-color: var(--background-light); }
-        footer { background: #1e293b; color: #cbd5e1; padding: 5rem 0 2rem; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
-        .footer-col h4 { font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--white); }
-        .footer-col p, .footer-col a { color: #94a3b8; text-decoration: none; }
-        .footer-col a { display: block; margin-bottom: 0.75rem; }
-        .footer-col a:hover { color: var(--white); padding-left: 5px; }
-        .footer-bottom { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #334155; font-size: 0.9rem; color: #94a3b8; }
+        /* --- 6. Testimonials & Footer --- */
+        #testimonials { background: var(--secondary-color); color: var(--white); }
+        #testimonials .section-header h2, #testimonials .section-header p { color: var(--white); }
+        .testimonial-card { background: rgba(255,255,255,0.1); padding: 2.5rem; border-radius: 12px; max-width: 800px; margin: 0 auto; text-align: center; }
+        .testimonial-card p { font-style: italic; margin-bottom: 1.5rem; font-size: 1.2rem; line-height: 1.7; }
+        .testimonial-author { font-weight: 600; font-size: 1rem; }
+        #how-it-works { background-color: var(--background-light); }
+        footer { background: #1e293b; color: #cbd5e1; padding: 5rem 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
+        .footer-col h4 { font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--white); }
+        .footer-col p, .footer-col a { color: #94a3b8; text-decoration: none; }
+        .footer-col a { display: block; margin-bottom: 0.75rem; }
+        .footer-col a:hover { color: var(--white); padding-left: 5px; }
+        .footer-bottom { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #334155; font-size: 0.9rem; color: #94a3b8; }
 
-        /* --- 7. Utilities & Toast --- */
-        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background-color: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 2000; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
-        .toast.show { bottom: 20px; }
-        body.nav-open { overflow: hidden; }
+        /* --- 7. Utilities & Toast --- */
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background-color: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 2000; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .toast.show { bottom: 20px; }
+        body.nav-open { overflow: hidden; }
 
-      /* --- 8. Responsive Design --- */
+      /* --- 8. Responsive Design --- */
 @media (max-width: 992px) {
-    .nav-links {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 300px;
-        height: 100vh;
-        background: var(--white);
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 2.5rem;
-        transform: translateX(100%);
-        transition: transform 0.4s ease-in-out;
-        box-shadow: -5px 0 25px rgba(0,0,0,0.1);
-    }
-    .nav-links.active { transform: translateX(0); }
-    .nav-links a { font-size: 1.3rem; color: var(--secondary-color); }
-    .menu-btn { display: block; z-index: 1001; }
-    .header:not(.scrolled) .menu-btn { color: var(--white); }
-    .header.scrolled .menu-btn { color: var(--secondary-color); }
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 100vh;
+        background: var(--white);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2.5rem;
+        transform: translateX(100%);
+        transition: transform 0.4s ease-in-out;
+        box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+    }
+    .nav-links.active { transform: translateX(0); }
+    .nav-links a { font-size: 1.3rem; color: var(--secondary-color); }
+    .menu-btn { display: block; z-index: 1001; }
+    .header:not(.scrolled) .menu-btn { color: var(--white); }
+    .header.scrolled .menu-btn { color: var(--secondary-color); }
 }
 
 @media (max-width: 768px) {
-    .section { padding: 4rem 0; }
-    .header-actions { gap: 1rem; }
-    .auth-btn { display: none; } /* Hide sign-in text on smaller screens */
+    .section { padding: 4rem 0; }
+    .header-actions { gap: 1rem; }
+    .auth-btn { display: none; } /* Hide sign-in text on smaller screens */
 
-    /* --- MOBILE HOMESCREEN ENHANCEMENTS --- */
-    .header {
-        background-color: rgba(44, 62, 80, 0.5); 
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        padding: 0.75rem 0;
-    }
-    .header:not(.scrolled) .logo a, 
-    .header:not(.scrolled) .header-actions a, 
-    .header:not(.scrolled) .menu-btn {
-        color: var(--white);
-        text-shadow: none;
-    }
-    .hero-content h1 {
-        text-shadow: 0 3px 15px rgba(0,0,0,0.6);
-    }
-    .hero-btn {
-        box-shadow: 0 5px 25px rgba(0,0,0,0.3);
-        transform: scale(0.95);
-    }
-    .hero-btn:hover {
-        transform: scale(1.0);
-    }
-    
-    /* --- NEW LOGO TEXT RULES --- */
-    .logo a {
-        /* Reduce space between logo icon and text on mobile */
-        gap: 0.5rem; 
-    }
-    .logo span {
-        /* Make the logo font smaller on mobile */
-        font-size: 0.9rem; 
-    }
-    
-    /* Make the hero text pop more */
-    .hero-content h1 {
-        text-shadow: 0 3px 15px rgba(0,0,0,0.6);
-    }
+    /* --- MOBILE HOMESCREEN ENHANCEMENTS --- */
+    .header {
+        background-color: rgba(44, 62, 80, 0.5); 
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 0.75rem 0;
+    }
+    .header:not(.scrolled) .logo a, 
+    .header:not(.scrolled) .header-actions a, 
+    .header:not(.scrolled) .menu-btn {
+        color: var(--white);
+        text-shadow: none;
+    }
+    .hero-content h1 {
+        text-shadow: 0 3px 15px rgba(0,0,0,0.6);
+    }
+    .hero-btn {
+        box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+        transform: scale(0.95);
+    }
+    .hero-btn:hover {
+        transform: scale(1.0);
+    }
+    
+    /* --- NEW LOGO TEXT RULES --- */
+    .logo a {
+        /* Reduce space between logo icon and text on mobile */
+        gap: 0.5rem; 
+    }
+    .logo span {
+        /* Make the logo font smaller on mobile */
+        font-size: 0.9rem; 
+    }
+    
+    /* Make the hero text pop more */
+    .hero-content h1 {
+        text-shadow: 0 3px 15px rgba(0,0,0,0.6);
+    }
 
-    /* Make the button stand out */
-    .hero-btn {
-        box-shadow: 0 5px 25px rgba(0,0,0,0.3);
-        transform: scale(0.95);
-    }
-    .hero-btn:hover {
-        transform: scale(1.0); /* Enlarge slightly on hover */
-    }
+    /* Make the button stand out */
+    .hero-btn {
+        box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+        transform: scale(0.95);
+    }
+    .hero-btn:hover {
+        transform: scale(1.0); /* Enlarge slightly on hover */
+    }
 }
 
 @media (max-width: 480px) {
-    /*.logo span { display: none; }*/ /* Hide logo text on very small screens */
-    .hero-content h1 { font-size: 2.2rem; }
-    .hero-content p { font-size: 1rem; }
-    .footer-grid { grid-template-columns: 1fr; } 
+    /*.logo span { display: none; }*/ /* Hide logo text on very small screens */
+    .hero-content h1 { font-size: 2.2rem; }
+    .hero-content p { font-size: 1rem; }
+    .footer-grid { grid-template-columns: 1fr; } 
 }
-    </style>
+    </style>
 </head>
 <body>
-    <header class="header">
-    <div class="container header-inner">
-        <div class="logo">
-            <a href="index.html">
-                <img src="assets/logo.png" alt="Potlapalli Farms Logo"/>
-                <span>Potlapalli Farms</span>
-            </a>
-        </div>
-        
-        <nav class="nav" id="nav">
-            <a href="#home">Home</a>
-            <a href="#products">Products</a>
-            <a href="about.html">About</a>
-            <a href="#contact">Contact</a>
-            <!-- Mobile-only Auth Buttons -->
-            <div class="mobile-auth">
-                <a href="signin.html" class="auth-btn">Sign In</a>
-                <a href="signup.html" class="auth-btn">Sign Up</a>
-            </div>
-        </nav>
-        
-        <div class="header-actions">
-            <div class="mini-cart">
-                <a href="cart.html">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cartCount">0</span>
-                </a>
-            </div>
-            <!-- Desktop-only Auth Buttons -->
-            <div id="authButtons" class="desktop-auth">
-                <a href="signin.html" class="auth-btn">Sign In</a>
-                <a href="signup.html" class="auth-btn">Sign Up</a>
-            </div>
-            <button class="menu-btn" id="menuBtn" aria-label="Toggle Menu">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </div>
-</header>
-    
-    <main>
-        <section class="hero" id="home">
-            <div class="hero-slider">
-                <div class="hero-slide active">
-                    <img src="assets/images/shopnow.jpeg" alt="Lush green farm fields">
-                    <div class="hero-content">
-                        <h1>Farm Freshness, Delivered.</h1>
-                        <p>The best of nature, from our farm to your family.</p>
-                        <a href="#products" class="hero-btn">Shop Now</a>
-                    </div>
-                </div>
-                <div class="hero-slide">
-                    <img src="assets/images/hero.jpg" alt="Organic Goodness at Potlapalli Farm">
-                    <div class="hero-content">
-                        <h1>Pure, Organic Goodness</h1>
-                        <p>No chemicals, no compromises. Just honest, healthy food.</p>
-                        <a href="about.html" class="hero-btn">Our Story</a>
-                    </div>
-                </div>
-            </div>
-            <div class="slider-nav"></div>
-        </section>
+    <header class="header" id="header">
+        <div class="container header-inner">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/logo.png" alt="Potlapalli Farms Logo"/>
+                    <span>Potlapalli Farms</span>
+                </a>
+            </div>
+            
+            <nav>
+                 <ul class="nav-links" id="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
 
-        <section id="why-choose-us" class="section animated-section">
-            <div class="container">
-                <div class="section-header"><h2>Why Potlapalli Farms?</h2></div>
-                <div class="features-grid">
-                    <div class="feature-card"><div class="icon"><i class="fas fa-leaf"></i></div><h3>100% Organic</h3><p>Grown naturally without any harmful pesticides or chemicals.</p></div>
-                    <div class="feature-card"><div class="icon"><i class="fas fa-truck"></i></div><h3>Directly From Farm</h3><p>We harvest, pack, and deliver, ensuring maximum freshness.</p></div>
-                    <div class="feature-card"><div class="icon"><i class="fas fa-heart"></i></div><h3>Ethically Raised</h3><p>Our animals are free-range, grass-fed, and treated with care.</p></div>
-                    <div class="feature-card"><div class="icon"><i class="fas fa-shield-alt"></i></div><h3>Quality Assured</h3><p>Hygienically packed to preserve nutrition and taste.</p></div>
-                </div>
-            </div>
-        </section>
+            <div class="header-actions">
+                <div class="mini-cart">
+                    <a href="cart.html" aria-label="View shopping cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCount">0</span>
+                    </a>
+                </div>
+                <div id="authButtons"><a href="signin.html" class="auth-btn">Sign In</a></div>
+                <div id="authButtons"><a href="signup.html" class="auth-btn">Sign Up</a></div>
 
-        <section class="section" id="products">
-            <div class="container">
-                <div class="section-header"><h2>Our Fresh Produce</h2><p>Handpicked and curated with care, from our fields to your plate.</p></div>
-                <div class="product-grid" id="product-grid">
-                    </div>
-            </div>
-        </section>
+                <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
 
-        <section id="how-it-works" class="section animated-section">
-            <div class="container">
-                <div class="section-header"><h2>How It Works</h2></div>
-                <div class="how-it-works-grid">
-                    <div class="step-card"><div class="icon"><i class="fas fa-mouse-pointer"></i></div><h3>1. You Order Online</h3><p>Browse our fresh selection and place your order with a few clicks.</p></div>
-                    <div class="step-card"><div class="icon"><i class="fas fa-tractor"></i></div><h3>2. We Harvest & Pack</h3><p>We harvest your produce fresh from the farm only after you order.</p></div>
-                    <div class="step-card"><div class="icon"><i class="fas fa-shipping-fast"></i></div><h3>3. We Deliver Fresh</h3><p>Your order is delivered to your doorstep, ensuring peak freshness.</p></div>
-                </div>
-            </div>
-        </section>
-        
-        <section id="testimonials" class="section animated-section">
-            <div class="container">
-                 <div class="section-header"><h2>What Our Customers Say</h2></div>
-                 <div class="testimonial-card">
-                       <p>"The best goat meat I've had in years! The freshness is unparalleled. You can truly taste the difference. Highly recommended!"</p>
-                       <div class="testimonial-author">- Priya S, Hyderabad</div>
-                 </div>
-            </div>
-        </section>
-    </main>
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-slider">
+                <div class="hero-slide active">
+                    <img src="assets/images/shopnow.jpeg" alt="Lush green farm fields">
+                    <div class="hero-content">
+                        <h1>Farm Freshness, Delivered.</h1>
+                        <p>The best of nature, from our farm to your family.</p>
+                        <a href="#products" class="hero-btn">Shop Now</a>
+                    </div>
+                </div>
+                <div class="hero-slide">
+                    <img src="assets/images/hero.jpg" alt="Organic Goodness at Potlapalli Farm">
+                    <div class="hero-content">
+                        <h1>Pure, Organic Goodness</h1>
+                        <p>No chemicals, no compromises. Just honest, healthy food.</p>
+                        <a href="about.html" class="hero-btn">Our Story</a>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-nav"></div>
+        </section>
 
-    <footer id="contact">
-        <div class="container">
-             <div class="footer-grid">
-                 <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
-                 <div class="footer-col"><h4>Quick Links</h4><a href="#home">Home</a><a href="#products">Products</a><a href="about.html">About</a></div>
-                 <div class="footer-col"><h4>Contact</h4><p>Potlapalli Village, AP<br>Email: contact@potlapallifarm.com<br>Phone: +91 98765 43210</p></div>
-                 <div class="footer-col"><h4>Follow Us</h4><a href="#">Facebook</a><a href="#">Instagram</a></div>
-             </div>
-             <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
-        </div>
-    </footer>
-    
-    <div id="toast" class="toast" aria-live="polite"></div>
+        <section id="why-choose-us" class="section animated-section">
+            <div class="container">
+                <div class="section-header"><h2>Why Potlapalli Farms?</h2></div>
+                <div class="features-grid">
+                    <div class="feature-card"><div class="icon"><i class="fas fa-leaf"></i></div><h3>100% Organic</h3><p>Grown naturally without any harmful pesticides or chemicals.</p></div>
+                    <div class="feature-card"><div class="icon"><i class="fas fa-truck"></i></div><h3>Directly From Farm</h3><p>We harvest, pack, and deliver, ensuring maximum freshness.</p></div>
+                    <div class="feature-card"><div class="icon"><i class="fas fa-heart"></i></div><h3>Ethically Raised</h3><p>Our animals are free-range, grass-fed, and treated with care.</p></div>
+                    <div class="feature-card"><div class="icon"><i class="fas fa-shield-alt"></i></div><h3>Quality Assured</h3><p>Hygienically packed to preserve nutrition and taste.</p></div>
+                </div>
+            </div>
+        </section>
 
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        
-        // --- 1. State & Data ---
-        const products = [
-            { id: 'goat', name: 'Premium Goat Meat', price: 900, unit: '/kg', image: 'assets/images/goat.jpg', description: 'Tender, pasture-raised goat meat, perfect for rich curries and roasts.' },
-            { id: 'chicken', name: 'Country Chicken', price: 900, unit: '/kg', image: 'assets/images/chicken.jpg', description: 'Flavorful, free-range country chicken. Raised ethically in our backyard.' },
-            { id: 'eggs', name: 'Farm Fresh Eggs', price: 180, unit: '/dozen', image: 'assets/images/eggs.jpg', description: 'A dozen golden-yolk eggs from happy, healthy, free-roaming hens.' },
-            { id: 'milk', name: 'Fresh Goat Milk', price: 60, unit: '/L', image: 'assets/images/milk.jpg', description: 'Nutritious and easy-to-digest fresh goat milk, delivered chilled.' }
-        ];
-        const CART_KEY = 'potlapalliCart';
+        <section class="section" id="products">
+            <div class="container">
+                <div class="section-header"><h2>Our Fresh Produce</h2><p>Handpicked and curated with care, from our fields to your plate.</p></div>
+                <div class="product-grid" id="product-grid">
+                    </div>
+            </div>
+        </section>
 
-        // --- 2. DOM Elements ---
-        const productGrid = document.getElementById('product-grid');
-        const cartCountEl = document.getElementById('cartCount');
-        const toastEl = document.getElementById('toast');
-        const header = document.getElementById('header');
-        const menuBtn = document.getElementById("menuBtn");
-        const navLinks = document.getElementById("nav-links");
+        <section id="how-it-works" class="section animated-section">
+            <div class="container">
+                <div class="section-header"><h2>How It Works</h2></div>
+                <div class="how-it-works-grid">
+                    <div class="step-card"><div class="icon"><i class="fas fa-mouse-pointer"></i></div><h3>1. You Order Online</h3><p>Browse our fresh selection and place your order with a few clicks.</p></div>
+                    <div class="step-card"><div class="icon"><i class="fas fa-tractor"></i></div><h3>2. We Harvest & Pack</h3><p>We harvest your produce fresh from the farm only after you order.</p></div>
+                    <div class="step-card"><div class="icon"><i class="fas fa-shipping-fast"></i></div><h3>3. We Deliver Fresh</h3><p>Your order is delivered to your doorstep, ensuring peak freshness.</p></div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="testimonials" class="section animated-section">
+            <div class="container">
+                 <div class="section-header"><h2>What Our Customers Say</h2></div>
+                 <div class="testimonial-card">
+                       <p>"The best goat meat I've had in years! The freshness is unparalleled. You can truly taste the difference. Highly recommended!"</p>
+                       <div class="testimonial-author">- Priya S, Hyderabad</div>
+                 </div>
+            </div>
+        </section>
+    </main>
 
-        // --- 3. Cart Functionality ---
-        const showToast = (message) => {
-            toastEl.textContent = message;
-            toastEl.classList.add('show');
-            setTimeout(() => toastEl.classList.remove('show'), 3000);
-        };
+    <footer id="contact">
+        <div class="container">
+             <div class="footer-grid">
+                 <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
+                 <div class="footer-col"><h4>Quick Links</h4><a href="#home">Home</a><a href="#products">Products</a><a href="about.html">About</a></div>
+                 <div class="footer-col"><h4>Contact</h4><p>Potlapalli Village, AP<br>Email: contact@potlapallifarm.com<br>Phone: +91 98765 43210</p></div>
+                 <div class="footer-col"><h4>Follow Us</h4><a href="#">Facebook</a><a href="#">Instagram</a></div>
+             </div>
+             <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
+        </div>
+    </footer>
+    
+    <div id="toast" class="toast" aria-live="polite"></div>
 
-        const updateCartCount = () => {
-            const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            if (cartCountEl) cartCountEl.textContent = totalItems;
-        };
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // --- 1. State & Data ---
+        const products = [
+            { id: 'goat', name: 'Premium Goat Meat', price: 900, unit: '/kg', image: 'assets/images/goat.jpg', description: 'Tender, pasture-raised goat meat, perfect for rich curries and roasts.' },
+            { id: 'chicken', name: 'Country Chicken', price: 900, unit: '/kg', image: 'assets/images/chicken.jpg', description: 'Flavorful, free-range country chicken. Raised ethically in our backyard.' },
+            { id: 'eggs', name: 'Farm Fresh Eggs', price: 180, unit: '/dozen', image: 'assets/images/eggs.jpg', description: 'A dozen golden-yolk eggs from happy, healthy, free-roaming hens.' },
+            { id: 'milk', name: 'Fresh Goat Milk', price: 60, unit: '/L', image: 'assets/images/milk.jpg', description: 'Nutritious and easy-to-digest fresh goat milk, delivered chilled.' }
+        ];
+        const CART_KEY = 'potlapalliCart';
 
-        const handleAddToCart = (productId, quantity, cardElement) => {
-            if (quantity <= 0) return;
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
+        // --- 2. DOM Elements ---
+        const productGrid = document.getElementById('product-grid');
+        const cartCountEl = document.getElementById('cartCount');
+        const toastEl = document.getElementById('toast');
+        const header = document.getElementById('header');
+        const menuBtn = document.getElementById("menuBtn");
+        const navLinks = document.getElementById("nav-links");
 
-            let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-            const existingItem = cart.find(item => item.id === productId);
+        // --- 3. Cart Functionality ---
+        const showToast = (message) => {
+            toastEl.textContent = message;
+            toastEl.classList.add('show');
+            setTimeout(() => toastEl.classList.remove('show'), 3000);
+        };
 
-            if (existingItem) {
-                existingItem.quantity += quantity;
-            } else {
-                cart.push({ ...product, quantity: quantity });
-            }
-            localStorage.setItem(CART_KEY, JSON.stringify(cart));
-            
-            updateCartCount();
-            showToast(`${quantity} x ${product.name} added to cart!`);
+        const updateCartCount = () => {
+            const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (cartCountEl) cartCountEl.textContent = totalItems;
+        };
 
-            // Reset quantity on the card for better UX
-            if (cardElement) {
-                cardElement.querySelector('.qty').textContent = '1';
-            }
-        };
+        const handleAddToCart = (productId, quantity, cardElement) => {
+            if (quantity <= 0) return;
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
 
-        // --- 4. Product Rendering ---
-        const renderProducts = () => {
-            if (!productGrid) return;
-            productGrid.innerHTML = products.map(product => `
-                <div class="product-card animated-section" data-id="${product.id}">
-                    <img src="${product.image}" alt="${product.name}">
-                    <div class="product-content">
-                        <h3>${product.name}</h3>
-                        <p>${product.description}</p>
-                        <div class="product-footer">
-                            <div class="price-line">
-                                <span class="price">₹${product.price} <small>${product.unit}</small></span>
-                                <div class="quantity-controls">
-                                    <button class="qty-btn minus-btn" aria-label="Decrease quantity">-</button>
-                                    <span class="qty">1</span>
-                                    <button class="qty-btn plus-btn" aria-label="Increase quantity">+</button>
-                                </div>
-                            </div>
-                            <button class="add-to-cart-btn">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        };
-        
-        // --- 5. Hero Slider ---
-        const initSlider = () => {
-            const slider = document.querySelector('.hero-slider');
-            const slides = document.querySelectorAll('.hero-slide');
-            const sliderNav = document.querySelector('.slider-nav');
-            if (!slider || slides.length <= 1) return;
+            let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+            const existingItem = cart.find(item => item.id === productId);
 
-            let currentIndex = 0;
-            let slideInterval;
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ ...product, quantity: quantity });
+            }
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+            
+            updateCartCount();
+            showToast(`${quantity} x ${product.name} added to cart!`);
 
-            // Create dots
-            slides.forEach((_, i) => {
-                const dot = document.createElement('div');
-                dot.classList.add('slider-dot');
-                if (i === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => {
-                    currentIndex = i;
-                    updateSlider();
-                    resetInterval();
-                });
-                sliderNav.appendChild(dot);
-            });
-            
-            const dots = document.querySelectorAll('.slider-dot');
-            const updateSlider = () => {
-                slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-                dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
-            };
+            // Reset quantity on the card for better UX
+            if (cardElement) {
+                cardElement.querySelector('.qty').textContent = '1';
+            }
+        };
 
-            const nextSlide = () => {
-                currentIndex = (currentIndex + 1) % slides.length;
-                updateSlider();
-            };
+        // --- 4. Product Rendering ---
+        const renderProducts = () => {
+            if (!productGrid) return;
+            productGrid.innerHTML = products.map(product => `
+                <div class="product-card animated-section" data-id="${product.id}">
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-content">
+                        <h3>${product.name}</h3>
+                        <p>${product.description}</p>
+                        <div class="product-footer">
+                            <div class="price-line">
+                                <span class="price">₹${product.price} <small>${product.unit}</small></span>
+                                <div class="quantity-controls">
+                                    <button class="qty-btn minus-btn" aria-label="Decrease quantity">-</button>
+                                    <span class="qty">1</span>
+                                    <button class="qty-btn plus-btn" aria-label="Increase quantity">+</button>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-btn">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        };
+        
+        // --- 5. Hero Slider ---
+        const initSlider = () => {
+            const slider = document.querySelector('.hero-slider');
+            const slides = document.querySelectorAll('.hero-slide');
+            const sliderNav = document.querySelector('.slider-nav');
+            if (!slider || slides.length <= 1) return;
 
-            const resetInterval = () => {
-                clearInterval(slideInterval);
-                slideInterval = setInterval(nextSlide, 5000);
-            };
+            let currentIndex = 0;
+            let slideInterval;
 
-            // Pause on hover
-            slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
-            slider.addEventListener('mouseleave', resetInterval);
+            // Create dots
+            slides.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.classList.add('slider-dot');
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    currentIndex = i;
+                    updateSlider();
+                    resetInterval();
+                });
+                sliderNav.appendChild(dot);
+            });
+            
+            const dots = document.querySelectorAll('.slider-dot');
+            const updateSlider = () => {
+                slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+                dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
+            };
 
-            resetInterval();
-        };
+            const nextSlide = () => {
+                currentIndex = (currentIndex + 1) % slides.length;
+                updateSlider();
+            };
 
-        // --- 6. Page Scroll Animations & Effects ---
-        const initScrollEffects = () => {
-            // Section fade-in on scroll
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.animated-section').forEach(el => observer.observe(el));
+            const resetInterval = () => {
+                clearInterval(slideInterval);
+                slideInterval = setInterval(nextSlide, 5000);
+            };
 
-            // Scrolled header effect
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-            });
-        };
+            // Pause on hover
+            slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
+            slider.addEventListener('mouseleave', resetInterval);
 
-        // --- 7. Mobile Navigation ---
-        const initMobileNav = () => {
-            if (!menuBtn || !navLinks) return;
-            const menuIcon = menuBtn.querySelector('i');
+            resetInterval();
+        };
 
-            menuBtn.addEventListener("click", () => {
-                navLinks.classList.toggle("active");
-                document.body.classList.toggle("nav-open");
-                // Change icon
-                if (navLinks.classList.contains("active")) {
-                    menuIcon.classList.remove('fa-bars');
-                    menuIcon.classList.add('fa-times');
-                } else {
-                    menuIcon.classList.remove('fa-times');
-                    menuIcon.classList.add('fa-bars');
-                }
-            });
+        // --- 6. Page Scroll Animations & Effects ---
+        const initScrollEffects = () => {
+            // Section fade-in on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.animated-section').forEach(el => observer.observe(el));
 
-            // Close menu when a link is clicked
-            navLinks.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    navLinks.classList.remove('active');
-                    document.body.classList.remove('nav-open');
-                    menuIcon.classList.remove('fa-times');
-                    menuIcon.classList.add('fa-bars');
-                });
-            });
-        };
+            // Scrolled header effect
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+        };
 
-        // --- 8. Event Listeners ---
-        if (productGrid) {
-            productGrid.addEventListener('click', (e) => {
-                const card = e.target.closest('.product-card');
-                if (!card) return;
-                
-                const qtyEl = card.querySelector('.qty');
-                let quantity = parseInt(qtyEl.textContent);
+        // --- 7. Mobile Navigation ---
+        const initMobileNav = () => {
+            if (!menuBtn || !navLinks) return;
+            const menuIcon = menuBtn.querySelector('i');
 
-                if (e.target.classList.contains('plus-btn')) {
-                    quantity++;
-                } else if (e.target.classList.contains('minus-btn')) {
-                    quantity = Math.max(1, quantity - 1);
-                } else if (e.target.classList.contains('add-to-cart-btn')) {
-                    handleAddToCart(card.dataset.id, quantity, card);
-                }
-                qtyEl.textContent = quantity;
-            });
-        }
-        
-        // --- 9. Initialization ---
-        renderProducts();
-        updateCartCount();
-        initSlider();
-        initScrollEffects();
-        initMobileNav();
-    });
-    </script>
+            menuBtn.addEventListener("click", () => {
+                navLinks.classList.toggle("active");
+                document.body.classList.toggle("nav-open");
+                // Change icon
+                if (navLinks.classList.contains("active")) {
+                    menuIcon.classList.remove('fa-bars');
+                    menuIcon.classList.add('fa-times');
+                } else {
+                    menuIcon.classList.remove('fa-times');
+                    menuIcon.classList.add('fa-bars');
+                }
+            });
 
-     <script>
-        // --- Ultimate Mobile Navigation ---
-        const menuBtn = document.getElementById("menuBtn");
-        const nav = document.getElementById("nav");
+            // Close menu when a link is clicked
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    document.body.classList.remove('nav-open');
+                    menuIcon.classList.remove('fa-times');
+                    menuIcon.classList.add('fa-bars');
+                });
+            });
+        };
 
-        if (menuBtn && nav) {
-            const menuIcon = menuBtn.querySelector('i');
+        // --- 8. Event Listeners ---
+        if (productGrid) {
+            productGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.product-card');
+                if (!card) return;
+                
+                const qtyEl = card.querySelector('.qty');
+                let quantity = parseInt(qtyEl.textContent);
 
-            menuBtn.addEventListener("click", () => {
-                const isActive = nav.classList.toggle("active");
-                menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
-                document.body.style.overflow = isActive ? 'hidden' : '';
-            });
-
-            nav.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    nav.classList.remove('active');
-                    menuIcon.className = 'fas fa-bars';
-                    document.body.style.overflow = '';
-                });
-            });
-        }
-    </script>
+                if (e.target.classList.contains('plus-btn')) {
+                    quantity++;
+                } else if (e.target.classList.contains('minus-btn')) {
+                    quantity = Math.max(1, quantity - 1);
+                } else if (e.target.classList.contains('add-to-cart-btn')) {
+                    handleAddToCart(card.dataset.id, quantity, card);
+                }
+                qtyEl.textContent = quantity;
+            });
+        }
+        
+        // --- 9. Initialization ---
+        renderProducts();
+        updateCartCount();
+        initSlider();
+        initScrollEffects();
+        initMobileNav();
+    });
+    </script>
 </body>
 </html>
