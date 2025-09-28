@@ -156,12 +156,10 @@
                     const transactionNote = `Order #${paymentCode}`;
                     const upiString = `upi://pay?pa=${YOUR_UPI_ID}&pn=${encodeURIComponent(YOUR_NAME)}&am=${amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
                     
-                    // Set the direct links for all mobile app buttons
                     gpayLink.href = upiString;
                     phonepeLink.href = upiString;
                     paytmLink.href = upiString;
 
-                    // Set the QR Code image source
                     const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
                     qrCodeImg.src = qrApiUrl;
 
