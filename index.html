@@ -402,11 +402,15 @@
         const initMobileNav = () => {
             if (!menuBtn || !navLinks) return;
             const menuIcon = menuBtn.querySelector('i');
+            const mobileAuth = document.getElementById("mobile-auth");
+            const mobileAuthSignup = document.getElementById("mobile-auth-signup");
             
             menuBtn.addEventListener("click", () => {
                 const isActive = navLinks.classList.toggle("active");
                 document.body.classList.toggle("nav-open");
                 menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
+                if(mobileAuth) mobileAuth.style.display = isActive ? 'block' : 'none';
+                if(mobileAuthSignup) mobileAuthSignup.style.display = isActive ? 'block' : 'none';
             });
 
             navLinks.querySelectorAll('a').forEach(link => {
