@@ -266,41 +266,46 @@
     </style>
 </head>
 <body>
-    <header class="header" id="header">
-        <div class="container header-inner">
-            <div class="logo">
-                <a href="index.html">
-                    <img src="assets/logo.png" alt="Potlapalli Farms Logo"/>
-                    <span>Potlapalli Farms</span>
+    <header class="header">
+    <div class="container header-inner">
+        <div class="logo">
+            <a href="index.html">
+                <img src="assets/logo.png" alt="Potlapalli Farms Logo"/>
+                <span>Potlapalli Farms</span>
+            </a>
+        </div>
+        
+        <nav class="nav" id="nav">
+            <a href="#home">Home</a>
+            <a href="#products">Products</a>
+            <a href="about.html">About</a>
+            <a href="#contact">Contact</a>
+            <!-- Mobile-only Auth Buttons -->
+            <div class="mobile-auth">
+                <a href="signin.html" class="auth-btn">Sign In</a>
+                <a href="signup.html" class="auth-btn">Sign Up</a>
+            </div>
+        </nav>
+        
+        <div class="header-actions">
+            <div class="mini-cart">
+                <a href="cart.html">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount">0</span>
                 </a>
             </div>
-            
-            <nav>
-                 <ul class="nav-links" id="nav-links">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#products">Products</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-
-            <div class="header-actions">
-                <div class="mini-cart">
-                    <a href="cart.html" aria-label="View shopping cart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cartCount">0</span>
-                    </a>
-                </div>
-                <div id="authButtons"><a href="signin.html" class="auth-btn">Sign In</a></div>
-                <div id="authButtons"><a href="signup.html" class="auth-btn">Sign Up</a></div>
-
-                <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
-                    <i class="fas fa-bars"></i>
-                </button>
+            <!-- Desktop-only Auth Buttons -->
+            <div id="authButtons" class="desktop-auth">
+                <a href="signin.html" class="auth-btn">Sign In</a>
+                <a href="signup.html" class="auth-btn">Sign Up</a>
             </div>
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle Menu">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
-    </header>
-
+    </div>
+</header>
+    
     <main>
         <section class="hero" id="home">
             <div class="hero-slider">
@@ -587,6 +592,30 @@
         initScrollEffects();
         initMobileNav();
     });
+    </script>
+
+     <script>
+        // --- Ultimate Mobile Navigation ---
+        const menuBtn = document.getElementById("menuBtn");
+        const nav = document.getElementById("nav");
+
+        if (menuBtn && nav) {
+            const menuIcon = menuBtn.querySelector('i');
+
+            menuBtn.addEventListener("click", () => {
+                const isActive = nav.classList.toggle("active");
+                menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
+                document.body.style.overflow = isActive ? 'hidden' : '';
+            });
+
+            nav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    nav.classList.remove('active');
+                    menuIcon.className = 'fas fa-bars';
+                    document.body.style.overflow = '';
+                });
+            });
+        }
     </script>
 </body>
 </html>
