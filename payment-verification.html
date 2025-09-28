@@ -9,8 +9,10 @@
     <style>
         :root {
             --primary-color: #27ae60; --secondary-color: #2c3e50; --white: #fff;
+            --background-light: #f8f9fa; --text-dark: #333; --danger-color: #e74c3c;
         }
-        body { background-color: #f8f9fa; font-family: 'Inter', sans-serif; text-align: center; padding: 2rem; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--background-light); font-family: 'Inter', sans-serif; text-align: center; padding: 2rem; }
         .payment-container { max-width: 600px; margin: 0 auto; background: var(--white); padding: 2.5rem; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
         h1 { font-family: 'Playfair Display', serif; color: var(--secondary-color); margin-bottom: 1rem; }
         .instructions { color: #555; margin-bottom: 1.5rem; line-height: 1.7; }
@@ -27,44 +29,56 @@
         .input-group label { font-weight: 500; margin-bottom: 0.5rem; display: block; }
         .input-group input { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 8px; text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem; text-transform: uppercase; }
         .btn-secondary { background: var(--secondary-color); color: var(--white); border: none; }
+        
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background-color: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 2000; transition: all 0.5s; }
+        .toast.show { bottom: 20px; }
+        .toast.error { background-color: var(--danger-color); }
     </style>
 </head>
 <body>
-    <div id="payment-view">
-        <div class="payment-container">
-            <h1>Almost There!</h1>
-            <p class="instructions">Your order has been saved. Please complete the payment of:</p>
-            <div class="amount-display" id="paymentAmount">₹0.00</div>
-            
-            <div class="order-code-box">
-                <p>Add this 4-Character Code to your UPI payment notes/remarks:</p>
-                <div class="order-code" id="orderCode">----</div>
-            </div>
+    <main id="main-content">
+        <div id="payment-view" style="display: none;">
+            <div class="payment-container">
+                <h1>Almost There!</h1>
+                <p class="instructions">Your order is saved. Please complete the payment of:</p>
+                <div class="amount-display" id="paymentAmount">₹0.00</div>
+                
+                <div class="order-code-box">
+                    <p>Add this 4-Character Code to your UPI payment notes/remarks:</p>
+                    <div class="order-code" id="orderCode">----</div>
+                </div>
 
-            <a href="#" id="upiPayLink" class="btn btn-primary"><i class="fas fa-mobile-alt"></i> Pay with UPI App</a>
-            
-            <div class="verification-form">
-                <form id="verifyForm">
-                    <div class="input-group">
-                        <label for="paymentCodeInput">Confirm your 4-Character Code</label>
-                        <input type="text" id="paymentCodeInput" maxlength="4" required>
-                    </div>
-                    <button type="submit" class="btn btn-secondary">I Have Paid</button>
-                </form>
+                <a href="#" id="upiPayLink" class="btn btn-primary"><i class="fas fa-mobile-alt"></i> Pay with UPI App</a>
+                
+                <div class="verification-form">
+                    <form id="verifyForm">
+                        <div class="input-group">
+                            <label for="paymentCodeInput">Confirm your 4-Character Code</label>
+                            <input type="text" id="paymentCodeInput" maxlength="4" required>
+                        </div>
+                        <button type="submit" class="btn btn-secondary">I Have Paid</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-    <div id="success-view" style="display:none;">
-        <div class="payment-container">
-            <h1><i class="fas fa-check-circle" style="color: #27ae60;"></i> Thank You!</h1>
-            <p>Your payment confirmation has been submitted.</p>
-            <p>We will verify it and update your order status to "Processing" shortly.</p>
-            <a href="orders.html" class="btn btn-primary" style="margin-top: 1.5rem;">View My Orders</a>
+        <div id="success-view" style="display:none;">
+            <div class="payment-container">
+                <h1><i class="fas fa-check-circle" style="color: #27ae60;"></i> Thank You!</h1>
+                <p>Your payment confirmation has been submitted.</p>
+                <p>We will verify it and update your order status to "Processing" shortly.</p>
+                <a href="orders.html" class="btn btn-primary" style="margin-top: 1.5rem;">View My Orders</a>
+            </div>
         </div>
-    </div>
+        <div id="auth-wall" style="display: block;">
+             <div class="payment-container"><h1>Verifying User...</h1></div>
+        </div>
+    </main>
+
+    <div id="toast" class="toast"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -76,6 +90,7 @@
             appId: "1:1017629729159:web:357c420a9de335d427b322"
         };
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
 
         const YOUR_UPI_ID = "9100065979@axl"; 
@@ -88,28 +103,47 @@
         const orderCodeEl = document.getElementById('orderCode');
         const paymentView = document.getElementById('payment-view');
         const successView = document.getElementById('success-view');
-
+        const authWall = document.getElementById('auth-wall');
+        const toastEl = document.getElementById('toast');
+        
         const urlParams = new URLSearchParams(window.location.search);
         const orderId = urlParams.get('orderId');
         const amount = urlParams.get('amount');
         const paymentCode = orderId ? orderId.slice(-4).toUpperCase() : null;
 
-        if (orderId && amount && paymentCode) {
-            paymentAmountEl.textContent = `₹${parseFloat(amount).toFixed(2)}`;
-            orderCodeEl.textContent = paymentCode;
-            
-            const transactionNote = `Order #${paymentCode}`;
-            const upiUrl = `upi://pay?pa=${YOUR_UPI_ID}&pn=${encodeURIComponent(YOUR_NAME)}&am=${amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
-            upiPayLink.href = upiUrl;
-        } else {
-            paymentView.innerHTML = '<h1>Error: Order details not found.</h1>';
+        function showToast(message, isError = false) {
+            toastEl.textContent = message;
+            toastEl.className = isError ? 'toast show error' : 'toast show';
+            setTimeout(() => { toastEl.className = 'toast'; }, 3000);
         }
+
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                authWall.style.display = 'none';
+                if (orderId && amount && paymentCode) {
+                    paymentView.style.display = 'block';
+                    paymentAmountEl.textContent = `₹${parseFloat(amount).toFixed(2)}`;
+                    orderCodeEl.textContent = paymentCode;
+                    
+                    const transactionNote = `Order #${paymentCode}`;
+                    const upiUrl = `upi://pay?pa=${YOUR_UPI_ID}&pn=${encodeURIComponent(YOUR_NAME)}&am=${amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
+                    upiPayLink.href = upiUrl;
+                } else {
+                    paymentView.innerHTML = '<h1>Error: Invalid order details.</h1>';
+                    paymentView.style.display = 'block';
+                }
+            } else {
+                authWall.innerHTML = '<div class="payment-container"><h1>Access Denied</h1><p>You must be signed in to confirm a payment.</p><a href="index.html">Return to Homepage</a></div>';
+                authWall.style.display = 'block';
+                paymentView.style.display = 'none';
+            }
+        });
 
         verifyForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const enteredCode = paymentCodeInput.value.trim().toUpperCase();
             if (enteredCode !== paymentCode) {
-                alert("The code you entered does not match the order code. Please check and try again.");
+                showToast("The code does not match the order code.", true);
                 return;
             }
             
@@ -117,13 +151,13 @@
             try {
                 await updateDoc(orderRef, {
                     status: "Payment Verification",
-                    paymentCode: enteredCode // Save the 4-digit code instead of long ID
+                    paymentCode: enteredCode
                 });
                 paymentView.style.display = 'none';
                 successView.style.display = 'block';
             } catch (error) {
                 console.error("Error updating order:", error);
-                alert("Could not submit confirmation. Please contact support.");
+                showToast("Could not submit confirmation. Please contact support.", true);
             }
         });
     </script>
