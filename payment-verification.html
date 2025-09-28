@@ -33,7 +33,7 @@
     .payment-apps { margin-top: 2rem; }
     .payment-apps p { font-weight: 500; margin-bottom: 1rem; }
     .app-icons { display: flex; justify-content: center; gap: 1.5rem; }
-    .app-icon { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-dark); }
+    .app-icon { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-dark); cursor: pointer; }
     .app-icon img { height: 50px; width: 50px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.3s; }
     .app-icon:hover img { transform: scale(1.1); }
     .app-icon span { font-size: 0.8rem; margin-top: 0.5rem; }
@@ -72,9 +72,18 @@
         <div class="payment-apps">
           <p>Or pay with your favorite app (mobile only):</p>
           <div class="app-icons">
-            <a href="#" id="gpayLink" class="app-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_logo.svg/2560px-Google_Pay_logo.svg.png" alt="GPay"><span>Google Pay</span></a>
-            <a href="#" id="phonepeLink" class="app-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" alt="PhonePe"><span>PhonePe</span></a>
-            <a href="#" id="paytmLink" class="app-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/2560px-Paytm_Logo_%28standalone%29.svg.png" alt="Paytm"><span>Paytm</span></a>
+            <a href="#" id="gpayLink" class="app-icon" onclick="openUpiApp(this.dataset.upi); return false;" data-upi="">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_logo.svg/2560px-Google_Pay_logo.svg.png" alt="GPay">
+              <span>Google Pay</span>
+            </a>
+            <a href="#" id="phonepeLink" class="app-icon" onclick="openUpiApp(this.dataset.upi); return false;" data-upi="">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" alt="PhonePe">
+              <span>PhonePe</span>
+            </a>
+            <a href="#" id="paytmLink" class="app-icon" onclick="openUpiApp(this.dataset.upi); return false;" data-upi="">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/2560px-Paytm_Logo_%28standalone%29.svg.png" alt="Paytm">
+              <span>Paytm</span>
+            </a>
           </div>
         </div>
 
@@ -151,6 +160,16 @@
       setTimeout(() => { toastEl.className = 'toast'; }, 3000);
     }
 
+    function openUpiApp(upiUri) {
+      // Attempt to open the UPI app using the custom scheme
+      window.location.href = upiUri;
+
+      // Fallback toast message if app doesn't open
+      setTimeout(() => {
+        showToast("If your UPI app did not open, please scan the QR code or try a different method.", true);
+      }, 1500);
+    }
+
     onAuthStateChanged(auth, user => {
       if (user) {
         authWall.style.display = 'none';
@@ -162,10 +181,10 @@
           const transactionNote = `Order #${paymentCode}`;
           const upiString = `upi://pay?pa=${YOUR_UPI_ID}&pn=${encodeURIComponent(YOUR_NAME)}&am=${amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
 
-          // For different apps, we can also try app-specific URI schemes (if supported)
-          gpayLink.href = upiString;       // generic
-          phonepeLink.href = upiString;    // generic
-          paytmLink.href = upiString;      // generic
+          // Set the UPI links as data attributes, not href
+          gpayLink.dataset.upi = upiString;
+          phonepeLink.dataset.upi = upiString;
+          paytmLink.dataset.upi = upiString;
 
           // Generate QR code for the same UPI string
           const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
@@ -176,32 +195,4 @@
           paymentView.style.display = 'block';
         }
       } else {
-        authWall.innerHTML = '<div class="payment-container"><h1>Access Denied</h1><p>You must be signed in to confirm a payment.</p><a href="index.html" class="btn btn-primary" style="width:auto; display:inline-block;">Return to Homepage</a></div>';
-        authWall.style.display = 'block';
-        paymentView.style.display = 'none';
-      }
-    });
-
-    verifyForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const entered = paymentCodeInput.value.trim().toUpperCase();
-      if (entered !== paymentCode) {
-        showToast("The code does not match the order code.", true);
-        return;
-      }
-      const orderRef = doc(db, "orders", orderId);
-      try {
-        await updateDoc(orderRef, {
-          status: "Payment Verification",
-          paymentCode: entered
-        });
-        paymentView.style.display = 'none';
-        successView.style.display = 'block';
-      } catch (error) {
-        console.error("Error updating order:", error);
-        showToast("Could not submit confirmation. Please contact support.", true);
-      }
-    });
-  </script>
-</body>
-</html>
+        authWall.innerHTML = '<div class="payment-container"><h1>Access Denied</h1><p>You
