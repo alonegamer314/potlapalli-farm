@@ -28,13 +28,15 @@
         img { max-width: 100%; display: block; }
         a, button { transition: all 0.3s ease; }
 
-        /* --- 2. Header & Navigation --- */
+        /* --- 2. Header & Navigation (Homepage Style) --- */
         .header { background: var(--white); border-bottom: 1px solid var(--border-light); padding: 1rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .header-inner { display: flex; justify-content: space-between; align-items: center; }
         .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
         .logo img { height: 50px; }
         .nav-links { display: flex; gap: 2rem; list-style: none; }
         .nav-links a { color: var(--text-dark); text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative; }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--primary-color); transition: width 0.3s ease; }
+        .nav-links a:hover::after { width: 100%; }
         .header-actions { display: flex; align-items: center; gap: 1.5rem; }
         .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--text-dark); }
         #cartCount { position: absolute; top: -8px; right: -10px; background-color: var(--danger-color); color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
@@ -110,6 +112,15 @@
             .menu-btn { display: block; }
             .header-nav { display: none; }
         }
+
+        /* --- 7. Footer --- */
+        footer { background: #1e2d3b; color: #cbd5e1; padding: 5rem 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
+        .footer-col h4 { font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--white); }
+        .footer-col p, .footer-col a { color: #94a3b8; text-decoration: none; }
+        .footer-col a { display: block; margin-bottom: 0.75rem; }
+        .footer-col a:hover { color: var(--white); padding-left: 5px; }
+        .footer-bottom { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #334155; font-size: 0.9rem; color: #94a3b8; }
     </style>
 </head>
 <body>
@@ -135,7 +146,7 @@
     <div id="auth-wall" style="display: none;"></div>
     <div id="toast" class="toast"></div>
 
-    <!-- Modals -->
+    <!-- All Modals are here -->
     <div id="trackingModal" class="modal-overlay">
         <div class="modal-content"><div class="modal-header"><h2>Track Order</h2><button class="close-modal">&times;</button></div><div class="modal-body"><ul class="tracking-timeline" id="tracking-timeline-list"></ul></div></div>
     </div>
@@ -145,13 +156,17 @@
     <div id="cancelConfirmModal" class="modal-overlay">
         <div class="modal-content" style="text-align:center;"><div class="modal-header"><h2>Are you sure?</h2><button class="close-modal">&times;</button></div><div class="modal-body"><p>This order will be cancelled. This action cannot be undone.</p><div class="btn-group"><button class="btn btn-outline" id="cancelModalCloseBtn">Keep Order</button><button class="btn btn-danger" id="cancelModalConfirmBtn">Yes, Cancel</button></div></div></div>
     </div>
-    <section class="random-click-section">
-        <div class="random-click-card">
-            <h3>Random Click</h3>
-            <img src="https://placehold.co/400x400/e8f5e9/333?text=Happy+Goat" alt="A happy goat at Potlapalli Farm">
-            <p>Photo by: Sidhard</p>
+
+    <footer id="contact">
+        <div class="container">
+             <div class="footer-grid">
+                <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
+                <div class="footer-col"><h4>Quick Links</h4><a href="index.html">Home</a><a href="profile.html">My Account</a><a href="cart.html">Cart</a></div>
+                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Village, AP<br>Email: contact@potlapallifarm.com<br>Phone: +91 98765 43210</p></div>
+             </div>
+             <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
         </div>
-    </section>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -171,7 +186,6 @@
         const db = getFirestore(app);
 
         const mainContent = document.getElementById('main-content');
-        const orderListEl = document.getElementById('order-list');
         const trackingModal = document.getElementById('trackingModal');
         const detailsModal = document.getElementById('detailsModal');
         const cancelConfirmModal = document.getElementById('cancelConfirmModal');
@@ -179,7 +193,6 @@
         const menuBtn = document.getElementById('menuBtn');
         const navLinks = document.getElementById('nav-links');
         const logoutMobileLi = document.getElementById('logout-mobile-li');
-        const logoutBtnMobile = document.getElementById('logoutBtnMobile');
         let allOrders = [];
 
         function showToast(message, isError = false) { 
@@ -201,7 +214,6 @@
         function renderOrders(orders) {
             const orderListContainer = document.getElementById('order-list');
             if (!orderListContainer) return;
-
             if (orders.length === 0) {
                 orderListContainer.innerHTML = `<div class="no-orders"><h3>No Orders Found</h3><p>You haven't placed any orders yet. <a href="index.html">Start shopping!</a></p></div>`;
                 return;
@@ -211,7 +223,6 @@
                 const formattedDate = orderTimestamp.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
                 const formattedTime = orderTimestamp.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true });
                 const tagline = generateOrderTagline(order.items);
-                
                 return `
                 <div class="order-card">
                     <div class="order-header">
@@ -243,7 +254,7 @@
                         <button class="btn btn-danger cancel-order-btn" data-order-id="${order.id}" ${order.status !== 'Processing' ? 'disabled' : ''}>Cancel</button>
                     </div>
                 </div>
-            `}).join('');
+            `;}).join('');
         }
 
         function renderTrackingTimeline(orderId) { /* ... full logic ... */ }
@@ -252,6 +263,7 @@
         function reOrder(orderId) { /* ... full logic ... */ }
 
         async function loadOrders(userId) {
+            const orderListContainer = document.getElementById('order-list');
             const ordersQuery = query(collection(db, "orders"), where("userId", "==", userId), orderBy("orderDate", "desc"));
             try {
                 const querySnapshot = await getDocs(ordersQuery);
@@ -260,7 +272,7 @@
                 renderOrders(allOrders);
             } catch (error) { 
                 console.error("Firebase Query Error:", error);
-                document.getElementById('order-list').innerHTML = `<div class="no-orders"><h3>Could Not Load Orders</h3><p>Please ensure your Firestore indexes are set up correctly.</p></div>`;
+                if(orderListContainer) orderListContainer.innerHTML = `<div class="no-orders"><h3>Could Not Load Orders</h3><p>Please ensure your Firestore indexes are set up correctly.</p></div>`;
             }
         }
         
@@ -275,11 +287,31 @@
             }
         });
         
-        mainContent.addEventListener('click', e => { /* ... event delegation for buttons ... */ });
+        mainContent.addEventListener('click', e => { 
+            const button = e.target.closest('button');
+            if (!button) return;
+            const orderId = button.dataset.orderId;
+            if (!orderId) return;
+
+            if (button.classList.contains('track-order-btn')) renderTrackingTimeline(orderId);
+            if (button.classList.contains('view-details-btn')) renderDetailsModal(orderId);
+            if (button.classList.contains('re-order-btn')) reOrder(orderId);
+            if (button.classList.contains('cancel-order-btn')) {
+                cancelConfirmModal.dataset.orderId = orderId;
+                cancelConfirmModal.classList.add('show');
+            }
+        });
         
-        document.querySelectorAll('.close-modal').forEach(btn => btn.addEventListener('click', e => e.target.closest('.modal-overlay').classList.remove('show')));
+        document.querySelectorAll('.close-modal, #cancelModalCloseBtn').forEach(btn => btn.addEventListener('click', e => e.target.closest('.modal-overlay').classList.remove('show')));
         
-        // --- Mobile Menu ---
+        document.getElementById('cancelModalConfirmBtn').addEventListener('click', () => {
+             const orderId = cancelConfirmModal.dataset.orderId;
+            if (orderId) {
+                cancelOrder(orderId);
+                cancelConfirmModal.classList.remove('show');
+            }
+        });
+        
         const menuIcon = menuBtn.querySelector('i');
         menuBtn.addEventListener("click", () => {
             const isActive = navLinks.classList.toggle("active");
