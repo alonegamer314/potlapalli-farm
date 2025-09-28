@@ -175,9 +175,46 @@
         }
 
         async function placeOrder() {
-            if (!fullNameInput.value || !phoneInput.value || !addressInput.value) {
-                showToast("Please fill in all personal and address details.", true);
-                return;
+    // Validate that all form fields are filled
+    if (!fullNameInput.value || !phoneInput.value || !addressInput.value) {
+        showToast("Please fill in all your details.", true); // Assuming you have a showToast function
+        return;
+    }
+    
+    placeOrderBtn.disabled = true;
+    placeOrderBtn.textContent = 'Saving Order...';
+
+    const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    // Prepare the order data to be saved
+    const orderData = {
+        userId: currentUser.uid,
+        items: cart,
+        totalAmount: totalAmount,
+        customerName: fullNameInput.value,
+        phone: phoneInput.value,
+        address: addressInput.value,
+        paymentMethod: document.querySelector('input[name="payment"]:checked').value,
+        status: 'Pending Payment', // Set the initial status
+        orderDate: serverTimestamp()
+    };
+
+    try {
+        // Save the order to the "orders" collection in Firestore
+        const docRef = await addDoc(collection(db, "orders"), orderData);
+        
+        // Clear the local cart now that the order is safely in the database
+        localStorage.removeItem('potlapalliCart');
+        
+        // CRITICAL STEP: Redirect to the payment page with the new Order ID and amount
+        window.location.href = `payment-verification.html?orderId=${docRef.id}&amount=${totalAmount}`;
+
+    } catch (error) {
+        console.error("Error saving order: ", error);
+        // showToast('Could not save your order. Please try again.', true);
+        placeOrderBtn.disabled = false;
+        placeOrderBtn.textContent = 'Place Final Order';
+    }
             }
             placeOrderBtn.disabled = true;
             placeOrderBtn.textContent = 'Placing Order...';
