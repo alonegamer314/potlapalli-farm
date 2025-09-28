@@ -87,8 +87,22 @@
         .random-click-card { max-width: 400px; margin: 0 auto; background: var(--white); padding: 1rem; border-radius: 8px; box-shadow: 0 10px 40px var(--shadow-dark); text-align: center; transform: rotate(-2deg); }
         .random-click-card:hover { transform: rotate(0deg) scale(1.02); }
         .random-click-card h3 { font-family: 'Playfair Display', serif; margin-bottom: 1rem; }
-        .random-click-card img { border-radius: 4px; }
+.random-click-card img {
+  border-radius: 4px;
+  max-width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+}
         .random-click-card p { font-size: 0.9rem; color: var(--text-light); margin-top: 1rem; font-style: italic; }
+
+        @media (max-width: 600px) {
+  .random-click-card img {
+    max-height: 250px;
+  }
+}
 
         /* --- 8. Responsive Design --- */
         @media (max-width: 992px) { 
