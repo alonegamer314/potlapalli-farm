@@ -27,15 +27,17 @@
         .input-group { margin-bottom: 1rem; }
         .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
         .input-group input, .input-group textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; }
-        .payment-options .option { display: flex; align-items: center; padding: 1rem; border: 2px solid #ccc; border-radius: 8px; margin-bottom: 0.8rem; cursor: pointer; transition: all 0.2s; }
-        .payment-options .option.selected { border-color: var(--primary-color); background: #f2faf5; }
+        .payment-options .option { display: flex; align-items: center; padding: 1rem; border: 2px solid var(--primary-color); border-radius: 8px; margin-bottom: 0.8rem; cursor: pointer; background: #f2faf5; }
         .payment-options input[type="radio"] { margin-right: 1rem; }
         .order-summary-item { display: flex; justify-content: space-between; margin-bottom: 0.8rem; }
         .summary-total { margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--secondary-color); font-weight: 700; font-size: 1.2rem; }
         .btn-primary { width: 100%; background: var(--primary-color); color: var(--white); border: none; padding: 1rem; font-size: 1.2rem; font-weight: 600; border-radius: 8px; cursor: pointer; }
         .btn-primary:disabled { background: #bdc3c7; cursor: not-allowed; }
-        .order-success { text-align: center; padding: 4rem 2rem; background: var(--white); border-radius: 12px; }
+        .order-success { text-align: center; padding: 4rem 2rem; background: var(--white); border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
         .order-success .icon { font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem; }
+        .order-success h2 { font-family: 'Playfair Display', serif; color: var(--secondary-color); }
+        .order-receipt { border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; text-align: left; }
+        .receipt-item { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
         .contact-section { background: var(--white); padding: 4rem 1rem; margin-top: 4rem; text-align: center; border-radius: 12px; }
         .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
         .contact-card a { text-decoration: none; color: var(--text-dark); }
@@ -63,7 +65,7 @@
                             <div class="form-section"><h3><i class="fas fa-credit-card"></i> Payment Method</h3>
                                 <div class="payment-options" id="paymentOptions">
                                     <label class="option selected" for="cod"><input type="radio" id="cod" name="payment" value="COD" checked>Cash on Delivery</label>
-                                    <label class="option" for="upi"><input type="radio" id="upi" name="payment" value="UPI">UPI / Credit Card</label>
+                                    <label class="option" for="upi" style="display: none;"><input type="radio" id="upi" name="payment" value="UPI">UPI / Credit Card</label>
                                 </div>
                             </div>
                         </form>
@@ -80,8 +82,16 @@
             <div id="success-view" class="order-success" style="display:none;">
                 <div class="icon"><i class="fas fa-check-circle"></i></div>
                 <h2>Order Placed Successfully!</h2>
-                <p>Thank you! Your Order ID is <strong id="orderId"></strong>.</p>
-                <a href="orders.html" class="btn-primary" style="display:inline-block; text-decoration:none; margin-top:1rem;">View My Orders</a>
+                <p>Thank you for your purchase. We will contact you shortly to confirm.</p>
+                <div class="order-receipt">
+                    <h3>Order Summary</h3>
+                    <p><strong>Order ID:</strong> <span id="orderId"></span></p>
+                    <p><strong>Status:</strong> <span id="orderStatus"></span></p>
+                    <hr style="margin: 1rem 0;">
+                    <div id="receipt-items"></div>
+                    <div class="summary-total" style="text-align: right;"><strong>Total:</strong> <span id="receipt-total"></span></div>
+                </div>
+                <a href="orders.html" class="btn-primary" style="display:inline-block; text-decoration:none; margin-top:1rem;">View All My Orders</a>
             </div>
         </div>
     </main>
@@ -111,7 +121,6 @@
         const fullNameInput = document.getElementById('fullName');
         const phoneInput = document.getElementById('phone');
         const addressInput = document.getElementById('address');
-        const paymentOptions = document.getElementById('paymentOptions');
         const checkoutView = document.getElementById('checkout-view');
         
         let cart = [];
@@ -126,7 +135,7 @@
             summaryItemsEl.innerHTML = cart.map(item => `<div class="order-summary-item"><span>${item.name} x ${item.quantity}</span><span>₹${item.price * item.quantity}</span></div>`).join('');
             const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
             summaryTotalEl.textContent = `₹${total}`;
-            validateForm(); // Check form validity after rendering
+            validateForm();
         }
 
         async function prefillUserDetails(userId) {
@@ -137,21 +146,22 @@
                 fullNameInput.value = userData.name || '';
                 phoneInput.value = userData.phone || '';
             }
-            validateForm(); // Check form validity after prefilling
+            validateForm();
         }
 
         async function placeOrder() {
-            if (!currentUser || cart.length === 0) return;
+            if (!currentUser || cart.length === 0 || !validateForm()) return;
             placeOrderBtn.disabled = true;
             placeOrderBtn.textContent = 'Placing Order...';
 
             const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
             const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+            const orderStatus = paymentMethod === 'COD' ? 'Processing' : 'Pending Payment';
 
             const orderData = {
                 userId: currentUser.uid, items: cart, totalAmount,
                 customerName: fullNameInput.value, phone: phoneInput.value, address: addressInput.value,
-                paymentMethod, status: 'Pending Payment', orderDate: serverTimestamp()
+                paymentMethod, status: orderStatus, orderDate: serverTimestamp()
             };
 
             try {
@@ -159,7 +169,11 @@
                 localStorage.removeItem('potlapalliCart');
                 
                 if (paymentMethod === 'COD') {
-                    document.getElementById('orderId').textContent = docRef.id.slice(-6).toUpperCase();
+                    document.getElementById('orderId').textContent = `#${docRef.id.slice(-6).toUpperCase()}`;
+                    document.getElementById('orderStatus').textContent = orderStatus;
+                    document.getElementById('receipt-items').innerHTML = orderData.items.map(item => `<div class="receipt-item"><span>${item.name} x ${item.quantity}</span><span>₹${item.price * item.quantity}</span></div>`).join('');
+                    document.getElementById('receipt-total').textContent = `₹${orderData.totalAmount}`;
+                    
                     checkoutView.style.display = 'none';
                     document.getElementById('success-view').style.display = 'block';
                 } else {
@@ -173,8 +187,9 @@
         }
 
         function validateForm() {
-            const isFormValid = fullNameInput.value && phoneInput.value && addressInput.value;
+            const isFormValid = fullNameInput.value.trim() && phoneInput.value.trim() && addressInput.value.trim();
             placeOrderBtn.disabled = !isFormValid;
+            return isFormValid;
         }
 
         onAuthStateChanged(auth, user => {
@@ -188,11 +203,7 @@
         });
         
         [fullNameInput, phoneInput, addressInput].forEach(input => input.addEventListener('input', validateForm));
-        paymentOptions.addEventListener('change', e => {
-            document.querySelectorAll('.payment-options .option').forEach(el => el.classList.remove('selected'));
-            e.target.closest('.option').classList.add('selected');
-        });
-
+        
         placeOrderBtn.addEventListener('click', placeOrder);
     </script>
 </body>
