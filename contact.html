@@ -18,14 +18,16 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--background-light); color: var(--text-dark); line-height: 1.6; }
         .container { width: 90%; max-width: 1100px; margin: 0 auto; }
-
-        /* --- Header --- */
+        
+        /* --- Header & Navigation --- */
         .header { background: var(--white); border-bottom: 1px solid var(--border-light); padding: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .header-inner { display: flex; justify-content: space-between; align-items: center; }
         .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
         .logo img { height: 50px; }
+        .header-nav { display: flex; align-items: center; gap: 1.5rem; }
         .header-nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; }
-        
+        .menu-btn { display: none; } /* Mobile menu styles are included for consistency */
+
         /* --- Main Checkout Layout --- */
         .checkout-page { padding: 4rem 1rem; }
         .page-title { font-family: 'Playfair Display', serif; color: var(--secondary-color); text-align: center; margin-bottom: 2.5rem; }
@@ -35,7 +37,8 @@
         .input-group { margin-bottom: 1rem; }
         .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
         .input-group input, .input-group textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; }
-        .payment-options .option { display: flex; align-items: center; padding: 1rem; border: 2px solid var(--primary-color); border-radius: 8px; margin-bottom: 0.8rem; cursor: pointer; background: #f2faf5; }
+        .payment-options .option { display: flex; align-items: center; padding: 1rem; border: 2px solid #ccc; border-radius: 8px; margin-bottom: 0.8rem; cursor: pointer; transition: all 0.2s; }
+        .payment-options .option.selected { border-color: var(--primary-color); background: #f2faf5; }
         .payment-options input[type="radio"] { margin-right: 1rem; }
         .order-summary-item { display: flex; justify-content: space-between; margin-bottom: 0.8rem; }
         .summary-total { margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--secondary-color); font-weight: 700; font-size: 1.2rem; }
@@ -49,18 +52,26 @@
         .order-receipt { border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; text-align: left; }
         .receipt-item { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
         
-        /* --- Contact Section --- */
+        /* --- Contact Section & Footer --- */
         .contact-section { background: var(--white); padding: 4rem 1rem; margin-top: 4rem; text-align: center; border-radius: 12px; }
         .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
         .contact-card a { text-decoration: none; color: var(--text-dark); }
         .contact-card i { font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem; }
-
+        footer { background: #1e2d3b; color: #cbd5e1; padding: 5rem 0 2rem; margin-top: 4rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
+        .footer-col h4 { font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--white); }
+        .footer-col p, .footer-col a { color: #94a3b8; text-decoration: none; }
+        .footer-bottom { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #334155; font-size: 0.9rem; }
+        
         .toast { /* Toast styles */ }
         @media (max-width: 992px) { .checkout-layout { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .header-nav { display: none; } .menu-btn { display: block; } }
     </style>
 </head>
 <body>
-    <header class="header"><!-- Header --></header>
+    <header class="header"><!-- Full Header HTML --></header>
+    <ul class="nav-links" id="nav-links"><!-- Mobile Nav HTML --></ul>
+
     <main id="main-content" class="checkout-page">
         <div class="container">
             <div id="checkout-view">
@@ -78,7 +89,7 @@
                             <div class="form-section"><h3><i class="fas fa-credit-card"></i> Payment Method</h3>
                                 <div class="payment-options" id="paymentOptions">
                                     <label class="option selected" for="cod"><input type="radio" id="cod" name="payment" value="COD" checked>Cash on Delivery</label>
-                                    <label class="option" for="upi" style="display: none;"><input type="radio" id="upi" name="payment" value="UPI">UPI / Credit Card</label>
+                                    <label class="option" for="upi"><input type="radio" id="upi" name="payment" value="UPI">UPI / Credit Card</label>
                                 </div>
                             </div>
                         </form>
@@ -108,7 +119,8 @@
             </div>
         </div>
     </main>
-    <section class="contact-section"><!-- Contact Info --></section>
+    <section class="contact-section"><!-- Full Contact Section HTML --></section>
+    <footer id="contact"><!-- Full Footer HTML --></footer>
     <div id="toast" class="toast"></div>
 
     <script type="module">
@@ -128,6 +140,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // --- All DOM Element selectors ---
         const summaryItemsEl = document.getElementById('summary-items');
         const summaryTotalEl = document.getElementById('summary-total');
         const placeOrderBtn = document.getElementById('placeOrderBtn');
@@ -135,6 +148,7 @@
         const phoneInput = document.getElementById('phone');
         const addressInput = document.getElementById('address');
         const checkoutView = document.getElementById('checkout-view');
+        const paymentOptions = document.getElementById('paymentOptions');
         
         let cart = [];
         let currentUser = null;
@@ -217,6 +231,11 @@
         
         [fullNameInput, phoneInput, addressInput].forEach(input => input.addEventListener('input', validateForm));
         
+        paymentOptions.addEventListener('change', e => {
+            document.querySelectorAll('.payment-options .option').forEach(el => el.classList.remove('selected'));
+            e.target.closest('.option').classList.add('selected');
+        });
+
         placeOrderBtn.addEventListener('click', placeOrder);
     </script>
 </body>
