@@ -104,7 +104,7 @@ body { background: var(--background-light); color: var(--text-dark); }
     </header>
     <main class="maps-main">
         <div class="container" id="order-queue-container">
-            <!-- Orders will be injected here -->
+            <!-- Initial loading state to prevent flicker/loop -->
             <div class="order-queue"><h2>Loading orders...</h2></div>
         </div>
     </main>
@@ -236,19 +236,16 @@ body { background: var(--background-light); color: var(--text-dark); }
 
     /**
      * Checks OTP and updates the status to 'Delivered'.
-     * FEATURE: Handles OTP and Expiration verification.
      */
-    async function verifyAndDeliver(orderId, enteredOTP, correctOTP) {
-        // Check if status is already delivered/cancelled (prevent double-submit)
-        const currentOrder = orderQueueContainer.querySelector(`.order-card[data-id="${orderId}"]`);
-        const statusDisplay = currentOrder.querySelector('.card-header h3');
-        if (statusDisplay && statusDisplay.textContent.includes('Delivered') || statusDisplay.textContent.includes('Cancelled')) {
-             return showToast("Order status already finalized.", true);
-        }
+    async function verifyAndDeliver(orderId, enteredOTP, correctOTP, verifyBtn) {
+        // Disable button immediately to prevent double-submit
+        verifyBtn.disabled = true;
 
         // 1. Basic OTP Mismatch Check
         if (enteredOTP !== correctOTP) {
-            return showToast("OTP Mismatch. Please re-enter the code.", true);
+            showToast("OTP Mismatch. Please re-enter the code.", true);
+            verifyBtn.disabled = false;
+            return;
         }
 
         // 2. Fetch fresh order data to check expiration
@@ -262,7 +259,9 @@ body { background: var(--background-light); color: var(--text-dark); }
                 const expiryTime = orderData.otpExpiry.toDate();
                 const currentTime = new Date();
                 if (currentTime > expiryTime) {
-                    return showToast("OTP has expired (12-hour limit). Cannot confirm delivery.", true);
+                    showToast("OTP has expired (12-hour limit). Cannot confirm delivery.", true);
+                    verifyBtn.disabled = false;
+                    return;
                 }
             }
             
@@ -273,6 +272,10 @@ body { background: var(--background-light); color: var(--text-dark); }
             console.error("Error during verification process:", error);
             showToast("Verification failed due to a network or database error.", true);
         }
+        
+        // Re-enable button should only happen on failure branches now.
+        // If updateOrderStatus succeeds, the onSnapshot listener handles the card removal/update.
+        verifyBtn.disabled = false;
     }
 
     /**
@@ -293,7 +296,6 @@ body { background: var(--background-light); color: var(--text-dark); }
      * Sets up a real-time listener for orders.
      */
     function listenToOrders() {
-        // Fetch all orders marked as "Shipped" (ready for maps user)
         const ordersQuery = query(
             collection(db, "orders"), 
             where("status", "==", "Shipped"), 
@@ -309,30 +311,42 @@ body { background: var(--background-light); color: var(--text-dark); }
         });
     }
     
-    // --- Authentication and View Management ---
+    // --- Authentication and View Management FIX ---
     
+    // Use a flag to track if we've already set up the dashboard listeners
+    let isDashboardInitialized = false;
+
     onAuthStateChanged(auth, async (user) => {
         if (user) {
+            // If we've already confirmed the role and started listening, do nothing.
+            if (isDashboardInitialized) return; 
+
             const userDocRef = doc(db, "users", user.uid);
             try {
                 const docSnap = await getDoc(userDocRef);
                 if (docSnap.exists() && docSnap.data().role === 'maps') {
+                    // Success: Show dashboard and initialize once
                     loginView.style.display = 'none';
                     dashboardView.style.display = 'block';
                     if (unsubscribeOrders) unsubscribeOrders();
                     listenToOrders();
+                    isDashboardInitialized = true; // Set flag to prevent future re-init
                 } else {
+                    // Access Denied: Force logout
                     signOut(auth);
                     showToast("Access Denied: Not a 'maps' account.", true);
                 }
             } catch (error) {
+                // Database error during role check
                 signOut(auth);
                 console.error("Error verifying account role:", error);
                 showToast("Error verifying account.", true);
             }
         } else {
+            // Logout: Reset view and clear listeners
             loginView.style.display = 'flex';
             dashboardView.style.display = 'none';
+            isDashboardInitialized = false;
             if (unsubscribeOrders) unsubscribeOrders();
         }
     });
@@ -343,6 +357,7 @@ body { background: var(--background-light); color: var(--text-dark); }
         e.preventDefault();
         const email = document.getElementById('mapsEmail').value;
         const password = document.getElementById('mapsPassword').value;
+        // The onAuthStateChanged listener handles the view change upon successful login
         signInWithEmailAndPassword(auth, email, password)
             .catch(err => showToast("Login Failed. Please check your email and password.", true));
     });
@@ -360,10 +375,11 @@ body { background: var(--background-light); color: var(--text-dark); }
                 const enteredOTP = otpInput ? otpInput.value.trim() : '';
 
                 // Call the verification logic
-                verifyAndDeliver(orderId, enteredOTP, correctOTP);
+                verifyAndDeliver(orderId, enteredOTP, correctOTP, button);
             };
         });
 
+        // The Cancel button uses the modal for confirmation
         document.querySelectorAll('.status-btn').forEach(button => {
             button.onclick = (e) => {
                 const orderId = button.dataset.id;
@@ -388,10 +404,12 @@ body { background: var(--background-light); color: var(--text-dark); }
     // Modal Confirmation and Cancellation Listeners
     document.getElementById('confirmAction').addEventListener('click', () => {
         if (activeOrderId && activeStatusUpdate) {
-            // Only allow update if the status is CANCELLED (Delivered status requires OTP)
+            // For Cancelled status, proceed directly with update (no OTP needed)
             if (activeStatusUpdate === 'Cancelled') {
                 updateOrderStatus(activeOrderId, 'Cancelled');
             } else {
+                // This scenario should ideally not be hit if verification is used, 
+                // but it prevents accidental delivery without OTP.
                 showToast("Verification is required for delivery.", true);
             }
         }
