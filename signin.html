@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <style>
-        /* --- 1. Foundational Styles & Variables --- */
         :root {
             --primary-color: #27ae60; --primary-color-dark: #1e874b; --secondary-color: #2c3e50; --white: #fff;
             --background-light: #f8f9fa; --danger-color: #e74c3c; --border-light: #e0e0e0;
@@ -19,12 +18,12 @@
             --shadow-light: rgba(0,0,0,0.08);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--background-light); padding-top: 70px; /* Space for fixed header */ }
+        body { background-color: var(--background-light); padding-top: 70px; }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
         a, button { transition: all 0.3s ease; }
         body.nav-open { overflow: hidden; }
 
-        /* --- 2. Header & Navigation (COPIED FROM INDEX.HTML) --- */
+        /* --- 2. Header & Navigation (Fixed Index Style) --- */
         .header { 
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 0.75rem 0; 
             background-color: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.07); 
@@ -77,7 +76,7 @@
         .toast.show { bottom: 20px; }
         .toast.error { background: var(--danger-color); }
         
-        /* --- 5. Responsive Design (COPIED FROM INDEX.HTML) --- */
+        /* --- 5. Responsive Design --- */
         @media (max-width: 992px) {
             .nav-links {
                 position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
@@ -113,6 +112,7 @@
                     <span>Potlapalli Farms</span>
                 </a>
             </div>
+            <!-- Desktop Nav Links -->
             <nav class="header-nav">
                 <a href="index.html">Shop</a>
                 <a href="profile.html">My Account</a>
@@ -121,13 +121,19 @@
                     <span id="cartCount">0</span>
                 </a>
             </nav>
-            <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+            <div class="header-actions">
+                <!-- Desktop Auth Button (Simplified for Sign-in Page) -->
+                <a href="signup.html" class="auth-btn">Sign Up</a>
+                <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+            </div>
         </div>
     </header>
+    <!-- Mobile Nav Slide-out Menu -->
     <ul class="nav-links" id="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="profile.html">My Profile</a></li>
         <li><a href="cart.html">My Cart</a></li>
+        <li><a href="signup.html">Sign Up</a></li>
     </ul>
 
     <main class="auth-page">
@@ -164,7 +170,7 @@
     <div id="toast" class="toast"></div>
     <div id="forgotPasswordModal" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header"><h2>Reset Password</h2><button class="close-modal">&times;</button></div>
+            <div class="modal-header"><h2>Reset Password</h2><button class="close-modal">&times; class="fas fa-times"></button></div>
             <div class="modal-body">
                 <p>Enter your email address and we'll send you a link to reset your password.</p>
                 <form id="resetPasswordForm">
@@ -188,7 +194,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         
         const firebaseConfig = {
             apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
