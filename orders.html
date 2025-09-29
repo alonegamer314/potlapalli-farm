@@ -74,10 +74,12 @@
         
         /* --- 4. Modals & States --- */
         .loading-state, .no-orders { text-align: center; padding: 4rem; background: var(--white); border-radius: 12px; }
+        /* Auth Wall uses modal-overlay class now for reliable z-index and coverage */
         #auth-wall { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--background-light); 
-            display: flex; align-items: center; justify-content: center; z-index: 100;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(248, 249, 250, 0.95); 
+            display: none; align-items: center; justify-content: center; z-index: 100;
         }
+        #auth-wall.show { display: flex; }
         #auth-wall > div { 
             text-align: center; padding: 4rem 1rem; background: var(--white); border-radius: 12px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 400px;
@@ -173,14 +175,14 @@
         </div>
     </main>
     
-    <!-- Auth Wall (Initially hidden, shown only if user is logged out) -->
-    <div id="auth-wall" class="modal-overlay"> 
-    <div class="container">
-        <h2>Access Denied</h2>
-        <p>You must be signed in to view your orders.</p>
-        <a href="signin.html" class="btn-primary" style="text-decoration:none;">Sign In</a>
+    <!-- Auth Wall (Uses modal-overlay CSS class for robust z-index control) -->
+    <div id="auth-wall" class="modal-overlay">
+        <div class="container">
+            <h2>Access Denied</h2>
+            <p>You must be signed in to view your orders.</p>
+            <a href="signin.html" class="btn-primary" style="text-decoration:none;">Sign In</a>
+        </div>
     </div>
-</div>
     
     <div id="toast" class="toast"></div>
 
@@ -318,7 +320,7 @@
                                         <img class="order-item-img" src="${item.image || 'https://placehold.co/60x60/f8f9fa/27ae60?text=P'}" alt="${item.name}">
                                         <div class="order-item-details">
                                             <span class="order-item-name">${item.name}</span>
-                                            <span class="order-item-qty">Quantity: ${item.quantity} ${item.unit.replace('/', '')}</span>
+                                            <span class="order-item-qty">Quantity: ${item.quantity} ${item.unit ? item.unit.replace('/', '') : ''}</span>
                                         </div>
                                     </li>
                                 `).join('')}
@@ -360,7 +362,7 @@
             if (!order) return;
 
             const detailsBody = detailsModal.querySelector('#details-modal-body');
-            const itemsHtml = order.items.map(item => `<p>${item.name} x ${item.quantity} - ₹${item.price * item.quantity}</p>`).join('');
+            const itemsHtml = order.items.map(item => `<p>${item.name} x ${item.quantity} ${item.unit ? item.unit.replace('/', '') : ''} - ₹${item.price * item.quantity}</p>`).join('');
 
             detailsBody.innerHTML = `
                 <div style="text-align:left;">
@@ -409,7 +411,7 @@
         onAuthStateChanged(auth, user => {
             if (user) { 
                 mainContent.style.display = 'block';
-                authWall.classList.remove('show');
+                authWall.classList.remove('show'); // Hide auth wall
                 
                 // Initialize order fetching
                 mainContent.querySelector('#order-list').innerHTML = `<div class="loading-state"><i class="fas fa-spinner loading-spinner"></i><p>Loading your orders...</p></div>`;
@@ -417,10 +419,10 @@
                 listenToOrders(user.uid); 
                 logoutMobileLi.style.display = 'block';
             } else { 
-                // Redirect user if not logged in after authentication check is complete
+                // If user is NOT logged in, hide content and show auth wall after check completes
                 if (unsubscribeOrders) unsubscribeOrders();
                 mainContent.style.display = 'none';
-                authWall.classList.add('show');
+                authWall.classList.add('show'); // Show auth wall
             }
         });
         
