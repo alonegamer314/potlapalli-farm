@@ -17,7 +17,7 @@
             --shadow-light: rgba(0,0,0,0.08);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; }
-        body { background: var(--background-light); color: var(--text-dark); line-height: 1.6; padding-top: 70px; } /* Added padding-top */
+        body { background: var(--background-light); color: var(--text-dark); line-height: 1.6; padding-top: 70px; } 
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
         body.nav-open { overflow: hidden; }
 
@@ -85,10 +85,16 @@
             .profile-container { flex-direction: column; }
             .profile-sidebar { width: 100%; order: 2; }
             .profile-main { order: 1; }
-        }
-        @media (max-width: 768px) {
             .header-nav { display: none; }
             .menu-btn { display: block; }
+            .nav-links {
+                position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
+                background-color: var(--white); z-index: 999; 
+                flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+                transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            }
+            .nav-links.active { transform: translateX(0); }
+            .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
         }
         .nav-links { 
             display: none; /* Hide default mobile nav list */
@@ -121,7 +127,7 @@
         </div>
     </header>
     
-    <!-- Mobile Nav Slide-out Menu (Must be outside the main flow) -->
+    <!-- Mobile Nav Slide-out Menu -->
     <ul class="nav-links" id="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="orders.html">Orders</a></li>
@@ -129,14 +135,14 @@
         <li id="logout-mobile-li"><a href="#" id="logoutBtnMobile">Logout</a></li>
     </ul>
 
-    <main id="main-content">
+    <main id="main-content" style="display: none;">
         <div class="profile-page">
             <div class="profile-container">
                 <div class="profile-sidebar">
                     <h3>Your Account</h3>
                     <div class="profile-nav">
                         <a class="profile-tab active" data-tab="info"><i class="fas fa-user"></i> Profile Info</a>
-                        <a href="orders.html" class="profile-tab"><i class="fas fa-box"></i> Order History</a>
+                        <a href="orders.html" class="profile-tab" data-tab="order-history-link"><i class="fas fa-box"></i> Order History</a>
                         <a class="profile-tab" data-tab="addresses"><i class="fas fa-map-marker-alt"></i> Addresses</a>
                         <a class="profile-tab" data-tab="security"><i class="fas fa-lock"></i> Security</a>
                         <a id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -240,8 +246,11 @@
         const confirmNewPasswordInput = document.getElementById('confirmNewPassword');
         const menuBtn = document.querySelector('.menu-btn');
         const navLinks = document.getElementById('nav-links');
+        
+        // --- Added global variable for Firebase Auth status check ---
+        let isAuthChecked = false;
+        let isUserLoggedIn = false;
 
-        let isMobileNavOpen = false;
 
         function showToast(message, isError = false) {
             toastEl.textContent = message;
@@ -266,7 +275,6 @@
                     accountRoleEl.textContent = `Role: ${userData.role ? userData.role.toUpperCase() : 'CUSTOMER'}`;
                     accountCreationDateEl.textContent = `Member Since: ${creationDate}`;
                 } else {
-                    // Fallback for new users who haven't saved to Firestore yet
                     profileNameEl.textContent = user.displayName || "Farm User";
                     profileEmailEl.textContent = `📧 ${user.email}`;
                     profilePhoneEl.textContent = '📞 Add phone number';
@@ -282,17 +290,33 @@
         
         // --- Authentication Check ---
         onAuthStateChanged(auth, user => {
+            isAuthChecked = true;
             if (user) {
+                isUserLoggedIn = true;
                 mainContent.style.display = 'block';
                 authWall.classList.remove('show');
                 fetchUserProfile(user);
             } else {
+                isUserLoggedIn = false;
                 mainContent.style.display = 'none';
                 authWall.classList.add('show');
             }
         });
 
-        // --- Profile Edit Logic ---
+        // --- Log out logic ---
+        const handleLogout = () => {
+            signOut(auth).then(() => {
+                showToast('Signed out successfully. Redirecting...');
+                // The onAuthStateChanged will handle hiding the profile view.
+                setTimeout(() => { window.location.href = 'signin.html'; }, 500); 
+            }).catch(error => {
+                showToast('Error signing out.', true);
+                console.error("Logout error:", error);
+            });
+        };
+
+        // --- Profile Edit Logic (Rest of the functions remain the same) ---
+        
         document.getElementById('editProfileBtn').addEventListener('click', () => {
             editNameInput.value = profileNameEl.textContent;
             const currentPhone = profilePhoneEl.textContent;
@@ -302,16 +326,8 @@
         
         document.getElementById('closeModalBtn').addEventListener('click', () => editProfileModal.classList.remove('show'));
         
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => { showToast('Signed out.'); }).catch(error => { showToast('Error signing out.', true); });
-        });
-        
-        // Mobile Logout button event (Ensure it works for the mobile menu)
-        document.getElementById('logoutBtnMobile').addEventListener('click', () => {
-            signOut(auth);
-            navLinks.classList.remove('active'); // Close menu after click
-        });
-
+        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+        document.getElementById('logoutBtnMobile').addEventListener('click', handleLogout);
 
         editProfileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -327,11 +343,9 @@
             }
 
             try {
-                // 1. Update Firestore Profile Data (Name and Phone)
                 const userDocRef = doc(db, "users", user.uid);
                 await setDoc(userDocRef, { name: newName, phone: newPhone }, { merge: true });
                 
-                // 2. Update Firebase Auth Profile (Display Name)
                 if(user.displayName !== newName) {
                     await updateProfile(user, { displayName: newName });
                 }
@@ -360,12 +374,10 @@
             }
 
             try {
-                // NOTE: Requires user to have recently logged in for security reasons (Firebase requirement)
                 await updatePassword(user, newPass);
                 showToast('Password changed successfully! Please log in again if prompted.', false);
                 changePasswordForm.reset();
             } catch (error) {
-                // Common error: auth/requires-recent-login
                 if (error.code === 'auth/requires-recent-login') {
                     showToast("Password requires recent login. Please sign out and sign in again before changing.", true);
                 } else {
@@ -391,21 +403,20 @@
 
         // Hamburger Menu Logic (Ensures mobile responsiveness)
         menuBtn.addEventListener("click", () => {
-            isMobileNavOpen = !isMobileNavOpen;
-            navLinks.classList.toggle("active", isMobileNavOpen);
-            document.body.classList.toggle("nav-open", isMobileNavOpen);
-            menuBtn.querySelector('i').className = isMobileNavOpen ? 'fas fa-times' : 'fas fa-bars';
+            navLinks.classList.toggle("active");
+            document.body.classList.toggle("nav-open");
+            menuBtn.querySelector('i').className = navLinks.classList.contains("active") ? 'fas fa-times' : 'fas fa-bars';
         });
         
         // Ensure menu closes if a link is clicked
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                if (link.id !== 'logoutBtnMobile') {
-                    if (isMobileNavOpen) {
+                // Only close if the link is not the logout link (which handles its own state change)
+                if (link.id !== 'logoutBtnMobile') { 
+                    if (navLinks.classList.contains("active")) {
                         navLinks.classList.remove('active');
                         document.body.classList.remove('nav-open');
                         menuBtn.querySelector('i').className = 'fas fa-bars';
-                        isMobileNavOpen = false;
                     }
                 }
             });
