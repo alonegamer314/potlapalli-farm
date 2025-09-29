@@ -249,7 +249,17 @@
                 showToast("Could not submit confirmation. Please contact support.", true);
             }
         });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('nav-links');
+        const menuIcon = menuBtn.querySelector('i');
+        menuBtn.addEventListener("click", () => {
+            const isActive = navLinks.classList.toggle("active");
+            document.body.classList.toggle("nav-open");
+            menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
+        });
     </script>
 </body>
 </html>
+
 
