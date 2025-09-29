@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maps Navigation Dashboard - Potlapalli Farm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary-color: #3498db; /* Blue for Maps/Navigation focus */
+            --secondary-color: #2c3e50;
+            --background-light: #f8f9fa;
+            --text-dark: #333;
+            --white: #fff;
+            --border-light: #e0e0e0;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71; /* Green for delivered */
+            --warning-color: #f39c12;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--background-light); color: var(--text-dark); }
+        .container { width: 95%; max-width: 800px; margin: 0 auto; }
+
+        /* Login View Styles */
+        #maps-login-view { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .login-box { background: var(--white); padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .login-box h1 { font-family: 'Playfair Display', serif; margin-bottom: 2rem; color: var(--secondary-color); }
+        .input-group { margin-bottom: 1.5rem; text-align: left; }
+        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem;}
+        .btn { width: 100%; padding: 1rem; background: var(--primary-color); color: var(--white); border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; }
+        .btn:hover { opacity: 0.9; }
+        
+        /* Dashboard View Styles */
+        #maps-dashboard-view { display: none; }
+        .maps-header { background: var(--white); padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .maps-header .container { display: flex; justify-content: space-between; align-items: center; }
+        .maps-header h1 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--primary-color); }
+        #logoutBtn { background: var(--danger-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+
+        .maps-main { padding: 2rem 1rem; }
+        .maps-main h2 { text-align: center; margin-bottom: 1.5rem; color: var(--secondary-color); }
+        .order-queue { display: flex; flex-direction: column; gap: 1.5rem; }
+        .order-card { background: var(--white); border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); overflow: hidden; }
+        .card-header { padding: 1rem 1.5rem; background: var(--secondary-color); color: var(--white); }
+        .card-header h3 { font-size: 1.2rem; }
+        .card-body { padding: 1.5rem; }
+        .detail-row { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
+        .detail-row .icon { font-size: 1.2rem; color: var(--primary-color); width: 20px; text-align: center; }
+        .detail-row .content p { margin: 0; }
+        .detail-row .content .label { font-weight: 600; }
+        .items-list { list-style: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border-light); font-size: 0.9em; }
+        .cod-highlight { background: var(--warning-color); color: var(--white); padding: 1rem; border-radius: 8px; text-align: center; margin-top: 1rem; }
+        .cod-highlight .amount { font-size: 1.5rem; font-weight: 700; }
+        
+        .card-footer { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; padding: 1.5rem; background: #fdfdfd; border-top: 1px solid var(--border-light); }
+        .card-footer .btn { padding: 0.8rem 0.5rem; font-size: 0.9rem; }
+        
+        .btn-map { background: var(--primary-color); color: white; }
+        .btn-success { background: var(--success-color); color: white; }
+        .btn-cancel { background: var(--danger-color); color: white; }
+
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content { background: var(--white); padding: 2rem; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; }
+        .modal-body .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+        .btn-outline { border: 2px solid var(--secondary-color); color: var(--secondary-color); background: transparent; }
+        
+        /* Toast Styles */
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 1001; transition: bottom 0.5s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .toast.show { bottom: 20px; }
+        .toast.error { background: var(--danger-color); }
+    </style>
+</head>
+<body>
+    <div id="maps-login-view">
+        <div class="login-box">
+            <h1>Maps Driver Login</h1>
+            <form id="mapsLoginForm">
+                <div class="input-group"><label for="mapsEmail">Email</label><input type="email" id="mapsEmail" required></div>
+                <div class="input-group"><label for="mapsPassword">Password</label><input type="password" id="mapsPassword" required></div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="maps-dashboard-view">
+        <header class="maps-header">
+            <div class="container"><h1>Navigation Queue</h1><button id="logoutBtn">Logout</button></div>
+        </header>
+        <main class="maps-main">
+            <div class="container" id="order-queue-container">
+                <div class="order-queue"><h2>Loading orders...</h2></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="statusConfirmModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3 id="modalTitle">Confirm Action</h3>
+                <p id="modalMessage"></p>
+                <div class="btn-group">
+                    <button class="btn btn-outline" id="confirmCancel">Cancel</button>
+                    <button class="btn btn-primary" id="confirmAction">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, where, onSnapshot, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // IMPORTANT: Use your actual Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+            authDomain: "potlapallifarm.firebaseapp.com",
+            projectId: "potlapallifarm",
+            storageBucket: "potlapallifarm.firebasestorage.app",
+            messagingSenderId: "1017629729159",
+            appId: "1:1017629729159:web:357c420a9de335d427b322"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const loginView = document.getElementById('maps-login-view');
+        const dashboardView = document.getElementById('maps-dashboard-view');
+        const loginForm = document.getElementById('mapsLoginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const orderQueueContainer = document.getElementById('order-queue-container');
+        const confirmModal = document.getElementById('statusConfirmModal');
+        const toastEl = document.getElementById('toast');
+        let unsubscribeOrders = null;
+        let activeOrderId = null;
+        let activeStatusUpdate = null; // Stores 'Delivered' or 'Cancelled'
+
+        function showToast(message, isError = false) {
+            toastEl.textContent = message;
+            toastEl.className = isError ? 'toast show error' : 'toast show';
+            setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+        }
+
+        /**
+         * Renders the order cards for navigation.
+         */
+        function renderOrders(orders) {
+            if (orders.length === 0) {
+                orderQueueContainer.innerHTML = `<div class="order-queue"><h2>No orders currently assigned for navigation.</h2></div>`;
+                attachEventListeners();
+                return;
+            }
+
+            const ordersHtml = orders.map(order => {
+                const customerPhone = order.customerPhone || 'N/A';
+                const shippingAddress = order.shippingAddress || 'Address not available';
+                const totalAmount = order.totalAmount ? order.totalAmount.toFixed(2) : '0.00';
+                
+                // FEATURE: Google Maps Link (Searches for the address)
+                const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shippingAddress)}`;
+                
+                return `
+                    <div class="order-card" data-id="${order.id}">
+                        <div class="card-header"><h3>Order #${order.id.slice(-6).toUpperCase()}</h3></div>
+                        <div class="card-body">
+                            <div class="detail-row"><div class="icon"><i class="fas fa-user"></i></div><div class="content"><p class="label">Customer:</p><p>${order.customerName || 'N/A'}</p></div></div>
+                            <div class="detail-row"><div class="icon"><i class="fas fa-map-marker-alt"></i></div><div class="content"><p class="label">Address:</p><p>${shippingAddress}</p></div></div>
+                            <div class="detail-row"><div class="icon"><i class="fas fa-phone"></i></div><div class="content"><p class="label">Phone:</p><p>${customerPhone}</p></div></div>
+                            
+                            ${order.paymentMethod === 'COD' ? 
+                                `<div class="cod-highlight"><p>COD Amount:</p><p class="amount">₹${totalAmount}</p></div>` 
+                                : ''
+                            }
+
+                            <ul class="items-list">${(order.items || []).map(item => `<li>${item.name || 'Unknown'} x ${item.quantity || 1}</li>`).join('')}</ul>
+                        </div>
+                        <div class="card-footer">
+                            <a href="${mapLink}" target="_blank" class="btn btn-map"><i class="fas fa-map-marked-alt"></i> Search on Maps</a>
+                            <button class="btn btn-success status-btn" data-status="Delivered" data-id="${order.id}"><i class="fas fa-check-circle"></i> Delivered</button>
+                            <button class="btn btn-cancel status-btn" data-status="Cancelled" data-id="${order.id}"><i class="fas fa-times-circle"></i> Cancelled</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            orderQueueContainer.innerHTML = `<div class="order-queue">${ordersHtml}</div>`;
+            attachEventListeners(); 
+        }
+
+        /**
+         * FEATURE: Changes the order status in the database.
+         */
+        async function updateOrderStatus(orderId, newStatus) {
+            const orderRef = doc(db, 'orders', orderId);
+            try {
+                await updateDoc(orderRef, { status: newStatus });
+                showToast(`Order status updated to ${newStatus}.`);
+            } catch (error) {
+                console.error("Error updating order status:", error);
+                showToast(`Failed to update status to ${newStatus}.`, true);
+            }
+        }
+
+        /**
+         * FEATURE: Gets data from the database (orders where status is "Shipped").
+         */
+        function listenToOrders() {
+            // Fetch all orders marked as "Shipped" (ready for driver/maps user)
+            const ordersQuery = query(
+                collection(db, "orders"), 
+                where("status", "==", "Shipped"), 
+                orderBy("orderDate", "asc")
+            );
+
+            unsubscribeOrders = onSnapshot(ordersQuery, (snapshot) => {
+                const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderOrders(orders);
+            }, (error) => {
+                console.error("Error listening to orders:", error);
+                showToast("Failed to load orders.", true);
+            });
+        }
+        
+        // --- Authentication and View Management ---
+        
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // FEATURE: Custom role check for 'maps'
+                const userDocRef = doc(db, "users", user.uid);
+                try {
+                    const docSnap = await getDoc(userDocRef);
+                    if (docSnap.exists() && docSnap.data().role === 'maps') {
+                        loginView.style.display = 'none';
+                        dashboardView.style.display = 'block';
+                        if (unsubscribeOrders) unsubscribeOrders();
+                        listenToOrders();
+                    } else {
+                        signOut(auth);
+                        showToast("Access Denied: Not a 'maps' account.", true);
+                    }
+                } catch (error) {
+                    signOut(auth);
+                    console.error("Error verifying account role:", error);
+                    showToast("Error verifying account.", true);
+                }
+            } else {
+                loginView.style.display = 'flex';
+                dashboardView.style.display = 'none';
+                if (unsubscribeOrders) unsubscribeOrders();
+            }
+        });
+        
+        // --- Event Listeners ---
+        
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('mapsEmail').value;
+            const password = document.getElementById('mapsPassword').value;
+            signInWithEmailAndPassword(auth, email, password)
+                .catch(err => showToast("Login Failed. Please check your email and password.", true));
+        });
+        
+        logoutBtn.addEventListener('click', () => signOut(auth));
+        
+        // Attaches listeners to the status buttons on the dynamically generated cards
+        function attachEventListeners() {
+            document.querySelectorAll('.status-btn').forEach(button => {
+                button.onclick = (e) => {
+                    const orderId = e.target.dataset.id;
+                    const newStatus = e.target.dataset.status;
+                    
+                    activeOrderId = orderId;
+                    activeStatusUpdate = newStatus;
+
+                    document.getElementById('modalTitle').textContent = `Confirm ${newStatus}?`;
+                    document.getElementById('modalMessage').textContent = 
+                        `Are you sure you want to mark Order #${orderId.slice(-6).toUpperCase()} as ${newStatus}?`;
+                    
+                    // Set the confirmation button style/text based on action
+                    const confirmBtn = document.getElementById('confirmAction');
+                    confirmBtn.className = `btn ${newStatus === 'Delivered' ? 'btn-success' : 'btn-cancel'}`;
+                    confirmBtn.textContent = `Yes, ${newStatus}`;
+
+                    confirmModal.classList.add('show');
+                };
+            });
+        }
+
+        // Modal Confirmation and Cancellation Listeners
+        document.getElementById('confirmAction').addEventListener('click', () => {
+            if (activeOrderId && activeStatusUpdate) {
+                updateOrderStatus(activeOrderId, activeStatusUpdate);
+            }
+            confirmModal.classList.remove('show');
+            activeOrderId = null;
+            activeStatusUpdate = null;
+        });
+        
+        document.getElementById('confirmCancel').addEventListener('click', () => {
+            confirmModal.classList.remove('show');
+            activeOrderId = null;
+            activeStatusUpdate = null;
+        });
+    </script>
+</body>
+</html>
