@@ -67,8 +67,16 @@ body { background: var(--background-light); color: var(--text-dark); }
         width: 100%;
     }
     
-    .card-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; padding: 1.5rem; background: #fdfdfd; border-top: 1px solid var(--border-light); }
+    .card-footer { 
+        display: grid; 
+        grid-template-columns: 1fr 1fr; /* Two main columns for action buttons */
+        gap: 0.8rem; 
+        padding: 1.5rem; 
+        background: #fdfdfd; 
+        border-top: 1px solid var(--border-light); 
+    }
     .card-footer .btn { padding: 0.8rem 0.5rem; font-size: 0.9rem; }
+    .footer-row { grid-column: span 2; margin-bottom: 0.8rem; }
     
     .btn-map { background: var(--info-color); color: white; }
     .btn-success { background: var(--success-color); color: white; }
@@ -205,15 +213,18 @@ body { background: var(--background-light); color: var(--text-dark); }
 
                         <ul class="items-list">${(order.items || []).map(item => `<li>${item.name || 'Unknown'} x ${item.quantity || 1}</li>`).join('')}</ul>
                     </div>
-                    <div class="card-footer" style="grid-template-columns: repeat(2, 1fr);">
-                        <a href="${mapLink}" target="_blank" class="btn btn-map" style="grid-column: span 2;"><i class="fas fa-map-marked-alt"></i> Search on Maps</a>
+                    <div class="card-footer" style="grid-template-columns: 1fr 1fr;">
                         
-                        <!-- Order-specific OTP Input -->
-                        <div style="grid-column: span 2; margin-bottom: -10px;">
-                            <input type="text" placeholder="Enter Customer OTP (${order.deliveryOTP})" class="otp-input" data-order-id="${order.id}" maxlength="6">
+                        <!-- Map Button (Full Width Row) -->
+                        <a href="${mapLink}" target="_blank" class="btn btn-map footer-row" style="grid-column: span 2;"><i class="fas fa-map-marked-alt"></i> Search on Maps</a>
+                        
+                        <!-- OTP Input Group (Full Width Row) -->
+                        <div class="footer-row" style="grid-column: span 2; margin-bottom: 0;">
+                            <!-- OTP in placeholder is hidden, placeholder only shows expected format -->
+                            <input type="text" placeholder="Enter Customer OTP (6 digits)" class="otp-input" data-order-id="${order.id}" maxlength="6">
                         </div>
 
-                        <!-- Verification Button (Replaces old Delivered Button) -->
+                        <!-- Action Buttons -->
                         <button class="btn btn-success btn-verify" 
                                 data-id="${order.id}" 
                                 data-otp-value="${order.deliveryOTP}"
@@ -221,7 +232,7 @@ body { background: var(--background-light); color: var(--text-dark); }
                             <i class="fas fa-check-circle"></i> Verify & Deliver
                         </button>
 
-                        <!-- Cancel Button (Now works via Modal) -->
+                        <!-- Cancel Button -->
                         <button class="btn btn-cancel status-btn" data-status="Cancelled" data-id="${order.id}" style="grid-column: 2 / span 1;">
                             <i class="fas fa-times-circle"></i> Cancel
                         </button>
