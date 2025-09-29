@@ -12,30 +12,39 @@
 
     <style>
         :root {
-            --primary-color: #27ae60; --secondary-color: #2c3e50; --white: #fff;
+            --primary-color: #27ae60; --primary-color-dark: #1e874b; --secondary-color: #2c3e50; --white: #fff;
             --background-light: #f8f9fa; --danger-color: #e74c3c; --border-light: #e0e0e0;
+            --text-dark: #333; --text-light: #555;
+            --shadow-light: rgba(0,0,0,0.08);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--background-light); }
+        body { background-color: var(--background-light); padding-top: 70px; /* Space for fixed header */ }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
         a, button { transition: all 0.3s ease; }
         body.nav-open { overflow: hidden; }
 
-        /* --- 2. Header & Navigation (Homepage Style) --- */
-        .header { background: var(--white); border-bottom: 1px solid var(--border-light); padding: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        /* --- 2. Header & Navigation (Fixed Index Style) --- */
+        .header { 
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 0.75rem 0; 
+            background-color: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.07); 
+        }
         .header-inner { display: flex; justify-content: space-between; align-items: center; }
-        .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
-        .logo img { height: 50px; }
+        .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
+        .logo img { height: 40px; }
+
         .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a { color: var(--text-dark); text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative; }
+        .nav-links a { color: var(--secondary-color); text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative; }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--primary-color); transition: width 0.3s ease; }
+        
         .header-actions { display: flex; align-items: center; gap: 1.5rem; }
-        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--text-dark); }
-        #cartCount { position: absolute; top: -8px; right: -10px; background-color: var(--danger-color); color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
-        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; }
+        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--secondary-color); }
+        #cartCount { position: absolute; top: -8px; right: -10px; background-color: var(--primary-color); color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
+        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; color: var(--primary-color); }
         .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--secondary-color); }
 
+
         /* --- 3. Main Auth Page Layout --- */
-        .auth-page { display: flex; min-height: 100vh; }
+        .auth-page { display: flex; min-height: calc(100vh - 70px); /* Adjust height for fixed header */ }
         .auth-left { flex: 1; background: linear-gradient(135deg, #a8e063, #56ab2f); color: var(--white); padding: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         .auth-left h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 1rem; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .auth-left p { font-size: 1.1rem; max-width: 400px; opacity: 0.9; }
@@ -54,7 +63,7 @@
         .forgot-password a { color: var(--primary-color); text-decoration: none; cursor: pointer; }
         
         .btn-primary { width: 100%; background-color: var(--primary-color); color: #fff; border: none; padding: 16px; font-size: 1.1rem; font-weight: 600; border-radius: 8px; cursor: pointer; }
-        .btn-primary:hover { background-color: #1e874b; transform: translateY(-2px); }
+        .btn-primary:hover { background-color: var(--primary-color-dark); transform: translateY(-2px); }
 
         .auth-footer { margin-top: 2rem; text-align: center; }
         .auth-footer a { color: var(--primary-color); font-weight: 600; text-decoration: none; }
@@ -72,7 +81,7 @@
         @media (max-width: 992px) {
             .nav-links {
                 position: fixed; top: 0; right: 0; width: 300px; height: 100vh;
-                background-color: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+                background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
                 border-left: 1px solid rgba(255, 255, 255, 0.2);
                 flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
                 transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
@@ -83,6 +92,7 @@
             .header-nav { display: none; }
             .auth-left { display: none; }
             .auth-right { padding: 40px 20px; }
+            .auth-page { min-height: calc(100vh - 70px); }
         }
 
         /* --- 6. Footer --- */
@@ -98,11 +108,19 @@
 <body>
     <header class="header">
         <div class="container header-inner">
-            <div class="logo"><a href="index.html"><img src="assets/logo.png" alt="Logo"/><span>Potlapalli Farms</span></a></div>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/logo.png" alt="Logo"/>
+                    <span>Potlapalli Farms</span>
+                </a>
+            </div>
             <nav class="header-nav">
                 <a href="index.html">Shop</a>
                 <a href="profile.html">My Account</a>
-                <a href="cart.html"><i class="fas fa-shopping-cart"></i><span id="cartCount">0</span></a>
+                <a href="cart.html">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount">0</span>
+                </a>
             </nav>
             <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
         </div>
@@ -171,8 +189,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
+        import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        // NOTE: Firestore is not strictly needed for signin but kept for potential future use
+        
         const firebaseConfig = {
             apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
             authDomain: "potlapallifarm.firebaseapp.com",
@@ -195,6 +214,14 @@
         const menuBtn = document.getElementById('menuBtn');
         const navLinks = document.getElementById('nav-links');
 
+        // Initial check for cart count (if cart.html has populated localStorage)
+        const updateCartCount = () => {
+            const cartCountEl = document.getElementById('cartCount');
+            const cart = JSON.parse(localStorage.getItem('potlapalliCart')) || [];
+            const totalItems = cart.length; 
+            if (cartCountEl) cartCountEl.textContent = totalItems;
+        };
+
         function showToast(message, isError = false) {
             toastEl.textContent = message;
             toastEl.className = isError ? 'toast show error' : 'toast show';
@@ -207,6 +234,10 @@
             passwordToggle.classList.toggle('fa-eye');
             passwordToggle.classList.toggle('fa-eye-slash');
         });
+
+        // Set initial visibility of the toggle icon
+        passwordToggle.classList.add('fa-eye-slash');
+
 
         signinForm.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -225,7 +256,8 @@
                 .then(() => signInWithEmailAndPassword(auth, email, password))
                 .then(() => {
                     showToast("Signed in successfully! Redirecting...");
-                    setTimeout(() => { window.location.href = "index.html"; }, 1500);
+                    // Give Firebase time to update the token before redirecting
+                    setTimeout(() => { window.location.href = "index.html"; }, 1000); 
                 })
                 .catch((error) => {
                     if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
@@ -233,6 +265,7 @@
                     } else {
                         showToast("An error occurred. Please try again.", true);
                     }
+                    console.error("Sign-in error:", error);
                 });
         });
 
@@ -253,6 +286,7 @@
                 })
                 .catch((error) => {
                     showToast("Could not send reset email. Please check the address.", true);
+                    console.error("Password reset error:", error);
                 });
         });
 
@@ -263,8 +297,10 @@
             document.body.classList.toggle("nav-open");
             menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
         });
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', updateCartCount);
     </script>
 
 </body>
 </html>
-
