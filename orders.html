@@ -318,7 +318,7 @@
                                         <img class="order-item-img" src="${item.image || 'https://placehold.co/60x60/f8f9fa/27ae60?text=P'}" alt="${item.name}">
                                         <div class="order-item-details">
                                             <span class="order-item-name">${item.name}</span>
-                                            <span class="order-item-qty">Quantity: ${item.quantity}</span>
+                                            <span class="order-item-qty">Quantity: ${item.quantity} ${item.unit.replace('/', '')}</span>
                                         </div>
                                     </li>
                                 `).join('')}
