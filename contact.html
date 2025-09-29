@@ -153,6 +153,34 @@
         let cart = [];
         let currentUser = null;
 
+        // ====================================================================
+    // 💥 NEW FUNCTION: OTP GENERATION AND EXPIRY
+    // ====================================================================
+
+    /**
+     * Generates a unique 6-digit OTP and calculates its 12-hour expiration time.
+     * @returns {object} An object containing the deliveryOTP (string) and otpExpiry (Timestamp).
+     */
+    function generateDeliveryOTPData() {
+        // Generate a random 6-digit OTP (000000 to 999999)
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        // Calculate expiration time: Current Time + 12 hours
+        const expiryTime = new Date();
+        expiryTime.setHours(expiryTime.getHours() + 12);
+        
+        // Convert standard Date object to Firestore Timestamp
+        // NOTE: We use the local Timestamp class imported from firestore.js
+        const otpExpiryTimestamp = Timestamp.fromDate(expiryTime); 
+
+        return {
+            deliveryOTP: otp,
+            otpExpiry: otpExpiryTimestamp
+        };
+    }
+    
+    // ====================================================================
+
         function renderSummary() {
             cart = JSON.parse(localStorage.getItem('potlapalliCart')) || [];
             if (cart.length === 0) {
