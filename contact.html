@@ -124,37 +124,37 @@
     <div id="toast" class="toast"></div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-            authDomain: "potlapallifarm.firebaseapp.com",
-            projectId: "potlapallifarm",
-            storageBucket: "potlapallifarm.firebasestorage.app",
-            messagingSenderId: "1017629729159",
-            appId: "1:1017629729159:web:357c420a9de335d427b322"
-        };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    
+    const firebaseConfig = {
+        apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+        authDomain: "potlapallifarm.firebaseapp.com",
+        projectId: "potlapallifarm",
+        storageBucket: "potlapallifarm.firebasestorage.app",
+        messagingSenderId: "1017629729159",
+        appId: "1:1017629729159:web:357c420a9de335d427b322"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-        // --- All DOM Element selectors ---
-        const summaryItemsEl = document.getElementById('summary-items');
-        const summaryTotalEl = document.getElementById('summary-total');
-        const placeOrderBtn = document.getElementById('placeOrderBtn');
-        const fullNameInput = document.getElementById('fullName');
-        const phoneInput = document.getElementById('phone');
-        const addressInput = document.getElementById('address');
-        const checkoutView = document.getElementById('checkout-view');
-        const paymentOptions = document.getElementById('paymentOptions');
-        
-        let cart = [];
-        let currentUser = null;
-
-        // ====================================================================
-    // 💥 NEW FUNCTION: OTP GENERATION AND EXPIRY
+    // --- All DOM Element selectors ---
+    const summaryItemsEl = document.getElementById('summary-items');
+    const summaryTotalEl = document.getElementById('summary-total');
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
+    const fullNameInput = document.getElementById('fullName');
+    const phoneInput = document.getElementById('phone');
+    const addressInput = document.getElementById('address');
+    const checkoutView = document.getElementById('checkout-view');
+    const paymentOptions = document.getElementById('paymentOptions');
+    
+    let cart = [];
+    let currentUser = null;
+    
+    // ====================================================================
+    // 💥 OTP GENERATION FUNCTION
     // ====================================================================
 
     /**
@@ -162,15 +162,11 @@
      * @returns {object} An object containing the deliveryOTP (string) and otpExpiry (Timestamp).
      */
     function generateDeliveryOTPData() {
-        // Generate a random 6-digit OTP (000000 to 999999)
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         
-        // Calculate expiration time: Current Time + 12 hours
         const expiryTime = new Date();
         expiryTime.setHours(expiryTime.getHours() + 12);
         
-        // Convert standard Date object to Firestore Timestamp
-        // NOTE: We use the local Timestamp class imported from firestore.js
         const otpExpiryTimestamp = Timestamp.fromDate(expiryTime); 
 
         return {
@@ -181,91 +177,122 @@
     
     // ====================================================================
 
-        function renderSummary() {
-            cart = JSON.parse(localStorage.getItem('potlapalliCart')) || [];
-            if (cart.length === 0) {
-                checkoutView.innerHTML = `<div style="text-align:center; padding: 4rem 1rem; background:var(--white); border-radius:12px;"><h2>Your cart is empty</h2><p>Please add items from the shop before checking out.</p><a href="index.html" style="text-decoration:none; color:var(--primary-color); font-weight:600;">Go to Shop</a></div>`;
-                return;
-            }
-            summaryItemsEl.innerHTML = cart.map(item => `<div class="order-summary-item"><span>${item.name} x ${item.quantity}</span><span>₹${item.price * item.quantity}</span></div>`).join('');
-            const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-            summaryTotalEl.textContent = `₹${total}`;
-            validateForm();
+    function renderSummary() {
+        cart = JSON.parse(localStorage.getItem('potlapalliCart')) || [];
+        if (cart.length === 0) {
+            checkoutView.innerHTML = `<div style="text-align:center; padding: 4rem 1rem; background:var(--white); border-radius:12px;"><h2>Your cart is empty</h2><p>Please add items from the shop before checking out.</p><a href="index.html" style="text-decoration:none; color:var(--primary-color); font-weight:600;">Go to Shop</a></div>`;
+            return;
         }
+        summaryItemsEl.innerHTML = cart.map(item => `<div class="order-summary-item"><span>${item.name} x ${item.quantity}</span><span>₹${item.price * item.quantity}</span></div>`).join('');
+        const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        summaryTotalEl.textContent = `₹${total}`;
+        validateForm();
+    }
 
-        async function prefillUserDetails(userId) {
-            const userDocRef = doc(db, "users", userId);
-            const docSnap = await getDoc(userDocRef);
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                fullNameInput.value = userData.name || '';
-                phoneInput.value = userData.phone || '';
-            }
-            validateForm();
+    async function prefillUserDetails(userId) {
+        const userDocRef = doc(db, "users", userId);
+        const docSnap = await getDoc(userDocRef);
+        if (docSnap.exists()) {
+            const userData = docSnap.data();
+            fullNameInput.value = userData.name || '';
+            
+            // NOTE: Prefilling uses the standard input IDs (phone, address)
+            phoneInput.value = userData.phone || ''; 
+            addressInput.value = userData.address || ''; 
         }
+        validateForm();
+    }
 
-        async function placeOrder() {
-            if (!currentUser || cart.length === 0 || !validateForm()) return;
-            placeOrderBtn.disabled = true;
-            placeOrderBtn.textContent = 'Placing Order...';
+    async function placeOrder() {
+        if (!currentUser || cart.length === 0 || !validateForm()) return;
+        placeOrderBtn.disabled = true;
+        placeOrderBtn.textContent = 'Placing Order...';
 
-            const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-            const orderStatus = paymentMethod === 'COD' ? 'Processing' : 'Pending Payment';
+        const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+        const orderStatus = paymentMethod === 'COD' ? 'Shipped' : 'Pending Payment'; 
+        
+        const otpData = generateDeliveryOTPData();
 
-            const orderData = {
-                userId: currentUser.uid, items: cart, totalAmount,
-                customerName: fullNameInput.value, phone: phoneInput.value, address: addressInput.value,
-                paymentMethod, status: orderStatus, orderDate: serverTimestamp()
-            };
+        // 2. Base Order Data
+        const baseOrderData = {
+            userId: currentUser.uid, 
+            items: cart, 
+            totalAmount,
+            customerName: fullNameInput.value, 
+            
+            // 💥 CRITICAL FIX: Save the input values using the standardized names 
+            // that the Admin and Maps dashboards are expecting!
+            customerPhone: phoneInput.value, 
+            shippingAddress: addressInput.value, 
+            
+            paymentMethod, 
+            status: orderStatus, 
+            orderDate: serverTimestamp()
+        };
+        
+        // 3. Merge OTP data with base order data
+        const finalOrderData = { ...baseOrderData, ...otpData };
 
-            try {
-                const docRef = await addDoc(collection(db, "orders"), orderData);
-                localStorage.removeItem('potlapalliCart');
+        try {
+            const docRef = await addDoc(collection(db, "orders"), finalOrderData);
+            localStorage.removeItem('potlapalliCart');
+            
+            if (paymentMethod === 'COD') {
+                // Display OTP and Order Success
+                document.getElementById('orderId').textContent = `#${docRef.id.slice(-6).toUpperCase()}`;
+                document.getElementById('orderStatus').textContent = orderStatus;
                 
-                if (paymentMethod === 'COD') {
-                    document.getElementById('orderId').textContent = `#${docRef.id.slice(-6).toUpperCase()}`;
-                    document.getElementById('orderStatus').textContent = orderStatus;
-                    document.getElementById('receipt-items').innerHTML = orderData.items.map(item => `<div class="receipt-item"><span>${item.name} x ${item.quantity}</span><span>₹${item.price * item.quantity}</span></div>`).join('');
-                    document.getElementById('receipt-total').textContent = `₹${orderData.totalAmount}`;
-                    
-                    checkoutView.style.display = 'none';
-                    document.getElementById('success-view').style.display = 'block';
-                } else {
-                    window.location.href = `payment-verification.html?orderId=${docRef.id}&amount=${totalAmount}`;
-                }
-            } catch (error) {
-                console.error("Error writing document: ", error);
-                placeOrderBtn.disabled = false;
-                placeOrderBtn.textContent = 'Place Final Order';
-            }
-        }
-
-        function validateForm() {
-            const isFormValid = fullNameInput.value.trim() && phoneInput.value.trim() && addressInput.value.trim();
-            placeOrderBtn.disabled = !isFormValid;
-            return isFormValid;
-        }
-
-        onAuthStateChanged(auth, user => {
-            if (user) {
-                currentUser = user;
-                prefillUserDetails(user.uid);
-                renderSummary();
+                // Add the OTP to the receipt display
+                document.getElementById('receipt-items').innerHTML = `
+                    <p style="font-size: 1.1rem; color: var(--danger-color); font-weight: 600; margin-bottom: 1rem;">
+                        Your Delivery OTP: <span style="font-size: 1.5rem;">${otpData.deliveryOTP}</span>
+                    </p>
+                    ${finalOrderData.items.map(item => `<div class="receipt-item"><span>${item.name} x ${item.quantity}</span><span>₹${item.price * item.quantity}</span></div>`).join('')}
+                `;
+                
+                document.getElementById('receipt-total').textContent = `₹${finalOrderData.totalAmount}`;
+                
+                checkoutView.style.display = 'none';
+                document.getElementById('success-view').style.display = 'block';
             } else {
-                checkoutView.innerHTML = '<h2>Access Denied</h2><p>Please <a href="index.html">sign in</a> to checkout.</p>';
+                window.location.href = `payment-verification.html?orderId=${docRef.id}&amount=${totalAmount}`;
             }
-        });
-        
-        [fullNameInput, phoneInput, addressInput].forEach(input => input.addEventListener('input', validateForm));
-        
-        paymentOptions.addEventListener('change', e => {
-            document.querySelectorAll('.payment-options .option').forEach(el => el.classList.remove('selected'));
-            e.target.closest('.option').classList.add('selected');
-        });
+        } catch (error) {
+            console.error("Error writing document: ", error);
+            placeOrderBtn.disabled = false;
+            placeOrderBtn.textContent = 'Place Final Order';
+        }
+    }
 
-        placeOrderBtn.addEventListener('click', placeOrder);
-    </script>
+    function validateForm() {
+        const isFormValid = fullNameInput.value.trim() && phoneInput.value.trim() && addressInput.value.trim();
+        placeOrderBtn.disabled = !isFormValid;
+        return isFormValid;
+    }
+
+    // --- Event Listeners and Auth ---
+
+    onAuthStateChanged(auth, user => {
+        if (user) {
+            currentUser = user;
+            prefillUserDetails(user.uid);
+            renderSummary();
+        } else {
+            // Redirect or show access denied if user is not logged in
+            window.location.href = 'login.html'; // Assuming you have a login page
+        }
+    });
+    
+    [fullNameInput, phoneInput, addressInput].forEach(input => input.addEventListener('input', validateForm));
+    
+    paymentOptions.addEventListener('change', e => {
+        document.querySelectorAll('.payment-options .option').forEach(el => el.classList.remove('selected'));
+        e.target.closest('.option').classList.add('selected');
+    });
+
+    placeOrderBtn.addEventListener('click', placeOrder);
+</script>
 </body>
 </html>
 
