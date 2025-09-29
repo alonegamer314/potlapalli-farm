@@ -97,7 +97,7 @@
             .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
         }
         .nav-links { 
-            display: none; /* Hide default mobile nav list */
+            display: none; 
         }
     </style>
 </head>
@@ -142,8 +142,10 @@
                     <h3>Your Account</h3>
                     <div class="profile-nav">
                         <a class="profile-tab active" data-tab="info"><i class="fas fa-user"></i> Profile Info</a>
-                        <!-- FIX: Removed data-tab so click listener only uses href -->
+                        
+                        <!-- FIX: This link now works as a standard HTML navigation -->
                         <a href="orders.html" class="profile-tab"><i class="fas fa-box"></i> Order History</a>
+                        
                         <a class="profile-tab" data-tab="addresses"><i class="fas fa-map-marker-alt"></i> Addresses</a>
                         <a class="profile-tab" data-tab="security"><i class="fas fa-lock"></i> Security</a>
                         <a id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -248,6 +250,7 @@
         const menuBtn = document.querySelector('.menu-btn');
         const navLinks = document.getElementById('nav-links');
         
+        // --- Utility Functions ---
 
         function showToast(message, isError = false) {
             toastEl.textContent = message;
@@ -277,7 +280,7 @@
                     profileEmailEl.textContent = `📧 ${user.email}`;
                     profilePhoneEl.textContent = '📞 Add phone number';
                     profileAvatarEl.textContent = (user.displayName || user.email || 'A')[0].toUpperCase();
-                    accountRoleEl.textContent = 'Role: CUSTOMER (Default)';
+                    accountRoleEl.textContent = 'Role: CUSTOMER (Online)';
                     accountCreationDateEl.textContent = `Member Since: ${creationDate}`;
                 }
             } catch (error) {
@@ -382,12 +385,12 @@
         });
 
 
-        // --- Navigation and Tab Logic ---
+        // --- Navigation and Tab Logic (FIXED ORDER HISTORY LINK) ---
         document.querySelectorAll('.profile-tab').forEach(tab => {
             // Check if the tab has a data-tab attribute (for internal navigation)
             if (tab.dataset.tab) { 
                 tab.addEventListener('click', (e) => {
-                    // Prevent default link behavior only for internal tabs
+                    // Prevent default link behavior for internal tabs
                     e.preventDefault(); 
                     
                     document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
@@ -397,6 +400,8 @@
                     });
                 });
             }
+            // Note: Tabs without data-tab (like "Order History" with its href="orders.html") 
+            // automatically execute the browser's navigation, which is the desired fix.
         });
 
         // Hamburger Menu Logic (Ensures mobile responsiveness)
@@ -406,8 +411,7 @@
             document.body.classList.toggle("nav-open");
             menuBtnElement.querySelector('i').className = navLinks.classList.contains("active") ? 'fas fa-times' : 'fas fa-bars';
         });
-        
-        // Ensure menu closes if a link is clicked
+
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 if (link.id !== 'logoutBtnMobile') {
