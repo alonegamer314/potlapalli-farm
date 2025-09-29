@@ -23,7 +23,7 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; }
         html { scroll-behavior: smooth; }
-        body { background: var(--background-light); color: var(--text-dark); line-height: 1.6; padding-top: 70px; } /* Added padding-top */
+        body { background: var(--background-light); color: var(--text-dark); line-height: 1.6; padding-top: 70px; }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
         img { max-width: 100%; display: block; }
         a, button { transition: all 0.3s ease; }
@@ -136,7 +136,6 @@
         <div class="container header-inner">
             <div class="logo">
                 <a href="index.html">
-                    <!-- Adjusted image placeholder for consistent sizing -->
                     <img src="https://placehold.co/40x40/27ae60/FFFFFF?text=PF" alt="Logo"/>
                     <span>Potlapalli Farms</span>
                 </a>
@@ -203,7 +202,7 @@
         </div>
     </section>
     
-    <footer id="contact">
+    <footer>
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce.</p></div>
@@ -242,7 +241,6 @@
         const logoutMobileLi = document.getElementById('logout-mobile-li');
         let allOrders = [];
         let unsubscribeOrders = null;
-        let isAuthCheckComplete = false; // New state flag
 
         // --- Utility Functions ---
         
@@ -317,7 +315,8 @@
                             <ul class="order-items-list">
                                 ${order.items.map(item => `
                                     <li class="order-item">
-                                        <img class="order-item-img" src="${item.image}" alt="${item.name}">
+                                        <!-- Placeholder image used since actual paths are unknown -->
+                                        <img class="order-item-img" src="${item.image || 'https://placehold.co/60x60/f8f9fa/27ae60?text=P'}" alt="${item.name}">
                                         <div class="order-item-details">
                                             <span class="order-item-name">${item.name}</span>
                                             <span class="order-item-qty">Quantity: ${item.quantity}</span>
@@ -338,17 +337,54 @@
                 `;
             }).join('');
         }
+
+        // 💥 FIXED: Modal content rendering logic completed
+        function renderTrackingTimeline(orderId) { 
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const statuses = ['Processing', 'Shipped', 'Delivered'];
+            const currentIndex = statuses.indexOf(order.status);
+
+            const timelineHtml = statuses.map((s, i) => `
+                <li class="tracking-step ${i <= currentIndex ? 'completed' : ''}">
+                    <div class="icon"><i class="fas fa-${i <= currentIndex ? 'check' : 'box'}"></i></div>
+                    <div class="details"><h4>${s}</h4><p>${i === currentIndex ? `(Current Status)` : ''}</p></div>
+                </li>
+            `).join('');
+
+            trackingModal.querySelector('#tracking-timeline-list').innerHTML = timelineHtml;
+            trackingModal.classList.add('show');
+        }
+
+        // 💥 FIXED: Modal content rendering logic completed
+        function renderDetailsModal(orderId) { 
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const detailsBody = detailsModal.querySelector('#details-modal-body');
+            const itemsHtml = order.items.map(item => `<p>${item.name} x ${item.quantity} - ₹${item.price * item.quantity}</p>`).join('');
+
+            detailsBody.innerHTML = `
+                <div style="text-align:left;">
+                    <p><strong>Order ID:</strong> #${order.id.slice(-6).toUpperCase()}</p>
+                    <p><strong>Total:</strong> ₹${order.totalAmount}</p>
+                    <p><strong>Address:</strong> ${order.address || 'N/A'}</p>
+                    <p><strong>Phone:</strong> ${order.phone || 'N/A'}</p>
+                    <hr style="margin:1rem 0;">
+                    ${itemsHtml}
+                </div>`;
+            detailsModal.classList.add('show');
+        }
         
-        function renderTrackingTimeline(orderId) { /* ... modal logic ... */ }
-        function renderDetailsModal(orderId) { /* ... modal logic ... */ }
-        async function cancelOrder(orderId) { 
+        async function cancelOrder(orderId) { /* ... existing logic ... */ 
             const orderRef = doc(db, 'orders', orderId);
             try {
                 await updateDoc(orderRef, { status: 'Cancelled' });
                 showToast('Order cancelled successfully.');
             } catch (error) { showToast('Failed to cancel order.', true); }
         }
-        function reOrder(orderId) { 
+        function reOrder(orderId) { /* ... existing logic ... */
             const order = allOrders.find(o => o.id === orderId);
             if (!order) return;
             localStorage.setItem('potlapalliCart', JSON.stringify(order.items));
@@ -374,35 +410,36 @@
         
         // --- Authentication Check (FIXED REDIRECTION LOOP) ---
         onAuthStateChanged(auth, user => {
-            isAuthCheckComplete = true; // Mark check as complete
-
             if (user) { 
-                // User is logged in: Show content and fetch orders
                 mainContent.style.display = 'block';
                 authWall.style.display = 'none';
                 
-                // Initialize order fetching
                 mainContent.querySelector('#order-list').innerHTML = `<div class="loading-state"><i class="fas fa-spinner loading-spinner"></i><p>Loading your orders...</p></div>`;
                 if (unsubscribeOrders) unsubscribeOrders();
                 listenToOrders(user.uid); 
                 logoutMobileLi.style.display = 'block';
             } else { 
-                // User is NOT logged in: Show auth wall
                 if (unsubscribeOrders) unsubscribeOrders();
                 mainContent.style.display = 'none';
-                authWall.style.display = 'flex'; // Use flex to center the content
+                authWall.style.display = 'flex';
             }
         });
         
-        // --- Event Listeners ---
+        // --- Event Listeners (NOW WORKING) ---
         
         mainContent.addEventListener('click', e => { 
             const button = e.target.closest('button');
             if (!button) return;
             const orderId = button.dataset.orderId;
+
+            // Ensure orderId exists and buttons are the correct type
             if (orderId) {
-                if (button.classList.contains('track-order-btn')) renderTrackingTimeline(orderId);
-                if (button.classList.contains('view-details-btn')) renderDetailsModal(orderId);
+                if (button.classList.contains('track-order-btn')) {
+                    renderTrackingTimeline(orderId);
+                }
+                if (button.classList.contains('view-details-btn')) {
+                    renderDetailsModal(orderId);
+                }
                 if (button.classList.contains('re-order-btn')) reOrder(orderId);
                 if (button.classList.contains('cancel-order-btn')) {
                     cancelConfirmModal.dataset.orderId = orderId;
@@ -411,6 +448,7 @@
             }
         });
         
+        // Modal Closing Logic (remains correct)
         document.querySelectorAll('.close-modal, #cancelModalCloseBtn').forEach(btn => btn.addEventListener('click', e => e.target.closest('.modal-overlay').classList.remove('show')));
         document.getElementById('cancelModalConfirmBtn').addEventListener('click', () => {
              const orderId = cancelConfirmModal.dataset.orderId;
@@ -429,16 +467,23 @@
         };
         
         const menuIcon = document.querySelector('.menu-btn i');
-        menuBtn.addEventListener("click", () => {
+        const menuBtnElement = document.getElementById('menuBtn');
+
+        menuBtnElement.addEventListener("click", () => {
             const isActive = navLinks.classList.toggle("active");
             document.body.classList.toggle("nav-open");
             menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
         });
+
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                document.body.classList.remove('nav-open');
-                menuIcon.className = 'fas fa-bars';
+                if (link.id !== 'logoutBtnMobile') {
+                    if (navLinks.classList.contains("active")) {
+                        navLinks.classList.remove('active');
+                        document.body.classList.remove('nav-open');
+                        menuIcon.className = 'fas fa-bars';
+                    }
+                }
             });
         });
 
