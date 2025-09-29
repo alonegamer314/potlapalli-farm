@@ -209,52 +209,78 @@
             return "Enjoy the fresh taste of the farm!";
         }
 
-        function renderOrders(orders) {
-            const orderListContainer = document.querySelector('#main-content .order-list');
-            if (!orderListContainer) return;
-            if (orders.length === 0) {
-                orderListContainer.innerHTML = `<div class="no-orders"><h3>No Orders Found</h3><p>You haven't placed any orders yet. <a href="index.html">Start shopping!</a></p></div>`;
-                return;
+        // Replace the existing renderOrders function with this one:
+
+function renderOrders(orders) {
+    const orderListContainer = document.querySelector('#main-content .order-list');
+    if (!orderListContainer) return;
+    if (orders.length === 0) {
+        orderListContainer.innerHTML = `<div class="no-orders"><h3>No Orders Found</h3><p>You haven't placed any orders yet. <a href="index.html">Start shopping!</a></p></div>`;
+        return;
+    }
+    
+    orderListContainer.innerHTML = orders.map(order => {
+        const orderTimestamp = new Date(order.orderDate.seconds * 1000);
+        const formattedDate = orderTimestamp.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        const formattedTime = orderTimestamp.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true });
+        const tagline = generateOrderTagline(order.items);
+        
+        // 💥 NEW: OTP Display Logic
+        let otpDisplay = '';
+        if (order.deliveryOTP && ['Processing', 'Shipped'].includes(order.status)) {
+            // Check expiry time only if the OTP is relevant
+            let expiryText = '';
+            if (order.otpExpiry && order.otpExpiry.toDate() < new Date()) {
+                 expiryText = '<span style="color:var(--danger-color); font-weight:700;">(EXPIRED)</span>';
+            } else {
+                 expiryText = ' (Valid for 12 hours)';
             }
-            orderListContainer.innerHTML = orders.map(order => {
-                const orderTimestamp = new Date(order.orderDate.seconds * 1000);
-                const formattedDate = orderTimestamp.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-                const formattedTime = orderTimestamp.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true });
-                const tagline = generateOrderTagline(order.items);
-                return `
-                <div class="order-card">
-                    <div class="order-header">
-                        <div>
-                            <div class="order-id">Order #${order.id.slice(-6).toUpperCase()}</div>
-                            <div class="order-date">Placed on: ${formattedDate} at ${formattedTime}</div>
-                        </div>
-                        <div class="order-status ${order.status}">${order.status}</div>
-                    </div>
-                    <div class="order-body">
-                        <ul class="order-items-list">
-                            ${order.items.map(item => `
-                                <li class="order-item">
-                                    <img class="order-item-img" src="${item.image}" alt="${item.name}">
-                                    <div class="order-item-details">
-                                        <span class="order-item-name">${item.name}</span>
-                                        <span class="order-item-qty">Quantity: ${item.quantity}</span>
-                                    </div>
-                                </li>
-                            `).join('')}
-                        </ul>
-                        <div class="order-summary-total">Total: ₹${order.totalAmount}</div>
-                        <p class="order-tagline">"${tagline}"</p>
-                    </div>
-                    <div class="order-footer">
-                        <button class="btn btn-outline view-details-btn" data-order-id="${order.id}">View Details</button>
-                        <button class="btn btn-outline track-order-btn" data-order-id="${order.id}">Track Order</button>
-                        <button class="btn btn-primary re-order-btn" data-order-id="${order.id}">Re-Order</button>
-                        <button class="btn btn-danger cancel-order-btn" data-order-id="${order.id}" ${order.status !== 'Processing' ? 'disabled' : ''}>Cancel</button>
-                    </div>
+            
+            otpDisplay = `
+                <div style="padding: 1rem; margin-top: 1rem; border: 2px dashed var(--primary-color); border-radius: 8px; text-align: center;">
+                    <p style="font-weight: 600; color: var(--secondary-color);">Delivery Confirmation OTP:</p>
+                    <span style="font-size: 2rem; font-family: monospace; color: var(--primary-color-dark); font-weight: 700;">${order.deliveryOTP}</span>
+                    <p style="font-size: 0.85rem; color: var(--text-light);">${expiryText}</p>
                 </div>
-            `;}).join('');
+            `;
         }
 
+        return `
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <div class="order-id">Order #${order.id.slice(-6).toUpperCase()}</div>
+                        <div class="order-date">Placed on: ${formattedDate} at ${formattedTime}</div>
+                    </div>
+                    <div class="order-status ${order.status}">${order.status}</div>
+                </div>
+                <div class="order-body">
+                    ${otpDisplay}
+                    <ul class="order-items-list">
+                        ${order.items.map(item => `
+                            <li class="order-item">
+                                <img class="order-item-img" src="${item.image}" alt="${item.name}">
+                                <div class="order-item-details">
+                                    <span class="order-item-name">${item.name}</span>
+                                    <span class="order-item-qty">Quantity: ${item.quantity}</span>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <div class="order-summary-total">Total: ₹${order.totalAmount}</div>
+                    <p class="order-tagline">"${tagline}"</p>
+                </div>
+                <div class="order-footer">
+                    <button class="btn btn-outline view-details-btn" data-order-id="${order.id}">View Details</button>
+                    <button class="btn btn-outline track-order-btn" data-order-id="${order.id}">Track Order</button>
+                    <button class="btn btn-primary re-order-btn" data-order-id="${order.id}">Re-Order</button>
+                    <button class="btn btn-danger cancel-order-btn" data-order-id="${order.id}" ${order.status !== 'Processing' ? 'disabled' : ''}>Cancel</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+        
         function renderTrackingTimeline(orderId) { 
             const order = allOrders.find(o => o.id === orderId);
             if (!order) return;
