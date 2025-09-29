@@ -30,7 +30,7 @@
         .delivery-header h1 { font-family: 'Playfair Display', serif; font-size: 1.5rem; }
         #logoutBtn { background: var(--danger-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
 
-        .delivery-main { padding: 2rem 0; }
+        .delivery-main { padding: 2rem 1rem; }
         .delivery-main h2 { text-align: center; margin-bottom: 1.5rem; color: var(--secondary-color); }
         .order-queue { display: flex; flex-direction: column; gap: 1.5rem; }
         .delivery-card { background: var(--white); border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); overflow: hidden; }
@@ -50,8 +50,14 @@
         .btn-green { background: var(--primary-color); color: white; }
         .btn-dark { background: var(--secondary-color); color: white; }
 
-        .modal-overlay { /* Modal styles */ }
-        .toast { /* Toast styles */ }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content { background: var(--white); padding: 2rem; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; }
+        .modal-body .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+        .btn-outline { border: 2px solid var(--secondary-color); color: var(--secondary-color); background: transparent; }
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 1001; transition: bottom 0.5s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .toast.show { bottom: 20px; }
+        .toast.error { background: var(--danger-color); }
     </style>
 </head>
 <body>
@@ -77,7 +83,18 @@
         </main>
     </div>
 
-    <div id="confirmModal" class="modal-overlay"><!-- Confirmation Modal HTML --></div>
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3>Confirm Delivery?</h3>
+                <p>Please confirm that you have delivered the order and collected payment if required.</p>
+                <div class="btn-group">
+                    <button class="btn btn-outline" id="confirmCancel">Cancel</button>
+                    <button class="btn btn-green" id="confirmAction">Yes, Delivered</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="toast" class="toast"></div>
 
     <script type="module">
@@ -85,7 +102,14 @@
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, doc, getDoc, collection, query, where, onSnapshot, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const firebaseConfig = { /* Your Firebase Config */ };
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+            authDomain: "potlapallifarm.firebaseapp.com",
+            projectId: "potlapallifarm",
+            storageBucket: "potlapallifarm.firebasestorage.app",
+            messagingSenderId: "1017629729159",
+            appId: "1:1017629729159:web:357c420a9de335d427b322"
+        };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -95,9 +119,15 @@
         const loginForm = document.getElementById('deliveryLoginForm');
         const logoutBtn = document.getElementById('logoutBtn');
         const orderQueueContainer = document.getElementById('order-queue-container');
+        const confirmModal = document.getElementById('confirmModal');
+        const toastEl = document.getElementById('toast');
         let unsubscribeOrders = null;
 
-        function showToast(message, isError = false) { /* ... */ }
+        function showToast(message, isError = false) {
+            toastEl.textContent = message;
+            toastEl.className = isError ? 'toast show error' : 'toast show';
+            setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+        }
 
         function renderDeliveries(orders) {
             if (orders.length === 0) {
@@ -108,22 +138,11 @@
                 <div class="delivery-card" data-id="${order.id}">
                     <div class="card-header"><h3>Order #${order.id.slice(-6).toUpperCase()}</h3></div>
                     <div class="card-body">
-                        <div class="detail-row">
-                            <div class="icon"><i class="fas fa-user"></i></div>
-                            <div class="content"><p class="label">Customer:</p><p>${order.customerName}</p></div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
-                            <div class="content"><p class="label">Address:</p><p>${order.address}</p></div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="icon"><i class="fas fa-phone"></i></div>
-                            <div class="content"><p class="label">Phone:</p><p>${order.phone}</p></div>
-                        </div>
+                        <div class="detail-row"><div class="icon"><i class="fas fa-user"></i></div><div class="content"><p class="label">Customer:</p><p>${order.customerName}</p></div></div>
+                        <div class="detail-row"><div class="icon"><i class="fas fa-map-marker-alt"></i></div><div class="content"><p class="label">Address:</p><p>${order.address}</p></div></div>
+                        <div class="detail-row"><div class="icon"><i class="fas fa-phone"></i></div><div class="content"><p class="label">Phone:</p><p>${order.phone}</p></div></div>
                         ${order.paymentMethod === 'COD' ? `<div class="cod-highlight"><p>Collect Cash:</p><p class="amount">₹${order.totalAmount}</p></div>` : ''}
-                        <ul class="items-list">
-                            ${order.items.map(item => `<li>${item.name} x ${item.quantity}</li>`).join('')}
-                        </ul>
+                        <ul class="items-list">${order.items.map(item => `<li>${item.name} x ${item.quantity}</li>`).join('')}</ul>
                     </div>
                     <div class="card-footer">
                         <a href="https://www.google.com/maps?q=${encodeURIComponent(order.address)}" target="_blank" class="btn btn-dark"><i class="fas fa-directions"></i> Get Directions</a>
@@ -152,15 +171,21 @@
         
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists() && userDoc.data().role === 'driver') {
-                    loginView.style.display = 'none';
-                    dashboardView.style.display = 'block';
-                    if (unsubscribeOrders) unsubscribeOrders();
-                    listenToDeliveries();
-                } else {
+                const userDocRef = doc(db, "users", user.uid);
+                try {
+                    const docSnap = await getDoc(userDocRef);
+                    if (docSnap.exists() && docSnap.data().role === 'driver') {
+                        loginView.style.display = 'none';
+                        dashboardView.style.display = 'block';
+                        if (unsubscribeOrders) unsubscribeOrders();
+                        listenToDeliveries();
+                    } else {
+                        signOut(auth);
+                        showToast("Access Denied: Not a driver account.", true);
+                    }
+                } catch (error) {
                     signOut(auth);
-                    showToast("Access Denied: Not a driver account.", true);
+                    showToast("Error verifying account.", true);
                 }
             } else {
                 loginView.style.display = 'flex';
@@ -171,8 +196,10 @@
         
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            signInWithEmailAndPassword(auth, deliveryEmail.value, deliveryPassword.value)
-                .catch(err => showToast("Login Failed.", true));
+            const email = document.getElementById('deliveryEmail').value;
+            const password = document.getElementById('deliveryPassword').value;
+            signInWithEmailAndPassword(auth, email, password)
+                .catch(err => showToast("Login Failed. Please check your email and password.", true));
         });
         
         logoutBtn.addEventListener('click', () => signOut(auth));
@@ -181,11 +208,22 @@
             const button = e.target.closest('.mark-delivered-btn');
             if (button) {
                 const card = button.closest('.delivery-card');
-                if (confirm(`Confirm delivery for order #${card.dataset.id.slice(-6).toUpperCase()}?`)) {
-                    markAsDelivered(card.dataset.id);
-                }
+                confirmModal.dataset.orderId = card.dataset.id;
+                confirmModal.classList.add('show');
             }
+        });
+
+        confirmModal.querySelector('#confirmAction').addEventListener('click', () => {
+            const orderId = confirmModal.dataset.orderId;
+            if (orderId) {
+                markAsDelivered(orderId);
+            }
+            confirmModal.classList.remove('show');
+        });
+        confirmModal.querySelector('#confirmCancel').addEventListener('click', () => {
+            confirmModal.classList.remove('show');
         });
     </script>
 </body>
 </html>
+
