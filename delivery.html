@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delivery Dashboard - Potlapalli Farm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary-color: #27ae60; --secondary-color: #2c3e50; --background-light: #f8f9fa;
+            --text-dark: #333; --white: #fff; --border-light: #e0e0e0; --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--background-light); color: var(--text-dark); }
+        .container { width: 95%; max-width: 800px; margin: 0 auto; }
+
+        #delivery-login-view { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .login-box { background: var(--white); padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .login-box h1 { font-family: 'Playfair Display', serif; margin-bottom: 2rem; color: var(--secondary-color); }
+        .input-group { margin-bottom: 1.5rem; text-align: left; }
+        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem;}
+        .btn { width: 100%; padding: 1rem; background: var(--primary-color); color: var(--white); border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; }
+        
+        #delivery-dashboard-view { display: none; }
+        .delivery-header { background: var(--white); padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .delivery-header .container { display: flex; justify-content: space-between; align-items: center; }
+        .delivery-header h1 { font-family: 'Playfair Display', serif; font-size: 1.5rem; }
+        #logoutBtn { background: var(--danger-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+
+        .delivery-main { padding: 2rem 0; }
+        .delivery-main h2 { text-align: center; margin-bottom: 1.5rem; color: var(--secondary-color); }
+        .order-queue { display: flex; flex-direction: column; gap: 1.5rem; }
+        .delivery-card { background: var(--white); border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); overflow: hidden; }
+        .card-header { padding: 1rem 1.5rem; background: var(--secondary-color); color: var(--white); }
+        .card-header h3 { font-size: 1.2rem; }
+        .card-body { padding: 1.5rem; }
+        .detail-row { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
+        .detail-row .icon { font-size: 1.2rem; color: var(--primary-color); width: 20px; text-align: center; }
+        .detail-row .content p { margin: 0; }
+        .detail-row .content .label { font-weight: 600; }
+        .items-list { list-style: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border-light); }
+        .cod-highlight { background: var(--warning-color); color: var(--white); padding: 1rem; border-radius: 8px; text-align: center; margin-top: 1rem; }
+        .cod-highlight .amount { font-size: 1.5rem; font-weight: 700; }
+        
+        .card-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1.5rem; background: #fdfdfd; border-top: 1px solid var(--border-light); }
+        .card-footer .btn { width: 100%; text-decoration: none; text-align: center; padding: 0.8rem; font-size: 1rem; }
+        .btn-green { background: var(--primary-color); color: white; }
+        .btn-dark { background: var(--secondary-color); color: white; }
+
+        .modal-overlay { /* Modal styles */ }
+        .toast { /* Toast styles */ }
+    </style>
+</head>
+<body>
+    <div id="delivery-login-view">
+        <div class="login-box">
+            <h1>Driver Login</h1>
+            <form id="deliveryLoginForm">
+                <div class="input-group"><label for="deliveryEmail">Email</label><input type="email" id="deliveryEmail" required></div>
+                <div class="input-group"><label for="deliveryPassword">Password</label><input type="password" id="deliveryPassword" required></div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="delivery-dashboard-view">
+        <header class="delivery-header">
+            <div class="container"><h1>Delivery Queue</h1><button id="logoutBtn">Logout</button></div>
+        </header>
+        <main class="delivery-main">
+            <div class="container" id="order-queue-container">
+                <!-- Delivery cards will be injected here -->
+            </div>
+        </main>
+    </div>
+
+    <div id="confirmModal" class="modal-overlay"><!-- Confirmation Modal HTML --></div>
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, where, onSnapshot, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = { /* Your Firebase Config */ };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const loginView = document.getElementById('delivery-login-view');
+        const dashboardView = document.getElementById('delivery-dashboard-view');
+        const loginForm = document.getElementById('deliveryLoginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const orderQueueContainer = document.getElementById('order-queue-container');
+        let unsubscribeOrders = null;
+
+        function showToast(message, isError = false) { /* ... */ }
+
+        function renderDeliveries(orders) {
+            if (orders.length === 0) {
+                orderQueueContainer.innerHTML = `<h2>No deliveries pending.</h2>`;
+                return;
+            }
+            orderQueueContainer.innerHTML = `<h2>${orders.length} Deliveries Pending</h2>` + orders.map(order => `
+                <div class="delivery-card" data-id="${order.id}">
+                    <div class="card-header"><h3>Order #${order.id.slice(-6).toUpperCase()}</h3></div>
+                    <div class="card-body">
+                        <div class="detail-row">
+                            <div class="icon"><i class="fas fa-user"></i></div>
+                            <div class="content"><p class="label">Customer:</p><p>${order.customerName}</p></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="content"><p class="label">Address:</p><p>${order.address}</p></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="icon"><i class="fas fa-phone"></i></div>
+                            <div class="content"><p class="label">Phone:</p><p>${order.phone}</p></div>
+                        </div>
+                        ${order.paymentMethod === 'COD' ? `<div class="cod-highlight"><p>Collect Cash:</p><p class="amount">₹${order.totalAmount}</p></div>` : ''}
+                        <ul class="items-list">
+                            ${order.items.map(item => `<li>${item.name} x ${item.quantity}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <a href="https://www.google.com/maps?q=${encodeURIComponent(order.address)}" target="_blank" class="btn btn-dark"><i class="fas fa-directions"></i> Get Directions</a>
+                        <a href="tel:${order.phone}" class="btn btn-dark"><i class="fas fa-phone"></i> Call Customer</a>
+                        <button class="btn btn-green mark-delivered-btn" style="grid-column: span 2;"><i class="fas fa-check-circle"></i> Mark as Delivered</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function markAsDelivered(orderId) {
+            const orderRef = doc(db, 'orders', orderId);
+            try {
+                await updateDoc(orderRef, { status: 'Delivered' });
+                showToast('Order marked as delivered!');
+            } catch (error) { showToast('Update failed!', true); }
+        }
+
+        function listenToDeliveries() {
+            const ordersQuery = query(collection(db, "orders"), where("status", "==", "Shipped"), orderBy("orderDate", "asc"));
+            unsubscribeOrders = onSnapshot(ordersQuery, (snapshot) => {
+                const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderDeliveries(orders);
+            });
+        }
+        
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists() && userDoc.data().role === 'driver') {
+                    loginView.style.display = 'none';
+                    dashboardView.style.display = 'block';
+                    if (unsubscribeOrders) unsubscribeOrders();
+                    listenToDeliveries();
+                } else {
+                    signOut(auth);
+                    showToast("Access Denied: Not a driver account.", true);
+                }
+            } else {
+                loginView.style.display = 'flex';
+                dashboardView.style.display = 'none';
+                if (unsubscribeOrders) unsubscribeOrders();
+            }
+        });
+        
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            signInWithEmailAndPassword(auth, deliveryEmail.value, deliveryPassword.value)
+                .catch(err => showToast("Login Failed.", true));
+        });
+        
+        logoutBtn.addEventListener('click', () => signOut(auth));
+        
+        orderQueueContainer.addEventListener('click', e => {
+            const button = e.target.closest('.mark-delivered-btn');
+            if (button) {
+                const card = button.closest('.delivery-card');
+                if (confirm(`Confirm delivery for order #${card.dataset.id.slice(-6).toUpperCase()}?`)) {
+                    markAsDelivered(card.dataset.id);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
