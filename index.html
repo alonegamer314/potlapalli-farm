@@ -217,9 +217,13 @@
                     <span id="cartCount">0</span>
                 </a>
             </div>
-            <div id="desktop-auth">
-                <div id="authButtons"><a href="signin.html" class="auth-btn">Log In</a></div>
-            </div>
+            <!-- Updated Desktop Auth Buttons (New structure for dynamic content) -->
+<div id="auth-controls">
+    <a href="signin.html" class="auth-btn" id="authLinkDesktop">Log In</a>
+</div>
+<button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
+    <i class="fas fa-bars"></i>
+</button>
             <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
                 <i class="fas fa-bars"></i>
             </button>
@@ -295,7 +299,23 @@
     
     <div id="toast" class="toast" aria-live="polite"></div>
 
-    <script type="module">
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // Initialize Firebase app instance (using your consistent config):
+    const firebaseConfig = {
+        apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+        authDomain: "potlapallifarm.firebaseapp.com",
+        projectId: "potlapallifarm",
+        storageBucket: "potlapallifarm.firebasestorage.app",
+        messagingSenderId: "1017629729159",
+        appId: "1:1017629729159:web:357c420a9de335d427b322",
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+
     // --- 1. State & Data (Updated Product List) ---
     const products = [
         // Meat Products (Minimum 0.5kg, increments 0.5kg)
@@ -320,7 +340,7 @@
 
     const CART_KEY = 'potlapalliCart';
 
-    // --- 2. DOM Elements ---
+    // --- 2. DOM Elements (Including Auth Controls) ---
     const productGrid = document.getElementById('product-grid');
     const cartCountEl = document.getElementById('cartCount');
     const upcomingProductsSection = document.getElementById('upcoming-products-section');
@@ -328,12 +348,15 @@
     const header = document.getElementById('header');
     const menuBtn = document.getElementById("menuBtn");
     const navLinks = document.getElementById("nav-links");
+    // 💥 NEW: Auth Controls element to target the header buttons
+    const authControls = document.getElementById('auth-controls'); 
 
-    // --- 3. Cart Functionality ---
-    const showToast = (message) => {
+
+    // --- 3. Cart & Utility Functionality ---
+    const showToast = (message, isError = false) => {
         toastEl.textContent = message;
-        toastEl.classList.add('show');
-        setTimeout(() => toastEl.classList.remove('show'), 3000);
+        toastEl.classList.add(isError ? 'error' : 'show');
+        setTimeout(() => toastEl.classList.remove('show', 'error'), 3000);
     };
 
     const updateCartCount = () => {
@@ -356,7 +379,6 @@
         if (existingItem) {
             existingItem.quantity += quantity;
         } else {
-            // Save the current calculated price per unit for stability, though the base price is fixed
             cart.push({ ...product, quantity: quantity });
         }
         localStorage.setItem(CART_KEY, JSON.stringify(cart));
@@ -365,14 +387,12 @@
         showToast(`${quantity.toFixed(product.isMeat ? 1 : 0)}${product.isMeat ? 'kg' : product.unit.replace('/', '')} of ${product.name} added to cart!`);
         
         if (cardElement) {
-             // Reset display quantity to the minimum order quantity after adding
              cardElement.querySelector('.qty').textContent = product.isMeat ? '0.5' : '1';
-             // Recalculate price display to reflect the reset quantity
              updatePriceDisplay(cardElement, product);
         }
     };
     
-    // --- NEW FUNCTION: Dynamic Price Display ---
+    // --- Dynamic Price Display ---
     const updatePriceDisplay = (cardElement, product) => {
         const qtyEl = cardElement.querySelector('.qty');
         const priceDisplayEl = cardElement.querySelector('.price-display');
@@ -383,21 +403,17 @@
 
         let calculatedPrice = basePrice * currentQty;
         
-        // Format based on product type
         priceDisplayEl.textContent = `₹${calculatedPrice.toFixed(0)}`;
         
-        // Update the small price text next to the description
         pricePerUnitSmallEl.innerHTML = `(₹${basePrice}${product.unit})`;
     };
-
+    
     // --- 4. Product Rendering ---
     const renderProducts = () => {
         if (!productGrid) return;
         productGrid.innerHTML = products.map(product => {
             const initialQty = product.isMeat ? 0.5 : 1;
             const unitText = product.isMeat ? 'kg' : product.unit.replace('/', '');
-            
-            // Calculate initial displayed price
             const initialPrice = product.price * initialQty;
             
             return `
@@ -428,8 +444,7 @@
     
     // --- 4b. Render Upcoming Products ---
     const renderUpcomingProducts = () => {
-        // We now target the container within the new section HTML
-        const container = upcomingProductsSection.querySelector('.container');
+        const container = document.querySelector('#upcoming-products-section .container');
         if (!container) return; 
 
         container.innerHTML = `
@@ -440,7 +455,40 @@
         `;
     };
 
-    // --- 5. Hero Slider (No change) ---
+    // --- 4.5. Authentication Status Manager ---
+
+    const renderAuthControls = (user) => {
+        if (!authControls) return;
+
+        if (user) {
+            // User is logged in: Show My Profile and Log Out buttons
+            authControls.innerHTML = `
+                <a href="profile.html" class="auth-btn">My Profile</a>
+                <button class="auth-btn" id="signOutBtn" style="border:none; background:none; cursor:pointer;">Log Out</button>
+            `;
+            // Attach logout listener immediately
+            document.getElementById('signOutBtn').addEventListener('click', handleLogout);
+        } else {
+            // User is logged out: Show Log In button
+            authControls.innerHTML = `<a href="signin.html" class="auth-btn">Log In</a>`;
+        }
+    };
+
+    const handleLogout = () => {
+        signOut(auth).then(() => {
+            showToast("Signed out successfully!");
+            renderAuthControls(null); // Instantly update UI
+        }).catch(error => {
+            showToast("Logout error.", true);
+            console.error("Logout failed:", error);
+        });
+    };
+
+    // Listen for authentication state changes and update the header buttons
+    onAuthStateChanged(auth, renderAuthControls);
+
+
+    // --- 5, 6, 7. Utility Functions (Unchanged) ---
     const initSlider = () => { 
         const slider = document.querySelector('.hero-slider');
         const slides = document.querySelectorAll('.hero-slide');
@@ -484,7 +532,6 @@
         resetInterval();
     };
 
-    // --- 6. Page Scroll Animations & Effects (No change) ---
     const initScrollEffects = () => {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -501,7 +548,6 @@
         });
     };
 
-    // --- 7. Mobile Navigation (No change) ---
     const initMobileNav = () => {
         if (!menuBtn || !navLinks) return;
         const menuIcon = menuBtn.querySelector('i');
@@ -574,5 +620,8 @@
             const product = products.find(p => p.id === card.dataset.id);
             if (product) updatePriceDisplay(card, product);
         });
+        
+        // 💥 Ensure Auth Controls render immediately on load
+        onAuthStateChanged(auth, renderAuthControls); 
     });
 </script>
