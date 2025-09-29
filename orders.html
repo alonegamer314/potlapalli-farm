@@ -174,13 +174,13 @@
     </main>
     
     <!-- Auth Wall (Initially hidden, shown only if user is logged out) -->
-    <div id="auth-wall" style="display: none;">
-        <div class="container">
-            <h2>Access Denied</h2>
-            <p>You must be signed in to view your orders.</p>
-            <a href="signin.html" class="btn-primary" style="text-decoration:none;">Sign In</a>
-        </div>
+    <div id="auth-wall" class="modal-overlay"> 
+    <div class="container">
+        <h2>Access Denied</h2>
+        <p>You must be signed in to view your orders.</p>
+        <a href="signin.html" class="btn-primary" style="text-decoration:none;">Sign In</a>
     </div>
+</div>
     
     <div id="toast" class="toast"></div>
 
@@ -315,7 +315,6 @@
                             <ul class="order-items-list">
                                 ${order.items.map(item => `
                                     <li class="order-item">
-                                        <!-- Placeholder image used since actual paths are unknown -->
                                         <img class="order-item-img" src="${item.image || 'https://placehold.co/60x60/f8f9fa/27ae60?text=P'}" alt="${item.name}">
                                         <div class="order-item-details">
                                             <span class="order-item-name">${item.name}</span>
@@ -338,7 +337,6 @@
             }).join('');
         }
 
-        // 💥 FIXED: Modal content rendering logic completed
         function renderTrackingTimeline(orderId) { 
             const order = allOrders.find(o => o.id === orderId);
             if (!order) return;
@@ -357,7 +355,6 @@
             trackingModal.classList.add('show');
         }
 
-        // 💥 FIXED: Modal content rendering logic completed
         function renderDetailsModal(orderId) { 
             const order = allOrders.find(o => o.id === orderId);
             if (!order) return;
@@ -377,14 +374,14 @@
             detailsModal.classList.add('show');
         }
         
-        async function cancelOrder(orderId) { /* ... existing logic ... */ 
+        async function cancelOrder(orderId) { 
             const orderRef = doc(db, 'orders', orderId);
             try {
                 await updateDoc(orderRef, { status: 'Cancelled' });
                 showToast('Order cancelled successfully.');
             } catch (error) { showToast('Failed to cancel order.', true); }
         }
-        function reOrder(orderId) { /* ... existing logic ... */
+        function reOrder(orderId) { 
             const order = allOrders.find(o => o.id === orderId);
             if (!order) return;
             localStorage.setItem('potlapalliCart', JSON.stringify(order.items));
@@ -412,16 +409,18 @@
         onAuthStateChanged(auth, user => {
             if (user) { 
                 mainContent.style.display = 'block';
-                authWall.style.display = 'none';
+                authWall.classList.remove('show');
                 
+                // Initialize order fetching
                 mainContent.querySelector('#order-list').innerHTML = `<div class="loading-state"><i class="fas fa-spinner loading-spinner"></i><p>Loading your orders...</p></div>`;
                 if (unsubscribeOrders) unsubscribeOrders();
                 listenToOrders(user.uid); 
                 logoutMobileLi.style.display = 'block';
             } else { 
+                // Redirect user if not logged in after authentication check is complete
                 if (unsubscribeOrders) unsubscribeOrders();
                 mainContent.style.display = 'none';
-                authWall.style.display = 'flex';
+                authWall.classList.add('show');
             }
         });
         
