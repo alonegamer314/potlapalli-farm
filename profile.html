@@ -17,7 +17,7 @@
             --shadow-light: rgba(0,0,0,0.08);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; }
-        body { background: var(--background-light); color: var(--text-dark); line-height: 1.6; padding-top: 70px; } 
+        body { background: var(--background-light); color: var(--text-dark); line-height: 1.6; padding-top: 70px; }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
         body.nav-open { overflow: hidden; }
 
@@ -71,7 +71,7 @@
         
         /* Auth Wall for non-logged in users */
         #auth-wall { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--background-light); display: flex; align-items: center; justify-content: center; z-index: 100; }
-        #auth-wall div { text-align: center; padding: 4rem 1rem; background: var(--white); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        #auth-wall div { text-align: center; padding: 4rem 1rem; background: var(--white); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 400px; }
         #auth-wall h2 { font-size: 2rem; color: var(--secondary-color); margin-bottom: 1rem; }
         #auth-wall p { margin-bottom: 1.5rem; }
         #auth-wall a { color: var(--primary-color); font-weight: 600; text-decoration: none; }
@@ -107,7 +107,7 @@
         <div class="container header-inner">
             <div class="logo">
                 <a href="index.html">
-                    <img src="https://placehold.co/100x100/27ae60/FFFFFF?text=PF" alt="Logo"/>
+                    <img src="https://placehold.co/40x40/27ae60/FFFFFF?text=PF" alt="Logo"/>
                     <span>Potlapalli Farm</span>
                 </a>
             </div>
@@ -142,7 +142,8 @@
                     <h3>Your Account</h3>
                     <div class="profile-nav">
                         <a class="profile-tab active" data-tab="info"><i class="fas fa-user"></i> Profile Info</a>
-                        <a href="orders.html" class="profile-tab" data-tab="order-history-link"><i class="fas fa-box"></i> Order History</a>
+                        <!-- FIX: Removed data-tab so click listener only uses href -->
+                        <a href="orders.html" class="profile-tab"><i class="fas fa-box"></i> Order History</a>
                         <a class="profile-tab" data-tab="addresses"><i class="fas fa-map-marker-alt"></i> Addresses</a>
                         <a class="profile-tab" data-tab="security"><i class="fas fa-lock"></i> Security</a>
                         <a id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -247,10 +248,6 @@
         const menuBtn = document.querySelector('.menu-btn');
         const navLinks = document.getElementById('nav-links');
         
-        // --- Added global variable for Firebase Auth status check ---
-        let isAuthChecked = false;
-        let isUserLoggedIn = false;
-
 
         function showToast(message, isError = false) {
             toastEl.textContent = message;
@@ -275,11 +272,12 @@
                     accountRoleEl.textContent = `Role: ${userData.role ? userData.role.toUpperCase() : 'CUSTOMER'}`;
                     accountCreationDateEl.textContent = `Member Since: ${creationDate}`;
                 } else {
+                    // Fallback for new users who haven't saved to Firestore yet
                     profileNameEl.textContent = user.displayName || "Farm User";
                     profileEmailEl.textContent = `📧 ${user.email}`;
                     profilePhoneEl.textContent = '📞 Add phone number';
                     profileAvatarEl.textContent = (user.displayName || user.email || 'A')[0].toUpperCase();
-                    accountRoleEl.textContent = 'Role: CUSTOMER (Online)';
+                    accountRoleEl.textContent = 'Role: CUSTOMER (Default)';
                     accountCreationDateEl.textContent = `Member Since: ${creationDate}`;
                 }
             } catch (error) {
@@ -290,14 +288,11 @@
         
         // --- Authentication Check ---
         onAuthStateChanged(auth, user => {
-            isAuthChecked = true;
             if (user) {
-                isUserLoggedIn = true;
                 mainContent.style.display = 'block';
                 authWall.classList.remove('show');
                 fetchUserProfile(user);
             } else {
-                isUserLoggedIn = false;
                 mainContent.style.display = 'none';
                 authWall.classList.add('show');
             }
@@ -307,15 +302,14 @@
         const handleLogout = () => {
             signOut(auth).then(() => {
                 showToast('Signed out successfully. Redirecting...');
-                // The onAuthStateChanged will handle hiding the profile view.
                 setTimeout(() => { window.location.href = 'signin.html'; }, 500); 
-            }).catch(error => {
-                showToast('Error signing out.', true);
+            }).catch(error => { 
+                showToast('Error signing out.', true); 
                 console.error("Logout error:", error);
             });
         };
 
-        // --- Profile Edit Logic (Rest of the functions remain the same) ---
+        // --- Profile Edit Logic ---
         
         document.getElementById('editProfileBtn').addEventListener('click', () => {
             editNameInput.value = profileNameEl.textContent;
@@ -390,8 +384,12 @@
 
         // --- Navigation and Tab Logic ---
         document.querySelectorAll('.profile-tab').forEach(tab => {
-            if (!tab.hasAttribute('href')) {
-                tab.addEventListener('click', () => {
+            // Check if the tab has a data-tab attribute (for internal navigation)
+            if (tab.dataset.tab) { 
+                tab.addEventListener('click', (e) => {
+                    // Prevent default link behavior only for internal tabs
+                    e.preventDefault(); 
+                    
                     document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
                     document.querySelectorAll('.profile-main > div').forEach(content => {
@@ -402,21 +400,21 @@
         });
 
         // Hamburger Menu Logic (Ensures mobile responsiveness)
-        menuBtn.addEventListener("click", () => {
+        const menuBtnElement = document.getElementById('menuBtn');
+        menuBtnElement.addEventListener("click", () => {
             navLinks.classList.toggle("active");
             document.body.classList.toggle("nav-open");
-            menuBtn.querySelector('i').className = navLinks.classList.contains("active") ? 'fas fa-times' : 'fas fa-bars';
+            menuBtnElement.querySelector('i').className = navLinks.classList.contains("active") ? 'fas fa-times' : 'fas fa-bars';
         });
         
         // Ensure menu closes if a link is clicked
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                // Only close if the link is not the logout link (which handles its own state change)
-                if (link.id !== 'logoutBtnMobile') { 
+                if (link.id !== 'logoutBtnMobile') {
                     if (navLinks.classList.contains("active")) {
                         navLinks.classList.remove('active');
                         document.body.classList.remove('nav-open');
-                        menuBtn.querySelector('i').className = 'fas fa-bars';
+                        document.getElementById('menuBtn').querySelector('i').className = 'fas fa-bars';
                     }
                 }
             });
