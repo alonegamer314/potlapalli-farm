@@ -157,20 +157,20 @@
             }
 
             const ordersHtml = orders.map(order => {
-                const customerPhone = order.customerPhone || 'N/A';
-                const shippingAddress = order.shippingAddress || 'Address not available';
+                const phone = order.phone || 'N/A';
+                const address = order.address || 'Address not available';
                 const totalAmount = order.totalAmount ? order.totalAmount.toFixed(2) : '0.00';
                 
                 // FEATURE: Google Maps Link (Searches for the address)
-                const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shippingAddress)}`;
+                const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
                 
                 return `
                     <div class="order-card" data-id="${order.id}">
                         <div class="card-header"><h3>Order #${order.id.slice(-6).toUpperCase()}</h3></div>
                         <div class="card-body">
                             <div class="detail-row"><div class="icon"><i class="fas fa-user"></i></div><div class="content"><p class="label">Customer:</p><p>${order.customerName || 'N/A'}</p></div></div>
-                            <div class="detail-row"><div class="icon"><i class="fas fa-map-marker-alt"></i></div><div class="content"><p class="label">Address:</p><p>${shippingAddress}</p></div></div>
-                            <div class="detail-row"><div class="icon"><i class="fas fa-phone"></i></div><div class="content"><p class="label">Phone:</p><p>${customerPhone}</p></div></div>
+                            <div class="detail-row"><div class="icon"><i class="fas fa-map-marker-alt"></i></div><div class="content"><p class="label">Address:</p><p>${address}</p></div></div>
+                            <div class="detail-row"><div class="icon"><i class="fas fa-phone"></i></div><div class="content"><p class="label">Phone:</p><p>${phone}</p></div></div>
                             
                             ${order.paymentMethod === 'COD' ? 
                                 `<div class="cod-highlight"><p>COD Amount:</p><p class="amount">₹${totalAmount}</p></div>` 
