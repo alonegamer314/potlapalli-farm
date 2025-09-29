@@ -509,37 +509,621 @@
     <div id="productModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="productModalTitle"></div>
     <div id="toast" role="alert" aria-live="assertive" aria-atomic="true" class="toast"></div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, deleteDoc, query, orderBy, limit, where, Timestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, deleteDoc, query, orderBy, limit, where, Timestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-            authDomain: "potlapallifarm.firebaseapp.com",
-            projectId: "potlapallifarm",
-            storageBucket: "potlapallifarm.firebasestorage.app",
-            messagingSenderId: "1017629729159",
-            appId: "1:1017629729159:web:357c420a9de335d427b322"
+    const firebaseConfig = {
+        apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+        authDomain: "potlapallifarm.firebaseapp.com",
+        projectId: "potlapallifarm",
+        storageBucket: "potlapallifarm.firebasestorage.app",
+        messagingSenderId: "1017629729159",
+        appId: "1:1017629729159:web:357c420a9de335d427b322"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let allOrders = [], allCustomers = [], allProducts = [];
+    let unsubscribeOrders, unsubscribeCustomers, unsubscribeProducts;
+    let revenueChartInstance = null;
+
+    // --- Utility Functions ---
+
+    function showLoader(show) {
+        document.getElementById('loader-overlay').classList.toggle('show', show);
+    }
+
+    function showToast(message, isError = false) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.toggle('error', isError);
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            const context = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), delay);
         };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
-        let allOrders = [], allCustomers = [], allProducts = [];
-        let unsubscribeOrders, unsubscribeCustomers, unsubscribeProducts;
+    }
 
-        // --- All Functions are now fully implemented ---
-        // showLoader, showToast, debounce, renderTable
-        // Authentication logic
-        // Dashboard initialization and tab navigation
-        // Dashboard Stats and Chart rendering
-        // Orders Tab: rendering, search, status update, modal view
-        // Customers Tab: rendering, search
-        // Products Tab: rendering, search, and full CRUD (Create, Read, Update, Delete)
-        // All Modal logic
+    function formatDate(timestamp) {
+        if (!timestamp) return 'N/A';
+        const date = timestamp instanceof Timestamp ? timestamp.toDate() : new Date(timestamp);
+        return date.toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(amount);
+    }
+
+    // --- Core Auth Logic ---
+
+    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('adminEmail').value;
+        const password = document.getElementById('adminPassword').value;
+
+        showLoader(true);
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            // onAuthStateChanged will handle the view switch
+        } catch (error) {
+            console.error("Login Failed:", error);
+            showToast("Login failed: Invalid credentials or account not found.", true);
+        } finally {
+            showLoader(false);
+        }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        showLoader(true);
+        try {
+            await signOut(auth);
+            // onAuthStateChanged will handle the view switch
+        } catch (error) {
+            console.error("Logout Failed:", error);
+            showToast("Logout failed. Please try again.", true);
+        } finally {
+            showLoader(false);
+        }
+    });
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.getElementById('admin-login-view').style.display = 'none';
+            document.getElementById('admin-dashboard-view').style.display = 'block';
+            initializeDashboard();
+        } else {
+            // Stop real-time listeners when logging out
+            if (unsubscribeOrders) unsubscribeOrders();
+            if (unsubscribeCustomers) unsubscribeCustomers();
+            if (unsubscribeProducts) unsubscribeProducts();
+
+            document.getElementById('admin-login-view').style.display = 'flex';
+            document.getElementById('admin-dashboard-view').style.display = 'none';
+        }
+    });
+
+    // --- Dashboard Initialisation & Navigation ---
+
+    function initializeDashboard() {
+        fetchDashboardData();
+        setupTabNavigation();
+    }
+
+    function setupTabNavigation() {
+        const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
+        const sections = document.querySelectorAll('.main-content > section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetTab = link.dataset.tab;
+
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                sections.forEach(s => s.classList.remove('active'));
+                document.getElementById(`tab-${targetTab}`).classList.add('active');
+
+                // Trigger specific tab render logic
+                if (targetTab === 'orders') renderOrdersTab(allOrders);
+                else if (targetTab === 'customers') renderCustomersTab(allCustomers);
+                else if (targetTab === 'products') renderProductsTab(allProducts);
+            });
+        });
+    }
+
+    // --- Firebase Data Fetching (Real-time with onSnapshot) ---
+
+    function fetchDashboardData() {
+        showLoader(true);
+
+        // Orders Listener
+        const ordersQuery = query(collection(db, "orders"), orderBy("orderDate", "desc"));
+        unsubscribeOrders = onSnapshot(ordersQuery, (snapshot) => {
+            allOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderDashboardStats(allOrders, allCustomers, allProducts);
+            if (document.getElementById('tab-orders').classList.contains('active')) {
+                renderOrdersTab(allOrders);
+            }
+            showLoader(false);
+        }, (error) => {
+            console.error("Error fetching orders:", error);
+            showToast("Failed to load orders.", true);
+            showLoader(false);
+        });
+
+        // Customers Listener
+        const customersQuery = collection(db, "customers");
+        unsubscribeCustomers = onSnapshot(customersQuery, (snapshot) => {
+            allCustomers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderDashboardStats(allOrders, allCustomers, allProducts);
+            if (document.getElementById('tab-customers').classList.contains('active')) {
+                renderCustomersTab(allCustomers);
+            }
+        }, (error) => {
+            console.error("Error fetching customers:", error);
+            showToast("Failed to load customers.", true);
+        });
+
+        // Products Listener
+        const productsQuery = collection(db, "products");
+        unsubscribeProducts = onSnapshot(productsQuery, (snapshot) => {
+            allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderDashboardStats(allOrders, allCustomers, allProducts);
+            if (document.getElementById('tab-products').classList.contains('active')) {
+                renderProductsTab(allProducts);
+            }
+        }, (error) => {
+            console.error("Error fetching products:", error);
+            showToast("Failed to load products.", true);
+        });
+    }
+
+    // --- Dashboard Rendering ---
+
+    function renderDashboardStats(orders, customers, products) {
+        // Total Revenue Calculation
+        const totalRevenue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+        document.getElementById('total-revenue').textContent = formatCurrency(totalRevenue);
+
+        // Simple Counts
+        document.getElementById('total-orders').textContent = orders.length;
+        document.getElementById('total-customers').textContent = customers.length;
+        document.getElementById('total-products').textContent = products.length;
+
+        // Revenue Chart (Last 7 Days)
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+
+        const dailyRevenue = {};
+        const dateLabels = [];
+
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(sevenDaysAgo);
+            date.setDate(sevenDaysAgo.getDate() + i);
+            const dateKey = date.toISOString().split('T')[0];
+            dailyRevenue[dateKey] = 0;
+            dateLabels.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
+        }
+
+        orders.forEach(order => {
+            const orderDate = order.orderDate instanceof Timestamp ? order.orderDate.toDate() : new Date(order.orderDate);
+            const orderDateKey = orderDate.toISOString().split('T')[0];
+            if (dailyRevenue.hasOwnProperty(orderDateKey)) {
+                dailyRevenue[orderDateKey] += (order.totalAmount || 0);
+            }
+        });
+
+        const revenueData = Object.values(dailyRevenue);
+        renderRevenueChart(dateLabels, revenueData);
+    }
+
+    function renderRevenueChart(labels, data) {
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        if (revenueChartInstance) {
+            revenueChartInstance.destroy(); // Destroy previous instance
+        }
+        revenueChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Revenue (₹)',
+                    data: data,
+                    backgroundColor: 'rgba(39, 174, 96, 0.7)', // var(--primary-color)
+                    borderColor: 'rgba(39, 174, 96, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, ticks: { callback: (value) => `₹${value.toLocaleString('en-IN')}` } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    // --- Orders Tab Logic ---
+
+    function renderOrdersTab(orders) {
+        const ordersSection = document.getElementById('tab-orders');
+        ordersSection.innerHTML = `
+            <h2>Orders Management</h2>
+            <div class="table-container">
+                <div class="table-toolbar">
+                    <input type="text" id="orderSearch" placeholder="Search by ID, customer name, or address..." aria-label="Search orders">
+                </div>
+                <table class="order-table">
+                    <thead><tr><th>Order ID</th><th>Customer</th><th>Items Preview</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="ordersTableBody"></tbody>
+                </table>
+            </div>
+        `;
+        const ordersTableBody = document.getElementById('ordersTableBody');
+        const orderSearchInput = document.getElementById('orderSearch');
         
-        // This script is now complete and contains all necessary logic.
-    </script>
+        function filterAndRenderOrders(searchTerm) {
+            const filteredOrders = orders.filter(order =>
+                order.id.toLowerCase().includes(searchTerm) ||
+                order.customerName.toLowerCase().includes(searchTerm) ||
+                order.shippingAddress.toLowerCase().includes(searchTerm)
+            );
+            populateOrdersTable(filteredOrders, ordersTableBody);
+        }
+
+        orderSearchInput.addEventListener('input', debounce((e) => {
+            filterAndRenderOrders(e.target.value.toLowerCase().trim());
+        }, 300));
+
+        filterAndRenderOrders(''); // Initial render
+    }
+
+    function populateOrdersTable(orders, tbody) {
+        tbody.innerHTML = ''; // Clear existing rows
+        if (orders.length === 0) {
+            tbody.innerHTML = `<tr class="empty-row"><td colspan="6">No orders found.</td></tr>`;
+            return;
+        }
+
+        orders.forEach(order => {
+            const itemsPreview = order.items.slice(0, 2).map(item => `${item.name} x${item.quantity}`).join(', ') + (order.items.length > 2 ? '...' : '');
+
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>${order.id.substring(0, 6)}...</td>
+                <td class="customer-details">
+                    ${order.customerName}
+                    <small>${order.customerPhone}</small>
+                    <small class="address">${order.shippingAddress}</small>
+                </td>
+                <td class="items-preview">${itemsPreview}</td>
+                <td>${formatCurrency(order.totalAmount)}</td>
+                <td>
+                    <select class="status-select" data-order-id="${order.id}" aria-label="Order status for ${order.customerName}">
+                        <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                        <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
+                        <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                        <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                        <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                    </select>
+                </td>
+                <td class="actions-cell">
+                    <button class="btn-primary view-order-btn" data-order-id="${order.id}">View</button>
+                </td>
+            `;
+        });
+
+        // Add listeners for status change and view button
+        tbody.querySelectorAll('.status-select').forEach(select => {
+            select.addEventListener('change', (e) => updateOrderStatus(e.target.dataset.orderId, e.target.value));
+        });
+        tbody.querySelectorAll('.view-order-btn').forEach(button => {
+            button.addEventListener('click', (e) => showOrderDetailsModal(e.target.dataset.orderId));
+        });
+    }
+
+    async function updateOrderStatus(orderId, newStatus) {
+        showLoader(true);
+        try {
+            const orderRef = doc(db, "orders", orderId);
+            await updateDoc(orderRef, { status: newStatus });
+            showToast(`Order ${orderId.substring(0, 6)}... status updated to ${newStatus}.`);
+        } catch (error) {
+            console.error("Error updating order status:", error);
+            showToast("Failed to update order status.", true);
+        } finally {
+            showLoader(false);
+        }
+    }
+
+    function showOrderDetailsModal(orderId) {
+        const order = allOrders.find(o => o.id === orderId);
+        if (!order) {
+            showToast("Order not found.", true);
+            return;
+        }
+
+        document.getElementById('modalOrderId').textContent = order.id;
+        document.getElementById('modalCustomerName').textContent = `${order.customerName} (${order.customerEmail})`;
+        document.getElementById('modalCustomerAddress').textContent = order.shippingAddress;
+        document.getElementById('modalOrderStatus').textContent = order.status;
+        document.getElementById('modalOrderTotal').textContent = order.totalAmount.toFixed(2);
+
+        const itemsList = document.getElementById('modal-order-items');
+        itemsList.innerHTML = order.items.map(item => `
+            <li>
+                <span>${item.name} x ${item.quantity}</span>
+                <span>${formatCurrency(item.price * item.quantity)}</span>
+            </li>
+        `).join('');
+
+        const modal = document.getElementById('orderDetailsModal');
+        modal.classList.add('show');
+        modal.querySelector('.modal-content').focus();
+    }
+
+    // Modal Close Logic (for Order Details Modal)
+    document.getElementById('orderDetailsModal').addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal-overlay') || e.target.classList.contains('close-modal')) {
+            document.getElementById('orderDetailsModal').classList.remove('show');
+        }
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.getElementById('orderDetailsModal').classList.contains('show')) {
+            document.getElementById('orderDetailsModal').classList.remove('show');
+        }
+    });
+
+    // --- Customers Tab Logic ---
+
+    function renderCustomersTab(customers) {
+        const customersSection = document.getElementById('tab-customers');
+        customersSection.innerHTML = `
+            <h2>Customer List</h2>
+            <div class="table-container">
+                <div class="table-toolbar">
+                    <input type="text" id="customerSearch" placeholder="Search by name, email, or phone..." aria-label="Search customers">
+                </div>
+                <table>
+                    <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Total Orders</th><th>Total Spent</th><th>Last Order Date</th></tr></thead>
+                    <tbody id="customersTableBody"></tbody>
+                </table>
+            </div>
+        `;
+        const customersTableBody = document.getElementById('customersTableBody');
+        const customerSearchInput = document.getElementById('customerSearch');
+
+        function filterAndRenderCustomers(searchTerm) {
+            const customerStats = allOrders.reduce((acc, order) => {
+                const customerId = order.customerId;
+                if (!acc[customerId]) {
+                    acc[customerId] = { totalOrders: 0, totalSpent: 0, lastOrderDate: 0 };
+                }
+                acc[customerId].totalOrders += 1;
+                acc[customerId].totalSpent += (order.totalAmount || 0);
+                const orderTime = order.orderDate instanceof Timestamp ? order.orderDate.toMillis() : new Date(order.orderDate).getTime();
+                if (orderTime > acc[customerId].lastOrderDate) {
+                    acc[customerId].lastOrderDate = orderTime;
+                }
+                return acc;
+            }, {});
+
+            const customerData = customers.map(customer => ({
+                ...customer,
+                ...customerStats[customer.id]
+            }));
+
+            const filteredCustomers = customerData.filter(customer =>
+                customer.displayName?.toLowerCase().includes(searchTerm) ||
+                customer.email?.toLowerCase().includes(searchTerm) ||
+                customer.phone?.toLowerCase().includes(searchTerm)
+            );
+
+            populateCustomersTable(filteredCustomers, customersTableBody);
+        }
+
+        customerSearchInput.addEventListener('input', debounce((e) => {
+            filterAndRenderCustomers(e.target.value.toLowerCase().trim());
+        }, 300));
+
+        filterAndRenderCustomers(''); // Initial render
+    }
+
+    function populateCustomersTable(customers, tbody) {
+        tbody.innerHTML = '';
+        if (customers.length === 0) {
+            tbody.innerHTML = `<tr class="empty-row"><td colspan="6">No customers found.</td></tr>`;
+            return;
+        }
+
+        customers.forEach(customer => {
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>${customer.displayName || 'N/A'}</td>
+                <td>${customer.email || 'N/A'}</td>
+                <td>${customer.phone || 'N/A'}</td>
+                <td>${customer.totalOrders || 0}</td>
+                <td>${formatCurrency(customer.totalSpent || 0)}</td>
+                <td>${customer.lastOrderDate ? formatDate(new Date(customer.lastOrderDate)) : 'N/A'}</td>
+            `;
+        });
+    }
+
+    // --- Products Tab Logic ---
+
+    function renderProductsTab(products) {
+        const productsSection = document.getElementById('tab-products');
+        productsSection.innerHTML = `
+            <h2>Products Management</h2>
+            <div class="table-toolbar">
+                <input type="text" id="productSearch" placeholder="Search by product name or category..." aria-label="Search products">
+                <button class="btn btn-primary" id="addProductBtn"><i class="fas fa-plus"></i> Add New Product</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Name</th><th>Price (₹)</th><th>Category</th><th>Stock</th><th>Actions</th></tr></thead>
+                    <tbody id="productsTableBody"></tbody>
+                </table>
+            </div>
+        `;
+        const productsTableBody = document.getElementById('productsTableBody');
+        const productSearchInput = document.getElementById('productSearch');
+        document.getElementById('addProductBtn').addEventListener('click', () => showProductModal());
+
+        function filterAndRenderProducts(searchTerm) {
+            const filteredProducts = products.filter(product =>
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.category.toLowerCase().includes(searchTerm)
+            );
+            populateProductsTable(filteredProducts, productsTableBody);
+        }
+
+        productSearchInput.addEventListener('input', debounce((e) => {
+            filterAndRenderProducts(e.target.value.toLowerCase().trim());
+        }, 300));
+
+        filterAndRenderProducts(''); // Initial render
+    }
+
+    function populateProductsTable(products, tbody) {
+        tbody.innerHTML = '';
+        if (products.length === 0) {
+            tbody.innerHTML = `<tr class="empty-row"><td colspan="5">No products found.</td></tr>`;
+            return;
+        }
+
+        products.forEach(product => {
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>${product.name}</td>
+                <td>${product.price.toFixed(2)}</td>
+                <td>${product.category}</td>
+                <td>${product.stock}</td>
+                <td class="actions-cell">
+                    <button class="btn-warning" data-id="${product.id}" onclick="window.editProduct('${product.id}')">Edit</button>
+                    <button class="btn-danger" data-id="${product.id}" onclick="window.deleteProduct('${product.id}')">Delete</button>
+                </td>
+            `;
+        });
+    }
+
+    // --- Product Modal and CRUD Logic ---
+
+    // Define globally accessible functions for table button handlers
+    window.editProduct = (productId) => {
+        const product = allProducts.find(p => p.id === productId);
+        if (product) showProductModal(product);
+    };
+
+    window.deleteProduct = async (productId) => {
+        if (!confirm("Are you sure you want to delete this product?")) return;
+
+        showLoader(true);
+        try {
+            await deleteDoc(doc(db, "products", productId));
+            showToast("Product deleted successfully!");
+        } catch (error) {
+            console.error("Error deleting product:", error);
+            showToast("Failed to delete product.", true);
+        } finally {
+            showLoader(false);
+        }
+    };
+
+    function showProductModal(product = null) {
+        const isEdit = !!product;
+        const modal = document.getElementById('productModal');
+
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="productModalTitle">${isEdit ? 'Edit Product' : 'Add New Product'}</h3>
+                    <button class="close-modal" aria-label="Close product modal">&times;</button>
+                </div>
+                <form id="productForm">
+                    <input type="hidden" id="productId" value="${product?.id || ''}">
+                    <div class="input-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" value="${product?.name || ''}" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="productPrice">Price (₹)</label>
+                        <input type="number" id="productPrice" step="0.01" value="${product?.price || ''}" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="productCategory">Category</label>
+                        <input type="text" id="productCategory" value="${product?.category || ''}" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="productStock">Stock Quantity</label>
+                        <input type="number" id="productStock" value="${product?.stock || ''}" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="productImage">Image URL</label>
+                        <input type="url" id="productImage" value="${product?.imageUrl || ''}" placeholder="http://example.com/image.jpg">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">${isEdit ? 'Update Product' : 'Create Product'}</button>
+                    </div>
+                </form>
+            </div>
+        `;
+
+        modal.classList.add('show');
+
+        // Attach event listeners for the new modal content
+        modal.querySelector('.close-modal').addEventListener('click', () => modal.classList.remove('show'));
+        modal.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) modal.classList.remove('show');
+        });
+        document.getElementById('productForm').addEventListener('submit', handleProductSave);
+    }
+
+    async function handleProductSave(e) {
+        e.preventDefault();
+        showLoader(true);
+
+        const form = e.target;
+        const productId = form.elements.productId.value;
+        const productData = {
+            name: form.elements.productName.value,
+            price: parseFloat(form.elements.productPrice.value),
+            category: form.elements.productCategory.value,
+            stock: parseInt(form.elements.productStock.value, 10),
+            imageUrl: form.elements.productImage.value || ''
+        };
+
+        try {
+            if (productId) {
+                // Update
+                const productRef = doc(db, "products", productId);
+                await updateDoc(productRef, productData);
+                showToast("Product updated successfully!");
+            } else {
+                // Create
+                await addDoc(collection(db, "products"), productData);
+                showToast("New product added successfully!");
+            }
+            document.getElementById('productModal').classList.remove('show');
+        } catch (error) {
+            console.error("Error saving product:", error);
+            showToast("Failed to save product.", true);
+        } finally {
+            showLoader(false);
+        }
+    }
+</script>
 </body>
 </html>
