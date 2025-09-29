@@ -97,133 +97,192 @@
     </div>
     <div id="toast" class="toast"></div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, query, where, onSnapshot, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+   <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, query, where, onSnapshot, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-            authDomain: "potlapallifarm.firebaseapp.com",
-            projectId: "potlapallifarm",
-            storageBucket: "potlapallifarm.firebasestorage.app",
-            messagingSenderId: "1017629729159",
-            appId: "1:1017629729159:web:357c420a9de335d427b322"
-        };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    const firebaseConfig = {
+        apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+        authDomain: "potlapallifarm.firebaseapp.com",
+        projectId: "potlapallifarm",
+        storageBucket: "potlapallifarm.firebasestorage.app",
+        messagingSenderId: "1017629729159",
+        appId: "1:1017629729159:web:357c420a9de335d427b322"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-        const loginView = document.getElementById('delivery-login-view');
-        const dashboardView = document.getElementById('delivery-dashboard-view');
-        const loginForm = document.getElementById('deliveryLoginForm');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const orderQueueContainer = document.getElementById('order-queue-container');
-        const confirmModal = document.getElementById('confirmModal');
-        const toastEl = document.getElementById('toast');
-        let unsubscribeOrders = null;
+    const loginView = document.getElementById('delivery-login-view');
+    const dashboardView = document.getElementById('delivery-dashboard-view');
+    const loginForm = document.getElementById('deliveryLoginForm');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const orderQueueContainer = document.getElementById('order-queue-container');
+    const confirmModal = document.getElementById('confirmModal');
+    const toastEl = document.getElementById('toast');
+    let unsubscribeOrders = null;
 
-        function showToast(message, isError = false) {
-            toastEl.textContent = message;
-            toastEl.className = isError ? 'toast show error' : 'toast show';
-            setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+    /**
+     * Utility function to display non-intrusive messages.
+     */
+    function showToast(message, isError = false) {
+        toastEl.textContent = message;
+        toastEl.className = isError ? 'toast show error' : 'toast show';
+        setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+    }
+
+    /**
+     * Renders the list of orders assigned for delivery.
+     * @param {Array} orders - The list of order objects.
+     */
+    function renderDeliveries(orders) {
+        if (orders.length === 0) {
+            orderQueueContainer.innerHTML = `<div class="order-queue"><h2>No deliveries currently assigned.</h2></div>`;
+            return;
         }
 
-        function renderDeliveries(orders) {
-            if (orders.length === 0) {
-                orderQueueContainer.innerHTML = `<h2>No deliveries pending.</h2>`;
-                return;
-            }
-            orderQueueContainer.innerHTML = `<h2>${orders.length} Deliveries Pending</h2>` + orders.map(order => `
+        orderQueueContainer.innerHTML = `<div class="order-queue"><h2>${orders.length} Deliveries Pending</h2>` + orders.map(order => {
+            const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.shippingAddress || '')}`;
+            const totalAmount = order.totalAmount ? order.totalAmount.toFixed(2) : '0.00';
+            const customerPhone = order.customerPhone || 'N/A';
+            const shippingAddress = order.shippingAddress || 'Address not available';
+
+            return `
                 <div class="delivery-card" data-id="${order.id}">
                     <div class="card-header"><h3>Order #${order.id.slice(-6).toUpperCase()}</h3></div>
                     <div class="card-body">
-                        <div class="detail-row"><div class="icon"><i class="fas fa-user"></i></div><div class="content"><p class="label">Customer:</p><p>${order.customerName}</p></div></div>
-                        <div class="detail-row"><div class="icon"><i class="fas fa-map-marker-alt"></i></div><div class="content"><p class="label">Address:</p><p>${order.address}</p></div></div>
-                        <div class="detail-row"><div class="icon"><i class="fas fa-phone"></i></div><div class="content"><p class="label">Phone:</p><p>${order.phone}</p></div></div>
-                        ${order.paymentMethod === 'COD' ? `<div class="cod-highlight"><p>Collect Cash:</p><p class="amount">₹${order.totalAmount}</p></div>` : ''}
-                        <ul class="items-list">${order.items.map(item => `<li>${item.name} x ${item.quantity}</li>`).join('')}</ul>
+                        <div class="detail-row"><div class="icon"><i class="fas fa-user"></i></div><div class="content"><p class="label">Customer:</p><p>${order.customerName || 'N/A'}</p></div></div>
+                        <div class="detail-row"><div class="icon"><i class="fas fa-map-marker-alt"></i></div><div class="content"><p class="label">Address:</p><p>${shippingAddress}</p></div></div>
+                        <div class="detail-row"><div class="icon"><i class="fas fa-phone"></i></div><div class="content"><p class="label">Phone:</p><p>${customerPhone}</p></div></div>
+                        
+                        ${order.paymentMethod === 'COD' ? 
+                            `<div class="cod-highlight"><p>Collect Cash (COD):</p><p class="amount">₹${totalAmount}</p></div>` 
+                            : ''
+                        }
+
+                        <ul class="items-list">${(order.items || []).map(item => `<li>${item.name || 'Unknown'} x ${item.quantity || 1}</li>`).join('')}</ul>
                     </div>
                     <div class="card-footer">
-                        <a href="https://www.google.com/maps?q=${encodeURIComponent(order.address)}" target="_blank" class="btn btn-dark"><i class="fas fa-directions"></i> Get Directions</a>
-                        <a href="tel:${order.phone}" class="btn btn-dark"><i class="fas fa-phone"></i> Call Customer</a>
+                        <a href="${mapLink}" target="_blank" class="btn btn-dark" aria-label="Get directions to customer address"><i class="fas fa-directions"></i> Get Directions</a>
+                        <a href="tel:${customerPhone}" class="btn btn-dark" aria-label="Call customer ${customerPhone}"><i class="fas fa-phone"></i> Call Customer</a>
                         <button class="btn btn-green mark-delivered-btn" style="grid-column: span 2;"><i class="fas fa-check-circle"></i> Mark as Delivered</button>
                     </div>
                 </div>
-            `).join('');
-        }
+            `;
+        }).join('') + `</div>`;
+    }
 
-        async function markAsDelivered(orderId) {
-            const orderRef = doc(db, 'orders', orderId);
+    /**
+     * Updates the order status to 'Delivered' in Firestore.
+     * @param {string} orderId - The ID of the order to update.
+     */
+    async function markAsDelivered(orderId) {
+        const orderRef = doc(db, 'orders', orderId);
+        try {
+            await updateDoc(orderRef, { status: 'Delivered' });
+            showToast('Order marked as delivered! Great job!');
+        } catch (error) {
+            console.error("Error updating order status:", error);
+            showToast('Update failed! Could not mark order as delivered.', true);
+        }
+    }
+
+    /**
+     * Sets up a real-time listener for orders with the status 'Shipped'.
+     */
+    function listenToDeliveries() {
+        // Query orders that are 'Shipped' (i.e., ready for driver delivery), ordered by date.
+        const ordersQuery = query(
+            collection(db, "orders"), 
+            where("status", "==", "Shipped"), 
+            orderBy("orderDate", "asc")
+        );
+
+        // onSnapshot provides real-time updates
+        unsubscribeOrders = onSnapshot(ordersQuery, (snapshot) => {
+            const orders = snapshot.docs.map(doc => ({ 
+                id: doc.id, 
+                // Use default values for robustness
+                customerName: doc.data().customerName || 'Customer Name N/A',
+                customerPhone: doc.data().customerPhone || 'N/A',
+                shippingAddress: doc.data().shippingAddress || 'Address N/A',
+                paymentMethod: doc.data().paymentMethod || 'Online',
+                totalAmount: doc.data().totalAmount || 0,
+                items: doc.data().items || [],
+                ...doc.data() // Spread to include all other data
+            }));
+            renderDeliveries(orders);
+        }, (error) => {
+            console.error("Error listening to orders:", error);
+            showToast("Failed to load delivery queue.", true);
+        });
+    }
+    
+    // --- Authentication and View Management ---
+    
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            // Check if the authenticated user has the 'driver' role
+            const userDocRef = doc(db, "users", user.uid);
             try {
-                await updateDoc(orderRef, { status: 'Delivered' });
-                showToast('Order marked as delivered!');
-            } catch (error) { showToast('Update failed!', true); }
-        }
-
-        function listenToDeliveries() {
-            const ordersQuery = query(collection(db, "orders"), where("status", "==", "Shipped"), orderBy("orderDate", "asc"));
-            unsubscribeOrders = onSnapshot(ordersQuery, (snapshot) => {
-                const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderDeliveries(orders);
-            });
-        }
-        
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const userDocRef = doc(db, "users", user.uid);
-                try {
-                    const docSnap = await getDoc(userDocRef);
-                    if (docSnap.exists() && docSnap.data().role === 'driver') {
-                        loginView.style.display = 'none';
-                        dashboardView.style.display = 'block';
-                        if (unsubscribeOrders) unsubscribeOrders();
-                        listenToDeliveries();
-                    } else {
-                        signOut(auth);
-                        showToast("Access Denied: Not a driver account.", true);
-                    }
-                } catch (error) {
+                const docSnap = await getDoc(userDocRef);
+                if (docSnap.exists() && docSnap.data().role === 'driver') {
+                    loginView.style.display = 'none';
+                    dashboardView.style.display = 'block';
+                    if (unsubscribeOrders) unsubscribeOrders();
+                    listenToDeliveries();
+                } else {
+                    // Log out users without the 'driver' role
                     signOut(auth);
-                    showToast("Error verifying account.", true);
+                    showToast("Access Denied: Not a driver account.", true);
                 }
-            } else {
-                loginView.style.display = 'flex';
-                dashboardView.style.display = 'none';
-                if (unsubscribeOrders) unsubscribeOrders();
+            } catch (error) {
+                signOut(auth);
+                console.error("Error verifying account role:", error);
+                showToast("Error verifying account.", true);
             }
-        });
-        
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('deliveryEmail').value;
-            const password = document.getElementById('deliveryPassword').value;
-            signInWithEmailAndPassword(auth, email, password)
-                .catch(err => showToast("Login Failed. Please check your email and password.", true));
-        });
-        
-        logoutBtn.addEventListener('click', () => signOut(auth));
-        
-        orderQueueContainer.addEventListener('click', e => {
-            const button = e.target.closest('.mark-delivered-btn');
-            if (button) {
-                const card = button.closest('.delivery-card');
-                confirmModal.dataset.orderId = card.dataset.id;
-                confirmModal.classList.add('show');
-            }
-        });
+        } else {
+            loginView.style.display = 'flex';
+            dashboardView.style.display = 'none';
+            if (unsubscribeOrders) unsubscribeOrders();
+        }
+    });
+    
+    // --- Event Listeners ---
 
-        confirmModal.querySelector('#confirmAction').addEventListener('click', () => {
-            const orderId = confirmModal.dataset.orderId;
-            if (orderId) {
-                markAsDelivered(orderId);
-            }
-            confirmModal.classList.remove('show');
-        });
-        confirmModal.querySelector('#confirmCancel').addEventListener('click', () => {
-            confirmModal.classList.remove('show');
-        });
-    </script>
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('deliveryEmail').value;
+        const password = document.getElementById('deliveryPassword').value;
+        signInWithEmailAndPassword(auth, email, password)
+            .catch(err => showToast("Login Failed. Please check your email and password.", true));
+    });
+    
+    logoutBtn.addEventListener('click', () => signOut(auth));
+    
+    // Listener for the 'Mark as Delivered' button
+    orderQueueContainer.addEventListener('click', e => {
+        const button = e.target.closest('.mark-delivered-btn');
+        if (button) {
+            const card = button.closest('.delivery-card');
+            confirmModal.dataset.orderId = card.dataset.id;
+            confirmModal.classList.add('show');
+        }
+    });
+
+    // Modal Confirmation and Cancellation
+    confirmModal.querySelector('#confirmAction').addEventListener('click', () => {
+        const orderId = confirmModal.dataset.orderId;
+        if (orderId) {
+            markAsDelivered(orderId);
+        }
+        confirmModal.classList.remove('show');
+    });
+    confirmModal.querySelector('#confirmCancel').addEventListener('click', () => {
+        confirmModal.classList.remove('show');
+    });
+</script>
 </body>
 </html>
 
