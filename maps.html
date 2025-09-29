@@ -126,10 +126,10 @@ body { background: var(--background-light); color: var(--text-dark); }
 <div id="toast" class="toast"></div>
 
 <script type="module">
-    import { initializeApp } from "[https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js](https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js)";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "[https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js](https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js)";
-    import { getFirestore, doc, getDoc, collection, query, where, onSnapshot, updateDoc, orderBy } from "[https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js](https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js)";
-    import { Timestamp } from "[https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js](https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js)";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, query, where, onSnapshot, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     // IMPORTANT: Use your actual Firebase configuration
     const firebaseConfig = {
@@ -266,6 +266,7 @@ body { background: var(--background-light); color: var(--text-dark); }
             }
             
             // 4. If all checks pass, update the status
+            // This call ensures the status update is reflected everywhere due to Firestore listeners.
             await updateOrderStatus(orderId, 'Delivered');
 
         } catch (error) {
@@ -274,7 +275,6 @@ body { background: var(--background-light); color: var(--text-dark); }
         }
         
         // Re-enable button should only happen on failure branches now.
-        // If updateOrderStatus succeeds, the onSnapshot listener handles the card removal/update.
         verifyBtn.disabled = false;
     }
 
@@ -354,7 +354,7 @@ body { background: var(--background-light); color: var(--text-dark); }
     // --- Event Listeners ---
     
     loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+        e.preventDefault(); // <-- CRITICAL: Prevents page reload on successful login
         const email = document.getElementById('mapsEmail').value;
         const password = document.getElementById('mapsPassword').value;
         // The onAuthStateChanged listener handles the view change upon successful login
@@ -404,12 +404,11 @@ body { background: var(--background-light); color: var(--text-dark); }
     // Modal Confirmation and Cancellation Listeners
     document.getElementById('confirmAction').addEventListener('click', () => {
         if (activeOrderId && activeStatusUpdate) {
-            // For Cancelled status, proceed directly with update (no OTP needed)
+            // This handles the status update triggered by the CANCEL modal
             if (activeStatusUpdate === 'Cancelled') {
                 updateOrderStatus(activeOrderId, 'Cancelled');
             } else {
-                // This scenario should ideally not be hit if verification is used, 
-                // but it prevents accidental delivery without OTP.
+                // This scenario should ideally not be hit as 'Delivered' is handled by OTP button
                 showToast("Verification is required for delivery.", true);
             }
         }
