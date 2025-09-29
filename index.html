@@ -297,64 +297,89 @@
     <div id="toast" class="toast" aria-live="polite"></div>
 
     <script type="module">
-        // --- 1. State & Data ---
-        const products = [
-            { id: 'goat', name: 'Premium Goat Meat', price: 900, unit: '/kg', image: 'assets/images/goat.jpg', description: 'Tender, pasture-raised goat meat, perfect for rich curries and roasts.' },
-            { id: 'chicken', name: 'Country Chicken', price: 900, unit: '/kg', image: 'assets/images/chicken.jpg', description: 'Flavorful, free-range country chicken. Raised ethically in our backyard.' },
-            { id: 'eggs', name: 'Farm Fresh Eggs', price: 180, unit: '/dozen', image: 'assets/images/eggs.jpg', description: 'A dozen golden-yolk eggs from happy, healthy, free-roaming hens.' },
-            { id: 'milk', name: 'Fresh Goat Milk', price: 60, unit: '/L', image: 'assets/images/milk.jpg', description: 'Nutritious and easy-to-digest fresh goat milk, delivered chilled.' }
-        ];
-        const CART_KEY = 'potlapalliCart';
+    // --- 1. State & Data (Updated Product List) ---
+    const products = [
+        // Meat Products (Minimum 0.5kg, increments 0.5kg)
+        { id: 'live-ram', name: 'Live Ram (Macherla Pottelu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, description: 'Live ram, range 15 to 40 kg. Price is based on live weight.', image: 'assets/images/ram.jpg' },
+        { id: 'buck', name: 'Buck (Meka Pothu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, description: 'Live buck, range 15 to 40 kg. Price is based on live weight.', image: 'assets/images/buck.jpg' },
+        { id: 'sonali-chicken', name: 'Sonali Country Chicken (Smokey Turmeric)', price: 550, unit: '/kg', category: 'Meat', isMeat: true, description: 'Premium Sonali country chicken, marinated with smokey turmeric rub.', image: 'assets/images/sonali.jpg' },
+        { id: 'backyard-chicken', name: 'Backyard Country Chicken (Smokey Turmeric)', price: 800, unit: '/kg', category: 'Meat', isMeat: true, description: 'High-quality backyard country chicken, marinated with smokey turmeric rub.', image: 'assets/images/backyard.jpg' },
+        
+        // Egg Products (Fixed Dozen/Tray Units)
+        { id: 'eggs-dozen', name: 'Country Chicken Eggs', price: 180, unit: '/dozen', category: 'Eggs', isMeat: false, description: 'A dozen golden-yolk eggs from happy, healthy, free-roaming hens.', image: 'assets/images/eggs.jpg' },
+        { id: 'eggs-tray', name: 'Country Chicken Eggs', price: 430, unit: '/30 eggs tray', category: 'Eggs', isMeat: false, description: 'Tray of 30 golden-yolk eggs for large families or catering.', image: 'assets/images/tray.jpg' },
 
-        // --- 2. DOM Elements ---
-        const productGrid = document.getElementById('product-grid');
-        const cartCountEl = document.getElementById('cartCount');
-        const toastEl = document.getElementById('toast');
-        const header = document.getElementById('header');
-        const menuBtn = document.getElementById("menuBtn");
-        const navLinks = document.getElementById("nav-links");
+        // Old products (Renamed for clarity if necessary, but using original data)
+        { id: 'goat', name: 'Premium Goat Meat (Flesh)', price: 900, unit: '/kg', category: 'Meat', isMeat: true, description: 'Tender, pasture-raised goat meat, delivered as flesh.', image: 'assets/images/goat.jpg' },
+        { id: 'milk', name: 'Fresh Goat Milk', price: 60, unit: '/L', category: 'Dairy', isMeat: false, description: 'Nutritious and easy-to-digest fresh goat milk, delivered chilled.', image: 'assets/images/milk.jpg' }
+    ];
+    
+    // --- Upcoming Products Section Data ---
+    const upcomingProducts = [
+        'Fish', 'Prawns', 'Crabs', 'Buffalo Milk', 'Cow Milk', 'Button Mushrooms'
+    ];
 
-        // --- 3. Cart Functionality ---
-        const showToast = (message) => {
-            toastEl.textContent = message;
-            toastEl.classList.add('show');
-            setTimeout(() => toastEl.classList.remove('show'), 3000);
-        };
+    const CART_KEY = 'potlapalliCart';
 
-        const updateCartCount = () => {
-            const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            if (cartCountEl) cartCountEl.textContent = totalItems;
-        };
+    // --- 2. DOM Elements ---
+    const productGrid = document.getElementById('product-grid');
+    const cartCountEl = document.getElementById('cartCount');
+    const upcomingProductsSection = document.getElementById('upcoming-products-section');
+    const toastEl = document.getElementById('toast');
+    const header = document.getElementById('header');
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("nav-links");
 
-        const handleAddToCart = (productId, quantity, cardElement) => {
-            if (quantity <= 0) return;
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
+    // --- 3. Cart Functionality ---
+    const showToast = (message) => {
+        toastEl.textContent = message;
+        toastEl.classList.add('show');
+        setTimeout(() => toastEl.classList.remove('show'), 3000);
+    };
 
-            let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-            const existingItem = cart.find(item => item.id === productId);
+    const updateCartCount = () => {
+        const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+        // Quantity for meats is in kilograms, but the count is for display, so we count unique items.
+        const totalItems = cart.length; 
+        if (cartCountEl) cartCountEl.textContent = totalItems;
+    };
 
-            if (existingItem) {
-                existingItem.quantity += quantity;
-            } else {
-                cart.push({ ...product, quantity: quantity });
-            }
-            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    const handleAddToCart = (productId, quantity, cardElement) => {
+        if (quantity <= 0) {
+             showToast('Quantity must be more than the minimum order size.', true);
+             return;
+        }
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
+
+        let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+        const existingItem = cart.find(item => item.id === productId);
+
+        if (existingItem) {
+            existingItem.quantity += quantity;
+        } else {
+            cart.push({ ...product, quantity: quantity });
+        }
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
+        
+        updateCartCount();
+        showToast(`${quantity}${product.isMeat ? 'kg' : product.unit} of ${product.name} added to cart!`);
+        
+        if (cardElement) {
+             // Reset display quantity to the minimum order quantity after adding
+             cardElement.querySelector('.qty').textContent = product.isMeat ? '0.5' : '1';
+        }
+    };
+
+    // --- 4. Product Rendering ---
+    const renderProducts = () => {
+        if (!productGrid) return;
+        productGrid.innerHTML = products.map(product => {
+            const initialQty = product.isMeat ? '0.5' : '1';
+            const unitText = product.isMeat ? 'kg' : product.unit.replace('/', '');
             
-            updateCartCount();
-            showToast(`${quantity} x ${product.name} added to cart!`);
-            
-            if (cardElement) {
-                cardElement.querySelector('.qty').textContent = '1';
-            }
-        };
-
-        // --- 4. Product Rendering ---
-        const renderProducts = () => {
-            if (!productGrid) return;
-            productGrid.innerHTML = products.map(product => `
-                <div class="product-card animated-section" data-id="${product.id}">
+            return `
+                <div class="product-card animated-section" data-id="${product.id}" data-is-meat="${product.isMeat}">
                     <img src="${product.image}" alt="${product.name}">
                     <div class="product-content">
                         <h3>${product.name}</h3>
@@ -363,138 +388,161 @@
                             <div class="price-line">
                                 <span class="price">₹${product.price} <small>${product.unit}</small></span>
                                 <div class="quantity-controls">
-                                    <button class="qty-btn minus-btn" aria-label="Decrease quantity">-</button>
-                                    <span class="qty">1</span>
-                                    <button class="qty-btn plus-btn" aria-label="Increase quantity">+</button>
+                                    <button class="qty-btn minus-btn" aria-label="Decrease quantity" ${product.isMeat ? 'data-step="-0.5"' : 'data-step="-1"'}>-</button>
+                                    <span class="qty">${initialQty}</span>
+                                    <button class="qty-btn plus-btn" aria-label="Increase quantity" ${product.isMeat ? 'data-step="0.5"' : 'data-step="1"'}>+</button>
+                                    <small class="unit-text">${unitText}</small>
                                 </div>
                             </div>
                             <button class="add-to-cart-btn">Add to Cart</button>
                         </div>
                     </div>
                 </div>
-            `).join('');
-        };
+            `;
+        }).join('');
         
-        // --- 5. Hero Slider ---
-        const initSlider = () => {
-            const slider = document.querySelector('.hero-slider');
-            const slides = document.querySelectorAll('.hero-slide');
-            const sliderNav = document.querySelector('.slider-nav');
-            if (!slider || slides.length <= 1) return;
-
-            let currentIndex = 0;
-            let slideInterval;
-
-            slides.forEach((_, i) => {
-                const dot = document.createElement('div');
-                dot.classList.add('slider-dot');
-                if (i === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => {
-                    currentIndex = i;
-                    updateSlider();
-                    resetInterval();
-                });
-                sliderNav.appendChild(dot);
-            });
-            
-            const dots = document.querySelectorAll('.slider-dot');
-            const updateSlider = () => {
-                slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-                dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
-            };
-
-            const nextSlide = () => {
-                currentIndex = (currentIndex + 1) % slides.length;
-                updateSlider();
-            };
-
-            const resetInterval = () => {
-                clearInterval(slideInterval);
-                slideInterval = setInterval(nextSlide, 5000);
-            };
-
-            slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
-            slider.addEventListener('mouseleave', resetInterval);
-
-            resetInterval();
-        };
-
-        // --- 6. Page Scroll Animations & Effects ---
-        const initScrollEffects = () => {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.animated-section').forEach(el => observer.observe(el));
-
-            window.addEventListener('scroll', () => {
-                header.classList.toggle('scrolled', window.scrollY > 50);
-            });
-        };
-
-        // --- 7. Mobile Navigation ---
-        // --- 7. Ultimate Mobile Navigation ---
-const initMobileNav = () => {
-    if (!menuBtn || !navLinks) return;
-    const menuIcon = menuBtn.querySelector('i');
-    const mobileAuth = document.getElementById("mobile-auth");
-    const mobileAuthSignup = document.getElementById("mobile-auth-signup");
+        renderUpcomingProducts();
+    };
     
-    menuBtn.addEventListener("click", () => {
-        const isActive = navLinks.classList.toggle("active");
-        document.body.classList.toggle("nav-open");
-        // Animate icon from bars to close (X)
-        menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
-        // Show auth buttons inside the menu
-        if(mobileAuth) mobileAuth.style.display = isActive ? 'block' : 'none';
-        if(mobileAuthSignup) mobileAuthSignup.style.display = isActive ? 'block' : 'none';
-    });
+    // --- 4b. Render Upcoming Products ---
+    const renderUpcomingProducts = () => {
+        if (!upcomingProductsSection) return;
+        upcomingProductsSection.innerHTML = `
+            <h2><i class="fas fa-seedling"></i> Coming Soon</h2>
+            <p>We are expanding our range with more fresh, high-quality organic items!</p>
+            <ul class="upcoming-list">
+                ${upcomingProducts.map(item => `<li><i class="fas fa-check"></i> ${item}</li>`).join('')}
+            </ul>
+        `;
+    };
 
-    // Close menu when a link is clicked
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            if (navLinks.classList.contains("active")) {
-                navLinks.classList.remove('active');
-                document.body.classList.remove('nav-open');
-                menuIcon.className = 'fas fa-bars';
-            }
-        });
-    });
-};
+    // --- 5. Hero Slider (No change) ---
+    const initSlider = () => {
+        const slider = document.querySelector('.hero-slider');
+        const slides = document.querySelectorAll('.hero-slide');
+        const sliderNav = document.querySelector('.slider-nav');
+        if (!slider || slides.length <= 1) return;
 
-        // --- 8. Event Listeners ---
-        if (productGrid) {
-            productGrid.addEventListener('click', (e) => {
-                const card = e.target.closest('.product-card');
-                if (!card) return;
-                
-                const qtyEl = card.querySelector('.qty');
-                let quantity = parseInt(qtyEl.textContent);
+        let currentIndex = 0;
+        let slideInterval;
 
-                if (e.target.classList.contains('plus-btn')) {
-                    quantity++;
-                } else if (e.target.classList.contains('minus-btn')) {
-                    quantity = Math.max(1, quantity - 1);
-                } else if (e.target.classList.contains('add-to-cart-btn')) {
-                    handleAddToCart(card.dataset.id, quantity, card);
-                }
-                qtyEl.textContent = quantity;
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.classList.add('slider-dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                currentIndex = i;
+                updateSlider();
+                resetInterval();
             });
-        }
-        
-        // --- 9. Initialization ---
-        document.addEventListener("DOMContentLoaded", function() {
-            renderProducts();
-            updateCartCount();
-            initSlider();
-            initScrollEffects();
-            initMobileNav();
+            sliderNav.appendChild(dot);
         });
-    </script>
+        
+        const dots = document.querySelectorAll('.slider-dot');
+        const updateSlider = () => {
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
+        };
+
+        const nextSlide = () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateSlider();
+        };
+
+        const resetInterval = () => {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        };
+
+        slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
+        slider.addEventListener('mouseleave', resetInterval);
+
+        resetInterval();
+    };
+
+    // --- 6. Page Scroll Animations & Effects (No change) ---
+    const initScrollEffects = () => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.animated-section').forEach(el => observer.observe(el));
+
+        window.addEventListener('scroll', () => {
+            if (header) header.classList.toggle('scrolled', window.scrollY > 50);
+        });
+    };
+
+    // --- 7. Mobile Navigation (No change) ---
+    const initMobileNav = () => {
+        if (!menuBtn || !navLinks) return;
+        const menuIcon = menuBtn.querySelector('i');
+        const mobileAuth = document.getElementById("mobile-auth");
+        const mobileAuthSignup = document.getElementById("mobile-auth-signup");
+        
+        menuBtn.addEventListener("click", () => {
+            const isActive = navLinks.classList.toggle("active");
+            document.body.classList.toggle("nav-open");
+            menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
+            if(mobileAuth) mobileAuth.style.display = isActive ? 'block' : 'none';
+            if(mobileAuthSignup) mobileAuthSignup.style.display = isActive ? 'block' : 'none';
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (navLinks.classList.contains("active")) {
+                    navLinks.classList.remove('active');
+                    document.body.classList.remove('nav-open');
+                    menuIcon.className = 'fas fa-bars';
+                }
+            });
+        });
+    };
+
+    // --- 8. Event Listeners (Updated Quantity Logic) ---
+    if (productGrid) {
+        productGrid.addEventListener('click', (e) => {
+            const card = e.target.closest('.product-card');
+            if (!card) return;
+            
+            const productId = card.dataset.id;
+            const product = products.find(p => p.id === productId);
+            const isMeat = product && product.isMeat;
+
+            const qtyEl = card.querySelector('.qty');
+            let currentQty = parseFloat(qtyEl.textContent);
+
+            if (e.target.classList.contains('plus-btn')) {
+                const step = isMeat ? 0.5 : 1;
+                currentQty += step;
+            } else if (e.target.classList.contains('minus-btn')) {
+                const step = isMeat ? 0.5 : 1;
+                const minQty = isMeat ? 0.5 : 1;
+                currentQty = Math.max(minQty, currentQty - step);
+            } else if (e.target.classList.contains('add-to-cart-btn')) {
+                 // Ensure quantity is correct before adding
+                 handleAddToCart(productId, currentQty, card);
+                 // Stop further processing if added to cart
+                 return; 
+            }
+            // Update the display, fixing float precision issues
+            qtyEl.textContent = currentQty.toFixed(isMeat ? 1 : 0);
+        });
+    }
+    
+    // --- 9. Initialization ---
+    document.addEventListener("DOMContentLoaded", function() {
+        renderProducts();
+        updateCartCount();
+        initSlider();
+        initScrollEffects();
+        initMobileNav();
+    });
+</script>
 </body>
 </html>
 
