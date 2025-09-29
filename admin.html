@@ -778,7 +778,7 @@
             const filteredOrders = orders.filter(order =>
                 order.id.toLowerCase().includes(searchTerm) ||
                 order.customerName.toLowerCase().includes(searchTerm) ||
-                order.shippingAddress.toLowerCase().includes(searchTerm)
+                order.address.toLowerCase().includes(searchTerm)
             );
             populateOrdersTable(filteredOrders, ordersTableBody);
         }
@@ -805,8 +805,8 @@
                 <td>${order.id.substring(0, 6)}...</td>
                 <td class="customer-details">
                     ${order.customerName}
-                    <small>${order.customerPhone}</small>
-                    <small class="address">${order.shippingAddress}</small>
+                    <small>${order.phone}</small>
+                    <small class="address">${order.address}</small>
                 </td>
                 <td class="items-preview">${itemsPreview}</td>
                 <td>${formatCurrency(order.totalAmount)}</td>
@@ -857,7 +857,7 @@
 
         document.getElementById('modalOrderId').textContent = order.id;
         document.getElementById('modalCustomerName').textContent = `${order.customerName} (${order.customerEmail})`;
-        document.getElementById('modalCustomerAddress').textContent = order.shippingAddress;
+        document.getElementById('modalCustomerAddress').textContent = order.address;
         document.getElementById('modalOrderStatus').textContent = order.status;
         document.getElementById('modalOrderTotal').textContent = order.totalAmount.toFixed(2);
 
