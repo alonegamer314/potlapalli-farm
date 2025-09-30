@@ -309,9 +309,9 @@ body { background: var(--background-light); color: var(--text-dark); }
             return;
         }
 
-        // 2. Fetch fresh order data to check expiration
         const orderDocRef = doc(db, 'orders', orderId);
         try {
+            // 2. Fetch fresh order data to check expiration (minimal structure retained)
             const orderSnap = await getDoc(orderDocRef);
             const orderData = orderSnap.data();
 
@@ -326,22 +326,18 @@ body { background: var(--background-light); color: var(--text-dark); }
                 }
             }
             
-            // 4. If all checks pass, update the status
+            // 4. Await the update: If this fails, it throws an error and jumps to catch{}
             await updateOrderStatus(orderId, 'Delivered');
 
-            // 5. IMMEDIATE CLIENT-SIDE REMOVAL: Hide the card right away
+            // 5. SUCCESS: Only if the update SUCCEEDED, perform the optimistic UI hide.
             if (cardElement) {
                 cardElement.classList.add('removed');
             }
+            showToast(`Order status updated to Delivered.`);
 
         } catch (error) {
             console.error("Error during verification process:", error);
-            // Check for permission error
-            if (error.code === 'permission-denied') {
-                showToast("🔴 Permission Denied: Check Firestore Rules.", true);
-            } else {
-                 showToast("Verification failed due to a network or database error.", true);
-            }
+            // The error is now handled by updateOrderStatus which shows the toast.
         }
         
         verifyBtn.disabled = false;
@@ -349,19 +345,20 @@ body { background: var(--background-light); color: var(--text-dark); }
 
     /**
      * Updates the order status to a specific value (Cancelled/Delivered).
+     * We re-throw the error on permission denial to halt the optimistic UI update in verifyAndDeliver.
      */
     async function updateOrderStatus(orderId, newStatus) {
         const orderRef = doc(db, 'orders', orderId);
         try {
             await updateDoc(orderRef, { status: newStatus });
-            showToast(`Order status updated to ${newStatus}.`);
         } catch (error) {
              if (error.code === 'permission-denied') {
-                showToast("🔴 FAILED: Permission Denied. Contact Admin to update Firestore Rules.", true);
-                console.error("FIREBASE PERMISSION DENIED ERROR: The logged-in 'maps' user does not have permission to modify the 'orders' collection.", error);
+                showToast("🔴 FAILED: Permission Denied. Check Firestore Rules.", true);
             } else {
                 showToast(`Failed to update status to ${newStatus}. (Check Console)`, true);
             }
+            // CRITICAL: Propagate the failure up to the calling function
+            throw error; 
         }
     }
 
@@ -369,20 +366,17 @@ body { background: var(--background-light); color: var(--text-dark); }
      * Sets up a real-time listener for orders.
      */
     function listenToOrders() {
-        // Query filters for status 'Shipped'
         const ordersQuery = query(
             collection(db, "orders"), 
             where("status", "==", "Shipped"), 
             orderBy("orderDate", "asc")
         );
 
-        // When the status changes to Delivered/Cancelled, it no longer matches "Shipped", so Firestore removes it from the snapshot automatically.
         unsubscribeOrders = onSnapshot(ordersQuery, (snapshot) => {
             const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             renderOrders(orders);
         }, (error) => {
             console.error("Error listening to orders:", error);
-            // This error is crucial! If it's permission denied, the rules are the problem.
             showToast("Failed to load orders. Check your network or permissions.", true);
         });
     }
@@ -393,24 +387,25 @@ body { background: var(--background-light); color: var(--text-dark); }
 
     onAuthStateChanged(auth, async (user) => {
         if (user) {
-            // CRITICAL FIX: Add this check to prevent a loop if initialization fails
+            // CRITICAL FIX: Prevent re-initialization loop
             if (isDashboardInitialized) return; 
 
             const userDocRef = doc(db, "users", user.uid);
             try {
                 const docSnap = await getDoc(userDocRef);
-                // Check if user exists and has the 'maps' role
-                if (docSnap.exists() && docSnap.data().role === 'maps') {
-                    // Success: Show dashboard and initialize once
+                const userRole = docSnap.exists() ? docSnap.data().role : null;
+                
+                // Check if user is Maps OR Driver
+                if (userRole === 'maps' || userRole === 'driver') {
                     loginView.style.display = 'none';
                     dashboardView.style.display = 'block';
                     if (unsubscribeOrders) unsubscribeOrders();
                     listenToOrders();
                     isDashboardInitialized = true;
                 } else {
-                    // Access Denied: Force logout
+                    // Access Denied: User logged in but has wrong role
                     signOut(auth);
-                    showToast("Access Denied: Not a 'maps' account.", true);
+                    showToast("Access Denied: Not a delivery staff account.", true);
                 }
             } catch (error) {
                 // Database error during role check
@@ -433,8 +428,18 @@ body { background: var(--background-light); color: var(--text-dark); }
         e.preventDefault(); 
         const email = document.getElementById('mapsEmail').value;
         const password = document.getElementById('mapsPassword').value;
+        
+        // Add loading state on login attempt
+        loginForm.querySelector('.btn').disabled = true;
+
         signInWithEmailAndPassword(auth, email, password)
-            .catch(err => showToast("Login Failed. Please check your email and password.", true));
+            .then(() => {
+                // Success is handled by onAuthStateChanged
+            })
+            .catch(err => {
+                showToast("Login Failed. Please check your email and password.", true);
+                loginForm.querySelector('.btn').disabled = false;
+            });
     });
     
     logoutBtn.addEventListener('click', () => signOut(auth));
@@ -478,13 +483,16 @@ body { background: var(--background-light); color: var(--text-dark); }
     // Modal Confirmation and Cancellation Listeners
     document.getElementById('confirmAction').addEventListener('click', async () => {
         if (activeOrderId && activeStatusUpdate) {
-            // This handles the status update triggered by the CANCEL modal
             if (activeStatusUpdate === 'Cancelled') {
-                await updateOrderStatus(activeOrderId, 'Cancelled');
-                // IMMEDIATE CLIENT-SIDE REMOVAL for Cancelled status
-                const cardElement = document.querySelector(`.order-card[data-id="${activeOrderId}"]`);
-                if (cardElement) {
-                    cardElement.classList.add('removed');
+                try {
+                    await updateOrderStatus(activeOrderId, 'Cancelled');
+                    // IMMEDIATE CLIENT-SIDE REMOVAL for Cancelled status
+                    const cardElement = document.querySelector(`.order-card[data-id="${activeOrderId}"]`);
+                    if (cardElement) {
+                        cardElement.classList.add('removed');
+                    }
+                } catch(e) {
+                    // Error already toasted by updateOrderStatus, just return
                 }
             }
         }
