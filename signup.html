@@ -40,7 +40,6 @@
         /* Desktop Nav - Hidden for Auth Page */
         #desktop-nav { display: none; }
         
-        /* FIX: Header Actions for Sign-up Page Layout (Logo | Actions) */
         .header-actions { 
             display: flex; 
             align-items: center; 
@@ -49,7 +48,6 @@
             justify-content: flex-end;
         }
 
-        /* NEW: Container for the desktop links (Home, Products, About, Contact) */
         #auth-links-container {
             display: flex;
             align-items: center;
@@ -92,10 +90,11 @@
         /* --- 3. Main Auth Page Layout --- */
         .auth-page { display: flex; min-height: calc(100vh - 5rem); }
         
-        /* FIX: Updated Auth Left with Sonali Chicken Image */
+        /* FIX: Replaced green overlay with subtle black overlay (rgba(0,0,0,0.3)) */
         .auth-left { 
             flex: 1; 
-            background: linear-gradient(rgba(39, 174, 96, 0.8), rgba(39, 174, 96, 0.8)), url('assets/images/sonali.jpg') center/cover no-repeat; 
+            /* Subtle black overlay to darken the image for text visibility */
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('assets/images/sonali.jpg') center/cover no-repeat; 
             background-size: cover;
             color: var(--white); 
             padding: 60px; 
@@ -104,8 +103,10 @@
             justify-content: center; 
             align-items: center; 
             text-align: center; 
+            /* Enhanced shadow for maximum clarity */
+            text-shadow: 1px 1px 7px rgba(0, 0, 0, 0.9); 
         }
-        .auth-left h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 1rem; text-shadow: 0 2px 5px rgba(0,0,0,0.4); }
+        .auth-left h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 1rem; }
         .auth-left p { font-size: 1.1rem; max-width: 400px; opacity: 0.9; }
         .auth-right { flex: 1.2; background-color: var(--white); display: flex; flex-direction: column; justify-content: center; padding: 60px 40px; }
         .auth-form-container { width: 100%; max-width: 400px; margin: 0 auto; }
@@ -252,7 +253,6 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        // Import necessary Firebase auth functions for sign-up and profile update
         import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         
         const firebaseConfig = {
@@ -275,10 +275,6 @@
         const menuBtn = document.getElementById('menuBtn');
         const navLinks = document.getElementById('nav-links');
 
-        /**
-         * Ensures the header cart count uses the array length (number of products) 
-         * to display a whole number, consistent with other pages.
-         */
         const updateCartCount = () => {
             const cartCountEl = document.getElementById('cartCount');
             const cart = JSON.parse(localStorage.getItem('potlapalliCart')) || [];
@@ -321,9 +317,7 @@
             // Firebase Sign Up Logic
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // Signed in 
                     const user = userCredential.user;
-                    // Update user profile with the provided full name
                     return updateProfile(user, {
                         displayName: fullName
                     });
