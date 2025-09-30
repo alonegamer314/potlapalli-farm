@@ -118,7 +118,30 @@
             #desktop-nav { display: none !important; } /* Hide the inline desktop links */
             .header-actions { margin-right: 0; gap: 15px; }
             .menu-btn { display: block !important; } /* Show hamburger icon */
-        }
+        /* --- PERMANENT FIX FOR MOBILE HEADER --- */
+
+/* 1. Prevent the logo text from ever wrapping to a new line */
+.header .logo span {
+    white-space: nowrap;
+}
+
+/* 2. Stack the "My Profile" & "Log Out" links vertically */
+.header #auth-controls {
+    display: flex;
+    flex-direction: column; /* This is the key change */
+    align-items: flex-start; /* Aligns them neatly */
+    line-height: 1.4;      /* Adjusts spacing between the links */
+}
+
+/* 3. Reduce font size of auth links to ensure they fit */
+.header #auth-controls a {
+    font-size: 0.9rem;
+}
+
+/* 4. Adjust spacing for the main actions container to prevent overlap */
+.header .header-actions {
+    gap: 12px; /* Reduces space between cart, auth, and menu button */
+}
         /* --- 3. Hero Slider --- */
         .hero { position: relative; height: 100vh; color: var(--white); overflow: hidden; }
         .hero-slider { display: flex; height: 100%; transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1); }
