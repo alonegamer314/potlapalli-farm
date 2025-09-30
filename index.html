@@ -54,6 +54,10 @@
         /* Logo & Text - Default (Unscrolled) is WHITE */
         .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--white); text-decoration: none; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
         .logo img { height: 40px; }
+        /* ADD THIS NEW RULE */
+.logo span {
+    white-space: nowrap;
+}
 
         /* HEADER ACTIONS: Container for Nav, Cart, and Auth buttons */
         .header-actions { display: flex; align-items: center; gap: 20px; }
@@ -356,6 +360,31 @@
     
     <div id="toast" class="toast" aria-live="polite"></div>
 
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('nav-links');
+        
+        if (menuBtn && navLinks) {
+            const menuIcon = menuBtn.querySelector('i');
+
+            menuBtn.addEventListener('click', () => {
+                // Toggle the 'active' class to show/hide the menu
+                navLinks.classList.toggle('active');
+
+                // Bonus: This changes the icon from bars to an 'X'
+                if (navLinks.classList.contains('active')) {
+                    menuIcon.classList.remove('fa-bars');
+                    menuIcon.classList.add('fa-times');
+                } else {
+                    menuIcon.classList.remove('fa-times');
+                    menuIcon.classList.add('fa-bars');
+                }
+            });
+        }
+    });
+</script>
+    
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
