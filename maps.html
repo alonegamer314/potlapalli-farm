@@ -23,8 +23,25 @@
 body { background: var(--background-light); color: var(--text-dark); }
 .container { width: 95%; max-width: 800px; margin: 0 auto; }
 
-    /* Login View Styles */
-    #maps-login-view { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    /* --- Loading Spinner/Overlay Styles --- */
+    #maps-loader-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: var(--background-light);
+        z-index: 5000; /* Highest z-index */
+        display: flex; align-items: center; justify-content: center;
+        transition: opacity 0.3s ease;
+    }
+    .loader-spinner {
+        width: 50px; height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* Login View Styles - Hidden by default */
+    #maps-login-view { display: none; align-items: center; justify-content: center; min-height: 100vh; }
     .login-box { background: var(--white); padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
     .login-box h1 { font-family: 'Playfair Display', serif; margin-bottom: 2rem; color: var(--secondary-color); }
     .input-group { margin-bottom: 1.5rem; text-align: left; }
@@ -33,7 +50,7 @@ body { background: var(--background-light); color: var(--text-dark); }
     .btn { width: 100%; padding: 1rem; background: var(--primary-color); color: var(--white); border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; }
     .btn:hover { opacity: 0.9; }
     
-    /* Dashboard View Styles */
+    /* Dashboard View Styles - Hidden by default */
     #maps-dashboard-view { display: none; }
     
     /* Cleaner Dashboard Header */
@@ -152,6 +169,12 @@ body { background: var(--background-light); color: var(--text-dark); }
 
 </head>
 <body>
+<!-- 1. Full-screen Loading Overlay (Visible by default) -->
+<div id="maps-loader-overlay">
+    <div class="loader-spinner"></div>
+</div>
+
+<!-- 2. Login View (Hidden by default) -->
 <div id="maps-login-view">
 <div class="login-box">
 <h1>Maps Driver Login</h1>
@@ -163,6 +186,7 @@ body { background: var(--background-light); color: var(--text-dark); }
 </div>
 </div>
 
+<!-- 3. Dashboard View (Hidden by default) -->
 <div id="maps-dashboard-view">
     <header class="maps-header">
         <div class="container"><h1>Delivery Dashboard</h1><button id="logoutBtn">Logout</button></div>
@@ -174,6 +198,7 @@ body { background: var(--background-light); color: var(--text-dark); }
     </main>
 </div>
 
+<!-- Status Confirmation Modal -->
 <div id="statusConfirmModal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-body">
@@ -214,6 +239,7 @@ body { background: var(--background-light); color: var(--text-dark); }
     const orderQueueContainer = document.getElementById('order-queue-container');
     const confirmModal = document.getElementById('statusConfirmModal');
     const toastEl = document.getElementById('toast');
+    const loaderOverlay = document.getElementById('maps-loader-overlay'); // New Loader Element
     let unsubscribeOrders = null;
     let activeOrderId = null;
     let activeStatusUpdate = null; // Stores 'Cancelled'
@@ -235,15 +261,12 @@ body { background: var(--background-light); color: var(--text-dark); }
         }
 
         const ordersHtml = orders.map(order => {
-            // Use the confirmed simple field names 'phone' and 'address'
             const customerPhone = order.phone || 'Phone number not available';
             const shippingAddress = order.address || 'Address not available';
             const totalAmount = order.totalAmount ? order.totalAmount.toFixed(2) : '0.00';
             
-            // Google Maps Link
             const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shippingAddress)}`; 
             
-            // Check OTP expiry status for display only
             let otpStatusText = '';
             if (order.otpExpiry) {
                 const expiryTime = order.otpExpiry.toDate();
@@ -302,7 +325,6 @@ body { background: var(--background-light); color: var(--text-dark); }
         const cardElement = verifyBtn.closest('.order-card');
         verifyBtn.disabled = true;
 
-        // 1. Basic OTP Mismatch Check
         if (enteredOTP !== correctOTP) {
             showToast("OTP Mismatch. Please re-enter the code.", true);
             verifyBtn.disabled = false;
@@ -354,6 +376,7 @@ body { background: var(--background-light); color: var(--text-dark); }
         } catch (error) {
              if (error.code === 'permission-denied') {
                 showToast("🔴 FAILED: Permission Denied. Check Firestore Rules.", true);
+                console.error("DEBUG: Update failed. User lacks permissions for orders collection.", error);
             } else {
                 showToast(`Failed to update status to ${newStatus}. (Check Console)`, true);
             }
@@ -386,6 +409,9 @@ body { background: var(--background-light); color: var(--text-dark); }
     let isDashboardInitialized = false;
 
     onAuthStateChanged(auth, async (user) => {
+        // Step 1: Hide the loader first, regardless of auth status
+        loaderOverlay.style.display = 'none';
+
         if (user) {
             // CRITICAL FIX: Prevent re-initialization loop
             if (isDashboardInitialized) return; 
@@ -395,7 +421,7 @@ body { background: var(--background-light); color: var(--text-dark); }
                 const docSnap = await getDoc(userDocRef);
                 const userRole = docSnap.exists() ? docSnap.data().role : null;
                 
-                // Check if user is Maps OR Driver
+                // Step 2: Check if user has the correct role
                 if (userRole === 'maps' || userRole === 'driver') {
                     loginView.style.display = 'none';
                     dashboardView.style.display = 'block';
@@ -406,15 +432,18 @@ body { background: var(--background-light); color: var(--text-dark); }
                     // Access Denied: User logged in but has wrong role
                     signOut(auth);
                     showToast("Access Denied: Not a delivery staff account.", true);
+                    // Fall through to show login view
+                    loginView.style.display = 'flex';
                 }
             } catch (error) {
                 // Database error during role check
                 signOut(auth);
                 console.error("Error verifying account role:", error);
                 showToast("Error verifying account.", true);
+                loginView.style.display = 'flex'; // Show login view on error
             }
         } else {
-            // Logout: Reset view and clear listeners
+            // Step 3: Not logged in (or just logged out), show login view
             loginView.style.display = 'flex';
             dashboardView.style.display = 'none';
             isDashboardInitialized = false;
@@ -429,8 +458,10 @@ body { background: var(--background-light); color: var(--text-dark); }
         const email = document.getElementById('mapsEmail').value;
         const password = document.getElementById('mapsPassword').value;
         
-        // Add loading state on login attempt
+        // Show loader during login attempt
+        loaderOverlay.style.display = 'flex';
         loginForm.querySelector('.btn').disabled = true;
+        loginView.style.display = 'none'; // Optimistically hide login form
 
         signInWithEmailAndPassword(auth, email, password)
             .then(() => {
@@ -439,6 +470,8 @@ body { background: var(--background-light); color: var(--text-dark); }
             .catch(err => {
                 showToast("Login Failed. Please check your email and password.", true);
                 loginForm.querySelector('.btn').disabled = false;
+                loaderOverlay.style.display = 'none';
+                loginView.style.display = 'flex'; // Show form again on failure
             });
     });
     
