@@ -6,7 +6,6 @@
     <title>Sign In - Potlapalli Farm</title>
     <meta name="description" content="Sign in to your Potlapalli Farms account to manage orders and track deliveries." />
     
-    <!-- Google Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
@@ -18,7 +17,7 @@
             --shadow-light: rgba(0,0,0,0.08);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--background-light); padding-top: 70px; }
+        body { background-color: var(--background-light); padding-top: 5rem; } /* Adjusted padding */
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
         a, button { transition: all 0.3s ease; }
         body.nav-open { overflow: hidden; }
@@ -28,24 +27,64 @@
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 0.75rem 0; 
             background-color: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.07); 
         }
-        .header-inner { display: flex; justify-content: space-between; align-items: center; }
+        .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
         .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
         .logo img { height: 40px; }
+        .logo span { white-space: nowrap; }
 
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a { color: var(--secondary-color); text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative; }
-        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--primary-color); transition: width 0.3s ease; }
+        /* Desktop Nav */
+        #desktop-nav { 
+            display: flex; align-items: center; gap: 30px; 
+            flex-grow: 1; justify-content: flex-end; 
+        }
+        #desktop-nav a { 
+            color: var(--secondary-color); text-decoration: none; font-weight: 500; 
+            padding: 0.5rem 0; position: relative; 
+        }
+
+        .header-actions { display: flex; align-items: center; gap: 20px; }
         
-        .header-actions { display: flex; align-items: center; gap: 1.5rem; }
+        /* Mini Cart Styles */
         .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--secondary-color); }
-        #cartCount { position: absolute; top: -8px; right: -10px; background-color: var(--primary-color); color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
+        .mini-cart span { 
+            position: absolute; top: -8px; right: -10px; 
+            background-color: var(--primary-color); color: var(--white); 
+            font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; 
+            display: flex; align-items: center; justify-content: center; 
+        }
         .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; color: var(--primary-color); }
         .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--secondary-color); }
 
+        /* Mobile Slide-out Nav */
+        .nav-links { 
+            position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
+            background-color: var(--white); 
+            z-index: 999; 
+            flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+            transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            list-style: none; padding: 0;
+            display: none; /* Hide by default */
+        }
+        .nav-links.active { transform: translateX(0); display: flex; }
+        .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
+        .nav-links li { padding: 0; }
+        
         /* --- 3. Main Auth Page Layout --- */
-        .auth-page { display: flex; min-height: calc(100vh - 70px); }
-        .auth-left { flex: 1; background: linear-gradient(135deg, #a8e063, #56ab2f); color: var(--white); padding: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .auth-left h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 1rem; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .auth-page { display: flex; min-height: calc(100vh - 5rem); } /* Adjusted min-height */
+        
+        /* FIX: Updated Auth Left with Image Background and Overlay */
+        .auth-left { 
+            flex: 1; 
+            background: linear-gradient(rgba(39, 174, 96, 0.8), rgba(39, 174, 96, 0.8)), url('assets/images/ram.jpg') center/cover no-repeat; 
+            color: var(--white); 
+            padding: 60px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+        }
+        .auth-left h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 1rem; text-shadow: 0 2px 5px rgba(0,0,0,0.4); }
         .auth-left p { font-size: 1.1rem; max-width: 400px; opacity: 0.9; }
         .auth-right { flex: 1.2; background-color: var(--white); display: flex; flex-direction: column; justify-content: center; padding: 60px 40px; }
         .auth-form-container { width: 100%; max-width: 400px; margin: 0 auto; }
@@ -70,7 +109,7 @@
         /* --- 4. Modals & Utilities --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.show { display: flex; opacity: 1; }
-        .modal-content { background: var(--white); padding: 2rem; border-radius: 15px; width: 90%; max-width: 500px; text-align: center; }
+        .modal-content { background: var(--white); padding: 2rem; border-radius: 15px; width: 90%; max-width: 500px; text-align: center; position: relative; }
         .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; position: absolute; top: 15px; right: 20px; }
         .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 1001; transition: bottom 0.5s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .toast.show { bottom: 20px; }
@@ -79,23 +118,15 @@
         /* --- 5. Responsive Design (MOBILE MENU FIX) --- */
         @media (max-width: 992px) {
             .nav-links {
-                position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
-                /* FIX: Make background solid white (opaque) and increase z-index */
-                background-color: var(--white); 
-                z-index: 999; 
-                flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
-                transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+                background-color: var(--white);
+                /* Ensure it's active when toggled */
             }
-            .nav-links.active { 
-                transform: translateX(0); 
-                box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Optional shadow for depth */
-            }
-            .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
-            .menu-btn { display: block; z-index: 1001; } /* Ensure menu button is always highest */
-            .header-nav { display: none; }
+            .menu-btn { display: block; z-index: 1001; }
+            #desktop-nav { display: none; }
+            
             .auth-left { display: none; }
             .auth-right { padding: 40px 20px; }
-            .auth-page { min-height: calc(100vh - 70px); }
+            .auth-page { min-height: calc(100vh - 5rem); }
         }
 
         /* --- 6. Footer --- */
@@ -109,7 +140,7 @@
     </style>
 </head>
 <body>
-    <header class="header">
+    <header class="header" id="header">
         <div class="container header-inner">
             <div class="logo">
                 <a href="index.html">
@@ -117,28 +148,33 @@
                     <span>Potlapalli Farms</span>
                 </a>
             </div>
-            <!-- Desktop Nav Links -->
-            <nav class="header-nav">
-                <a href="index.html">Shop</a>
-                <a href="profile.html">My Account</a>
-                <a href="cart.html">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cartCount">0</span>
-                </a>
+            
+            <nav class="header-nav" id="desktop-nav">
+                <a href="index.html">Home</a>
+                <a href="index.html#products">Products</a>
+                <a href="about.html">About</a>
+                <a href="index.html#contact">Contact</a>
             </nav>
+            
             <div class="header-actions">
-                <!-- Desktop Auth Button (Simplified for Sign-in Page) -->
+                <div class="mini-cart">
+                    <a href="cart.html" aria-label="View shopping cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCount">0</span>
+                    </a>
+                </div>
                 <a href="signup.html" class="auth-btn">Sign Up</a>
-                <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+                <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu"><i class="fas fa-bars"></i></button>
             </div>
         </div>
     </header>
-    <!-- Mobile Nav Slide-out Menu -->
+    
     <ul class="nav-links" id="nav-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="profile.html">My Profile</a></li>
-        <li><a href="cart.html">My Cart</a></li>
-        <li><a href="signup.html">Sign Up</a></li>
+        <li><a href="index.html#products">Products</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+        <li><a href="signup.html" style="font-size: 1.5rem; color: var(--primary-color);">Sign Up</a></li>
     </ul>
 
     <main class="auth-page">
@@ -159,7 +195,7 @@
                     <div class="input-group">
                         <label for="signinPassword">Password</label>
                         <input type="password" id="signinPassword" placeholder="Enter your password" required />
-                        <i class="fas fa-eye password-toggle" id="passwordToggle"></i>
+                        <i class="fas fa-eye-slash password-toggle" id="passwordToggle"></i>
                     </div>
                     <div class="form-options">
                         <div class="remember-me"><input type="checkbox" id="rememberMe" /><label for="rememberMe">Remember Me</label></div>
@@ -175,7 +211,8 @@
     <div id="toast" class="toast"></div>
     <div id="forgotPasswordModal" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header"><h2>Reset Password</h2><button class="close-modal">&times;</button></div>
+            <button class="close-modal" aria-label="Close modal">&times;</button>
+            <div class="modal-header"><h2>Reset Password</h2></div>
             <div class="modal-body">
                 <p>Enter your email address and we'll send you a link to reset your password.</p>
                 <form id="resetPasswordForm">
@@ -223,10 +260,14 @@
         const menuBtn = document.getElementById('menuBtn');
         const navLinks = document.getElementById('nav-links');
 
+        /**
+         * FIX: Ensures the header cart count uses the array length (number of products) 
+         * to display a whole number, consistent with other pages.
+         */
         const updateCartCount = () => {
             const cartCountEl = document.getElementById('cartCount');
             const cart = JSON.parse(localStorage.getItem('potlapalliCart')) || [];
-            const totalItems = cart.length; 
+            const totalItems = cart.length; // Count the number of unique items/products
             if (cartCountEl) cartCountEl.textContent = totalItems;
         };
 
@@ -243,7 +284,8 @@
             passwordToggle.classList.toggle('fa-eye-slash');
         });
 
-        passwordToggle.classList.add('fa-eye-slash');
+        // The icon starts as 'fa-eye-slash' in the HTML, so this line is unnecessary/redundant:
+        // passwordToggle.classList.add('fa-eye-slash'); 
 
         signinForm.addEventListener("submit", (e) => {
             e.preventDefault();
