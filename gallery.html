@@ -1,89 +1,562 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Potlapalli Farm - Gallery</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery - Potlapalli Farms</title>
+    <meta name="description" content="View the Potlapalli Farms photo gallery: farm life, ethically raised animals, and fresh organic produce." />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* --- 1. Foundational Styles & Variables (Copied from Index/Profile) --- */
+        :root {
+            --primary-color: #27ae60;
+            --primary-color-dark: #1e874b;
+            --secondary-color: #2c3e50;
+            --background-light: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #555;
+            --white: #fff;
+            --border-light: #e0e0e0;
+            --shadow-light: rgba(0,0,0,0.08);
+            --shadow-dark: rgba(0,0,0,0.12);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { 
+            background-color: var(--background-light); 
+            color: var(--text-dark); 
+            line-height: 1.6;
+            padding-top: 5rem; /* Space for fixed header */
+        }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+        a, button { transition: all 0.3s ease; text-decoration: none; }
+        body.nav-open { overflow: hidden; }
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        /* --- 2. Header & Navigation (NON-TRANSPARENT STYLE) --- */
+        .header { 
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 0.75rem 0; 
+            background-color: var(--white); 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07); 
+        }
+        .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
+        .logo img { height: 40px; }
+        
+        /* Desktop Navigation Links Container */
+        #desktop-nav { display: flex; align-items: center; gap: 30px; flex-grow: 1; justify-content: flex-end; margin-right: 20px; }
+        #desktop-nav a { font-weight: 500; color: var(--secondary-color); }
+        
+        .header-actions { display: flex; align-items: center; gap: 20px; }
+        .mini-cart a { font-size: 1.2rem; position: relative; color: var(--secondary-color); }
+        #cartCount { position: absolute; top: -8px; right: -10px; background-color: var(--primary-color); color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
+        .auth-btn { font-weight: 600; font-size: 0.95rem; color: var(--secondary-color); }
+        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--secondary-color); }
 
-  <!-- JS -->
-  <script src="js/main.js" defer></script>
+        /* Mobile Nav Slide-out styles */
+        .nav-links {
+            display: none; 
+            position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
+            background-color: rgba(255, 255, 255, 0.95); z-index: 999; 
+            flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+            transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            list-style: none; padding: 0;
+        }
+        .nav-links.active { transform: translateX(0); display: flex; }
+        .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
+
+        /* --- 3. Gallery Page Specific Layout --- */
+        .gallery-page { padding: 4rem 0; }
+        .gallery-header { text-align: center; margin-bottom: 3rem; }
+        .gallery-header h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--secondary-color); margin-bottom: 0.5rem; }
+        .gallery-header p { font-size: 1.1rem; color: var(--text-light); max-width: 800px; margin: 0 auto; }
+
+        /* Filtering/Category Buttons */
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        .filter-buttons button {
+            background: var(--white);
+            color: var(--secondary-color);
+            border: 2px solid var(--border-light);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .filter-buttons button:hover, .filter-buttons button.active {
+            background: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+
+        /* Image Grid (Masonry-like layout) */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            opacity: 1;
+            transform: scale(1);
+            transition: all 0.5s ease-in-out;
+            aspect-ratio: 4/3; /* Enforcing consistent ratio */
+        }
+        .gallery-item.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            height: 0;
+            padding: 0;
+            margin: 0;
+            visibility: hidden;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
+            color: var(--white);
+            font-size: 0.9rem;
+            font-weight: 500;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .gallery-item:hover .image-caption {
+            opacity: 1;
+        }
+        
+        /* Lightbox Modal Styles (New Feature) */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+        .lightbox-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 100vh;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            object-fit: contain;
+        }
+        .lightbox-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            color: var(--white);
+            text-align: center;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: var(--white);
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 3001;
+            padding: 10px;
+            line-height: 1;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+        }
+
+
+        /* --- 4. Footer (Copied from Index) --- */
+        footer { background: #1e293b; color: #cbd5e1; padding: 5rem 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
+        .footer-col h4 { font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--white); }
+        .footer-col p, .footer-col a { color: #94a3b8; }
+        .footer-col a { display: block; margin-bottom: 0.75rem; }
+        .footer-col a:hover { color: var(--white); padding-left: 5px; }
+        .footer-bottom { 
+            text-align: center; 
+            margin-top: 4rem; 
+            padding-top: 2rem; 
+            border-top: 1px solid #334155; 
+            font-size: 0.9rem; 
+            color: #94a3b8; 
+            line-height: 1.4;
+        }
+        .footer-bottom em {
+            font-style: italic;
+            display: block;
+            margin-top: 0.5rem;
+            color: #ccc;
+        }
+
+
+        /* --- 5. Responsive Design --- */
+        @media (max-width: 992px) {
+            #desktop-nav { display: none !important; }
+            .menu-btn { display: block !important; }
+            .header-actions { margin-left: auto; }
+            .image-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            .gallery-header h1 { font-size: 2.5rem; }
+            .filter-buttons button { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
+        }
+    </style>
 </head>
 <body>
+    <header class="header" id="header">
+        <div class="container header-inner">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/logo.png" alt="Potlapalli Farms Logo"/>
+                    <span>Potlapalli Farms</span>
+                </a>
+            </div>
+            
+            <!-- Desktop Nav Links -->
+            <nav class="header-nav" id="desktop-nav"> 
+                <a href="index.html">Home</a>
+                <a href="index.html#products">Products</a>
+                <a href="about.html">About</a>
+                <a href="contact-us.html">Contact</a>
+            </nav>
 
-  <!-- Header -->
-  <header class="header">
-    <div class="container header-inner">
-      <div class="logo">
-        <img src="assets/logo.png" alt="Potlapalli Farm Logo">
-        <span>Potlapalli Farm</span>
-      </div>
-
-      <nav class="nav">
-        <a href="index.html">Home</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="#contact">Contact</a>
-      </nav>
-
-      <div class="header-actions">
-        <div class="mini-cart">
-          <a href="cart.html">🛒 <span id="cartCount">0</span></a>
+            <div class="header-actions">
+                <div class="mini-cart">
+                    <a href="cart.html" aria-label="View shopping cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCount">0</span>
+                    </a>
+                </div>
+                <!-- Dynamic Auth Controls container (Desktop) -->
+                <div id="auth-controls" class="auth-controls">
+                    <!-- Log In / My Profile / Log Out inserted here by JS -->
+                </div>
+                <!-- Hamburger Menu Button -->
+                <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
         </div>
-      </div>
+    </header>
+    
+    <!-- Mobile Slide-out Menu -->
+    <ul class="nav-links" id="nav-links">
+        <!-- Links are dynamically rendered by JS -->
+    </ul>
+
+    <main>
+        <section class="gallery-page">
+            <div class="container">
+                <div class="gallery-header">
+                    <h1>Our Farm in Photos</h1>
+                    <p>A peek into daily life at Potlapalli Farms. See our healthy, free-range animals and the fields where we harvest fresh produce.</p>
+                  <em>Pictures Shot by Sidhard</em>
+                </div>
+
+                <div class="filter-buttons" id="filterButtons">
+                    <button class="active" data-filter="all">All Photos</button>
+                    <button data-filter="animals">Animals</button>
+                    <button data-filter="produce">Produce</button>
+                    <button data-filter="farm">Farm Life</button>
+                </div>
+
+                <div class="image-grid" id="imageGrid">
+                    <!-- Gallery Items injected here by JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer copied from index.html -->
+    <footer id="contact">
+        <div class="container">
+             <div class="footer-grid">
+                <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
+                <div class="footer-col"><h4>Quick Links</h4><a href="index.html#home">Home</a><a href="index.html#products">Products</a><a href="about.html">About</a></div>
+                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Village, AP<br>Email: contact@potlapallifarm.com<br>Phone: +91 98765 43210</p></div>
+                <div class="footer-col"><h4>Follow Us</h4><a href="#">Facebook</a><a href="#">Instagram</a></div>
+             </div>
+             <div class="footer-bottom">
+                 <p>© 2025 Potlapalli Farms. All Rights Reserved.</p>
+                 <!-- NEW FEATURE: End Credit -->
+                 <em>Pictures Shot by Sidhard</em>
+             </div>
+        </div>
+    </footer>
+    
+    <div id="toast" class="toast" aria-live="polite"></div>
+    
+    <!-- NEW FEATURE: Lightbox Modal -->
+    <div id="lightbox" class="lightbox-overlay">
+        <span class="lightbox-close">&times;</span>
+        <div class="lightbox-content">
+            <img id="lightboxImage" src="" alt="">
+            <div id="lightboxCaption" class="lightbox-caption"></div>
+        </div>
     </div>
-  </header>
 
-  <!-- =========================
-       Gallery Section
-  ========================= -->
-  <section class="gallery-section">
-    <div class="container">
-      <h2>Our Farm Gallery</h2>
-      <p>Click on any image to view details.</p>
 
-      <div class="gallery-container">
+    <script>
+    // --- 1. Gallery Data ---
+    const galleryImages = [
+        { src: 'assets/images/live-ram.jpg', caption: 'Ethically raised rams.', category: 'animals' },
+        { src: 'assets/images/farm-field.jpg', caption: 'Lush green fields...', category: 'farm' },
+        { src: 'assets/images/live-goats.jpg', caption: 'Premium goat meat source.', category: 'animals' },
+        { src: 'assets/images/eggs.jpg', caption: 'Farm-fresh country chicken eggs.', category: 'produce' },
+        { src: 'assets/images/hero.jpg', caption: 'Morning light over the farm.', category: 'farm' },
+        { src: 'assets/images/sonali.jpg', caption: 'Healthy Sonali country chicken.', category: 'animals' },
+        { src: 'assets/images/buck.jpg', caption: 'Our finest buck on the range.', category: 'animals' },
+        { src: 'assets/images/backyard-chicken.jpg', caption: 'Chickens roaming freely in the backyard.', category: 'animals' },
+        { src: 'assets/images/shopnow.jpeg', caption: 'A view from the main field.', category: 'farm' },
+        { src: 'assets/images/tray.jpg', caption: 'Trays of fresh, golden-yolk eggs.', category: 'produce' },
+    ];
 
-        <!-- Gallery Item 1 -->
-        <div class="gallery-item" data-title="Happy Goats" data-description="Our free-range goats roaming happily on the farm." data-image="assets/images/gallery/goat1.jpg">
-          <img src="assets/images/gallery/goat1_thumb.jpg" alt="Happy Goats">
-          <div class="gallery-caption">Happy Goats</div>
-        </div>
+    // --- 2. Utility Functions (Toast, Lightbox) ---
+    const showToast = (message, isError = false) => {
+        const toastEl = document.getElementById('toast');
+        toastEl.textContent = message;
+        toastEl.classList.add(isError ? 'error' : 'show');
+        setTimeout(() => toastEl.classList.remove('show', 'error'), 3000);
+    };
+    
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const lightboxClose = document.querySelector('.lightbox-close');
 
-        <!-- Gallery Item 2 -->
-        <div class="gallery-item" data-title="Organic Vegetables" data-description="Freshly harvested organic vegetables ready for delivery." data-image="assets/images/gallery/veggies1.jpg">
-          <img src="assets/images/gallery/veggies1_thumb.jpg" alt="Organic Vegetables">
-          <div class="gallery-caption">Organic Vegetables</div>
-        </div>
+    function openLightbox(src, caption) {
+        lightboxImage.src = src;
+        lightboxCaption.textContent = caption;
+        lightbox.classList.add('active');
+        document.body.classList.add('nav-open'); // Prevent background scroll
+    }
 
-        <!-- Gallery Item 3 -->
-        <div class="gallery-item" data-title="Country Chicken" data-description="Native breed chickens enjoying our open pasture." data-image="assets/images/gallery/chicken1.jpg">
-          <img src="assets/images/gallery/chicken1_thumb.jpg" alt="Country Chicken">
-          <div class="gallery-caption">Country Chicken</div>
-        </div>
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.classList.remove('nav-open');
+    }
 
-        <!-- Gallery Item 4 -->
-        <div class="gallery-item" data-title="Fresh Milk" data-description="Milking goats daily to provide fresh, pure milk." data-image="assets/images/gallery/milk1.jpg">
-          <img src="assets/images/gallery/milk1_thumb.jpg" alt="Fresh Milk">
-          <div class="gallery-caption">Fresh Milk</div>
-        </div>
+    lightbox.addEventListener('click', (e) => {
+        // Close only if clicking the overlay or the close button
+        if (e.target === lightbox || e.target === lightboxClose) {
+            closeLightbox();
+        }
+    });
+    
+    // --- 3. Gallery Rendering and Filtering ---
+    const imageGrid = document.getElementById('imageGrid');
+    const filterButtons = document.getElementById('filterButtons');
 
-        <!-- Add more items as needed -->
+    function renderGallery(filter = 'all') {
+        const items = galleryImages.map(img => {
+            const isHidden = filter !== 'all' && img.category !== filter;
+            return `
+                <a class="gallery-item ${isHidden ? 'hidden' : ''}" 
+                   data-category="${img.category}" 
+                   data-src="${img.src}" 
+                   data-caption="${img.caption}" 
+                   href="#" onclick="event.preventDefault(); openLightbox('${img.src}', '${img.caption}')">
+                    <img src="${img.src}" alt="${img.caption}" loading="lazy">
+                    <div class="image-caption">${img.caption}</div>
+                </a>
+            `;
+        }).join('');
+        
+        imageGrid.innerHTML = items;
 
-      </div>
-    </div>
-  </section>
+        // Apply visual transformation after setting innerHTML
+        if (filter !== 'all') {
+            // Re-select elements after they are rendered
+            document.querySelectorAll('.gallery-item').forEach(item => {
+                 if (!item.classList.contains('hidden')) {
+                    item.style.transform = 'scale(1)';
+                    item.style.opacity = '1';
+                    item.style.visibility = 'visible';
+                 } else {
+                    item.style.height = '0';
+                    item.style.margin = '0';
+                 }
+            });
+        }
+    }
 
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <p>© 2025 Potlapalli Farm. All rights reserved.</p>
-    </div>
-  </footer>
+    // Attach filter event listeners
+    filterButtons.addEventListener('click', (e) => {
+        const button = e.target.closest('button');
+        if (!button) return;
 
+        const filter = button.dataset.filter;
+        
+        document.querySelectorAll('.filter-buttons button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        button.classList.add('active');
+
+        renderGallery(filter);
+    });
+
+    // --- 4. Header & Auth Logic (Copied and adapted for this page) ---
+    
+    // Auth related DOM elements
+    const cartCountEl = document.getElementById('cartCount');
+    const authControls = document.getElementById('auth-controls');
+    const navLinks = document.getElementById('nav-links');
+
+    // Utility function for updating cart count
+    const updateCartCount = () => {
+        const CART_KEY = 'potlapalliCart';
+        const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+        if (cartCountEl) cartCountEl.textContent = cart.length;
+    };
+
+    // Handle Logout
+    const handleLogout = () => {
+        signOut(auth).then(() => {
+            showToast("Signed out successfully!");
+            renderAuthControls(null); // Update UI
+        }).catch(error => {
+            showToast("Logout error.", true);
+            console.error("Logout failed:", error);
+        });
+    };
+
+    // Authentication Status Manager
+    const renderAuthControls = (user) => {
+        authControls.innerHTML = '';
+        navLinks.innerHTML = '';
+
+        const baseMobileLinks = `
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#products">Products</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact-us.html">Contact</a></li>
+            <div id="mobile-auth-links"></div>
+        `;
+        navLinks.innerHTML = baseMobileLinks;
+        const mobileAuthLinksContainer = navLinks.querySelector('#mobile-auth-links');
+
+        if (user) {
+            // Logged In State
+            authControls.innerHTML = `
+                <a href="profile.html" class="auth-btn">My Profile</a>
+                <button class="auth-btn" id="signOutBtnDesktop" style="border:none; background:none; color: var(--secondary-color); cursor:pointer;">Log Out</button>
+            `;
+            const desktopSignOutBtn = document.getElementById('signOutBtnDesktop'); 
+            if(desktopSignOutBtn) desktopSignOutBtn.addEventListener('click', handleLogout);
+            
+            // Mobile Menu
+            mobileAuthLinksContainer.innerHTML = `
+                <li><a href="profile.html" class="auth-btn">My Profile</a></li>
+                <li><a href="#" id="signOutBtnMobile" class="auth-btn">Log Out</a></li>
+            `;
+            const mobileSignOutBtn = document.getElementById('signOutBtnMobile');
+            if(mobileSignOutBtn) mobileSignOutBtn.addEventListener('click', handleLogout);
+
+        } else {
+            // Logged Out State
+            authControls.innerHTML = `<a href="signin.html" class="auth-btn">Log In</a>`;
+
+            // Mobile Menu
+            mobileAuthLinksContainer.innerHTML = `
+                <li><a href="signin.html" class="auth-btn">Log In</a></li>
+                <li><a href="signup.html" class="auth-btn">Sign Up</a></li>
+            `;
+        }
+    };
+    
+    // Mobile Menu Toggle Fix (needs to be inside DOMContentLoaded)
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuBtn = document.getElementById('menuBtn');
+        if (menuBtn && navLinks) {
+            const menuIcon = menuBtn.querySelector('i');
+            menuBtn.addEventListener('click', () => {
+                const isActive = navLinks.classList.toggle('active');
+                document.body.classList.toggle("nav-open");
+                menuIcon.classList.toggle('fa-bars', !isActive);
+                menuIcon.classList.toggle('fa-times', isActive);
+            });
+            
+            navLinks.querySelectorAll('a').forEach(link => {
+                 link.addEventListener('click', () => {
+                    if (navLinks.classList.contains("active")) {
+                        navLinks.classList.remove('active');
+                        document.body.classList.remove('nav-open');
+                        menuBtn.querySelector('i').className = 'fas fa-bars';
+                    }
+                });
+            });
+        }
+    });
+
+    // --- 5. Initialization ---
+    document.addEventListener("DOMContentLoaded", function() {
+        renderGallery('all');
+        updateCartCount();
+    });
+    
+    // Firebase Auth Setup (Must be at the end)
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+        authDomain: "potlapallifarm.firebaseapp.com",
+        projectId: "potlapallifarm",
+        storageBucket: "potlapallifarm.firebasestorage.app",
+        messagingSenderId: "1017629729159",
+        appId: "1:1017629729159:web:357c420a9de335d427b322",
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    onAuthStateChanged(auth, renderAuthControls);
+    </script>
+    
+</script>
 </body>
 </html>
