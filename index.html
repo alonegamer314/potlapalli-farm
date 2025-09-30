@@ -30,7 +30,7 @@
         img { max-width: 100%; display: block; }
         a, button { transition: all 0.3s ease; }
 
-        /* --- 2. Header & Navigation (FINAL ALIGNMENT FIX) --- */
+        /* --- 2. Header & Navigation (FINAL ALIGNMENT & COLOR FIX) --- */
         .header {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1rem 0;
             background-color: transparent; transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease;
@@ -40,39 +40,50 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.07);
             padding: 0.75rem 0;
         }
-        .header-inner { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-        .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
+        .header-inner { display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Logo & Text - Default (Unscrolled) is WHITE */
+        .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--white); text-decoration: none; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
         .logo img { height: 40px; }
 
+        /* HEADER ACTIONS: Container for Nav, Cart, and Auth buttons */
+        .header-actions { display: flex; align-items: center; gap: 20px; }
+        
         /* Desktop Navigation Links Container */
         #desktop-nav { 
-            display: flex; /* Always show links on desktop */
-            gap: 1.5rem; 
-            margin-right: auto; /* Push nav to the left of the actions */
-            margin-left: 20px; /* Space from logo */
+            display: flex; 
             align-items: center;
+            gap: 20px; /* Spacing between Cart/Auth and the Nav links */
+            margin-right: 20px; /* Push nav slightly away from actions group */
         }
+        
+        /* Desktop Navigation Links Text */
         #desktop-nav a { 
-            color: var(--secondary-color); 
-            text-decoration: none; 
             font-weight: 500; 
+            text-decoration: none; 
+            padding: 0.5rem 0; 
+            position: relative; 
+            color: var(--white); /* Default (Unscrolled) is White */
             transition: color 0.3s;
         }
-        .header:not(.scrolled) #desktop-nav a { color: var(--white); } /* Transparency styling */
-        
-        .header-actions { display: flex; align-items: center; gap: 15px; } /* Space between Cart, Auth, and Menu */
-        
-        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--secondary-color); }
-        .mini-cart span { position: absolute; top: -8px; right: -10px; background-color: var(--primary-color); color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
-        .header:not(.scrolled) .mini-cart span { background-color: var(--white); color: var(--primary-color); }
 
-        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; }
-        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--secondary-color); }
-        .header:not(.scrolled) .menu-btn { color: var(--white); }
+        /* SCROLLED STATE: Change everything to secondary-color (DARK) */
+        .header.scrolled .logo a, 
+        .header.scrolled #desktop-nav a, 
+        .header.scrolled .menu-btn,
+        .header.scrolled .mini-cart a,
+        .header.scrolled .auth-btn { 
+            color: var(--secondary-color) !important; 
+            text-shadow: none; 
+        }
+        .header.scrolled .mini-cart span { background-color: var(--primary-color); color: var(--white); }
+
+        /* AUTH BUTTON STYLING */
+        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; color: var(--white); }
+        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--white); }
+        .mini-cart span { position: absolute; top: -8px; right: -10px; background-color: var(--primary-color); color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
+        
+        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--white); }
 
         /* --- MOBILE MENU HANDLING (The slide-out) --- */
         .nav-links { 
@@ -83,20 +94,17 @@
             flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
             transform: translateX(100%);
             transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-            list-style: none; /* Ensure no bullets */
-            padding: 0; /* Remove default padding */
-            display: none; /* HIDDEN BY DEFAULT ON ALL SCREENS */
+            list-style: none; padding: 0;
+            display: none; 
         }
-        .nav-links.active { 
-            transform: translateX(0);
-            display: flex; /* Show only when active */
-        }
+        .nav-links.active { display: flex; transform: translateX(0); }
         .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
         
         /* --- 8. Responsive Design --- */
         @media (max-width: 992px) {
             #desktop-nav { display: none !important; } /* Hide the inline desktop links */
-            .menu-btn { display: block !important; } /* Show the hamburger button */
+            .header-actions { margin-right: 0; gap: 15px; }
+            .menu-btn { display: block !important; } /* Show hamburger icon */
         }
         /* --- 3. Hero Slider --- */
         .hero { position: relative; height: 100vh; color: var(--white); overflow: hidden; }
