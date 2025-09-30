@@ -17,7 +17,7 @@
             --shadow-light: rgba(0,0,0,0.08);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--background-light); padding-top: 5rem; } /* Adjusted padding */
+        body { background-color: var(--background-light); padding-top: 5rem; }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
         a, button { transition: all 0.3s ease; }
         body.nav-open { overflow: hidden; }
@@ -27,24 +27,46 @@
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 0.75rem 0; 
             background-color: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.07); 
         }
-        .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .header-inner { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 20px; 
+        }
         .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
         .logo img { height: 40px; }
         .logo span { white-space: nowrap; }
 
-        /* Desktop Nav */
+        /* Desktop Nav - Reverted to Simple Links for Auth Page */
         #desktop-nav { 
-            display: flex; align-items: center; gap: 30px; 
-            flex-grow: 1; justify-content: flex-end; 
+            display: none; /* Hide standard nav for this layout */
         }
-        #desktop-nav a { 
-            color: var(--secondary-color); text-decoration: none; font-weight: 500; 
-            padding: 0.5rem 0; position: relative; 
+        
+        /* FIX: Header Actions for Sign-in Page Layout (Logo | Actions) */
+        .header-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 20px;
+            flex-grow: 1; /* Allows this to fill the space */
+            justify-content: flex-end; /* Pushes content to the right */
         }
 
-        .header-actions { display: flex; align-items: center; gap: 20px; }
-        
+        /* NEW: Container for the links like "Shop My Account" and "Sign Up" */
+        #auth-links-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-right: 20px; /* Space before the Sign Up button */
+        }
+        #auth-links-container a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+
         /* Mini Cart Styles */
+        .mini-cart { margin-right: 5px; } /* Ensure cart is aligned properly */
         .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--secondary-color); }
         .mini-cart span { 
             position: absolute; top: -8px; right: -10px; 
@@ -63,19 +85,20 @@
             flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
             transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
             list-style: none; padding: 0;
-            display: none; /* Hide by default */
+            display: none;
         }
         .nav-links.active { transform: translateX(0); display: flex; }
         .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
         .nav-links li { padding: 0; }
         
         /* --- 3. Main Auth Page Layout --- */
-        .auth-page { display: flex; min-height: calc(100vh - 5rem); } /* Adjusted min-height */
+        .auth-page { display: flex; min-height: calc(100vh - 5rem); }
         
-        /* FIX: Updated Auth Left with Image Background and Overlay */
+        /* Updated Auth Left with Image Background and Overlay */
         .auth-left { 
             flex: 1; 
             background: linear-gradient(rgba(39, 174, 96, 0.8), rgba(39, 174, 96, 0.8)), url('assets/images/ram.jpg') center/cover no-repeat; 
+            background-size: cover;
             color: var(--white); 
             padding: 60px; 
             display: flex; 
@@ -117,12 +140,11 @@
         
         /* --- 5. Responsive Design (MOBILE MENU FIX) --- */
         @media (max-width: 992px) {
-            .nav-links {
-                background-color: var(--white);
-                /* Ensure it's active when toggled */
-            }
+            .nav-links.active { transform: translateX(0); display: flex; }
             .menu-btn { display: block; z-index: 1001; }
             #desktop-nav { display: none; }
+            #auth-links-container { display: none; } /* Hide desktop links */
+            .header-actions { justify-content: flex-end; } /* Keep actions aligned right */
             
             .auth-left { display: none; }
             .auth-right { padding: 40px 20px; }
@@ -150,13 +172,16 @@
             </div>
             
             <nav class="header-nav" id="desktop-nav">
-                <a href="index.html">Home</a>
-                <a href="index.html#products">Products</a>
-                <a href="about.html">About</a>
-                <a href="index.html#contact">Contact</a>
-            </nav>
+                </nav>
             
             <div class="header-actions">
+                <div id="auth-links-container">
+                    <a href="index.html" class="desktop-link">Home</a>
+                    <a href="index.html#products" class="desktop-link">Products</a>
+                    <a href="about.html" class="desktop-link">About</a>
+                    <a href="index.html#contact" class="desktop-link">Contact</a>
+                </div>
+
                 <div class="mini-cart">
                     <a href="cart.html" aria-label="View shopping cart">
                         <i class="fas fa-shopping-cart"></i>
@@ -283,9 +308,6 @@
             passwordToggle.classList.toggle('fa-eye');
             passwordToggle.classList.toggle('fa-eye-slash');
         });
-
-        // The icon starts as 'fa-eye-slash' in the HTML, so this line is unnecessary/redundant:
-        // passwordToggle.classList.add('fa-eye-slash'); 
 
         signinForm.addEventListener("submit", (e) => {
             e.preventDefault();
