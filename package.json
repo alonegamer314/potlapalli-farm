@@ -1,0 +1,8 @@
+{
+  "name": "potlapalli-farm",
+  "version": "1.0.0",
+  "description": "Static deployment for Potlapalli Farm website.",
+  "scripts": {
+    "start": "echo 'No development server needed for static site.'"
+  }
+}
