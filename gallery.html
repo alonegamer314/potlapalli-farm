@@ -295,7 +295,7 @@
                 <div class="gallery-header">
                     <h1>Our Farm in Photos</h1>
                     <p>A peek into daily life at Potlapalli Farms. See our healthy, free-range animals and the fields where we harvest fresh produce.</p>
-                  <em>Pictures Shot by Sidhard</em>
+                 <em> {Pictures Shot by Sidhard} </em>
                 </div>
 
                 <div class="filter-buttons" id="filterButtons">
@@ -318,7 +318,7 @@
              <div class="footer-grid">
                 <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
                 <div class="footer-col"><h4>Quick Links</h4><a href="index.html#home">Home</a><a href="index.html#products">Products</a><a href="about.html">About</a></div>
-                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Village, AP<br>Email: contact@potlapallifarm.com<br>Phone: +91 98765 43210</p></div>
+                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Farms, AP<br>Email: contact@potlapallifarm.com<br>Phone: +91 98765 43210</p></div>
                 <div class="footer-col"><h4>Follow Us</h4><a href="#">Facebook</a><a href="#">Instagram</a></div>
              </div>
              <div class="footer-bottom">
@@ -342,18 +342,19 @@
 
 
     <script>
-    // --- 1. Gallery Data ---
+    // --- 1. Gallery Data (Using image names that are likely correct) ---
     const galleryImages = [
-        { src: 'assets/images/live-ram.jpg', caption: 'Ethically raised rams.', category: 'animals' },
-        { src: 'assets/images/farm-field.jpg', caption: 'Lush green fields...', category: 'farm' },
-        { src: 'assets/images/live-goats.jpg', caption: 'Premium goat meat source.', category: 'animals' },
-        { src: 'assets/images/eggs.jpg', caption: 'Farm-fresh country chicken eggs.', category: 'produce' },
-        { src: 'assets/images/hero.jpg', caption: 'Morning light over the farm.', category: 'farm' },
-        { src: 'assets/images/sonali.jpg', caption: 'Healthy Sonali country chicken.', category: 'animals' },
-        { src: 'assets/images/buck.jpg', caption: 'Our finest buck on the range.', category: 'animals' },
-        { src: 'assets/images/backyard-chicken.jpg', caption: 'Chickens roaming freely in the backyard.', category: 'animals' },
-        { src: 'assets/images/shopnow.jpeg', caption: 'A view from the main field.', category: 'farm' },
-        { src: 'assets/images/tray.jpg', caption: 'Trays of fresh, golden-yolk eggs.', category: 'produce' },
+        // Updated to use the common asset names used in other files where possible
+        { src: 'assets/images/live-ram.jpg', caption: 'Healthy Rams, Raised the Right Way.', category: 'animals' },
+        { src: 'assets/images/farm-field.jpg', caption: 'Lush green fields.', category: 'farm' },
+        { src: 'assets/images/live-goat.jpg', caption: 'Our Goats: Naturally Raised, Quality Assured.', category: 'animals' },
+       // { src: 'assets/images/eggs.jpg', caption: 'Farm-fresh country chicken eggs.', category: 'produce' }, //
+        { src: 'assets/images/hero.jpg', caption: 'Everyday Harmony at the Farm.', category: 'farm' },
+        { src: 'assets/images/sonali.jpg', caption: 'Thriving Sonali Chicken, Farm-Fresh and Free-Range.', category: 'animals' },
+        { src: 'assets/images/buck.jpeg', caption: 'Raised with care, our prized buck enjoying the day.', category: 'animals' },
+        { src: 'assets/images/backyard.jpg', caption: 'Backyard Freedom, Just How Chickens Like It.', category: 'animals' },
+        // { src: 'assets/images/shopnow.jpeg', caption: 'A view from the main field.', category: 'farm' }, //
+       // { src: 'assets/images/tray.jpg', caption: 'Trays of fresh, golden-yolk eggs.', category: 'produce' },//
     ];
 
     // --- 2. Utility Functions (Toast, Lightbox) ---
@@ -369,11 +370,12 @@
     const lightboxCaption = document.getElementById('lightboxCaption');
     const lightboxClose = document.querySelector('.lightbox-close');
 
-    function openLightbox(src, caption) {
+    // Make Lightbox functions global for use in delegated event listener
+    window.openLightbox = function(src, caption) {
         lightboxImage.src = src;
         lightboxCaption.textContent = caption;
         lightbox.classList.add('active');
-        document.body.classList.add('nav-open'); // Prevent background scroll
+        document.body.classList.add('nav-open'); 
     }
 
     function closeLightbox() {
@@ -382,7 +384,6 @@
     }
 
     lightbox.addEventListener('click', (e) => {
-        // Close only if clicking the overlay or the close button
         if (e.target === lightbox || e.target === lightboxClose) {
             closeLightbox();
         }
@@ -400,7 +401,7 @@
                    data-category="${img.category}" 
                    data-src="${img.src}" 
                    data-caption="${img.caption}" 
-                   href="#" onclick="event.preventDefault(); openLightbox('${img.src}', '${img.caption}')">
+                   href="#">
                     <img src="${img.src}" alt="${img.caption}" loading="lazy">
                     <div class="image-caption">${img.caption}</div>
                 </a>
@@ -409,9 +410,7 @@
         
         imageGrid.innerHTML = items;
 
-        // Apply visual transformation after setting innerHTML
         if (filter !== 'all') {
-            // Re-select elements after they are rendered
             document.querySelectorAll('.gallery-item').forEach(item => {
                  if (!item.classList.contains('hidden')) {
                     item.style.transform = 'scale(1)';
@@ -424,6 +423,16 @@
             });
         }
     }
+
+    // Attach click listener to the grid container
+    imageGrid.addEventListener('click', (e) => {
+        e.preventDefault();
+        const item = e.target.closest('.gallery-item');
+        if (item) {
+            window.openLightbox(item.dataset.src, item.dataset.caption);
+        }
+    });
+
 
     // Attach filter event listeners
     filterButtons.addEventListener('click', (e) => {
@@ -440,25 +449,23 @@
         renderGallery(filter);
     });
 
-    // --- 4. Header & Auth Logic (Copied and adapted for this page) ---
+    // --- 4. Header & Auth Logic ---
     
-    // Auth related DOM elements
     const cartCountEl = document.getElementById('cartCount');
     const authControls = document.getElementById('auth-controls');
     const navLinks = document.getElementById('nav-links');
 
-    // Utility function for updating cart count
     const updateCartCount = () => {
         const CART_KEY = 'potlapalliCart';
         const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
         if (cartCountEl) cartCountEl.textContent = cart.length;
     };
 
-    // Handle Logout
+    // Handle Logout (Defined inside the module scope)
     const handleLogout = () => {
         signOut(auth).then(() => {
             showToast("Signed out successfully!");
-            renderAuthControls(null); // Update UI
+            renderAuthControls(null); 
         }).catch(error => {
             showToast("Logout error.", true);
             console.error("Logout failed:", error);
@@ -509,7 +516,7 @@
         }
     };
     
-    // Mobile Menu Toggle Fix (needs to be inside DOMContentLoaded)
+    // Mobile Menu Toggle Fix 
     document.addEventListener('DOMContentLoaded', () => {
         const menuBtn = document.getElementById('menuBtn');
         if (menuBtn && navLinks) {
@@ -538,8 +545,9 @@
         renderGallery('all');
         updateCartCount();
     });
+    </script>
     
-    // Firebase Auth Setup (Must be at the end)
+    <!-- Firebase Auth Setup (Must be type="module") -->
     <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -556,7 +564,5 @@
     const auth = getAuth(app);
     onAuthStateChanged(auth, renderAuthControls);
     </script>
-    
-</script>
 </body>
 </html>
