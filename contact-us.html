@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - Potlapalli Farms</title>
+    <meta name="description" content="Get in touch with Potlapalli Farms for product inquiries, orders, or support. We're here to help!" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        /* --- 1. Foundational Styles & Variables (Copied from Index/Profile) --- */
+        :root {
+            --primary-color: #27ae60;
+            --primary-color-dark: #1e874b;
+            --secondary-color: #2c3e50;
+            --background-light: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #555;
+            --white: #fff;
+            --border-light: #e0e0e0;
+            --shadow-light: rgba(0,0,0,0.08);
+            --shadow-dark: rgba(0,0,0,0.12);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { 
+            background-color: var(--background-light); 
+            color: var(--text-dark); 
+            line-height: 1.6;
+            padding-top: 5rem; /* Space for fixed header */
+        }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+        a, button { transition: all 0.3s ease; text-decoration: none; }
+        body.nav-open { overflow: hidden; }
+
+        /* --- 2. Header & Navigation (NON-TRANSPARENT STYLE) --- */
+        .header { 
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 0.75rem 0; 
+            background-color: var(--white); 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07); 
+        }
+        .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
+        .logo img { height: 40px; }
+        
+        /* Desktop Navigation Links Container */
+        #desktop-nav { display: flex; align-items: center; gap: 30px; flex-grow: 1; justify-content: flex-end; margin-right: 20px; }
+        #desktop-nav a { font-weight: 500; color: var(--secondary-color); }
+        
+        .header-actions { display: flex; align-items: center; gap: 20px; }
+        .mini-cart a { font-size: 1.2rem; position: relative; color: var(--secondary-color); }
+        #cartCount { position: absolute; top: -8px; right: -10px; background-color: var(--primary-color); color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
+        .auth-btn { font-weight: 600; font-size: 0.95rem; color: var(--secondary-color); }
+        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--secondary-color); }
+
+        /* Mobile Nav Slide-out styles */
+        .nav-links {
+            display: none; 
+            position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
+            background-color: rgba(255, 255, 255, 0.95); z-index: 999; 
+            flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+            transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            list-style: none; padding: 0;
+        }
+        .nav-links.active { transform: translateX(0); display: flex; }
+        .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
+
+        /* --- 3. Contact Page Specific Layout --- */
+        .contact-page { padding: 4rem 0; }
+        .contact-header { text-align: center; margin-bottom: 3rem; }
+        .contact-header h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--secondary-color); margin-bottom: 0.5rem; }
+        .contact-header p { font-size: 1.1rem; color: var(--text-light); max-width: 600px; margin: 0 auto; }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr; /* Contact Details | Form */
+            gap: 3rem;
+            align-items: stretch;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px var(--shadow-light);
+            padding: 3rem;
+        }
+        
+        /* Contact Form */
+        .contact-form-container { padding: 1rem; }
+        .contact-form-container h2 { font-size: 1.5rem; color: var(--primary-color); margin-bottom: 1.5rem; }
+        .input-group { margin-bottom: 1.5rem; }
+        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--secondary-color); }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .input-group input:focus, .input-group textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        .input-group textarea { resize: vertical; min-height: 120px; }
+        .btn-submit {
+            width: 100%;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 1rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-submit:hover { background: var(--primary-color-dark); }
+        
+        /* Contact Details */
+        .contact-details-container { 
+            padding: 1rem;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .contact-details-container h2 { font-size: 1.8rem; margin-bottom: 2rem; font-family: 'Playfair Display', serif; }
+        .detail-item { display: flex; align-items: center; margin-bottom: 1.5rem; gap: 1rem; }
+        .detail-item i { font-size: 1.5rem; flex-shrink: 0; }
+        .detail-item p { font-size: 1.1rem; line-height: 1.4; }
+        .detail-item a { color: var(--white); font-weight: 500; }
+        
+        /* Map Section */
+        #farm-location { padding: 4rem 0; background: var(--white); }
+        #map-container { 
+            width: 100%; 
+            height: 400px; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-top: 2rem;
+        }
+        #google-map { width: 100%; height: 100%; border: none; }
+
+
+        /* --- 4. Footer (Copied from Index) --- */
+        footer { background: #1e293b; color: #cbd5e1; padding: 5rem 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
+        .footer-col h4 { font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--white); }
+        .footer-col p, .footer-col a { color: #94a3b8; }
+        .footer-col a { display: block; margin-bottom: 0.75rem; }
+        .footer-col a:hover { color: var(--white); padding-left: 5px; }
+        .footer-bottom { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #334155; font-size: 0.9rem; color: #94a3b8; }
+
+        /* --- 5. Responsive Design --- */
+        @media (max-width: 992px) {
+            #desktop-nav { display: none !important; }
+            .menu-btn { display: block !important; }
+            .header-actions { margin-left: auto; }
+            .contact-grid {
+                grid-template-columns: 1fr;
+                padding: 2rem;
+            }
+            .contact-details-container { order: 1; margin-bottom: 1rem; }
+            .contact-form-container { order: 2; margin-top: 1rem; }
+        }
+        @media (max-width: 600px) {
+            .contact-header h1 { font-size: 2.5rem; }
+            .contact-grid { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header" id="header">
+        <div class="container header-inner">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/logo.png" alt="Potlapalli Farms Logo"/>
+                    <span>Potlapalli Farms</span>
+                </a>
+            </div>
+            
+            <!-- Desktop Nav Links -->
+            <nav class="header-nav" id="desktop-nav"> 
+                <a href="index.html">Home</a>
+                <a href="index.html#products">Products</a>
+                <a href="about.html">About</a>
+                <a href="contact-us.html">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <div class="mini-cart">
+                    <a href="cart.html" aria-label="View shopping cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCount">0</span>
+                    </a>
+                </div>
+                <!-- Dynamic Auth Controls container (Desktop) -->
+                <div id="auth-controls" class="auth-controls">
+                    <!-- Log In / My Profile / Log Out inserted here by JS -->
+                </div>
+                <!-- Hamburger Menu Button -->
+                <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Slide-out Menu -->
+    <ul class="nav-links" id="nav-links">
+        <!-- Links are dynamically rendered by JS -->
+    </ul>
+
+    <main>
+        <section class="contact-page">
+            <div class="container">
+                <div class="contact-header">
+                    <h1>Let's Connect</h1>
+                    <p>We are always happy to hear from our customers. Whether you have an inquiry, feedback, or need support with an order, reach out to us!</p>
+                </div>
+
+                <div class="contact-grid">
+                    <!-- Contact Details (Left Side, Green Box) -->
+                    <div class="contact-details-container">
+                        <h2>Our Details</h2>
+                        <div class="detail-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p>Potlapalli Village, Prakasam District, Andhra Pradesh - 523315</p>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-phone"></i>
+                            <p><a href="tel:+919876543210">+91 98765 43210</a> (For Orders & Support)</p>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-envelope"></i>
+                            <p><a href="mailto:contact@potlapallifarm.com">contact@potlapallifarm.com</a></p>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-clock"></i>
+                            <p>Customer Support: Mon - Sat, 9:00 AM - 6:00 PM IST</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Form (Right Side) -->
+                    <div class="contact-form-container">
+                        <h2>Send Us a Message</h2>
+                        <form id="contactForm">
+                            <div class="input-group">
+                                <label for="name">Your Name</label>
+                                <input type="text" id="name" required placeholder="Full Name">
+                            </div>
+                            <div class="input-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" required placeholder="name@example.com">
+                            </div>
+                            <div class="input-group">
+                                <label for="subject">Subject</label>
+                                <input type="text" id="subject" required placeholder="E.g., Order Inquiry #1234">
+                            </div>
+                            <div class="input-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" required placeholder="How can we help you?"></textarea>
+                            </div>
+                            <button type="submit" class="btn-submit">Submit Inquiry</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="farm-location">
+            <div class="container">
+                 <div class="contact-header">
+                    <h2>Our Farm Location</h2>
+                    <p>Visit us to see how your fresh food is sourced! (By appointment only)</p>
+                 </div>
+                 <!-- Google Maps Placeholder/Embed -->
+                 <div id="map-container">
+                     <!-- Using an iframe placeholder for the map -->
+                     <iframe 
+                        id="google-map"
+                        src="https://maps.google.com/maps?q=Potlapalli%20Village%20Prakasam%20District&t=&z=13&ie=UTF8&iwloc=&output=embed" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                     </iframe>
+                 </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer copied from index.html -->
+    <footer id="contact">
+        <div class="container">
+             <div class="footer-grid">
+                <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
+                <div class="footer-col"><h4>Quick Links</h4><a href="index.html#home">Home</a><a href="index.html#products">Products</a><a href="about.html">About</a></div>
+                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Village, AP<br>Email: contact@potlapallifarm.com<br>Phone: +91 98765 43210</p></div>
+                <div class="footer-col"><h4>Follow Us</h4><a href="#">Facebook</a><a href="#">Instagram</a></div>
+             </div>
+             <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
+        </div>
+    </footer>
+    
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <script>
+    // --- Vanilla JS for Menu Toggle and Form Submission ---
+
+    // Utility function for toasts
+    const showToast = (message, isError = false) => {
+        const toastEl = document.getElementById('toast');
+        toastEl.textContent = message;
+        toastEl.classList.add(isError ? 'error' : 'show');
+        setTimeout(() => toastEl.classList.remove('show', 'error'), 3000);
+    };
+
+    // Form Submission Handler
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // In a real application, you would send this data to a backend server (e.g., Firebase Functions, email API).
+        // Since we don't have a backend endpoint here, we simulate success.
+        
+        const name = document.getElementById('name').value;
+        showToast(`Thank you, ${name}! Your message has been received.`);
+        
+        this.reset();
+    });
+
+    // Mobile Menu Toggle Logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('nav-links');
+        
+        if (menuBtn && navLinks) {
+            const menuIcon = menuBtn.querySelector('i');
+
+            menuBtn.addEventListener('click', () => {
+                const isActive = navLinks.classList.toggle('active');
+                document.body.classList.toggle("nav-open");
+                menuIcon.classList.toggle('fa-bars', !isActive);
+                menuIcon.classList.toggle('fa-times', isActive);
+            });
+            
+            navLinks.querySelectorAll('a').forEach(link => {
+                 link.addEventListener('click', () => {
+                    if (navLinks.classList.contains("active")) {
+                        navLinks.classList.remove('active');
+                        document.body.classList.remove('nav-open');
+                        menuBtn.querySelector('i').className = 'fas fa-bars';
+                    }
+                });
+            });
+        }
+    });
+    </script>
+
+    <!-- Firebase Auth Integration (Same as Index/About Pages) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        // Initialize Firebase app instance (using your consistent config):
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+            authDomain: "potlapallifarm.firebaseapp.com",
+            projectId: "potlapallifarm",
+            storageBucket: "potlapallifarm.firebasestorage.app",
+            messagingSenderId: "1017629729159",
+            appId: "1:1017629729159:web:357c420a9de335d427b322",
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // --- DOM Elements ---
+        const cartCountEl = document.getElementById('cartCount');
+        const authControls = document.getElementById('auth-controls');
+        const navLinks = document.getElementById('nav-links');
+
+        // --- Utility Functions ---
+        const updateCartCount = () => {
+            const CART_KEY = 'potlapalliCart';
+            const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+            if (cartCountEl) cartCountEl.textContent = cart.length;
+        };
+
+        const handleLogout = () => {
+            signOut(auth).then(() => {
+                showToast("Signed out successfully!");
+                renderAuthControls(null); // Update UI
+            }).catch(error => {
+                showToast("Logout error.", true);
+                console.error("Logout failed:", error);
+            });
+        };
+
+        // --- Authentication Status Manager ---
+        const renderAuthControls = (user) => {
+            // Clear both containers
+            authControls.innerHTML = '';
+            navLinks.innerHTML = ''; // This clears the hardcoded mobile links
+
+            // Base Mobile Nav Links (always present)
+            const baseMobileLinks = `
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#products">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact-us.html">Contact</a></li>
+                <div id="mobile-auth-links">
+                    <!-- Auth links inserted here -->
+                </div>
+            `;
+            navLinks.innerHTML = baseMobileLinks;
+            const mobileAuthLinksContainer = navLinks.querySelector('#mobile-auth-links');
+
+
+            if (user) {
+                // Logged In State
+                authControls.innerHTML = `
+                    <a href="profile.html" class="auth-btn">My Profile</a>
+                    <button class="auth-btn" id="signOutBtnDesktop" style="border:none; background:none; color: var(--secondary-color); cursor:pointer;">Log Out</button>
+                `;
+                const desktopSignOutBtn = document.getElementById('signOutBtnDesktop'); 
+                if(desktopSignOutBtn) desktopSignOutBtn.addEventListener('click', handleLogout);
+                
+
+                // Mobile Menu
+                mobileAuthLinksContainer.innerHTML = `
+                    <li><a href="profile.html" class="auth-btn">My Profile</a></li>
+                    <li><a href="#" id="signOutBtnMobile" class="auth-btn">Log Out</a></li>
+                `;
+                const mobileSignOutBtn = document.getElementById('signOutBtnMobile');
+                if(mobileSignOutBtn) mobileSignOutBtn.addEventListener('click', handleLogout);
+
+
+            } else {
+                // Logged Out State
+                authControls.innerHTML = `<a href="signin.html" class="auth-btn">Log In</a>`;
+
+                // Mobile Menu
+                mobileAuthLinksContainer.innerHTML = `
+                    <li><a href="signin.html" class="auth-btn">Log In</a></li>
+                    <li><a href="signup.html" class="auth-btn">Sign Up</a></li>
+                `;
+            }
+        };
+
+        // Listen for authentication state changes and update the header buttons
+        onAuthStateChanged(auth, renderAuthControls);
+
+        // Initialization
+        document.addEventListener("DOMContentLoaded", function() {
+            updateCartCount();
+        });
+    </script>
+</body>
+</html>
