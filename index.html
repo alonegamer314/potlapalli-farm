@@ -147,7 +147,7 @@
         @media (max-width: 992px) {
             .nav-links {
                 position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
-                background-color: rgba(255, 255, 255, 0.95); /* Solid white background for mobile fix */
+                background-color: rgba(255, 255, 255, 0.95);
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
                 z-index: 999; 
@@ -162,10 +162,12 @@
 
             .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
             
-            /* Show the hamburger menu button */
             .menu-btn { display: block; z-index: 1001; } 
             .header-nav { display: none; }
-            .header-actions { padding-right: 15px; } /* Space for the button */
+            .header-actions { padding-right: 15px; }
+            
+            /* Hide the separate Log In button in mobile view */
+            #auth-controls a.auth-btn { display: none; }
         }
     </style>
 </head>
@@ -196,7 +198,7 @@
                     </a>
                 </div>
                 <div id="auth-controls" class="auth-controls">
-                    <a href="signin.html" class="auth-btn">Log In</a>
+                    <a href="signin.html" class="auth-btn" id="authLinkDesktop">Log In</a>
                 </div>
                 <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
                     <i class="fas fa-bars"></i>
@@ -211,9 +213,7 @@
         <li><a href="about.html">About</a></li>
         <li><a href="#contact">Contact</a></li>
         <div id="mobile-auth-links">
-            <li><a href="signin.html" class="auth-btn">Log In</a></li>
-            <li><a href="signup.html" class="auth-btn">Sign Up</a></li>
-        </div>
+            </div>
     </ul>
 
     <main>
@@ -336,7 +336,7 @@
     const menuBtn = document.getElementById("menuBtn");
     const navLinks = document.getElementById("nav-links");
     const authControls = document.getElementById('auth-controls');
-    const mobileAuthLinks = document.getElementById('mobile-auth-links');
+    const mobileAuthLinks = document.getElementById('mobile-auth-links'); // Target for mobile links
 
 
     // --- 3. Cart & Utility Functionality ---
@@ -370,12 +370,13 @@
         }
         localStorage.setItem(CART_KEY, JSON.stringify(cart));
         
+        // Quantity display uses 2 decimal places for accuracy (e.g., 0.25kg, 0.75kg)
         updateCartCount();
         showToast(`${quantity.toFixed(product.isMeat ? 2 : 0)}${product.isMeat ? 'kg' : product.unit.replace('/', '')} of ${product.name} added to cart!`);
         
         if (cardElement) {
-             // Goat: 0.75, Processed Meat: 0.5, Other: 1
-             const resetQty = (product.id === 'goat') ? 0.75 : (product.isMeat ? 0.5 : 1);
+             const isGoat = product.id === 'goat';
+             const resetQty = isGoat ? 0.75 : (product.isMeat ? 0.5 : 1);
              cardElement.querySelector('.qty').textContent = resetQty.toFixed(product.isMeat ? 2 : 0);
              updatePriceDisplay(cardElement, product);
         }
@@ -437,7 +438,7 @@
                                 <span class="price price-display">₹${initialPrice.toFixed(0)}</span>
                                 <div class="quantity-controls">
                                     <button class="qty-btn minus-btn" aria-label="Decrease quantity">-</button>
-                                    <span class="qty">${initialQty.toFixed(isGoat ? 2 : (product.isMeat ? 1 : 0))}</span>
+                                    <span class="qty">${initialQty.toFixed(product.isMeat ? 2 : 0)}</span>
                                     <button class="qty-btn plus-btn" aria-label="Increase quantity">+</button>
                                     <small class="unit-text">${unitText}</small>
                                 </div>
@@ -468,15 +469,9 @@
     // --- 4.5. Authentication Status Manager ---
 
     const renderAuthControls = (user) => {
-        if (!authControls) return;
-
-        // Clear mobile auth links first
-        mobileAuthLinks.innerHTML = '';
-
+        // Desktop Auth Controls
         if (user) {
-            // Logged In State
-            
-            // Desktop: Show My Profile and Log Out buttons
+            // Logged In State (Desktop)
             authControls.innerHTML = `
                 <a href="profile.html" class="auth-btn">My Profile</a>
                 <button class="auth-btn" id="signOutBtn" style="border:none; background:none; color: var(--primary-color); cursor:pointer;">Log Out</button>
@@ -484,9 +479,15 @@
             document.getElementById('signOutBtn').addEventListener('click', handleLogout);
 
             // Mobile Menu: Only Profile and Logout
-            mobileAuthLinks.innerHTML = `
-                <li><a href="profile.html" class="auth-btn">My Profile</a></li>
-                <li><a href="#" id="signOutBtnMobile" class="auth-btn">Log Out</a></li>
+            navLinks.innerHTML = `
+                <li><a href="#home">Home</a></li>
+                <li><a href="#products">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <div id="mobile-auth-links">
+                    <li><a href="profile.html" class="auth-btn">My Profile</a></li>
+                    <li><a href="#" id="signOutBtnMobile" class="auth-btn">Log Out</a></li>
+                </div>
             `;
             document.getElementById('signOutBtnMobile').addEventListener('click', handleLogout);
 
@@ -497,9 +498,15 @@
             authControls.innerHTML = `<a href="signin.html" class="auth-btn">Log In</a>`;
 
             // Mobile Menu: Show Log In and Sign Up
-            mobileAuthLinks.innerHTML = `
-                <li><a href="signin.html" class="auth-btn">Log In</a></li>
-                <li><a href="signup.html" class="auth-btn">Sign Up</a></li>
+            navLinks.innerHTML = `
+                <li><a href="#home">Home</a></li>
+                <li><a href="#products">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <div id="mobile-auth-links">
+                    <li><a href="signin.html" class="auth-btn">Log In</a></li>
+                    <li><a href="signup.html" class="auth-btn">Sign Up</a></li>
+                </div>
             `;
         }
     };
@@ -526,21 +533,23 @@
         if (!menuBtn || !navLinks) return;
         const menuIcon = menuBtn.querySelector('i');
         
-        // Use the primary Menu Button (which is the first one)
         menuBtn.addEventListener("click", () => {
             const isActive = navLinks.classList.toggle("active");
             document.body.classList.toggle("nav-open");
             menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
         });
 
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (navLinks.classList.contains("active")) {
+        // The logout listener is handled by renderAuthControls
+        // The closing logic is generic:
+        navLinks.addEventListener('click', (e) => {
+             const target = e.target.closest('a');
+             if (target) {
+                 if (navLinks.classList.contains("active")) {
                     navLinks.classList.remove('active');
                     document.body.classList.remove('nav-open');
                     menuIcon.className = 'fas fa-bars';
-                }
-            });
+                 }
+             }
         });
     };
 
@@ -560,13 +569,11 @@
             let currentQty = parseFloat(qtyEl.textContent);
 
             if (e.target.classList.contains('plus-btn')) {
-                // Meat and Goat increments by 0.25, Others by 1
                 const step = isMeat ? 0.25 : 1;
                 currentQty += step;
             } else if (e.target.classList.contains('minus-btn')) {
                 const step = isMeat ? 0.25 : 1;
                 
-                // Define Minimum Quantities
                 let minQty;
                 if (isGoat) {
                     minQty = 0.75; 
@@ -604,8 +611,8 @@
             if (product) updatePriceDisplay(card, product);
         });
         
-        // Ensure Auth Controls render immediately on load
-        onAuthStateChanged(auth, renderAuthControls); 
+        // Final listener call remains outside the DOMContentLoaded scope for immediate action
+        // onAuthStateChanged(auth, renderAuthControls); 
     });
 </script>
 </body>
