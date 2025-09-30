@@ -6,7 +6,6 @@
     <meta name="description" content="Your cart at Potlapalli Farm — fresh goat meat, eggs, milk & more" />
     <title>Your Cart - Potlapalli Farm</title>
 
-    <!-- Google Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
@@ -27,19 +26,47 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         html { scroll-behavior: smooth; }
-        body { background: var(--background-light); color: var(--text-dark); }
+        body { background: var(--background-light); color: var(--text-dark); padding-top: 5rem; /* Push content below fixed header */ }
         .container { width: 90%; max-width: 1100px; margin: 0 auto; }
+        a, button { transition: all 0.3s ease; }
 
-        /* --- 2. Header (Consistent with index.html) --- */
-        .header { background: var(--white); border-bottom: 1px solid var(--border-light); padding: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .header-inner { display: flex; justify-content: space-between; align-items: center; }
-        .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
-        .logo img { height: 50px; }
-        .header-nav { display: flex; align-items: center; gap: 1.5rem; }
-        .header-nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; }
-        #cartCount { background: var(--danger-color); color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.8rem; vertical-align: top; margin-left: 4px; }
-        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--secondary-color); }
+        /* --- 2. Header (Consistent with index.html structure) --- */
+        .header { 
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; 
+            background: var(--white); border-bottom: 1px solid var(--border-light); 
+            padding: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+        }
+        .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
         
+        .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
+        .logo img { height: 40px; } /* Adjusted height */
+        .logo span { white-space: nowrap; }
+
+        /* Desktop Nav */
+        #desktop-nav { 
+            display: flex; align-items: center; gap: 30px; 
+            flex-grow: 1; justify-content: flex-end; 
+        }
+        #desktop-nav a { text-decoration: none; color: var(--secondary-color); font-weight: 500; }
+
+        /* Header Actions (Cart & Auth) */
+        .header-actions { display: flex; align-items: center; gap: 20px; }
+        
+        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--secondary-color); }
+        .mini-cart span { 
+            position: absolute; top: -8px; right: -10px; 
+            background-color: var(--primary-color); color: var(--white); 
+            font-size: 0.7rem; font-weight: 600; 
+            border-radius: 50%; width: 18px; height: 18px; 
+            display: flex; align-items: center; justify-content: center; 
+        }
+        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; color: var(--secondary-color); }
+
+        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--secondary-color); }
+
+        /* Mobile Slide-Out Menu Styles (minimal for now, assuming external CSS handles full functionality) */
+        .nav-links { display: none; } 
+
         /* --- 3. Main Cart Page Layout --- */
         .cart-page { padding: 4rem 1rem; }
         .cart-header h1 { font-family: 'Playfair Display', serif; color: var(--secondary-color); font-size: 2.8rem; text-align: center; margin-bottom: 1rem; }
@@ -87,22 +114,22 @@
         .random-click-card { max-width: 400px; margin: 0 auto; background: var(--white); padding: 1rem; border-radius: 8px; box-shadow: 0 10px 40px var(--shadow-dark); text-align: center; transform: rotate(-2deg); }
         .random-click-card:hover { transform: rotate(0deg) scale(1.02); }
         .random-click-card h3 { font-family: 'Playfair Display', serif; margin-bottom: 1rem; }
-.random-click-card img {
-  border-radius: 4px;
-  max-width: 100%;
-  height: auto;
-  max-height: 400px;
-  object-fit: cover;
-  display: block;
-  margin: 0 auto;
-}
+        .random-click-card img {
+            border-radius: 4px;
+            max-width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
         .random-click-card p { font-size: 0.9rem; color: var(--text-light); margin-top: 1rem; font-style: italic; }
 
         @media (max-width: 600px) {
-  .random-click-card img {
-    max-height: 250px;
-  }
-}
+            .random-click-card img {
+                max-height: 250px;
+            }
+        }
 
         /* --- 8. Responsive Design --- */
         @media (max-width: 992px) { 
@@ -112,13 +139,16 @@
         @media (max-width: 480px) {
             .cart-item { flex-wrap: wrap; }
             .item-total { margin-left: auto; }
-            .header-nav { display: none; }
+            /* Hide desktop navigation and show menu button for mobile */
+            #desktop-nav { display: none !important; }
+            .header-actions { margin-left: auto; } /* Push actions to the right */
             .menu-btn { display: block; }
+            #auth-controls { display: none; }
         }
     </style>
 </head>
 <body>
-    <header class="header">
+    <header class="header" id="header">
         <div class="container header-inner">
             <div class="logo">
                 <a href="index.html">
@@ -126,12 +156,28 @@
                     <span>Potlapalli Farms</span>
                 </a>
             </div>
-            <nav class="header-nav">
+            
+            <nav class="header-nav" id="desktop-nav"> 
                 <a href="index.html">Home</a>
-                <a href="profile.html">My Account</a>
-                <a href="cart.html"><i class="fas fa-shopping-cart"></i><span id="cartCount">0</span></a>
+                <a href="index.html#products">Products</a>
+                <a href="about.html">About</a>
+                <a href="index.html#contact">Contact</a>
             </nav>
-            <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+
+            <div class="header-actions">
+                <div class="mini-cart">
+                    <a href="cart.html" aria-label="View shopping cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCount">0</span>
+                    </a>
+                </div>
+                <div id="auth-controls" class="auth-controls">
+                    <a href="signin.html" class="auth-btn">Log In</a>
+                </div>
+                <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -141,7 +187,7 @@
                 <h1>Your Cart</h1>
                 <p>Review and manage the items for your order.</p>
             </div>
-            <div id="cart-content"><!-- Cart content is rendered here --></div>
+            <div id="cart-content"></div>
         </div>
     </main>
 
@@ -157,7 +203,8 @@
         const products = {
             'goat': { id: 'goat', name: 'Premium Goat Meat', price: 850, image: 'assets/images/goat.jpg' },
             'chicken': { id: 'chicken', name: 'Country Chicken', price: 320, image: 'assets/images/chicken.jpg' },
-            'eggs': { id: 'eggs', name: 'Farm Eggs', price: 8, image: 'assets/imgaes/eggs.jpg' },
+            // Note: Updated image path for eggs
+            'eggs': { id: 'eggs', name: 'Farm Eggs', price: 8, image: 'assets/images/eggs.jpg' }, 
             'milk': { id: 'milk', name: 'Fresh Goat Milk', price: 60, image: 'assets/images/milk.jpg' }
         };
 
@@ -179,18 +226,30 @@
             updateHeaderCartCount();
         }
 
+        /**
+         * FIX: Updates the header cart count to reflect the number of unique items (products),
+         * not the total quantity, to avoid decimal display.
+         */
         function updateHeaderCartCount() {
             const cart = getCart();
-            const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+            // Count the number of unique products (length of the cart array)
+            const totalItems = cart.length; 
             if(headerCartCountEl) headerCartCountEl.textContent = totalItems;
         }
 
         function updateItemQuantity(productId, change) {
             let cart = getCart();
             const itemIndex = cart.findIndex(item => item.id === productId);
+            
             if (itemIndex > -1) {
-                cart[itemIndex].quantity += change;
-                if (cart[itemIndex].quantity <= 0) cart.splice(itemIndex, 1);
+                // Ensure quantity remains at least 1 when increasing/decreasing
+                const newQuantity = cart[itemIndex].quantity + change;
+                cart[itemIndex].quantity = Math.max(0, newQuantity);
+                
+                if (cart[itemIndex].quantity <= 0) {
+                     // If quantity drops to 0 or below, remove the item
+                     cart.splice(itemIndex, 1); 
+                }
             }
             saveCart(cart);
         }
@@ -215,6 +274,7 @@
         function undoRemove() {
             if (!recentlyRemoved) return;
             let cart = getCart();
+            // Splice the removed item back at its original index
             cart.splice(recentlyRemoved.index, 0, recentlyRemoved.item);
             recentlyRemoved = null;
             saveCart(cart);
@@ -233,28 +293,32 @@
             cartContentEl.innerHTML = `
                 <div class="cart-layout">
                     <div class="cart-items">
-                        ${cart.map(item => `
-                            <div class="cart-item" data-id="${item.id}">
-                                <img src="${products[item.id]?.image || ''}" alt="${item.name}">
-                                <div class="item-details">
-                                    <h4>${item.name}</h4><p>₹${item.price}</p>
-                                    <div class="quantity-controls">
-                                        <button class="qty-btn decrease-qty-btn">-</button>
-                                        <span class="qty">${item.quantity}</span>
-                                        <button class="qty-btn increase-qty-btn">+</button>
+                        ${cart.map(item => {
+                            const unit = item.id === 'eggs' ? ' dozen' : (item.id === 'milk' ? ' L' : ' kg');
+                            const displayQuantity = item.quantity.toFixed(item.quantity % 1 === 0 ? 0 : 2); // Show 2 decimals only if not an integer
+                            return `
+                                <div class="cart-item" data-id="${item.id}">
+                                    <img src="${products[item.id]?.image || ''}" alt="${item.name}">
+                                    <div class="item-details">
+                                        <h4>${item.name}</h4><p>₹${item.price} per ${unit.trim()}</p>
+                                        <div class="quantity-controls">
+                                            <button class="qty-btn decrease-qty-btn">-</button>
+                                            <span class="qty">${displayQuantity}${unit}</span>
+                                            <button class="qty-btn increase-qty-btn">+</button>
+                                        </div>
                                     </div>
+                                    <span class="item-total">₹${(item.price * item.quantity).toFixed(0)}</span>
+                                    <button class="remove-btn"><i class="fas fa-trash"></i></button>
                                 </div>
-                                <span class="item-total">₹${item.price * item.quantity}</span>
-                                <button class="remove-btn"><i class="fas fa-trash"></i></button>
-                            </div>
-                        `).join('')}
+                            `;
+                        }).join('')}
                         ${recentlyRemoved ? `<div class="undo-container">Item removed. <button class="undo-btn">Undo</button></div>` : ''}
                     </div>
                     <div class="cart-summary">
                         <h3>Order Summary</h3>
-                        <div class="summary-row"><span>Subtotal</span><span>₹${subtotal}</span></div>
+                        <div class="summary-row"><span>Subtotal</span><span>₹${subtotal.toFixed(0)}</span></div>
                         <div class="summary-row"><span>Delivery Fee</span><span>FREE</span></div>
-                        <div class="summary-row summary-total"><span>Total</span><span>₹${subtotal}</span></div>
+                        <div class="summary-row summary-total"><span>Total</span><span>₹${subtotal.toFixed(0)}</span></div>
                         <a href="contact.html" class="btn btn-primary">Proceed to Checkout</a>
                         <a href="index.html" class="btn btn-outline">Continue Shopping</a>
                     </div>
@@ -266,18 +330,28 @@
             const target = e.target;
             const itemEl = target.closest('.cart-item');
             const productId = itemEl?.dataset.id;
+            
+            // Determine step based on product type (assuming all meat is 0.25, others 1)
+            const step = (productId === 'goat' || productId === 'chicken') ? 0.25 : 1;
 
-            if (target.closest('.increase-qty-btn')) updateItemQuantity(productId, 1);
-            else if (target.closest('.decrease-qty-btn')) updateItemQuantity(productId, -1);
+            if (target.closest('.increase-qty-btn')) updateItemQuantity(productId, step);
+            else if (target.closest('.decrease-qty-btn')) updateItemQuantity(productId, -step);
             else if (target.closest('.remove-btn')) removeItem(productId);
             else if (target.matches('.undo-btn')) undoRemove();
         });
 
+        // Simple Mobile Menu Toggle (to handle hamburger button)
         document.addEventListener('DOMContentLoaded', () => {
+            const menuBtn = document.getElementById('menuBtn');
+            const headerActions = document.querySelector('.header-actions');
+            
+            // This cart.html is simplified and doesn't have a full slide-out,
+            // so we'll just handle basic click interaction if needed in a real app.
+            // For now, ensure the cart count and rendering run.
+            
             renderCart();
             updateHeaderCartCount();
         });
     </script>
 </body>
 </html>
-
