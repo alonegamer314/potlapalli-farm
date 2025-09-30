@@ -30,16 +30,25 @@
         img { max-width: 100%; display: block; }
         a, button { transition: all 0.3s ease; }
 
-        /* --- 2. Header & Navigation (FINAL ALIGNMENT & COLOR FIX) --- */
+        /* --- 2. Header & Navigation (FINAL ALIGNMENT & COLOR FIX) New --- */
         .header {
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1rem 0;
-            background-color: transparent; transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease;
-        }
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1rem 0;
+    
+    /* Apply transparent background and blur from the start */
+    background-color: rgba(255, 255, 255, 0.2); /* Very light transparency */
+    -webkit-backdrop-filter: blur(5px); /* Starting blur */
+    backdrop-filter: blur(5px); /* Starting blur */
+    
+    transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease, backdrop-filter 0.4s ease;
+}
         .header.scrolled {
-            background-color: var(--white);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-            padding: 0.75rem 0;
-        }
+    /* More opaque and more blurry on scroll */
+    background-color: rgba(255, 255, 255, 0.8); 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    padding: 0.75rem 0;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
         .header-inner { display: flex; justify-content: space-between; align-items: center; }
         
         /* Logo & Text - Default (Unscrolled) is WHITE */
