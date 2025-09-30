@@ -215,7 +215,7 @@ body { background: var(--background-light); color: var(--text-dark); }
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, doc, getDoc, collection, query, where, onSnapshot, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     import { Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -239,7 +239,7 @@ body { background: var(--background-light); color: var(--text-dark); }
     const orderQueueContainer = document.getElementById('order-queue-container');
     const confirmModal = document.getElementById('statusConfirmModal');
     const toastEl = document.getElementById('toast');
-    const loaderOverlay = document.getElementById('maps-loader-overlay'); // New Loader Element
+    const loaderOverlay = document.getElementById('maps-loader-overlay'); 
     let unsubscribeOrders = null;
     let activeOrderId = null;
     let activeStatusUpdate = null; // Stores 'Cancelled'
