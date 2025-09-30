@@ -1,0 +1,47 @@
+name: Secure Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # This triggers the action when you push changes to the 'main' branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    
+      # 1. Checkout repository (Gets your HTML, package.json, and inject.js)
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Setup Node.js Environment 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      # 3. Install dependencies 
+      - name: Install dependencies
+        run: npm install 
+
+      # 4. CRITICAL STEP: Inject Secrets into HTML files
+      - name: Inject Firebase Configuration
+        # The 'env' section exposes your GitHub Secrets to the node script environment
+        run: node inject.js
+        env:
+          # Mapping the GitHub secrets to Node.js environment variables
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+      # 5. Deploy the secured files to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: . # Deploys files from the root directory
+          force_orphan: true
