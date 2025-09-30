@@ -190,23 +190,21 @@
                 </a>
             </div>
             
-          <div class="header-actions">
-    <nav class="header-nav">
-        <a href="index.html">Shop</a>
-        <a href="profile.html">My Account</a>
-    </nav>
-    <div class="mini-cart">
-        <a href="cart.html" aria-label="View shopping cart">
-            <i class="fas fa-shopping-cart"></i>
-            <span id="cartCount">0</span>
-        </a>
-    </div>
-    <div id="auth-controls" class="auth-controls">
-        </div>
-    <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
-        <i class="fas fa-bars"></i>
-    </button>
-</div>
+            <div class="header-actions">
+                <nav class="header-nav">
+                    <ul class="nav-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="mini-cart">
+                    <a href="cart.html" aria-label="View shopping cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCount">0</span>
+                    </a>
+                </div>
                 <div id="auth-controls" class="auth-controls">
                     </div>
                 <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
@@ -314,20 +312,20 @@
     // --- 1. State & Data (Updated Product List) ---
     const products = [
         // Live Products (isLive: true - Contact to Order)
-        { id: 'live-ram', name: 'Live Ram (Macherla Pottelu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Ram, range 15 to 40 kg.', image: 'assets/images/ram.jpg' },
+        { id: 'live-ram', name: 'Live Ram (Macherla Pottelu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Ram, range 15 to 40 kg.', image: 'assets/ram.jpg' },
         { id: 'buck', name: 'Buck (Meka Pothu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Buck, range 15 to 40 kg.', image: 'assets/images/buck.jpg' },
-        { id: 'live-natu-kodi', name: 'Live Natu Kodi (Country Chicken)', price: 700, unit: '/kg', category: 'Live Birds', isMeat: false, isLive: true, description: 'Fresh, live country chicken, delivered to your specifications.', image: 'assets/images/live-natu-kodi.jpg' }, // NEW PRODUCT
+        { id: 'live-natu-kodi', name: 'Live Natu Kodi (Country Chicken)', price: 700, unit: '/kg', category: 'Live Birds', isMeat: false, isLive: true, description: 'Fresh, live country chicken, delivered to your specifications.', image: 'assets/live-natu-kodi.jpg' }, // NEW PRODUCT
 
         // Processed Meats (isMeat: true - 0.25kg increments)
-        { id: 'sonali-chicken', name: 'Sonali Country Chicken (Smokey Turmeric)', price: 550, unit: '/kg', category: 'Meat', isMeat: true, description: 'Premium Sonali country chicken.', image: 'assets/images/sonali.jpg' },
+        { id: 'sonali-chicken', name: 'Sonali Country Chicken (Smokey Turmeric)', price: 550, unit: '/kg', category: 'Meat', isMeat: true, description: 'Premium Sonali country chicken.', image: 'assets/sonali.jpg' },
         { id: 'backyard-chicken', name: 'Backyard Country Chicken (Smokey Turmeric)', price: 800, unit: '/kg', category: 'Meat', isMeat: true, description: 'High-quality backyard country chicken.', image: 'assets/images/backyard.jpg' },
         { id: 'goat', name: 'Premium Goat Meat (Flesh)', price: 900, unit: '/kg', category: 'Meat', isMeat: true, description: 'Tender, pasture-raised goat meat.', image: 'assets/images/goat.jpg' },
         
         // Other Products
         { id: 'eggs-dozen', name: 'Country Chicken Eggs', price: 180, unit: '/dozen', category: 'Eggs', isMeat: false, description: 'A dozen golden-yolk eggs.', image: 'assets/images/eggs.jpg' },
         { id: 'eggs-tray', name: '30 Eggs Tray', price: 430, unit: '/tray', category: 'Eggs', isMeat: false, description: 'Tray of 30 golden-yolk eggs.', image: 'assets/images/tray.jpg' },
-       { id: 'milk', name: 'Fresh Goat Milk', price: 60, unit: '/L', category: 'Dairy', isMeat: false, description: 'Nutritious and easy-to-digest fresh goat milk.', image: 'assets/images/milk.jpg' } 
-    ]; 
+        { id: 'milk', name: 'Fresh Goat Milk', price: 60, unit: '/L', category: 'Dairy', isMeat: false, description: 'Nutritious and easy-to-digest fresh goat milk.', image: 'assets/images/milk.jpg' }
+    ];
     
     // --- Upcoming Products Section Data ---
     const upcomingProducts = [
