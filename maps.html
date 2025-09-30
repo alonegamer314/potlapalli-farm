@@ -241,7 +241,7 @@ body { background: var(--background-light); color: var(--text-dark); }
             const totalAmount = order.totalAmount ? order.totalAmount.toFixed(2) : '0.00';
             
             // Google Maps Link
-            const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shippingAddress)}`; // Corrected Maps URL
+            const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shippingAddress)}`; 
             
             // Check OTP expiry status for display only
             let otpStatusText = '';
@@ -332,7 +332,6 @@ body { background: var(--background-light); color: var(--text-dark); }
             // 5. IMMEDIATE CLIENT-SIDE REMOVAL: Hide the card right away
             if (cardElement) {
                 cardElement.classList.add('removed');
-                // The live listener will remove it from the DOM completely later
             }
 
         } catch (error) {
@@ -383,7 +382,8 @@ body { background: var(--background-light); color: var(--text-dark); }
             renderOrders(orders);
         }, (error) => {
             console.error("Error listening to orders:", error);
-            showToast("Failed to load orders.", true);
+            // This error is crucial! If it's permission denied, the rules are the problem.
+            showToast("Failed to load orders. Check your network or permissions.", true);
         });
     }
     
