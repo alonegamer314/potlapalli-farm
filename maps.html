@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -9,15 +8,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <style>
 :root {
---primary-color: #3498db; /* Blue for Maps/Navigation focus /
+--primary-color: #3498db; /* Blue for Maps/Navigation focus */
 --secondary-color: #2c3e50;
 --background-light: #f8f9fa;
 --text-dark: #333;
 --white: #fff;
 --border-light: #e0e0e0;
---danger-color: #e74c3c;
---success-color: #2ecc77; / Green for delivered */
---warning-color: #f39c12;
+--danger-color: #e74c3c; /* Red for cancelled/logout */
+--success-color: #2ecc77; /* Green for delivered */
+--warning-color: #f39c12; /* Orange for COD */
 --info-color: #3498db;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
@@ -36,16 +35,36 @@ body { background: var(--background-light); color: var(--text-dark); }
     
     /* Dashboard View Styles */
     #maps-dashboard-view { display: none; }
-    .maps-header { background: var(--white); padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+    
+    /* FIX: Cleaner Dashboard Header */
+    .maps-header { 
+        background: var(--secondary-color); 
+        padding: 1.5rem 1rem; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+        position: sticky; top: 0; z-index: 100; 
+        color: var(--white);
+    }
     .maps-header .container { display: flex; justify-content: space-between; align-items: center; }
-    .maps-header h1 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--primary-color); }
-    #logoutBtn { background: var(--danger-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+    .maps-header h1 { 
+        font-family: 'Playfair Display', serif; 
+        font-size: 1.8rem; 
+        color: var(--white); 
+    }
+    #logoutBtn { 
+        background: var(--danger-color); 
+        color: white; 
+        border: none; 
+        padding: 0.5rem 1rem; 
+        border-radius: 6px; 
+        cursor: pointer; 
+        font-weight: 600;
+    }
 
     .maps-main { padding: 2rem 1rem; }
     .maps-main h2 { text-align: center; margin-bottom: 1.5rem; color: var(--secondary-color); }
     .order-queue { display: flex; flex-direction: column; gap: 1.5rem; }
     .order-card { background: var(--white); border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); overflow: hidden; }
-    .card-header { padding: 1rem 1.5rem; background: var(--secondary-color); color: var(--white); }
+    .card-header { padding: 1rem 1.5rem; background: var(--info-color); color: var(--white); }
     .card-header h3 { font-size: 1.2rem; }
     .card-body { padding: 1.5rem; }
     .detail-row { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
@@ -78,31 +97,30 @@ body { background: var(--background-light); color: var(--text-dark); }
     .card-footer .btn { padding: 0.8rem 0.5rem; font-size: 0.9rem; }
     .footer-row { grid-column: span 2; margin-bottom: 0.8rem; }
     
-   /* Action Buttons Styling (FIXED VISIBILITY) */
-        .btn { 
-            padding: 0.8rem 0.5rem; 
-            border-radius: 6px; 
-            font-weight: 600; 
-            text-decoration: none; 
-            text-align: center; 
-            border: none; /* Removed thin browser border */
-            cursor: pointer; 
-            transition: all 0.3s; 
-            font-size: 0.9rem;
-            color: var(--white); /* Default button text color */
-        }
-        
-        .btn-map { background: var(--info-color); color: white; }
-        
-        /* These classes now enforce their background and text color explicitly */
-        .btn-success { 
-            background: var(--success-color); 
-            color: var(--white); 
-        }
-        .btn-cancel { 
-            background: var(--danger-color); 
-            color: var(--white); 
-        }
+    /* Action Buttons Styling */
+    .btn { 
+        padding: 0.8rem 0.5rem; 
+        border-radius: 6px; 
+        font-weight: 600; 
+        text-decoration: none; 
+        text-align: center; 
+        border: none;
+        cursor: pointer; 
+        transition: all 0.3s; 
+        font-size: 0.9rem;
+        color: var(--white);
+    }
+    
+    .btn-map { background: var(--info-color); color: white; }
+    
+    .btn-success { 
+        background: var(--success-color); 
+        color: var(--white); 
+    }
+    .btn-cancel { 
+        background: var(--danger-color); 
+        color: var(--white); 
+    }
 
 
     /* Modal & Toast Styles */
@@ -131,17 +149,15 @@ body { background: var(--background-light); color: var(--text-dark); }
 
 <div id="maps-dashboard-view">
     <header class="maps-header">
-        <div class="container"><h1>Navigation Queue</h1><button id="logoutBtn">Logout</button></div>
+        <div class="container"><h1>Delivery Dashboard</h1><button id="logoutBtn">Logout</button></div>
     </header>
     <main class="maps-main">
         <div class="container" id="order-queue-container">
-            <!-- Initial loading state to prevent flicker/loop -->
             <div class="order-queue"><h2>Loading orders...</h2></div>
         </div>
     </main>
 </div>
 
-<!-- Status Confirmation Modal -->
 <div id="statusConfirmModal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-body">
@@ -238,16 +254,12 @@ body { background: var(--background-light); color: var(--text-dark); }
                     </div>
                     <div class="card-footer" style="grid-template-columns: 1fr 1fr;">
                         
-                        <!-- Map Button (Full Width Row) -->
-                        <a href="${mapLink}" target="_blank" class="btn btn-map footer-row" style="grid-column: span 2;"><i class="fas fa-map-marked-alt"></i> Search on Maps</a>
+                        <a href="${mapLink}" target="_blank" class="btn btn-map footer-row" style="grid-column: span 2;"><i class="fas fa-map-marked-alt"></i> Navigate on Maps</a>
                         
-                        <!-- OTP Input Group (Full Width Row) -->
                         <div class="footer-row" style="grid-column: span 2; margin-bottom: 0;">
-                            <!-- OTP in placeholder is hidden, placeholder only shows expected format -->
                             <input type="text" placeholder="Enter Customer OTP (6 digits)" class="otp-input" data-order-id="${order.id}" maxlength="6">
                         </div>
 
-                        <!-- Action Buttons -->
                         <button class="btn btn-success btn-verify" 
                                 data-id="${order.id}" 
                                 data-otp-value="${order.deliveryOTP}"
@@ -255,7 +267,6 @@ body { background: var(--background-light); color: var(--text-dark); }
                             <i class="fas fa-check-circle"></i> Verify & Deliver
                         </button>
 
-                        <!-- Cancel Button -->
                         <button class="btn btn-cancel status-btn" data-status="Cancelled" data-id="${order.id}" style="grid-column: 2 / span 1;">
                             <i class="fas fa-times-circle"></i> Cancel
                         </button>
@@ -300,7 +311,6 @@ body { background: var(--background-light); color: var(--text-dark); }
             }
             
             // 4. If all checks pass, update the status
-            // This call ensures the status update is reflected everywhere due to Firestore listeners.
             await updateOrderStatus(orderId, 'Delivered');
 
         } catch (error) {
@@ -321,8 +331,13 @@ body { background: var(--background-light); color: var(--text-dark); }
             await updateDoc(orderRef, { status: newStatus });
             showToast(`Order status updated to ${newStatus}.`);
         } catch (error) {
-            console.error("Error updating order status:", error);
-            showToast(`Failed to update status to ${newStatus}. (Check Console/Rules)`, true);
+            // Log the permission denied error explicitly
+            if (error.code === 'permission-denied') {
+                showToast("🔴 FAILED: Permission Denied. Contact Admin to update Firestore Rules.", true);
+                console.error("FIREBASE PERMISSION DENIED ERROR: The logged-in 'maps' user does not have permission to modify the 'orders' collection. Fix Firestore Security Rules.", error);
+            } else {
+                showToast(`Failed to update status to ${newStatus}. (Check Console)`, true);
+            }
         }
     }
 
@@ -345,26 +360,25 @@ body { background: var(--background-light); color: var(--text-dark); }
         });
     }
     
-    // --- Authentication and View Management FIX ---
+    // --- Authentication and View Management ---
     
-    // Use a flag to track if we've already set up the dashboard listeners
     let isDashboardInitialized = false;
 
     onAuthStateChanged(auth, async (user) => {
         if (user) {
-            // If we've already confirmed the role and started listening, do nothing.
             if (isDashboardInitialized) return; 
 
             const userDocRef = doc(db, "users", user.uid);
             try {
                 const docSnap = await getDoc(userDocRef);
+                // Check if user exists and has the 'maps' role
                 if (docSnap.exists() && docSnap.data().role === 'maps') {
                     // Success: Show dashboard and initialize once
                     loginView.style.display = 'none';
                     dashboardView.style.display = 'block';
                     if (unsubscribeOrders) unsubscribeOrders();
                     listenToOrders();
-                    isDashboardInitialized = true; // Set flag to prevent future re-init
+                    isDashboardInitialized = true;
                 } else {
                     // Access Denied: Force logout
                     signOut(auth);
@@ -388,10 +402,9 @@ body { background: var(--background-light); color: var(--text-dark); }
     // --- Event Listeners ---
     
     loginForm.addEventListener('submit', (e) => {
-        e.preventDefault(); // <-- CRITICAL: Prevents page reload on successful login
+        e.preventDefault(); 
         const email = document.getElementById('mapsEmail').value;
         const password = document.getElementById('mapsPassword').value;
-        // The onAuthStateChanged listener handles the view change upon successful login
         signInWithEmailAndPassword(auth, email, password)
             .catch(err => showToast("Login Failed. Please check your email and password.", true));
     });
@@ -408,7 +421,6 @@ body { background: var(--background-light); color: var(--text-dark); }
                 const otpInput = document.querySelector(`.otp-input[data-order-id="${orderId}"]`);
                 const enteredOTP = otpInput ? otpInput.value.trim() : '';
 
-                // Call the verification logic
                 verifyAndDeliver(orderId, enteredOTP, correctOTP, button);
             };
         });
@@ -441,9 +453,6 @@ body { background: var(--background-light); color: var(--text-dark); }
             // This handles the status update triggered by the CANCEL modal
             if (activeStatusUpdate === 'Cancelled') {
                 updateOrderStatus(activeOrderId, 'Cancelled');
-            } else {
-                // This scenario should ideally not be hit as 'Delivered' is handled by OTP button
-                showToast("Verification is required for delivery.", true);
             }
         }
         confirmModal.classList.remove('show');
