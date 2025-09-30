@@ -30,16 +30,10 @@
         img { max-width: 100%; display: block; }
         a, button { transition: all 0.3s ease; }
 
-        /* --- 2. Header & Navigation --- */
+        /* --- 2. Header & Navigation (FIXED ALIGNMENT) --- */
         .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            padding: 1rem 0;
-            background-color: transparent;
-            transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease;
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1rem 0;
+            background-color: transparent; transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease;
         }
         .header.scrolled {
             background-color: var(--white);
@@ -49,16 +43,33 @@
         .header-inner { display: flex; justify-content: space-between; align-items: center; }
         .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
         .logo img { height: 40px; }
-        .header.scrolled .logo a, .header.scrolled .nav-links a, .header.scrolled .header-actions a, .header.scrolled .menu-btn { color: var(--secondary-color); }
-        .header:not(.scrolled) .logo a, .header:not(.scrolled) .nav-links a, .header:not(.scrolled) .header-actions a, .header:not(.scrolled) .menu-btn { color: var(--white); text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .header.scrolled .logo a, .header.scrolled .header-actions a, .header.scrolled .menu-btn { color: var(--secondary-color); }
+        .header:not(.scrolled) .logo a, .header:not(.scrolled) .header-actions a, .header:not(.scrolled) .menu-btn { color: var(--white); text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
         .header:not(.scrolled) .mini-cart span { background-color: var(--white); color: var(--primary-color); }
 
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a { color: inherit; text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative; }
-        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--primary-color); transition: width 0.3s ease; }
-        .nav-links a:hover::after { width: 100%; }
+        .header-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+        }
         
-        .header-actions { display: flex; align-items: center; gap: 1.5rem; }
+        /* Desktop Navigation Links */
+        .header-nav { display: block; }
+        .header-nav ul { 
+            display: flex; 
+            gap: 1.5rem; 
+            list-style: none; 
+            padding: 0;
+        }
+        .header-nav a { 
+            color: var(--secondary-color); 
+            text-decoration: none; 
+            font-weight: 500; 
+            padding: 0.5rem 0; 
+            position: relative; 
+        }
+        .header:not(.scrolled) .header-nav a { color: var(--white); }
+        
         .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; }
         .mini-cart span { position: absolute; top: -8px; right: -10px; background-color: var(--primary-color); color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
         .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; }
@@ -145,6 +156,9 @@
 
         /* --- 8. Responsive Design (MOBILE MENU FIX) --- */
         @media (max-width: 992px) {
+            .header-nav { display: none !important; } /* Ensure desktop navigation is hidden */
+            .menu-btn { display: block; z-index: 1001; } /* Ensure hamburger is shown */
+            
             .nav-links {
                 position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
                 background-color: rgba(255, 255, 255, 0.95);
@@ -154,6 +168,8 @@
                 flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
                 transform: translateX(100%);
                 transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+                /* Ensure mobile menu list is flexed */
+                display: flex !important;
             }
 
             .nav-links.active {
@@ -161,13 +177,6 @@
             }
 
             .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
-            
-            .menu-btn { display: block; z-index: 1001; } 
-            .header-nav { display: none; }
-            .header-actions { padding-right: 15px; }
-            
-            /* Hide the separate Log In button in mobile view */
-            #auth-controls a.auth-btn { display: none; }
         }
     </style>
 </head>
@@ -181,16 +190,15 @@
                 </a>
             </div>
             
-            <nav class="header-nav">
-                <ul class="nav-links">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#products">Products</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-
             <div class="header-actions">
+                <nav class="header-nav">
+                    <ul class="nav-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
                 <div class="mini-cart">
                     <a href="cart.html" aria-label="View shopping cart">
                         <i class="fas fa-shopping-cart"></i>
@@ -198,8 +206,7 @@
                     </a>
                 </div>
                 <div id="auth-controls" class="auth-controls">
-                    <a href="signin.html" class="auth-btn" id="authLinkDesktop">Log In</a>
-                </div>
+                    </div>
                 <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -336,7 +343,7 @@
     const menuBtn = document.getElementById("menuBtn");
     const navLinks = document.getElementById("nav-links");
     const authControls = document.getElementById('auth-controls');
-    const mobileAuthLinks = document.getElementById('mobile-auth-links'); // Target for mobile links
+    const mobileAuthLinks = document.getElementById('mobile-auth-links');
 
 
     // --- 3. Cart & Utility Functionality ---
@@ -348,7 +355,8 @@
 
     const updateCartCount = () => {
         const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-        const totalItems = cart.length;
+        // FIX: Cart count should reflect the number of unique items/product types
+        const totalItems = cart.length; 
         if (cartCountEl) cartCountEl.textContent = totalItems;
     };
 
@@ -370,7 +378,6 @@
         }
         localStorage.setItem(CART_KEY, JSON.stringify(cart));
         
-        // Quantity display uses 2 decimal places for accuracy (e.g., 0.25kg, 0.75kg)
         updateCartCount();
         showToast(`${quantity.toFixed(product.isMeat ? 2 : 0)}${product.isMeat ? 'kg' : product.unit.replace('/', '')} of ${product.name} added to cart!`);
         
@@ -466,12 +473,16 @@
         `;
     };
 
-    // --- 4.5. Authentication Status Manager ---
+    // --- 4.5. Authentication Status Manager (HEADER FIX) ---
 
     const renderAuthControls = (user) => {
-        // Desktop Auth Controls
+        // Clear mobile auth links first
+        mobileAuthLinks.innerHTML = '';
+
         if (user) {
-            // Logged In State (Desktop)
+            // Logged In State
+            
+            // Desktop: Show My Profile and Log Out buttons
             authControls.innerHTML = `
                 <a href="profile.html" class="auth-btn">My Profile</a>
                 <button class="auth-btn" id="signOutBtn" style="border:none; background:none; color: var(--primary-color); cursor:pointer;">Log Out</button>
@@ -526,21 +537,75 @@
 
 
     // --- 5, 6, 7. Utility Functions (Slider, Scroll, Nav) ---
-    const initSlider = () => { /* ... existing slider code ... */ };
-    const initScrollEffects = () => { /* ... existing scroll code ... */ };
+    const initSlider = () => { 
+        const slider = document.querySelector('.hero-slider');
+        const slides = document.querySelectorAll('.hero-slide');
+        const sliderNav = document.querySelector('.slider-nav');
+        if (!slider || slides.length <= 1) return;
+
+        let currentIndex = 0;
+        let slideInterval;
+
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.classList.add('slider-dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                currentIndex = i;
+                updateSlider();
+                resetInterval();
+            });
+            sliderNav.appendChild(dot);
+        });
+        
+        const dots = document.querySelectorAll('.slider-dot');
+        const updateSlider = () => {
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
+        };
+
+        const nextSlide = () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateSlider();
+        };
+
+        const resetInterval = () => {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        };
+
+        slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
+        slider.addEventListener('mouseleave', resetInterval);
+
+        resetInterval();
+    };
+
+    const initScrollEffects = () => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.animated-section').forEach(el => observer.observe(el));
+
+        window.addEventListener('scroll', () => {
+            if (header) header.classList.toggle('scrolled', window.scrollY > 50);
+        });
+    };
 
     const initMobileNav = () => {
-        if (!menuBtn || !navLinks) return;
-        const menuIcon = menuBtn.querySelector('i');
+        if (!primaryMenuBtn || !navLinks) return; // Use primaryMenuBtn
+        const menuIcon = primaryMenuBtn.querySelector('i');
         
-        menuBtn.addEventListener("click", () => {
+        primaryMenuBtn.addEventListener("click", () => {
             const isActive = navLinks.classList.toggle("active");
             document.body.classList.toggle("nav-open");
             menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
         });
 
-        // The logout listener is handled by renderAuthControls
-        // The closing logic is generic:
         navLinks.addEventListener('click', (e) => {
              const target = e.target.closest('a');
              if (target) {
@@ -610,9 +675,6 @@
             const product = products.find(p => p.id === card.dataset.id);
             if (product) updatePriceDisplay(card, product);
         });
-        
-        // Final listener call remains outside the DOMContentLoaded scope for immediate action
-        // onAuthStateChanged(auth, renderAuthControls); 
     });
 </script>
 </body>
