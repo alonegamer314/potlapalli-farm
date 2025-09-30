@@ -97,31 +97,37 @@
             border-color: var(--primary-color);
         }
 
-        /* Image Grid (Masonry-like layout) */
+        /* Image Grid */
         .image-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
 
+        /* FIX: Card Structure */
         .gallery-item {
-            position: relative;
-            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             cursor: pointer;
-            opacity: 1;
-            transform: scale(1);
-            transition: all 0.5s ease-in-out;
-            aspect-ratio: 4/3; /* Enforcing consistent ratio */
+            overflow: hidden;
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+        .gallery-item:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
         }
         .gallery-item.hidden {
-            opacity: 0;
-            transform: scale(0.8);
-            height: 0;
-            padding: 0;
-            margin: 0;
-            visibility: hidden;
+            display: none; /* Use display none for quick filtering */
+        }
+        
+        .image-wrapper {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            aspect-ratio: 4/3; /* Enforcing consistent ratio */
         }
 
         .gallery-item img {
@@ -135,24 +141,24 @@
             transform: scale(1.05);
         }
         
+        /* FIX: Caption is now the footer content */
         .image-caption {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
             padding: 1rem;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
-            color: var(--white);
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        .card-footer-text {
             font-size: 0.9rem;
-            font-weight: 500;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: 0.5rem;
+            display: block;
         }
-        .gallery-item:hover .image-caption {
-            opacity: 1;
-        }
-        
+
+
         /* Lightbox Modal Styles (New Feature) */
         .lightbox-overlay {
             position: fixed;
@@ -295,7 +301,6 @@
                 <div class="gallery-header">
                     <h1>Our Farm in Photos</h1>
                     <p>A peek into daily life at Potlapalli Farms. See our healthy, free-range animals and the fields where we harvest fresh produce.</p>
-                 <em> {Pictures Shot by Sidhard} </em>
                 </div>
 
                 <div class="filter-buttons" id="filterButtons">
@@ -318,13 +323,13 @@
              <div class="footer-grid">
                 <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
                 <div class="footer-col"><h4>Quick Links</h4><a href="index.html#home">Home</a><a href="index.html#products">Products</a><a href="about.html">About</a></div>
-                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Farms, AP<br>Email: contact@potlapallifarm.com<br>Phone: +91 98765 43210</p></div>
+                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Village, AP<br>Email: contact@potlapallifarm.com<br>Phone: +91 98765 43210</p></div>
                 <div class="footer-col"><h4>Follow Us</h4><a href="#">Facebook</a><a href="#">Instagram</a></div>
              </div>
              <div class="footer-bottom">
                  <p>© 2025 Potlapalli Farms. All Rights Reserved.</p>
                  <!-- NEW FEATURE: End Credit -->
-                 <em>Pictures Shot by Sidhard</em>
+                 <em>Loved What You Saw? Bring It Home, Order Now!</em>
              </div>
         </div>
     </footer>
@@ -346,15 +351,15 @@
     const galleryImages = [
         // Updated to use the common asset names used in other files where possible
         { src: 'assets/images/live-ram.jpg', caption: 'Healthy Rams, Raised the Right Way.', category: 'animals' },
-        { src: 'assets/images/farm-field.jpg', caption: 'Lush green fields.', category: 'farm' },
-        { src: 'assets/images/live-goat.jpg', caption: 'Our Goats: Naturally Raised, Quality Assured.', category: 'animals' },
-       // { src: 'assets/images/eggs.jpg', caption: 'Farm-fresh country chicken eggs.', category: 'produce' }, //
+        { src: 'assets/images/farm-field.jpg', caption: 'Lush green fields...', category: 'farm' },
+        { src: 'assets/images/live-goats.jpg', caption: 'Our Goats: Naturally Raised, Quality Assured.', category: 'animals' },
+      //  { src: 'assets/images/eggs.jpg', caption: 'Farm-fresh country chicken eggs.', category: 'produce' },//
         { src: 'assets/images/hero.jpg', caption: 'Everyday Harmony at the Farm.', category: 'farm' },
-        { src: 'assets/images/sonali.jpg', caption: 'Thriving Sonali Chicken, Farm-Fresh and Free-Range.', category: 'animals' },
-        { src: 'assets/images/buck.jpeg', caption: 'Raised with care, our prized buck enjoying the day.', category: 'animals' },
-        { src: 'assets/images/backyard.jpg', caption: 'Backyard Freedom, Just How Chickens Like It.', category: 'animals' },
-        // { src: 'assets/images/shopnow.jpeg', caption: 'A view from the main field.', category: 'farm' }, //
-       // { src: 'assets/images/tray.jpg', caption: 'Trays of fresh, golden-yolk eggs.', category: 'produce' },//
+        { src: 'assets/images/sonali.jpg', caption: 'Thriving Sonali country chicken, Farm-Fresh and Free-Range.', category: 'animals' },
+        { src: 'assets/images/buck.jpeg', caption: 'Raised with care, out prized buck enjoying the day.', category: 'animals' },
+        { src: 'assets/images/backyard-chicken.jpg', caption: 'Backyard Freedom, Just how Chickens Like It.', category: 'animals' },
+     //   { src: 'assets/images/shopnow.jpeg', caption: 'A view from the main field.', category: 'farm' },//
+      //  { src: 'assets/images/tray.jpg', caption: 'Trays of fresh, golden-yolk eggs.', category: 'produce' },//
     ];
 
     // --- 2. Utility Functions (Toast, Lightbox) ---
@@ -402,8 +407,13 @@
                    data-src="${img.src}" 
                    data-caption="${img.caption}" 
                    href="#">
-                    <img src="${img.src}" alt="${img.caption}" loading="lazy">
-                    <div class="image-caption">${img.caption}</div>
+                    <div class="image-wrapper">
+                        <img src="${img.src}" alt="${img.caption}" loading="lazy">
+                    </div>
+                    <div class="image-caption">
+                        ${img.caption}
+                        <span class="card-footer-text">Photo by: Sidhard</span>
+                    </div>
                 </a>
             `;
         }).join('');
@@ -417,6 +427,8 @@
                     item.style.opacity = '1';
                     item.style.visibility = 'visible';
                  } else {
+                    // Reset height/margin only if the item is meant to be hidden 
+                    // This ensures the layout shifts smoothly
                     item.style.height = '0';
                     item.style.margin = '0';
                  }
