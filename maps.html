@@ -393,6 +393,7 @@ body { background: var(--background-light); color: var(--text-dark); }
 
     onAuthStateChanged(auth, async (user) => {
         if (user) {
+            // CRITICAL FIX: Add this check to prevent a loop if initialization fails
             if (isDashboardInitialized) return; 
 
             const userDocRef = doc(db, "users", user.uid);
