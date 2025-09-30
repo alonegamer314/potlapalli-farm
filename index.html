@@ -118,7 +118,12 @@
             #desktop-nav { display: none !important; } /* Hide the inline desktop links */
             .header-actions { margin-right: 0; gap: 15px; }
             .menu-btn { display: block !important; } /* Show hamburger icon */
-        /* --- PERMANENT FIX FOR MOBILE HEADER --- */
+      
+            /* Hide the auth controls on mobile header */
+#auth-controls {
+    display: none;
+}
+            /* --- PERMANENT FIX FOR MOBILE HEADER --- */
 
 /* 1. Prevent the logo text from ever wrapping to a new line */
 .header .logo span {
