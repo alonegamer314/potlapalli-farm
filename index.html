@@ -30,7 +30,7 @@
         img { max-width: 100%; display: block; }
         a, button { transition: all 0.3s ease; }
 
-        /* --- Policy Alert Bar CSS (RESTORED & STYLED) --- */
+        /* --- Policy Alert Bar CSS --- */
         .order-policy-alert {
             position: fixed;
             top: 70px; /* Calculated: Header padding + height */
@@ -62,21 +62,35 @@
             height: calc(100vh - 40px);
         }
 
-        /* --- 2. Header & Navigation (FIXED ALIGNMENT) --- */
+        /* --- 2. Header & Navigation (FIXED VISIBILITY) --- */
         .header {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1rem 0;
-            background-color: rgba(255, 255, 255, 0.2);
+            
+            /* FIX: Add a subtle dark gradient layer to ensure white text is always visible */
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+            background-color: rgba(255, 255, 255, 0.2); /* Base transparency */
+            
             -webkit-backdrop-filter: blur(5px);
             backdrop-filter: blur(5px);
-            transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease, backdrop-filter 0.4s ease;
+            transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease, backdrop-filter 0.4s ease, background-image 0.4s ease;
         }
+        
+        /* SCROLLED STATE: Remove gradient and become solid white */
         .header.scrolled {
+            background-image: none; /* Remove gradient */
             background-color: rgba(255, 255, 255, 0.8);
             box-shadow: 0 4px 20px rgba(0,0,0,0.07);
             padding: 0.75rem 0;
             -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
         }
+        
+        /* Header elements visibility */
+        .logo a, .mini-cart a, .menu-btn, #desktop-nav a, .auth-btn {
+            /* Enhance text/icon shadow for better contrast against light images */
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.6); 
+        }
+
         /* --- Desktop Header Alignment FIX --- */
         .header-inner { 
             display: flex; 
@@ -86,7 +100,7 @@
         }
         
         /* Logo & Text - Default (Unscrolled) is WHITE */
-        .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--white); text-decoration: none; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--white); text-decoration: none; }
         .logo img { height: 40px; }
         .logo span { white-space: nowrap; }
 
@@ -97,9 +111,9 @@
         #desktop-nav { 
             display: flex; 
             align-items: center;
-            gap: 30px; /* Increased gap for better link spacing */
-            flex-grow: 1; /* Allows nav to take up available space in the middle */
-            justify-content: flex-end; /* Pushes links to the right, towards the actions */
+            gap: 30px; 
+            flex-grow: 1; 
+            justify-content: flex-end; 
         }
         
         /* Desktop Navigation Links Text */
@@ -112,14 +126,14 @@
             transition: color 0.3s;
         }
 
-        /* SCROLLED STATE: Change everything to secondary-color (DARK) */
+        /* SCROLLED STATE: Change everything to secondary-color (DARK) and remove shadow */
         .header.scrolled .logo a, 
         .header.scrolled #desktop-nav a, 
         .header.scrolled .menu-btn,
         .header.scrolled .mini-cart a,
         .header.scrolled .auth-btn { 
             color: var(--secondary-color) !important; 
-            text-shadow: none; 
+            text-shadow: none; /* Remove shadow when background is solid */
         }
         .header.scrolled .mini-cart span { background-color: var(--primary-color); color: var(--white); }
 
@@ -247,6 +261,71 @@
         .toast.show { bottom: 20px; }
         body.nav-open { overflow: hidden; }
         
+        /* --- Policy Alert Bar CSS (Integrated) --- */
+        .order-policy-alert {
+            position: fixed;
+            top: 70px; /* Calculated: Header padding + height */
+            left: 0;
+            width: 100%;
+            background-color: var(--secondary-color); 
+            color: var(--white);
+            padding: 0.75rem 0;
+            z-index: 900; 
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+        }
+        .order-policy-alert strong {
+            font-weight: 700;
+            color: var(--primary-color); 
+            margin: 0 4px;
+        }
+        
+        /* Adjust main content and hero to account for the alert bar (approx 40px height) */
+        main {
+            padding-top: 40px; 
+        }
+        .hero {
+            margin-top: 40px; 
+            height: calc(100vh - 40px);
+        }
+
+        /* --- 8. Responsive Design --- */
+        @media (max-width: 992px) {
+            #desktop-nav { display: none !important; } /* Hide the inline desktop links */
+            .header-actions { margin-right: 0; gap: 15px; }
+            .menu-btn { display: block !important; } /* Show hamburger icon */
+            
+            /* Hide the auth controls on mobile header since they are in the slide-out nav-links */
+            #auth-controls {
+                display: none;
+            }
+            
+            /* Crucial mobile menu display fix */
+            .nav-links { 
+                 display: flex; /* Force it to be visible in the flow for mobile, then transform handles showing/hiding */
+            }
+        }
+
+        /* --- 3. Hero Slider (rest of the sections remain the same) --- */
+        .hero { position: relative; color: var(--white); overflow: hidden; }
+        .hero-slider { display: flex; height: 100%; transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1); }
+        .hero-slide { min-width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 1rem; }
+        .hero-slide::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.3)); }
+        .hero-slide img { position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+        .hero-content { position: relative; z-index: 2; max-width: 800px; animation: fadeIn 1s 0.5s forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        .hero-content h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 6vw, 4.5rem); margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .hero-content p { font-size: clamp(1.1rem, 2.5vw, 1.3rem); margin-bottom: 2.5rem; }
+        .hero-btn { display: inline-block; background: var(--primary-color); padding: 1rem 3rem; font-size: 1.1rem; font-weight: 600; border-radius: 50px; text-decoration: none; color: var(--white); }
+        .hero-btn:hover { background: var(--primary-color-dark); transform: scale(1.05); }
+        .slider-nav { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; gap: 12px; }
+        .slider-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; }
+        .slider-dot.active { background: var(--white); transform: scale(1.2); }
+
     </style>
 </head>
 <body>
@@ -274,7 +353,8 @@
                     </a>
                 </div>
                 <div id="auth-controls" class="auth-controls">
-                    </div>
+                    <!-- Auth controls inserted here by JS -->
+                </div>
                 <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -282,12 +362,15 @@
         </div>
     </header>
     
+    <!-- ORDER POLICY ALERT BAR (NEW) -->
     <div class="order-policy-alert">
         <div class="container">
             ⚠️ **Order Freshness Policy:** We accept orders **EXCLUSIVELY on Sundays (6 AM - 7 PM IST)**. 
             All deliveries are completed on the same day, typically within **30-60 minutes** of order confirmation.
         </div>
     </div>
+    <!-- END ORDER POLICY ALERT BAR -->
+    
     <ul class="nav-links" id="nav-links">
         </ul>
 
