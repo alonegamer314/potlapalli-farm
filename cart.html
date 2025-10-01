@@ -54,16 +54,46 @@
             margin: 0 4px;
         }
 
+        /* --- Floating Clock Widget (NEW FEATURE) --- */
+        .time-floater {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 1000;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .time-floater.sunday {
+            background-color: var(--primary-color);
+            border-color: var(--white);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+        }
+
 
         /* --- 2. Header (Consistent with index.html structure) --- */
         .header { 
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; 
-            background: var(--white); border-bottom: 1px solid var(--border-light); 
-            padding: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+            /* Solid Primary Color Background */
+            background: var(--primary-color);
+            padding: 1rem 0; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
         }
         .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
         
-        .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
+        .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--white); text-decoration: none; }
         .logo img { height: 40px; } 
         .logo span { white-space: nowrap; }
 
@@ -72,22 +102,23 @@
             display: flex; align-items: center; gap: 30px; 
             flex-grow: 1; justify-content: flex-end; 
         }
-        #desktop-nav a { text-decoration: none; color: var(--secondary-color); font-weight: 500; }
+        #desktop-nav a { text-decoration: none; color: var(--white); font-weight: 500; }
 
         /* Header Actions (Cart & Auth) */
         .header-actions { display: flex; align-items: center; gap: 20px; }
         
-        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--secondary-color); }
+        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--white); }
         .mini-cart span { 
             position: absolute; top: -8px; right: -10px; 
-            background-color: var(--primary-color); color: var(--white); 
+            background-color: var(--secondary-color); /* Dark badge on green header */
+            color: var(--white); 
             font-size: 0.7rem; font-weight: 600; 
             border-radius: 50%; width: 18px; height: 18px; 
             display: flex; align-items: center; justify-content: center; 
         }
-        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; color: var(--secondary-color); }
+        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; color: var(--white); }
 
-        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--secondary-color); }
+        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--white); }
 
         /* Mobile Slide-Out Menu Styles (minimal for now, assuming external CSS handles full functionality) */
         .nav-links { display: none; } 
@@ -98,7 +129,7 @@
         .cart-header p { text-align: center; font-size: 1.1rem; color: var(--text-light); margin-bottom: 3rem; }
         .cart-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 2.5rem; align-items: flex-start; }
 
-        /* --- 4. Cart Items List --- */
+        /* --- 4. Cart Items List (VISUAL IMPROVEMENTS) --- */
         .cart-items { background: var(--white); border-radius: 16px; box-shadow: 0 8px 30px var(--shadow-light); }
         .cart-item { display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border-bottom: 1px solid var(--border-light); transition: opacity 0.4s ease, transform 0.4s ease; }
         .cart-item.removing { opacity: 0; transform: scale(0.95); }
@@ -111,23 +142,28 @@
         .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-light); background: var(--background-light); cursor: pointer; font-size: 1.2rem; color: var(--text-dark); transition: all 0.2s; }
         .qty-btn:hover { background-color: #e9ecef; }
         .qty { font-weight: 600; font-size: 1.1rem; min-width: 20px; text-align: center; }
-        .item-total { font-weight: 700; font-size: 1.1rem; color: var(--secondary-color); }
+        .item-total { 
+            font-weight: 700; 
+            font-size: 1.3rem; 
+            color: var(--primary-color-dark); /* Highlighted total */
+            white-space: nowrap;
+        }
         .remove-btn { background: none; border: none; color: var(--danger-color); font-size: 1.2rem; cursor: pointer; margin-left: 1rem; padding: 0.5rem; border-radius: 50%; }
         .remove-btn:hover { background-color: #fef2f2; }
         
         .undo-container { padding: 1rem 1.5rem; background-color: #fef2f2; text-align: center; font-size: 0.9rem; }
         .undo-btn { background: none; border: none; color: var(--primary-color); text-decoration: underline; cursor: pointer; font-weight: 600; }
 
-        /* --- 5. Order Summary Card --- */
-        .cart-summary { background: var(--white); border-radius: 16px; box-shadow: 0 8px 30px var(--shadow-light); padding: 2rem; position: sticky; top: 120px; }
+        /* --- 5. Order Summary Card (VISUAL IMPROVEMENTS) --- */
+        .cart-summary { background: var(--white); border-radius: 16px; box-shadow: 0 8px 30px var(--shadow-light); padding: 2rem; position: sticky; top: 120px; border: 1px solid var(--primary-color); }
         .cart-summary h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--secondary-color); text-align: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 1rem; }
         .summary-total { margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--secondary-color); font-weight: 700; font-size: 1.3rem; }
         .btn { display: block; width: 100%; padding: 0.9rem 1.6rem; text-align: center; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1.05rem; cursor: pointer; transition: all 0.3s; }
         .btn-primary { background: var(--primary-color); color: var(--white); border: 2px solid var(--primary-color); margin-bottom: 1rem; }
-        .btn-primary:hover { background: var(--primary-color-dark); border-color: var(--primary-color-dark); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(39, 174, 96, 0.2); }
-        .btn-outline { background: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); }
-        .btn-outline:hover { background: var(--primary-color); color: var(--white); }
+        .btn-primary:hover { background: var(--primary-color-dark); border-color: var(--primary-color-dark); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4); }
+        .btn-outline { background: transparent; border: 2px solid var(--secondary-color); color: var(--secondary-color); }
+        .btn-outline:hover { background: var(--secondary-color); color: var(--white); }
 
         /* --- 6. Empty Cart State --- */
         .empty-cart { text-align: center; padding: 4rem; background: var(--white); border-radius: 16px; box-shadow: 0 8px 30px var(--shadow-light); }
@@ -165,29 +201,6 @@
         .footer-col a:hover { color: var(--white); padding-left: 5px; }
         .footer-bottom { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #334155; font-size: 0.9rem; color: #94a3b8; }
         
-        
-        /* --- Policy Alert Bar CSS (Integrated from Index) --- */
-        .order-policy-alert {
-            position: fixed;
-            top: 70px; /* Calculated: Header padding + height */
-            left: 0;
-            width: 100%;
-            background-color: var(--secondary-color); 
-            color: var(--white);
-            padding: 0.75rem 0;
-            z-index: 900; 
-            text-align: center;
-            font-size: 0.95rem;
-            font-weight: 500;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            line-height: 1.4;
-            letter-spacing: 0.5px;
-        }
-        .order-policy-alert strong {
-            font-weight: 700;
-            color: var(--primary-color); 
-            margin: 0 4px;
-        }
         /* --- 8. Responsive Design --- */
         @media (max-width: 992px) { 
             .cart-layout { grid-template-columns: 1fr; } 
@@ -238,12 +251,15 @@
         </div>
     </header>
 
+    <!-- ORDER POLICY ALERT BAR (NEW) -->
     <div class="order-policy-alert">
         <div class="container">
             ⚠️ **Order Freshness Policy:** We accept orders **EXCLUSIVELY on Sundays (6 AM - 7 PM IST)**. 
             All deliveries are completed on the same day, typically within **30-60 minutes** of order confirmation.
         </div>
     </div>
+    <!-- END ORDER POLICY ALERT BAR -->
+    
     <main class="cart-page">
         <div class="container">
             <div class="cart-header">
@@ -273,6 +289,8 @@
              <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
         </div>
     </footer>
+    <div id="toast" class="toast"></div>
+
     <script type="module">
         const products = {
             'goat': { id: 'goat', name: 'Premium Goat Meat', price: 850, image: 'assets/images/goat.jpg' },
@@ -416,12 +434,8 @@
 
         // Simple Mobile Menu Toggle (to handle hamburger button)
         document.addEventListener('DOMContentLoaded', () => {
-            const menuBtn = document.getElementById('menuBtn');
-            const headerActions = document.querySelector('.header-actions');
-            
-            // This cart.html is simplified and doesn't have a full slide-out,
-            // so we'll just handle basic click interaction if needed in a real app.
-            // For now, ensure the cart count and rendering run.
+            // Note: Firebase auth imports needed for mobile menu handling are missing in cart.html,
+            // but the basic DOM listeners are retained here for structure.
             
             renderCart();
             updateHeaderCartCount();
