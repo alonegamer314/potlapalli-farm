@@ -30,10 +30,10 @@
         img { max-width: 100%; display: block; }
         a, button { transition: all 0.3s ease; }
 
-        /* --- Policy Alert Bar CSS (Integrated) --- */
+        /* --- Policy Alert Bar CSS --- /
         .order-policy-alert {
             position: fixed;
-            top: 70px; /* Below the fixed header */
+            top: 70px; /* Calculated: Header padding + height /
             left: 0;
             width: 100%;
             background-color: var(--secondary-color); 
@@ -51,7 +51,7 @@
             font-weight: 700;
             color: var(--primary-color); 
             margin: 0 4px;
-        }
+        }//
         
         /* Adjust main content and hero to account for the alert bar (approx 40px height) */
         main {
@@ -62,49 +62,42 @@
             height: calc(100vh - 40px);
         }
 
-        /* --- 2. Header & Navigation (ORIGINAL TRANSPARENT/BLURRED RESTORED) --- */
+        /* --- 2. Header & Navigation (FIXED SOLID BACKGROUND) --- */
         .header {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1rem 0;
             
-            /* RESTORED: Original Transparent/Blurred Look */
-            background-color: rgba(255, 255, 255, 0.2);
-            -webkit-backdrop-filter: blur(5px);
-            backdrop-filter: blur(5px);
+            /* FIX: Default Solid Primary Color Background */
+            background-color: var(--primary-color);
+            background-image: none; /* Remove previous gradient */
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Soft shadow for lift */
             
-            /* ADDED: Subtle gradient for visibility against light heroes */
-            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
-            
-            transition: all 0.4s ease;
-        }
-        .header.scrolled {
-            /* RESTORED: Solid white/dark text on scroll */
-            background-color: rgba(255, 255, 255, 0.9);
-            background-image: none;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            padding: 0.75rem 0;
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
+            transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease;
         }
         
-        /* Default State: WHITE text/icons on transparent header */
+        /* SCROLLED STATE: Transition to a slightly darker/more opaque version */
+        .header.scrolled {
+            background-color: var(--primary-color-dark); /* Darker green on scroll */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15); /* Slightly stronger shadow */
+            padding: 0.75rem 0;
+        }
+        
+        /* Ensure all text/icons are white in the non-scrolled state (always primary color) */
         .logo a, .mini-cart a, .menu-btn, #desktop-nav a, .auth-btn {
             color: var(--white) !important; 
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.7); /* Shadow for visibility */
+            text-shadow: none; /* No shadow needed on solid background */
         }
-        .mini-cart span { background-color: var(--secondary-color); color: var(--white); }
-
-        /* Scrolled State: DARK text/icons on solid white header */
+        
+        /* Scrolled state needs to switch to dark text */
         .header.scrolled .logo a, 
         .header.scrolled #desktop-nav a, 
         .header.scrolled .menu-btn,
         .header.scrolled .mini-cart a,
         .header.scrolled .auth-btn { 
-            color: var(--secondary-color) !important; 
-            text-shadow: none; 
+            color: var(--white) !important; 
         }
-        .header.scrolled .mini-cart span { background-color: var(--primary-color); color: var(--white); }
-
-
+        
         /* --- Desktop Header Alignment FIX --- */
         .header-inner { 
             display: flex; 
@@ -136,10 +129,14 @@
         }
 
         .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; }
+        .mini-cart span { 
+            position: absolute; top: -8px; right: -10px; background-color: var(--secondary-color); /* Dark badge on green background */
+            color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; 
+        }
         
         .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; }
 
-        /* --- MOBILE MENU HANDLING --- */
+        /* --- MOBILE MENU HANDLING (The slide-out) --- */
         .nav-links { 
             /* Base styles for the slide-out menu */
             position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
@@ -246,6 +243,108 @@
         .toast.show { bottom: 20px; }
         body.nav-open { overflow: hidden; }
         
+        /* --- Policy Alert Bar CSS (Integrated) --- /
+        .order-policy-alert {
+            position: fixed;
+            top: 70px; /* Calculated: Header padding + height /
+            left: 0;
+            width: 100%;
+            background-color: var(--secondary-color); 
+            color: var(--white);
+            padding: 0.75rem 0;
+            z-index: 900; 
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+        }
+        .order-policy-alert strong {
+            font-weight: 700;
+            color: var(--primary-color); 
+            margin: 0 4px;
+        }/
+        
+        /* Adjust main content and hero to account for the alert bar (approx 40px height) */
+        main {
+            padding-top: 40px; 
+        }
+        .hero {
+            margin-top: 40px; 
+            height: calc(100vh - 40px);
+        }
+
+        /* --- 8. Responsive Design --- */
+        @media (max-width: 992px) {
+            #desktop-nav { display: none !important; } /* Hide the inline desktop links */
+            .header-actions { margin-right: 0; gap: 15px; }
+            .menu-btn { display: block !important; } /* Show hamburger icon */
+            
+            /* Hide the auth controls on mobile header since they are in the slide-out nav-links */
+            #auth-controls {
+                display: none;
+            }
+            
+            /* Crucial mobile menu display fix */
+            .nav-links { 
+                display: flex; /* Force it to be visible in the flow for mobile, then transform handles showing/hiding */
+            }
+        }
+
+        /* --- 3. Hero Slider (rest of the sections remain the same) --- */
+        .hero { position: relative; color: var(--white); overflow: hidden; }
+        .hero-slider { display: flex; height: 100%; transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1); }
+        .hero-slide { min-width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 1rem; }
+        .hero-slide::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.3)); }
+        .hero-slide img { position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+        .hero-content { position: relative; z-index: 2; max-width: 800px; animation: fadeIn 1s 0.5s forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        .hero-content h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 6vw, 4.5rem); margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .hero-content p { font-size: clamp(1.1rem, 2.5vw, 1.3rem); margin-bottom: 2.5rem; }
+        .hero-btn { display: inline-block; background: var(--primary-color); padding: 1rem 3rem; font-size: 1.1rem; font-weight: 600; border-radius: 50px; text-decoration: none; color: var(--white); }
+        .hero-btn:hover { background: var(--primary-color-dark); transform: scale(1.05); }
+        .slider-nav { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; gap: 12px; }
+        .slider-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; }
+        .slider-dot.active { background: var(--white); transform: scale(1.2); }
+        
+        /* --- FINAL HEADER FIX: Ensure dark color on scroll matches the overall design --- */
+        .header.scrolled .logo a, 
+        .header.scrolled #desktop-nav a, 
+        .header.scrolled .menu-btn,
+        .header.scrolled .mini-cart a,
+        .header.scrolled .auth-btn { 
+            /* Set to dark secondary color when scrolled */
+            color: var(--secondary-color) !important; 
+            text-shadow: none; 
+        }
+        .header.scrolled .mini-cart span { background-color: var(--primary-color); color: var(--white); }
+        .header.scrolled {
+            background-color: rgba(255, 255, 255, 0.9); /* Lighter solid white on scroll */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        /* --- FINAL HEADER SOLID COLOR --- */
+        .header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1rem 0;
+            
+            /* FIX: Default Solid Primary Color Background */
+            background-color: var(--primary-color);
+            background-image: none; 
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+            
+            transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease;
+        }
+
+        /* Ensure all text/icons are white in the default (primary color) state */
+        .logo a, .mini-cart a, .menu-btn, #desktop-nav a, .auth-btn {
+            color: var(--white) !important; 
+            text-shadow: none; 
+        }
+        .mini-cart span { background-color: var(--secondary-color); color: var(--white); }
+
     </style>
 </head>
 <body>
@@ -281,12 +380,6 @@
         </div>
     </header>
     
-    <div class="order-policy-alert">
-        <div class="container">
-            ⚠️ **Order Freshness Policy:** We accept orders **EXCLUSIVELY on Sundays (6 AM - 7 PM IST)**. 
-            All deliveries are completed on the same day, typically within **30-60 minutes** of order confirmation.
-        </div>
-    </div>
     <ul class="nav-links" id="nav-links">
         </ul>
 
@@ -313,7 +406,10 @@
 
         <section class="section" id="products">
             <div class="container">
-                <div class="section-header"><h2>Our Fresh Produce</h2><p>Handpicked and curated with care, from our fields to your plate.</p></div>
+                <div class="section-header"><h2>Our Fresh Produce</h2><p>Handpicked and curated with care, from our fields to your plate.</p>
+                <p>⚠️ Order Policy: Currently, We accept orders EXCLUSIVELY on Sundays (6 AM - 7 PM IST).</p>
+                <p>We strive to complete all deliveries within 30 to 60 minutes of order confirmation, Thank You 💚👨‍🌾</p>
+                </div>
                 <div class="product-grid" id="product-grid"></div>
             </div>
         </section>
@@ -336,24 +432,24 @@
         
         <section id="testimonials" class="section animated-section">
             <div class="container">
-                 <div class="section-header"><h2>What Our Customers Say</h2></div>
-                 <div class="testimonial-card">
-                    <p>"The best goat meat I've had in years! The freshness is unparalleled. You can truly taste the difference. Highly recommended!"</p>
-                    <div class="testimonial-author">- Priya S, Hyderabad</div>
-                 </div>
+                    <div class="section-header"><h2>What Our Customers Say</h2></div>
+                    <div class="testimonial-card">
+                        <p>"The best goat meat I've had in years! The freshness is unparalleled. You can truly taste the difference. Highly recommended!"</p>
+                        <div class="testimonial-author">- Priya S, Hyderabad</div>
+                    </div>
             </div>
         </section>
     </main>
 
     <footer id="contact">
         <div class="container">
-             <div class="footer-grid">
-                <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
-                <div class="footer-col"><h4>Quick Links</h4><a href="#home">Home</a><a href="#products">Products</a><a href="about.html">About</a><a href="gallery.html">Farm Gallery</a></div>
-                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Farms, AP<br>Email: <a href="mailto:pgf.natural@gmail.com">pgf.natural@gmail.com</a> <br>Phone: +91 98765 43210</p></div>
-                <div class="footer-col"><h4>Follow Us</h4><a href="#">Facebook</a><a href="https://www.instagram.com/potlapallifarms" target="_blank">Instagram</a></div>
-             </div>
-             <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
+                <div class="footer-grid">
+                    <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
+                    <div class="footer-col"><h4>Quick Links</h4><a href="#home">Home</a><a href="#products">Products</a><a href="about.html">About</a><a href="gallery.html">Farm Gallery</a></div>
+                    <div class="footer-col"><h4>Contact</h4><p>Potlapalli Farms, AP<br>Email:<a href="mailto:pgf.natural@gmail.com">pgf.natural@gmail.com</a><br>Phone: +91 79810 59178</p></div>
+                    <div class="footer-col"><h4>Follow Us</h4> <a href="https://www.instagram.com/potlapallifarms" target="_blank">Instagram</a></div>
+                </div>
+                <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
         </div>
     </footer>
     
@@ -403,13 +499,14 @@
     const products = [
         // Live Products (isLive: true - Contact to Order)
         { id: 'live-ram', name: 'Live Ram (Macherla Pottelu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Ram, range 15 to 40 kg.', image: 'assets/ram.jpg' },
-        { id: 'buck', name: 'Buck (Meka Pothu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Buck, range 15 to 40 kg.', image: 'assets/images/live-buck.jpg' },
+        { id: 'buck', name: 'Buck (Meka Pothu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Buck, range 15 to 40 kg.', image: 'assets/images/buck.jpg' },
         { id: 'live-natu-kodi', name: 'Live Natu Kodi (Country Chicken)', price: 700, unit: '/kg', category: 'Live Birds', isMeat: false, isLive: true, description: 'Fresh, live country chicken, delivered to your specifications.', image: 'assets/live-natu-kodi.jpg' }, // NEW PRODUCT
 
         // Processed Meats (isMeat: true - 0.25kg increments)
-        { id: 'sonali-chicken', name: 'Sonali Country Chicken (Smokey Turmeric)', price: 550, unit: '/kg', category: 'Meat', isMeat: true, description: 'Premium Sonali country chicken.', image: 'assets/images/chicken-sonali.jpg' },
+        { id: 'sonali-chicken', name: 'Sonali Country Chicken (Smokey Turmeric)', price: 550, unit: '/kg', category: 'Meat', isMeat: true, description: 'Premium Sonali country chicken.', image: 'assets/images/sonali-chicken.jpg' },
         { id: 'backyard-chicken', name: 'Backyard Country Chicken (Smokey Turmeric)', price: 800, unit: '/kg', category: 'Meat', isMeat: true, description: 'High-quality backyard country chicken.', image: 'assets/images/backyard.jpg' },
-        { id: 'goat', name: 'Premium Goat Meat (Flesh)', price: 900, unit: '/kg', category: 'Meat', isMeat: true, description: 'Tender, pasture-raised goat meat.', image: 'assets/images/goat.jpg' },
+        { id: 'natu-kodi-smokey', name: 'Natu Kodi (Smoked Country Chicken)', price: 900, unit: '/kg', category: 'Meat', isMeat: true, description: 'Premium country chicken, skin-on, delicately smoked with aromatic turmeric.', image: 'assets/images/natu-kodi-smokey.jpg' },
+        { id: 'goat', name: 'Premium Goat Meat', price: 900, unit: '/kg', category: 'Meat', isMeat: true, description: 'Tender, pasture-raised goat meat.', image: 'assets/images/goat.jpg' },
         
         // Other Products
         { id: 'eggs-dozen', name: 'Country Chicken Eggs', price: 180, unit: '/dozen', category: 'Eggs', isMeat: false, description: 'A dozen golden-yolk eggs.', image: 'assets/images/eggs-dozen.jpg' },
@@ -451,8 +548,8 @@
 
     const handleAddToCart = (productId, quantity, cardElement) => {
         if (quantity <= 0) {
-             showToast('Quantity must be more than the minimum order size.', true);
-             return;
+            showToast('Quantity must be more than the minimum order size.', true);
+            return;
         }
         const product = products.find(p => p.id === productId);
         if (!product) return;
@@ -471,10 +568,10 @@
         showToast(`${quantity.toFixed(product.isMeat ? 2 : 0)}${product.isMeat ? 'kg' : product.unit.replace('/', '')} of ${product.name} added to cart!`);
         
         if (cardElement) {
-             const isGoat = product.id === 'goat';
-             const resetQty = isGoat ? 0.75 : (product.isMeat ? 0.5 : 1);
-             cardElement.querySelector('.qty').textContent = resetQty.toFixed(product.isMeat ? 2 : 0);
-             updatePriceDisplay(cardElement, product);
+            const isGoat = product.id === 'goat';
+            const resetQty = isGoat ? 0.75 : (product.isMeat ? 0.5 : 1);
+            cardElement.querySelector('.qty').textContent = resetQty.toFixed(product.isMeat ? 2 : 0);
+            updatePriceDisplay(cardElement, product);
         }
     };
     
@@ -562,12 +659,15 @@
         `;
     };
 
-    // --- 4.5. Authentication Status Manager (HEADER FIX) ---
-
+    // --- 4.5. Authentication Status Manager (FIXED) ---
     const renderAuthControls = (user) => {
         // Clear both containers
         authControls.innerHTML = '';
         navLinks.innerHTML = '';
+        
+        // Add styles for proper spacing of desktop buttons
+        authControls.style.display = 'flex';
+        authControls.style.gap = '20px';
 
 
         // Base Mobile Nav Links (always present)
@@ -577,11 +677,10 @@
             <li><a href="about.html">About</a></li>
             <li><a href="contact-us.html">Contact</a></li>
             <div id="mobile-auth-links">
-                </div>
+            </div>
         `;
         navLinks.innerHTML = baseMobileLinks;
         const mobileAuthLinksContainer = navLinks.querySelector('#mobile-auth-links');
-
 
         if (user) {
             // Logged In State
@@ -589,13 +688,12 @@
             // Desktop: Show My Profile and Log Out buttons
             authControls.innerHTML = `
                 <a href="profile.html" class="auth-btn">My Profile</a>
-                <button class="auth-btn" id="signOutBtn" style="border:none; background:none; color: var(--white); cursor:pointer;">Log Out</button>
+                <button class="auth-btn" id="signOutBtn" style="border:none; background:none; cursor:pointer; font-size: 1rem; font-weight: 500;">Log Out</button>
             `;
             // Re-select element after setting innerHTML
             const desktopSignOutBtn = document.getElementById('signOutBtn'); 
             if(desktopSignOutBtn) desktopSignOutBtn.addEventListener('click', handleLogout);
             
-
             // Mobile Menu: Only Profile and Logout
             mobileAuthLinksContainer.innerHTML = `
                 <li><a href="profile.html" class="auth-btn">My Profile</a></li>
@@ -603,12 +701,6 @@
             `;
             const mobileSignOutBtn = document.getElementById('signOutBtnMobile');
             if(mobileSignOutBtn) mobileSignOutBtn.addEventListener('click', handleLogout);
-
-            // Ensure colors are correct in logged-in state (always white here)
-            authControls.querySelectorAll('.auth-btn').forEach(btn => {
-                btn.style.color = 'var(--white)';
-            });
-
 
         } else {
             // Logged Out State
@@ -624,26 +716,13 @@
                 <li><a href="signin.html" class="auth-btn">Log In</a></li>
                 <li><a href="signup.html" class="auth-btn">Sign Up</a></li>
             `;
-            
-            // Ensure colors are correct in logged-out state (always white here)
-            authControls.querySelectorAll('.auth-btn').forEach(btn => {
-                btn.style.color = 'var(--white)';
-            });
-        }
-        
-        // Fix for scrolled state color change on desktop
-        if (header.classList.contains('scrolled')) {
-            // Ensure colors switch to dark secondary color when scrolled
-            authControls.querySelectorAll('.auth-btn').forEach(btn => {
-                btn.style.color = 'var(--secondary-color)';
-            });
         }
     };
 
     const handleLogout = () => {
         signOut(auth).then(() => {
             showToast("Signed out successfully!");
-            renderAuthControls(null); // Update UI
+            // The onAuthStateChanged listener will automatically call renderAuthControls(null)
         }).catch(error => {
             showToast("Logout error.", true);
             console.error("Logout failed:", error);
@@ -710,49 +789,30 @@
         document.querySelectorAll('.animated-section').forEach(el => observer.observe(el));
 
         window.addEventListener('scroll', () => {
+            // This class change is handled correctly by the CSS for all header elements now.
             if (header) header.classList.toggle('scrolled', window.scrollY > 50);
-            
-            // Handle color switching for scrolled state
-            const isScrolled = window.scrollY > 50;
-            
-            // Apply color change to all white header elements
-            const headerElements = document.querySelectorAll('.logo a, .mini-cart a, .menu-btn, #desktop-nav a, .auth-btn');
-
-            headerElements.forEach(el => {
-                el.style.color = isScrolled ? 'var(--secondary-color)' : 'var(--white)';
-            });
-
-            // Specific fix for header title font (must also change)
-            const logoSpan = document.querySelector('.logo span');
-            if (logoSpan) {
-                logoSpan.style.color = isScrolled ? 'var(--secondary-color)' : 'var(--white)';
-            }
-            
-            // Specific fix for menu button text color
-            const menuBtnIcon = document.querySelector('.menu-btn');
-            if (menuBtnIcon) {
-                 menuBtnIcon.style.color = isScrolled ? 'var(--secondary-color)' : 'var(--white)';
-            }
         });
     };
     
     const initMobileNav = () => {
         // The DOMContentLoaded listener handles the click and toggle logic.
+        // This function simply ensures we handle the mobile menu close on link click.
         if (!navLinks) return; 
 
         navLinks.addEventListener('click', (e) => {
-             const target = e.target.closest('a');
-             if (target) {
-                 if (navLinks.classList.contains("active")) {
-                    navLinks.classList.remove('active');
-                    document.body.classList.remove('nav-open');
-                    const menuIcon = menuBtn ? menuBtn.querySelector('i') : null;
-                    if(menuIcon) {
-                        menuIcon.classList.remove('fa-times');
-                        menuIcon.classList.add('fa-bars');
+                const target = e.target.closest('a');
+                if (target) {
+                    if (navLinks.classList.contains("active")) {
+                        navLinks.classList.remove('active');
+                        document.body.classList.remove('nav-open');
+                        // Reset icon (menuBtn is a global variable)
+                        const menuIcon = menuBtn ? menuBtn.querySelector('i') : null;
+                        if(menuIcon) {
+                            menuIcon.classList.remove('fa-times');
+                            menuIcon.classList.add('fa-bars');
+                        }
                     }
                 }
-             }
         });
     };
 
@@ -788,8 +848,8 @@
 
                 currentQty = Math.max(minQty, currentQty - step);
             } else if (e.target.classList.contains('add-to-cart-btn')) {
-                 handleAddToCart(productId, currentQty, card);
-                 return; 
+                    handleAddToCart(productId, currentQty, card);
+                    return; 
             }
             
             // Update the display
