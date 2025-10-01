@@ -138,13 +138,13 @@
 
         /* --- MOBILE MENU HANDLING (The slide-out) --- */
         .nav-links { 
-            /* Base styles for the slide-out menu */
             position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
             background-color: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(35px);
             -webkit-backdrop-filter: blur(35px);
             z-index: 999; 
-            flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+            flex-direction: column; align-items: center; justify-content: center; 
+            gap: 1.5rem; /* Spacing for new buttons */
             transform: translateX(100%);
             transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
             list-style: none; padding: 0;
@@ -152,15 +152,33 @@
         }
         .nav-links.active { transform: translateX(0); }
         .nav-links li { padding: 0; }
-        .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
-        .nav-links #mobile-auth-links { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1.5rem; }
+        
+        /* ### NEW BUTTON STYLING FOR HAMBURGER MENU ### */
+        .nav-links a {
+            display: block;
+            background-color: var(--primary-color);
+            color: var(--white) !important;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            text-align: center;
+            min-width: 280px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .nav-links a:hover, .nav-links a:focus {
+            background-color: var(--primary-color-dark);
+            transform: scale(1.05);
+        }
+        /* ### END OF NEW STYLES ### */
 
         /* --- 8. Responsive Design --- */
         @media (max-width: 992px) {
             #desktop-nav { display: none !important; } 
             .header-actions { margin-right: 0; gap: 15px; }
             .menu-btn { display: block !important; } 
-            #auth-controls { display: none; }
+            #auth-controls { display: none; } /* This correctly hides desktop buttons on mobile */
             .nav-links { display: flex; } 
         }
 
@@ -541,7 +559,6 @@
 
     const updateCartCount = () => {
         const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-        // FIX: Cart count should reflect the number of unique items/product types
         const totalItems = cart.length; 
         if (cartCountEl) cartCountEl.textContent = totalItems;
     };
@@ -602,7 +619,6 @@
             const unitText = product.isMeat ? 'kg' : product.unit.replace('/', '');
             const initialPrice = product.price * initialQty;
             
-            // Check if product is live (needs Contact button)
             if (product.isLive) {
                 return `
                     <div class="product-card animated-section" data-id="${product.id}">
@@ -619,7 +635,6 @@
                 `;
             }
 
-            // Standard E-commerce Product (Meat and Others)
             return `
                 <div class="product-card animated-section" data-id="${product.id}">
                     <img src="assets/images/${product.id}.jpg" alt="${product.name}">
@@ -661,68 +676,66 @@
 
     // --- 4.5. Authentication Status Manager (FIXED) ---
     const renderAuthControls = (user) => {
-        // Clear both containers
+        // --- 1. Desktop Controls ---
         authControls.innerHTML = '';
-        navLinks.innerHTML = '';
-        
-        // Add styles for proper spacing of desktop buttons
         authControls.style.display = 'flex';
         authControls.style.gap = '20px';
 
-
-        // Base Mobile Nav Links (always present)
-        const baseMobileLinks = `
-            <li><a href="#home">Home</a></li>
-            <li><a href="#products">Products</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="contact-us.html">Contact</a></li>
-            <div id="mobile-auth-links">
-            </div>
-        `;
-        navLinks.innerHTML = baseMobileLinks;
-        const mobileAuthLinksContainer = navLinks.querySelector('#mobile-auth-links');
-
         if (user) {
-            // Logged In State
-            
-            // Desktop: Show My Profile and Log Out buttons
+            // Logged In State (Desktop)
             authControls.innerHTML = `
                 <a href="profile.html" class="auth-btn">My Profile</a>
                 <button class="auth-btn" id="signOutBtn" style="border:none; background:none; cursor:pointer; font-size: 1rem; font-weight: 500;">Log Out</button>
             `;
-            // Re-select element after setting innerHTML
-            const desktopSignOutBtn = document.getElementById('signOutBtn'); 
-            if(desktopSignOutBtn) desktopSignOutBtn.addEventListener('click', handleLogout);
-            
-            // Mobile Menu: Only Profile and Logout
-            mobileAuthLinksContainer.innerHTML = `
-                <li><a href="profile.html" class="auth-btn">My Profile</a></li>
-                <li><a href="#" id="signOutBtnMobile" class="auth-btn">Log Out</a></li>
-            `;
-            const mobileSignOutBtn = document.getElementById('signOutBtnMobile');
-            if(mobileSignOutBtn) mobileSignOutBtn.addEventListener('click', handleLogout);
-
+            const desktopSignOutBtn = document.getElementById('signOutBtn');
+            if (desktopSignOutBtn) desktopSignOutBtn.addEventListener('click', handleLogout);
         } else {
-            // Logged Out State
-            
-            // Desktop: Show Log In and Sign Up buttons
+            // Logged Out State (Desktop)
             authControls.innerHTML = `
                 <a href="signin.html" class="auth-btn">Log In</a>
                 <a href="signup.html" class="auth-btn">Sign Up</a>
             `;
+        }
 
-            // Mobile Menu: Show Log In and Sign Up
-            mobileAuthLinksContainer.innerHTML = `
-                <li><a href="signin.html" class="auth-btn">Log In</a></li>
-                <li><a href="signup.html" class="auth-btn">Sign Up</a></li>
+        // --- 2. Mobile (Hamburger Menu) Controls ---
+        let mobileNavHTML = `
+            <li><a href="#home">Home</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact-us.html">Contact</a></li>
+        `;
+
+        if (user) {
+            // Logged In State (Mobile)
+            mobileNavHTML += `
+                <li><a href="profile.html">My Profile</a></li>
+                <li><a href="#" id="signOutBtnMobile">Log Out</a></li>
             `;
+        } else {
+            // Logged Out State (Mobile)
+            mobileNavHTML += `
+                <li><a href="signin.html">Log In</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+            `;
+        }
+        navLinks.innerHTML = mobileNavHTML;
+
+        // --- 3. Attach Mobile Logout Listener (only if user is logged in) ---
+        if (user) {
+            const mobileSignOutBtn = document.getElementById('signOutBtnMobile');
+            if (mobileSignOutBtn) {
+                mobileSignOutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    handleLogout();
+                });
+            }
         }
     };
 
     const handleLogout = () => {
         signOut(auth).then(() => {
             showToast("Signed out successfully!");
-            // The onAuthStateChanged listener will automatically call renderAuthControls(null)
+            // onAuthStateChanged will handle the UI update automatically.
         }).catch(error => {
             showToast("Logout error.", true);
             console.error("Logout failed:", error);
@@ -789,23 +802,19 @@
         document.querySelectorAll('.animated-section').forEach(el => observer.observe(el));
 
         window.addEventListener('scroll', () => {
-            // This class change is handled correctly by the CSS for all header elements now.
             if (header) header.classList.toggle('scrolled', window.scrollY > 50);
         });
     };
     
     const initMobileNav = () => {
-        // The DOMContentLoaded listener handles the click and toggle logic.
-        // This function simply ensures we handle the mobile menu close on link click.
         if (!navLinks) return; 
 
         navLinks.addEventListener('click', (e) => {
                 const target = e.target.closest('a');
-                if (target) {
+                if (target && target.id !== 'signOutBtnMobile') { // Prevent closing for logout button
                     if (navLinks.classList.contains("active")) {
                         navLinks.classList.remove('active');
                         document.body.classList.remove('nav-open');
-                        // Reset icon (menuBtn is a global variable)
                         const menuIcon = menuBtn ? menuBtn.querySelector('i') : null;
                         if(menuIcon) {
                             menuIcon.classList.remove('fa-times');
@@ -824,7 +833,7 @@
             
             const productId = card.dataset.id;
             const product = products.find(p => p.id === productId);
-            if (!product || product.isLive) return; // Skip if live product
+            if (!product || product.isLive) return; 
 
             const isGoat = product.id === 'goat';
             const isMeat = product.isMeat;
@@ -836,26 +845,14 @@
                 currentQty += step;
             } else if (e.target.classList.contains('minus-btn')) {
                 const step = isMeat ? 0.25 : 1;
-                
-                let minQty;
-                if (isGoat) {
-                    minQty = 0.75; 
-                } else if (isMeat) {
-                    minQty = 0.5; 
-                } else {
-                    minQty = 1;
-                }
-
+                let minQty = isGoat ? 0.75 : (isMeat ? 0.5 : 1);
                 currentQty = Math.max(minQty, currentQty - step);
             } else if (e.target.classList.contains('add-to-cart-btn')) {
                     handleAddToCart(productId, currentQty, card);
                     return; 
             }
             
-            // Update the display
             qtyEl.textContent = currentQty.toFixed(isMeat ? 2 : 0);
-            
-            // Update the displayed price
             updatePriceDisplay(card, product); 
         });
     }
@@ -868,10 +865,9 @@
         initScrollEffects();
         initMobileNav();
         
-        // Final initialization of dynamic prices after rendering
         document.querySelectorAll('.product-card').forEach(card => {
             const product = products.find(p => p.id === card.dataset.id);
-            if (product) updatePriceDisplay(card, product);
+            if (product && !product.isLive) updatePriceDisplay(card, product);
         });
     });
 </script>
