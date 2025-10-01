@@ -26,9 +26,34 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         html { scroll-behavior: smooth; }
-        body { background: var(--background-light); color: var(--text-dark); padding-top: 5rem; /* Push content below fixed header */ }
+        /* FIX: Adjusted padding-top to account for header + alert bar (~100px total) */
+        body { background: var(--background-light); color: var(--text-dark); padding-top: 6.5rem; }
         .container { width: 90%; max-width: 1100px; margin: 0 auto; }
         a, button { transition: all 0.3s ease; }
+        
+        /* --- Policy Alert Bar CSS (NEW) --- */
+        .order-policy-alert {
+            position: fixed;
+            top: 70px; /* Below the fixed header */
+            left: 0;
+            width: 100%;
+            background-color: var(--secondary-color); 
+            color: var(--white);
+            padding: 0.75rem 0;
+            z-index: 900; 
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+        }
+        .order-policy-alert strong {
+            font-weight: 700;
+            color: var(--primary-color); 
+            margin: 0 4px;
+        }
+
 
         /* --- 2. Header (Consistent with index.html structure) --- */
         .header { 
@@ -39,7 +64,7 @@
         .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
         
         .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
-        .logo img { height: 40px; } /* Adjusted height */
+        .logo img { height: 40px; } 
         .logo span { white-space: nowrap; }
 
         /* Desktop Nav */
@@ -131,6 +156,38 @@
             }
         }
 
+        /* --- 9. Footer Styles (Copied from Index) --- */
+        footer { background: #1e293b; color: #cbd5e1; padding: 5rem 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
+        .footer-col h4 { font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--white); }
+        .footer-col p, .footer-col a { color: #94a3b8; text-decoration: none; }
+        .footer-col a { display: block; margin-bottom: 0.75rem; }
+        .footer-col a:hover { color: var(--white); padding-left: 5px; }
+        .footer-bottom { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #334155; font-size: 0.9rem; color: #94a3b8; }
+        
+        
+        /* --- Policy Alert Bar CSS (Integrated from Index) --- */
+        .order-policy-alert {
+            position: fixed;
+            top: 70px; /* Calculated: Header padding + height */
+            left: 0;
+            width: 100%;
+            background-color: var(--secondary-color); 
+            color: var(--white);
+            padding: 0.75rem 0;
+            z-index: 900; 
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+        }
+        .order-policy-alert strong {
+            font-weight: 700;
+            color: var(--primary-color); 
+            margin: 0 4px;
+        }
         /* --- 8. Responsive Design --- */
         @media (max-width: 992px) { 
             .cart-layout { grid-template-columns: 1fr; } 
@@ -182,12 +239,11 @@
     </header>
 
     <div class="order-policy-alert">
-    <div class="container">
-        ⚠️ **Order Freshness Policy:** We accept orders **EXCLUSIVELY on Sundays (6 AM - 7 PM IST)**. 
-        All deliveries are completed on the same day, typically within **30-60 minutes** of order confirmation.
+        <div class="container">
+            ⚠️ **Order Freshness Policy:** We accept orders **EXCLUSIVELY on Sundays (6 AM - 7 PM IST)**. 
+            All deliveries are completed on the same day, typically within **30-60 minutes** of order confirmation.
+        </div>
     </div>
-</div>
-    
     <main class="cart-page">
         <div class="container">
             <div class="cart-header">
@@ -206,6 +262,17 @@
         </div>
     </section>
 
+    <footer id="contact">
+        <div class="container">
+             <div class="footer-grid">
+                <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
+                <div class="footer-col"><h4>Quick Links</h4><a href="index.html#home">Home</a><a href="index.html#products">Products</a><a href="about.html">About</a><a href="gallery.html">Farm Gallery</a></div>
+                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Farms, AP<br>Email: <a href="mailto:pgf.natural@gmail.com">pgf.natural@gmail.com</a> <br>Phone: +91 98765 43210</p></div>
+                <div class="footer-col"><h4>Follow Us</h4><a href="#">Facebook</a><a href="https://www.instagram.com/potlapallifarms" target="_blank">Instagram</a></div>
+             </div>
+             <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
+        </div>
+    </footer>
     <script type="module">
         const products = {
             'goat': { id: 'goat', name: 'Premium Goat Meat', price: 850, image: 'assets/images/goat.jpg' },
