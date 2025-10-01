@@ -352,12 +352,12 @@
 
     // Initialize Firebase app instance (using your consistent config):
     const firebaseConfig = {
-        apiKey: "##FIREBASE_API_KEY##",
-        authDomain: "##FIREBASE_AUTH_DOMAIN##",
-        projectId: "##FIREBASE_PROJECT_ID##",
-        storageBucket: "##FIREBASE_STORAGE_BUCKET##",
+        apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+        authDomain: "potlapallifarm.firebaseapp.com",
+        projectId: "potlapallifarm",
+        storageBucket: "potlapallifarm.firebasestorage.app",
         messagingSenderId: "1017629729159",
-        appId: "##FIREBASE_APP_ID##",
+        appId: "1:1017629729159:web:357c420a9de335d427b322",
     };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -367,7 +367,7 @@
     const products = [
         // Live Products (isLive: true - Contact to Order)
         { id: 'live-ram', name: 'Live Ram (Macherla Pottelu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Ram, range 15 to 40 kg.', image: 'assets/ram.jpg' },
-        { id: 'buck', name: 'Buck (Meka Pothu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Buck, range 15 to 40 kg.', image: 'assets/images/buck.jpeg' },
+        { id: 'buck', name: 'Buck (Meka Pothu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Buck, range 15 to 40 kg.', image: 'assets/images/live-buck.jpg' },
         { id: 'live-natu-kodi', name: 'Live Natu Kodi (Country Chicken)', price: 700, unit: '/kg', category: 'Live Birds', isMeat: false, isLive: true, description: 'Fresh, live country chicken, delivered to your specifications.', image: 'assets/live-natu-kodi.jpg' }, // NEW PRODUCT
 
         // Processed Meats (isMeat: true - 0.25kg increments)
