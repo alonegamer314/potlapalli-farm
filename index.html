@@ -30,10 +30,10 @@
         img { max-width: 100%; display: block; }
         a, button { transition: all 0.3s ease; }
 
-        /* --- Policy Alert Bar CSS --- */
+        /* --- Policy Alert Bar CSS (Integrated) --- */
         .order-policy-alert {
             position: fixed;
-            top: 70px; /* Calculated: Header padding + height */
+            top: 70px; /* Below the fixed header */
             left: 0;
             width: 100%;
             background-color: var(--secondary-color); 
@@ -62,34 +62,38 @@
             height: calc(100vh - 40px);
         }
 
-        /* --- 2. Header & Navigation (FIXED SOLID BACKGROUND) --- */
+        /* --- 2. Header & Navigation (ORIGINAL TRANSPARENT/BLURRED RESTORED) --- */
         .header {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1rem 0;
             
-            /* FIX: Default Solid Primary Color Background */
-            background-color: var(--primary-color);
-            background-image: none; 
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+            /* RESTORED: Original Transparent/Blurred Look */
+            background-color: rgba(255, 255, 255, 0.2);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
             
-            transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease;
+            /* ADDED: Subtle gradient for visibility against light heroes */
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+            
+            transition: all 0.4s ease;
         }
-        
-        /* SCROLLED STATE: Transition to a slightly darker/more opaque version */
         .header.scrolled {
-            background-color: rgba(255, 255, 255, 0.9); /* Lighter solid white on scroll */
+            /* RESTORED: Solid white/dark text on scroll */
+            background-color: rgba(255, 255, 255, 0.9);
+            background-image: none;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             padding: 0.75rem 0;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
         }
         
-        /* Ensure all text/icons are white in the default (primary color) state */
+        /* Default State: WHITE text/icons on transparent header */
         .logo a, .mini-cart a, .menu-btn, #desktop-nav a, .auth-btn {
             color: var(--white) !important; 
-            text-shadow: none; 
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.7); /* Shadow for visibility */
         }
-        
-        /* Scrolled state needs to switch to dark text */
+        .mini-cart span { background-color: var(--secondary-color); color: var(--white); }
+
+        /* Scrolled State: DARK text/icons on solid white header */
         .header.scrolled .logo a, 
         .header.scrolled #desktop-nav a, 
         .header.scrolled .menu-btn,
@@ -99,8 +103,8 @@
             text-shadow: none; 
         }
         .header.scrolled .mini-cart span { background-color: var(--primary-color); color: var(--white); }
-        .mini-cart span { background-color: var(--secondary-color); color: var(--white); } /* Dark badge on green header */
-        
+
+
         /* --- Desktop Header Alignment FIX --- */
         .header-inner { 
             display: flex; 
@@ -134,7 +138,7 @@
         .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; }
         
         .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; }
-        
+
         /* --- MOBILE MENU HANDLING --- */
         .nav-links { 
             /* Base styles for the slide-out menu */
@@ -245,557 +249,571 @@
     </style>
 </head>
 <body>
-    <header class="header" id="header">
-        <div class="container header-inner">
-            <div class="logo">
-                <a href="index.html">
-                    <img src="assets/logo.png" alt="Potlapalli Farms Logo"/>
-                    <span>Potlapalli Farms</span>
-                </a>
-            </div>
-            
-            <nav class="header-nav" id="desktop-nav"> 
-                <a href="#home">Home</a>
-                <a href="#products">Products</a>
-                <a href="about.html">About</a>
-                <a href="contact-us.html">Contact</a>
-            </nav>
+    <header class="header" id="header">
+        <div class="container header-inner">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/logo.png" alt="Potlapalli Farms Logo"/>
+                    <span>Potlapalli Farms</span>
+                </a>
+            </div>
+            
+            <nav class="header-nav" id="desktop-nav"> 
+                <a href="#home">Home</a>
+                <a href="#products">Products</a>
+                <a href="about.html">About</a>
+                <a href="contact-us.html">Contact</a>
+            </nav>
 
-            <div class="header-actions">
-                <div class="mini-cart">
-                    <a href="cart.html" aria-label="View shopping cart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cartCount">0</span>
-                    </a>
-                </div>
-                <div id="auth-controls" class="auth-controls">
-                    </div>
-                <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-    
-        <div class="order-policy-alert">
-        <div class="container">
-            ⚠️ **Order Freshness Policy:** We accept orders **EXCLUSIVELY on Sundays (6 AM - 7 PM IST)**. 
-            All deliveries are completed on the same day, typically within **30-60 minutes** of order confirmation.
-        </div>
-    </div>
-        
-    <ul class="nav-links" id="nav-links">
-        </ul>
+            <div class="header-actions">
+                <div class="mini-cart">
+                    <a href="cart.html" aria-label="View shopping cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCount">0</span>
+                    </a>
+                </div>
+                <div id="auth-controls" class="auth-controls">
+                    </div>
+                <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="order-policy-alert">
+        <div class="container">
+            ⚠️ **Order Freshness Policy:** We accept orders **EXCLUSIVELY on Sundays (6 AM - 7 PM IST)**. 
+            All deliveries are completed on the same day, typically within **30-60 minutes** of order confirmation.
+        </div>
+    </div>
+    <ul class="nav-links" id="nav-links">
+        </ul>
 
-    <main>
-        <section class="hero" id="home">
-            <div class="hero-slider">
-                <div class="hero-slide active"><img src="assets/images/shopnow.jpeg" alt="Lush green farm fields"><div class="hero-content"><h1>Farm Freshness, Delivered.</h1><p>The best of nature, from our farm to your family.</p><a href="#products" class="hero-btn">Shop Now</a></div></div>
-                <div class="hero-slide"><img src="assets/images/hero.jpg" alt="Organic Goodness"><div class="hero-content"><h1>Pure, Organic Goodness</h1><p>No chemicals, no compromises. Just honest, healthy food.</p><a href="about.html" class="hero-btn">Our Story</a></div></div>
-            </div>
-            <div class="slider-nav"></div>
-        </section>
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-slider">
+                <div class="hero-slide active"><img src="assets/images/shopnow.jpeg" alt="Lush green farm fields"><div class="hero-content"><h1>Farm Freshness, Delivered.</h1><p>The best of nature, from our farm to your family.</p><a href="#products" class="hero-btn">Shop Now</a></div></div>
+                <div class="hero-slide"><img src="assets/images/hero.jpg" alt="Organic Goodness"><div class="hero-content"><h1>Pure, Organic Goodness</h1><p>No chemicals, no compromises. Just honest, healthy food.</p><a href="about.html" class="hero-btn">Our Story</a></div></div>
+            </div>
+            <div class="slider-nav"></div>
+        </section>
 
-        <section id="why-choose-us" class="section animated-section">
-            <div class="container">
-                <div class="section-header"><h2>Why Potlapalli Farms?</h2></div>
-                <div class="features-grid">
-                    <div class="feature-card"><div class="icon"><i class="fas fa-leaf"></i></div><h3>100% Organic</h3><p>Grown naturally without any harmful pesticides or chemicals.</p></div>
-                    <div class="feature-card"><div class="icon"><i class="fas fa-truck"></i></div><h3>Directly From Farm</h3><p>We harvest, pack, and deliver, ensuring maximum freshness.</p></div>
-                    <div class="feature-card"><div class="icon"><i class="fas fa-heart"></i></div><h3>Ethically Raised</h3><p>Our animals are free-range, grass-fed, and treated with care.</p></div>
-                    <div class="feature-card"><div class="icon"><i class="fas fa-shield-alt"></i></div><h3>Quality Assured</h3><p>Hygienically packed to preserve nutrition and taste.</p></div>
-                </div>
-            </div>
-        </section>
+        <section id="why-choose-us" class="section animated-section">
+            <div class="container">
+                <div class="section-header"><h2>Why Potlapalli Farms?</h2></div>
+                <div class="features-grid">
+                    <div class="feature-card"><div class="icon"><i class="fas fa-leaf"></i></div><h3>100% Organic</h3><p>Grown naturally without any harmful pesticides or chemicals.</p></div>
+                    <div class="feature-card"><div class="icon"><i class="fas fa-truck"></i></div><h3>Directly From Farm</h3><p>We harvest, pack, and deliver, ensuring maximum freshness.</p></div>
+                    <div class="feature-card"><div class="icon"><i class="fas fa-heart"></i></div><h3>Ethically Raised</h3><p>Our animals are free-range, grass-fed, and treated with care.</p></div>
+                    <div class="feature-card"><div class="icon"><i class="fas fa-shield-alt"></i></div><h3>Quality Assured</h3><p>Hygienically packed to preserve nutrition and taste.</p></div>
+                </div>
+            </div>
+        </section>
 
-        <section class="section" id="products">
-            <div class="container">
-                <div class="section-header"><h2>Our Fresh Produce</h2><p>Handpicked and curated with care, from our fields to your plate.</p></div>
-                <div class="product-grid" id="product-grid"></div>
-            </div>
-        </section>
-        
-        <section id="upcoming-products-section" class="section animated-section">
-            <div class="container">
-            </div>
-        </section>
+        <section class="section" id="products">
+            <div class="container">
+                <div class="section-header"><h2>Our Fresh Produce</h2><p>Handpicked and curated with care, from our fields to your plate.</p></div>
+                <div class="product-grid" id="product-grid"></div>
+            </div>
+        </section>
+        
+        <section id="upcoming-products-section" class="section animated-section">
+            <div class="container">
+            </div>
+        </section>
 
-        <section id="how-it-works" class="section animated-section" style="background-color: var(--background-light);">
-            <div class="container">
-                <div class="section-header"><h2>How It Works</h2></div>
-                <div class="how-it-works-grid">
-                    <div class="step-card"><div class="icon"><i class="fas fa-mouse-pointer"></i></div><h3>1. You Order Online</h3><p>Browse our fresh selection and place your order with a few clicks.</p></div>
-                    <div class="step-card"><div class="icon"><i class="fas fa-tractor"></i></div><h3>2. We Harvest & Pack</h3><p>We harvest your produce fresh from the farm only after you order.</p></div>
-                    <div class="step-card"><div class="icon"><i class="fas fa-shipping-fast"></i></div><h3>3. We Deliver Fresh</h3><p>Your order is delivered to your doorstep, ensuring peak freshness.</p></div>
-                </div>
-            </div>
-        </section>
-        
-        <section id="testimonials" class="section animated-section">
-            <div class="container">
-                 <div class="section-header"><h2>What Our Customers Say</h2></div>
-                 <div class="testimonial-card">
-                    <p>"The best goat meat I've had in years! The freshness is unparalleled. You can truly taste the difference. Highly recommended!"</p>
-                    <div class="testimonial-author">- Priya S, Hyderabad</div>
-                 </div>
-            </div>
-        </section>
-    </main>
+        <section id="how-it-works" class="section animated-section" style="background-color: var(--background-light);">
+            <div class="container">
+                <div class="section-header"><h2>How It Works</h2></div>
+                <div class="how-it-works-grid">
+                    <div class="step-card"><div class="icon"><i class="fas fa-mouse-pointer"></i></div><h3>1. You Order Online</h3><p>Browse our fresh selection and place your order with a few clicks.</p></div>
+                    <div class="step-card"><div class="icon"><i class="fas fa-tractor"></i></div><h3>2. We Harvest & Pack</h3><p>We harvest your produce fresh from the farm only after you order.</p></div>
+                    <div class="step-card"><div class="icon"><i class="fas fa-shipping-fast"></i></div><h3>3. We Deliver Fresh</h3><p>Your order is delivered to your doorstep, ensuring peak freshness.</p></div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="testimonials" class="section animated-section">
+            <div class="container">
+                 <div class="section-header"><h2>What Our Customers Say</h2></div>
+                 <div class="testimonial-card">
+                    <p>"The best goat meat I've had in years! The freshness is unparalleled. You can truly taste the difference. Highly recommended!"</p>
+                    <div class="testimonial-author">- Priya S, Hyderabad</div>
+                 </div>
+            </div>
+        </section>
+    </main>
 
-    <footer id="contact">
-        <div class="container">
-             <div class="footer-grid">
-                <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
-                <div class="footer-col"><h4>Quick Links</h4><a href="#home">Home</a><a href="#products">Products</a><a href="about.html">About</a><a href="gallery.html">Farm Gallery</a></div>
-                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Farms, AP<br>Email: <a href="mailto:pgf.natural@gmail.com">pgf.natural@gmail.com</a> <br>Phone: +91 98765 43210</p></div>
-                <div class="footer-col"><h4>Follow Us</h4><a href="#">Facebook</a><a href="https://www.instagram.com/potlapallifarms" target="_blank">Instagram</a></div>
-             </div>
-             <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
-        </div>
-    </footer>
-    
-    <div id="toast" class="toast" aria-live="polite"></div>
+    <footer id="contact">
+        <div class="container">
+             <div class="footer-grid">
+                <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
+                <div class="footer-col"><h4>Quick Links</h4><a href="#home">Home</a><a href="#products">Products</a><a href="about.html">About</a><a href="gallery.html">Farm Gallery</a></div>
+                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Farms, AP<br>Email: <a href="mailto:pgf.natural@gmail.com">pgf.natural@gmail.com</a> <br>Phone: +91 98765 43210</p></div>
+                <div class="footer-col"><h4>Follow Us</h4><a href="#">Facebook</a><a href="https://www.instagram.com/potlapallifarms" target="_blank">Instagram</a></div>
+             </div>
+             <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
+        </div>
+    </footer>
+    
+    <div id="toast" class="toast" aria-live="polite"></div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const menuBtn = document.getElementById('menuBtn');
-        const navLinks = document.getElementById('nav-links');
-        
-        if (menuBtn && navLinks) {
-            const menuIcon = menuBtn.querySelector('i');
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('nav-links');
+        
+        if (menuBtn && navLinks) {
+            const menuIcon = menuBtn.querySelector('i');
 
-            menuBtn.addEventListener('click', () => {
-                // Toggle the 'active' class to show/hide the menu
-                const isActive = navLinks.classList.toggle('active');
+            menuBtn.addEventListener('click', () => {
+                // Toggle the 'active' class to show/hide the menu
+                const isActive = navLinks.classList.toggle('active');
 
-                // Toggle body overflow for fixed background
-                document.body.classList.toggle("nav-open");
+                // Toggle body overflow for fixed background
+                document.body.classList.toggle("nav-open");
 
-                // Bonus: This changes the icon from bars to an 'X'
-                menuIcon.classList.toggle('fa-bars', !isActive);
-                menuIcon.classList.toggle('fa-times', isActive);
-            });
-        }
-    });
-    </script>
-    
+                // Bonus: This changes the icon from bars to an 'X'
+                menuIcon.classList.toggle('fa-bars', !isActive);
+                menuIcon.classList.toggle('fa-times', isActive);
+            });
+        }
+    });
+    </script>
+    
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    // Initialize Firebase app instance (using your consistent config):
-    const firebaseConfig = {
-        apiKey: "##FIREBASE_API_KEY##",
-        authDomain: "##FIREBASE_AUTH_DOMAIN##",
-        projectId: "##FIREBASE_PROJECT_ID##",
-        storageBucket: "##FIREBASE_STORAGE_BUCKET##",
-        messagingSenderId: "1017629729159",
-        appId: "##FIREBASE_APP_ID##",
-    };
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-
-    // --- 1. State & Data (Updated Product List) ---
-    const products = [
-        // Live Products (isLive: true - Contact to Order)
-        { id: 'live-ram', name: 'Live Ram (Macherla Pottelu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Ram, range 15 to 40 kg.', image: 'assets/ram.jpg' },
-        { id: 'buck', name: 'Buck (Meka Pothu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Buck, range 15 to 40 kg.', image: 'assets/images/live-buck.jpg' },
-        { id: 'live-natu-kodi', name: 'Live Natu Kodi (Country Chicken)', price: 700, unit: '/kg', category: 'Live Birds', isMeat: false, isLive: true, description: 'Fresh, live country chicken, delivered to your specifications.', image: 'assets/live-natu-kodi.jpg' }, // NEW PRODUCT
-
-        // Processed Meats (isMeat: true - 0.25kg increments)
-        { id: 'sonali-chicken', name: 'Sonali Country Chicken (Smokey Turmeric)', price: 550, unit: '/kg', category: 'Meat', isMeat: true, description: 'Premium Sonali country chicken.', image: 'assets/images/chicken-sonali.jpg' },
-        { id: 'backyard-chicken', name: 'Backyard Country Chicken (Smokey Turmeric)', price: 800, unit: '/kg', category: 'Meat', isMeat: true, description: 'High-quality backyard country chicken.', image: 'assets/images/backyard.jpg' },
-        { id: 'goat', name: 'Premium Goat Meat (Flesh)', price: 900, unit: '/kg', category: 'Meat', isMeat: true, description: 'Tender, pasture-raised goat meat.', image: 'assets/images/goat.jpg' },
-        
-        // Other Products
-        { id: 'eggs-dozen', name: 'Country Chicken Eggs', price: 180, unit: '/dozen', category: 'Eggs', isMeat: false, description: 'A dozen golden-yolk eggs.', image: 'assets/images/eggs-dozen.jpg' },
-        { id: 'eggs-tray', name: '30 Eggs Tray', price: 430, unit: '/tray', category: 'Eggs', isMeat: false, description: 'Tray of 30 golden-yolk eggs.', image: 'assets/images/tray.jpg' },
-       //{ id: 'milk', name: 'Fresh Goat Milk', price: 60, unit: '/L', category: 'Dairy', isMeat: false, description: 'Nutritious and easy-to-digest fresh goat milk.', image: 'assets/images/milk.jpg' } //
-    ];
-    
-    // --- Upcoming Products Section Data ---
-    const upcomingProducts = [
-        'Fish', 'Prawns', 'Crabs', 'Buffalo Milk', 'Cow Milk', 'Button Mushrooms'
-    ];
-
-    const CART_KEY = 'potlapalliCart';
-
-    // --- 2. DOM Elements (Including Auth Controls) ---
-    const productGrid = document.getElementById('product-grid');
-    const cartCountEl = document.getElementById('cartCount');
-    const upcomingProductsSection = document.getElementById('upcoming-products-section');
-    const toastEl = document.getElementById('toast');
-    const header = document.getElementById('header');
-    const menuBtn = document.getElementById("menuBtn");
-    const navLinks = document.getElementById("nav-links");
-    const authControls = document.getElementById('auth-controls');
+    // Initialize Firebase app instance (using your consistent config):
+    const firebaseConfig = {
+        apiKey: "##FIREBASE_API_KEY##",
+        authDomain: "##FIREBASE_AUTH_DOMAIN##",
+        projectId: "##FIREBASE_PROJECT_ID##",
+        storageBucket: "##FIREBASE_STORAGE_BUCKET##",
+        messagingSenderId: "1017629729159",
+        appId: "##FIREBASE_APP_ID##",
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
 
-    // --- 3. Cart & Utility Functionality ---
-    const showToast = (message, isError = false) => {
-        toastEl.textContent = message;
-        toastEl.classList.add(isError ? 'error' : 'show');
-        setTimeout(() => toastEl.classList.remove('show', 'error'), 3000);
-    };
+    // --- 1. State & Data (Updated Product List) ---
+    const products = [
+        // Live Products (isLive: true - Contact to Order)
+        { id: 'live-ram', name: 'Live Ram (Macherla Pottelu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Ram, range 15 to 40 kg.', image: 'assets/ram.jpg' },
+        { id: 'buck', name: 'Buck (Meka Pothu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Buck, range 15 to 40 kg.', image: 'assets/images/live-buck.jpg' },
+        { id: 'live-natu-kodi', name: 'Live Natu Kodi (Country Chicken)', price: 700, unit: '/kg', category: 'Live Birds', isMeat: false, isLive: true, description: 'Fresh, live country chicken, delivered to your specifications.', image: 'assets/live-natu-kodi.jpg' }, // NEW PRODUCT
 
-    const updateCartCount = () => {
-        const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-        // FIX: Cart count should reflect the number of unique items/product types
-        const totalItems = cart.length; 
-        if (cartCountEl) cartCountEl.textContent = totalItems;
-    };
+        // Processed Meats (isMeat: true - 0.25kg increments)
+        { id: 'sonali-chicken', name: 'Sonali Country Chicken (Smokey Turmeric)', price: 550, unit: '/kg', category: 'Meat', isMeat: true, description: 'Premium Sonali country chicken.', image: 'assets/images/chicken-sonali.jpg' },
+        { id: 'backyard-chicken', name: 'Backyard Country Chicken (Smokey Turmeric)', price: 800, unit: '/kg', category: 'Meat', isMeat: true, description: 'High-quality backyard country chicken.', image: 'assets/images/backyard.jpg' },
+        { id: 'goat', name: 'Premium Goat Meat (Flesh)', price: 900, unit: '/kg', category: 'Meat', isMeat: true, description: 'Tender, pasture-raised goat meat.', image: 'assets/images/goat.jpg' },
+        
+        // Other Products
+        { id: 'eggs-dozen', name: 'Country Chicken Eggs', price: 180, unit: '/dozen', category: 'Eggs', isMeat: false, description: 'A dozen golden-yolk eggs.', image: 'assets/images/eggs-dozen.jpg' },
+        { id: 'eggs-tray', name: '30 Eggs Tray', price: 430, unit: '/tray', category: 'Eggs', isMeat: false, description: 'Tray of 30 golden-yolk eggs.', image: 'assets/images/tray.jpg' },
+        //{ id: 'milk', name: 'Fresh Goat Milk', price: 60, unit: '/L', category: 'Dairy', isMeat: false, description: 'Nutritious and easy-to-digest fresh goat milk.', image: 'assets/images/milk.jpg' } //
+    ];
+    
+    // --- Upcoming Products Section Data ---
+    const upcomingProducts = [
+        'Fish', 'Prawns', 'Crabs', 'Buffalo Milk', 'Cow Milk', 'Button Mushrooms'
+    ];
 
-    const handleAddToCart = (productId, quantity, cardElement) => {
-        if (quantity <= 0) {
-             showToast('Quantity must be more than the minimum order size.', true);
-             return;
-        }
-        const product = products.find(p => p.id === productId);
-        if (!product) return;
+    const CART_KEY = 'potlapalliCart';
 
-        let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-        const existingItem = cart.find(item => item.id === productId);
-
-        if (existingItem) {
-            existingItem.quantity += quantity;
-        } else {
-            cart.push({ ...product, quantity: quantity });
-        }
-        localStorage.setItem(CART_KEY, JSON.stringify(cart));
-        
-        updateCartCount();
-        showToast(`${quantity.toFixed(product.isMeat ? 2 : 0)}${product.isMeat ? 'kg' : product.unit.replace('/', '')} of ${product.name} added to cart!`);
-        
-        if (cardElement) {
-             const isGoat = product.id === 'goat';
-             const resetQty = isGoat ? 0.75 : (product.isMeat ? 0.5 : 1);
-             cardElement.querySelector('.qty').textContent = resetQty.toFixed(product.isMeat ? 2 : 0);
-             updatePriceDisplay(cardElement, product);
-        }
-    };
-    
-    // --- Dynamic Price Display ---
-    const updatePriceDisplay = (cardElement, product) => {
-        const qtyEl = cardElement.querySelector('.qty');
-        const priceDisplayEl = cardElement.querySelector('.price-display');
-        const pricePerUnitSmallEl = cardElement.querySelector('.price-per-unit-small');
-
-        const currentQty = parseFloat(qtyEl.textContent);
-        const basePrice = product.price;
-
-        let calculatedPrice = basePrice * currentQty;
-        
-        priceDisplayEl.textContent = `₹${calculatedPrice.toFixed(0)}`;
-        
-        let unitTextContent = `(₹${basePrice}${product.unit})`;
-        pricePerUnitSmallEl.innerHTML = unitTextContent;
-    };
-    
-    // --- 4. Product Rendering ---
-    const renderProducts = () => {
-        if (!productGrid) return;
-        
-        productGrid.innerHTML = products.map(product => {
-            const isGoat = product.id === 'goat';
-            const initialQty = isGoat ? 0.75 : (product.isMeat ? 0.5 : 1);
-            const unitText = product.isMeat ? 'kg' : product.unit.replace('/', '');
-            const initialPrice = product.price * initialQty;
-            
-            // Check if product is live (needs Contact button)
-            if (product.isLive) {
-                return `
-                    <div class="product-card animated-section" data-id="${product.id}">
-                        <img src="assets/images/${product.id}.jpg" alt="${product.name}">
-                        <div class="product-content">
-                            <h3>${product.name}</h3>
-                            <p>${product.description} <span class="price-per-unit-small">(₹${product.price}/kg Live Weight)</span></p>
-                            <div class="product-footer">
-                                <span class="price price-display">₹${product.price}/kg</span>
-                                <a href="#contact" class="add-to-cart-btn contact-btn">Contact to Order</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Standard E-commerce Product (Meat and Others)
-            return `
-                <div class="product-card animated-section" data-id="${product.id}">
-                    <img src="assets/images/${product.id}.jpg" alt="${product.name}">
-                    <div class="product-content">
-                        <h3>${product.name}</h3>
-                        <p>${product.description} <span class="price-per-unit-small">(₹${product.price}${product.unit})</span></p>
-                        <div class="product-footer">
-                            <div class="price-line">
-                                <span class="price price-display">₹${initialPrice.toFixed(0)}</span>
-                                <div class="quantity-controls">
-                                    <button class="qty-btn minus-btn" aria-label="Decrease quantity">-</button>
-                                    <span class="qty">${initialQty.toFixed(product.isMeat ? 2 : 0)}</span>
-                                    <button class="qty-btn plus-btn" aria-label="Increase quantity">+</button>
-                                    <small class="unit-text">${unitText}</small>
-                                </div>
-                            </div>
-                            <button class="add-to-cart-btn">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        renderUpcomingProducts();
-    };
-    
-    // --- 4b. Render Upcoming Products ---
-    const renderUpcomingProducts = () => {
-        const container = document.querySelector('#upcoming-products-section .container');
-        if (!container) return; 
-
-        container.innerHTML = `
-            <div class="section-header"><h2><i class="fas fa-seedling"></i> Coming Soon</h2><p>We are expanding our range with more fresh, high-quality organic items!</p></div>
-            <ul class="upcoming-list">
-                ${upcomingProducts.map(item => `<li><i class="fas fa-check"></i> ${item}</li>`).join('')}
-            </ul>
-        `;
-    };
-
-    // --- 4.5. Authentication Status Manager (HEADER FIX) ---
-
-    const renderAuthControls = (user) => {
-        // Clear both containers
-        authControls.innerHTML = '';
-        navLinks.innerHTML = '';
+    // --- 2. DOM Elements (Including Auth Controls) ---
+    const productGrid = document.getElementById('product-grid');
+    const cartCountEl = document.getElementById('cartCount');
+    const upcomingProductsSection = document.getElementById('upcoming-products-section');
+    const toastEl = document.getElementById('toast');
+    const header = document.getElementById('header');
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("nav-links");
+    const authControls = document.getElementById('auth-controls');
 
 
-        // Base Mobile Nav Links (always present)
-        const baseMobileLinks = `
-            <li><a href="#home">Home</a></li>
-            <li><a href="#products">Products</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="contact-us.html">Contact</a></li>
-            <div id="mobile-auth-links">
-                </div>
-        `;
-        navLinks.innerHTML = baseMobileLinks;
-        const mobileAuthLinksContainer = navLinks.querySelector('#mobile-auth-links');
+    // --- 3. Cart & Utility Functionality ---
+    const showToast = (message, isError = false) => {
+        toastEl.textContent = message;
+        toastEl.classList.add(isError ? 'error' : 'show');
+        setTimeout(() => toastEl.classList.remove('show', 'error'), 3000);
+    };
+
+    const updateCartCount = () => {
+        const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+        // FIX: Cart count should reflect the number of unique items/product types
+        const totalItems = cart.length; 
+        if (cartCountEl) cartCountEl.textContent = totalItems;
+    };
+
+    const handleAddToCart = (productId, quantity, cardElement) => {
+        if (quantity <= 0) {
+             showToast('Quantity must be more than the minimum order size.', true);
+             return;
+        }
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
+
+        let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+        const existingItem = cart.find(item => item.id === productId);
+
+        if (existingItem) {
+            existingItem.quantity += quantity;
+        } else {
+            cart.push({ ...product, quantity: quantity });
+        }
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
+        
+        updateCartCount();
+        showToast(`${quantity.toFixed(product.isMeat ? 2 : 0)}${product.isMeat ? 'kg' : product.unit.replace('/', '')} of ${product.name} added to cart!`);
+        
+        if (cardElement) {
+             const isGoat = product.id === 'goat';
+             const resetQty = isGoat ? 0.75 : (product.isMeat ? 0.5 : 1);
+             cardElement.querySelector('.qty').textContent = resetQty.toFixed(product.isMeat ? 2 : 0);
+             updatePriceDisplay(cardElement, product);
+        }
+    };
+    
+    // --- Dynamic Price Display ---
+    const updatePriceDisplay = (cardElement, product) => {
+        const qtyEl = cardElement.querySelector('.qty');
+        const priceDisplayEl = cardElement.querySelector('.price-display');
+        const pricePerUnitSmallEl = cardElement.querySelector('.price-per-unit-small');
+
+        const currentQty = parseFloat(qtyEl.textContent);
+        const basePrice = product.price;
+
+        let calculatedPrice = basePrice * currentQty;
+        
+        priceDisplayEl.textContent = `₹${calculatedPrice.toFixed(0)}`;
+        
+        let unitTextContent = `(₹${basePrice}${product.unit})`;
+        pricePerUnitSmallEl.innerHTML = unitTextContent;
+    };
+    
+    // --- 4. Product Rendering ---
+    const renderProducts = () => {
+        if (!productGrid) return;
+        
+        productGrid.innerHTML = products.map(product => {
+            const isGoat = product.id === 'goat';
+            const initialQty = isGoat ? 0.75 : (product.isMeat ? 0.5 : 1);
+            const unitText = product.isMeat ? 'kg' : product.unit.replace('/', '');
+            const initialPrice = product.price * initialQty;
+            
+            // Check if product is live (needs Contact button)
+            if (product.isLive) {
+                return `
+                    <div class="product-card animated-section" data-id="${product.id}">
+                        <img src="assets/images/${product.id}.jpg" alt="${product.name}">
+                        <div class="product-content">
+                            <h3>${product.name}</h3>
+                            <p>${product.description} <span class="price-per-unit-small">(₹${product.price}/kg Live Weight)</span></p>
+                            <div class="product-footer">
+                                <span class="price price-display">₹${product.price}/kg</span>
+                                <a href="#contact" class="add-to-cart-btn contact-btn">Contact to Order</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Standard E-commerce Product (Meat and Others)
+            return `
+                <div class="product-card animated-section" data-id="${product.id}">
+                    <img src="assets/images/${product.id}.jpg" alt="${product.name}">
+                    <div class="product-content">
+                        <h3>${product.name}</h3>
+                        <p>${product.description} <span class="price-per-unit-small">(₹${product.price}${product.unit})</span></p>
+                        <div class="product-footer">
+                            <div class="price-line">
+                                <span class="price price-display">₹${initialPrice.toFixed(0)}</span>
+                                <div class="quantity-controls">
+                                    <button class="qty-btn minus-btn" aria-label="Decrease quantity">-</button>
+                                    <span class="qty">${initialQty.toFixed(product.isMeat ? 2 : 0)}</span>
+                                    <button class="qty-btn plus-btn" aria-label="Increase quantity">+</button>
+                                    <small class="unit-text">${unitText}</small>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-btn">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        renderUpcomingProducts();
+    };
+    
+    // --- 4b. Render Upcoming Products ---
+    const renderUpcomingProducts = () => {
+        const container = document.querySelector('#upcoming-products-section .container');
+        if (!container) return; 
+
+        container.innerHTML = `
+            <div class="section-header"><h2><i class="fas fa-seedling"></i> Coming Soon</h2><p>We are expanding our range with more fresh, high-quality organic items!</p></div>
+            <ul class="upcoming-list">
+                ${upcomingProducts.map(item => `<li><i class="fas fa-check"></i> ${item}</li>`).join('')}
+            </ul>
+        `;
+    };
+
+    // --- 4.5. Authentication Status Manager (HEADER FIX) ---
+
+    const renderAuthControls = (user) => {
+        // Clear both containers
+        authControls.innerHTML = '';
+        navLinks.innerHTML = '';
 
 
-        if (user) {
-            // Logged In State
-            
-            // Desktop: Show My Profile and Log Out buttons
-            authControls.innerHTML = `
-                <a href="profile.html" class="auth-btn">My Profile</a>
-                <button class="auth-btn" id="signOutBtn" style="border:none; background:none; color: var(--white); cursor:pointer;">Log Out</button>
-            `;
-            // Re-select element after setting innerHTML
-            const desktopSignOutBtn = document.getElementById('signOutBtn'); 
-            if(desktopSignOutBtn) desktopSignOutBtn.addEventListener('click', handleLogout);
-            
-
-            // Mobile Menu: Only Profile and Logout
-            mobileAuthLinksContainer.innerHTML = `
-                <li><a href="profile.html" class="auth-btn">My Profile</a></li>
-                <li><a href="#" id="signOutBtnMobile" class="auth-btn">Log Out</a></li>
-            `;
-            const mobileSignOutBtn = document.getElementById('signOutBtnMobile');
-            if(mobileSignOutBtn) mobileSignOutBtn.addEventListener('click', handleLogout);
+        // Base Mobile Nav Links (always present)
+        const baseMobileLinks = `
+            <li><a href="#home">Home</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact-us.html">Contact</a></li>
+            <div id="mobile-auth-links">
+                </div>
+        `;
+        navLinks.innerHTML = baseMobileLinks;
+        const mobileAuthLinksContainer = navLinks.querySelector('#mobile-auth-links');
 
 
-        } else {
-            // Logged Out State
-            
-            // Desktop: Show Log In and Sign Up buttons
-            authControls.innerHTML = `
-                <a href="signin.html" class="auth-btn">Log In</a>
-                <a href="signup.html" class="auth-btn">Sign Up</a>
-            `;
-            // FIX: Add style to ensure Log In/Sign Up use the correct color
+        if (user) {
+            // Logged In State
+            
+            // Desktop: Show My Profile and Log Out buttons
+            authControls.innerHTML = `
+                <a href="profile.html" class="auth-btn">My Profile</a>
+                <button class="auth-btn" id="signOutBtn" style="border:none; background:none; color: var(--white); cursor:pointer;">Log Out</button>
+            `;
+            // Re-select element after setting innerHTML
+            const desktopSignOutBtn = document.getElementById('signOutBtn'); 
+            if(desktopSignOutBtn) desktopSignOutBtn.addEventListener('click', handleLogout);
+            
+
+            // Mobile Menu: Only Profile and Logout
+            mobileAuthLinksContainer.innerHTML = `
+                <li><a href="profile.html" class="auth-btn">My Profile</a></li>
+                <li><a href="#" id="signOutBtnMobile" class="auth-btn">Log Out</a></li>
+            `;
+            const mobileSignOutBtn = document.getElementById('signOutBtnMobile');
+            if(mobileSignOutBtn) mobileSignOutBtn.addEventListener('click', handleLogout);
+
+            // Ensure colors are correct in logged-in state (always white here)
             authControls.querySelectorAll('.auth-btn').forEach(btn => {
                 btn.style.color = 'var(--white)';
             });
 
-            // Mobile Menu: Show Log In and Sign Up
-            mobileAuthLinksContainer.innerHTML = `
-                <li><a href="signin.html" class="auth-btn">Log In</a></li>
-                <li><a href="signup.html" class="auth-btn">Sign Up</a></li>
-            `;
-        }
-        
-        // Fix for scrolled state color change on desktop
-        if (header.classList.contains('scrolled')) {
-            // Ensure colors switch to dark when scrolled
-            authControls.querySelectorAll('.auth-btn').forEach(btn => {
-                btn.style.color = 'var(--secondary-color)';
-            });
-        }
-    };
 
-    const handleLogout = () => {
-        signOut(auth).then(() => {
-            showToast("Signed out successfully!");
-            renderAuthControls(null); // Update UI
-        }).catch(error => {
-            showToast("Logout error.", true);
-            console.error("Logout failed:", error);
-        });
-    };
+        } else {
+            // Logged Out State
+            
+            // Desktop: Show Log In and Sign Up buttons
+            authControls.innerHTML = `
+                <a href="signin.html" class="auth-btn">Log In</a>
+                <a href="signup.html" class="auth-btn">Sign Up</a>
+            `;
 
-    // Listen for authentication state changes and update the header buttons
-    onAuthStateChanged(auth, renderAuthControls);
+            // Mobile Menu: Show Log In and Sign Up
+            mobileAuthLinksContainer.innerHTML = `
+                <li><a href="signin.html" class="auth-btn">Log In</a></li>
+                <li><a href="signup.html" class="auth-btn">Sign Up</a></li>
+            `;
+            
+            // Ensure colors are correct in logged-out state (always white here)
+            authControls.querySelectorAll('.auth-btn').forEach(btn => {
+                btn.style.color = 'var(--white)';
+            });
+        }
+        
+        // Fix for scrolled state color change on desktop
+        if (header.classList.contains('scrolled')) {
+            // Ensure colors switch to dark secondary color when scrolled
+            authControls.querySelectorAll('.auth-btn').forEach(btn => {
+                btn.style.color = 'var(--secondary-color)';
+            });
+        }
+    };
+
+    const handleLogout = () => {
+        signOut(auth).then(() => {
+            showToast("Signed out successfully!");
+            renderAuthControls(null); // Update UI
+        }).catch(error => {
+            showToast("Logout error.", true);
+            console.error("Logout failed:", error);
+        });
+    };
+
+    // Listen for authentication state changes and update the header buttons
+    onAuthStateChanged(auth, renderAuthControls);
 
 
-    // --- 5, 6, 7. Utility Functions (Slider, Scroll, Nav) ---
-    const initSlider = () => { 
-        const slider = document.querySelector('.hero-slider');
-        const slides = document.querySelectorAll('.hero-slide');
-        const sliderNav = document.querySelector('.slider-nav');
-        if (!slider || slides.length <= 1) return;
+    // --- 5, 6, 7. Utility Functions (Slider, Scroll, Nav) ---
+    const initSlider = () => { 
+        const slider = document.querySelector('.hero-slider');
+        const slides = document.querySelectorAll('.hero-slide');
+        const sliderNav = document.querySelector('.slider-nav');
+        if (!slider || slides.length <= 1) return;
 
-        let currentIndex = 0;
-        let slideInterval;
+        let currentIndex = 0;
+        let slideInterval;
 
-        slides.forEach((_, i) => {
-            const dot = document.createElement('div');
-            dot.classList.add('slider-dot');
-            if (i === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => {
-                currentIndex = i;
-                updateSlider();
-                resetInterval();
-            });
-            sliderNav.appendChild(dot);
-        });
-        
-        const dots = document.querySelectorAll('.slider-dot');
-        const updateSlider = () => {
-            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
-        };
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.classList.add('slider-dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                currentIndex = i;
+                updateSlider();
+                resetInterval();
+            });
+            sliderNav.appendChild(dot);
+        });
+        
+        const dots = document.querySelectorAll('.slider-dot');
+        const updateSlider = () => {
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
+        };
 
-        const nextSlide = () => {
-            currentIndex = (currentIndex + 1) % slides.length;
-            updateSlider();
-        };
+        const nextSlide = () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateSlider();
+        };
 
-        const resetInterval = () => {
-            clearInterval(slideInterval);
-            slideInterval = setInterval(nextSlide, 5000);
-        };
+        const resetInterval = () => {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        };
 
-        slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
-        slider.addEventListener('mouseleave', resetInterval);
+        slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
+        slider.addEventListener('mouseleave', resetInterval);
 
-        resetInterval();
-    };
+        resetInterval();
+    };
 
-    const initScrollEffects = () => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.animated-section').forEach(el => observer.observe(el));
+    const initScrollEffects = () => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.animated-section').forEach(el => observer.observe(el));
 
-        window.addEventListener('scroll', () => {
-            if (header) header.classList.toggle('scrolled', window.scrollY > 50);
-            
-            // Also run auth control color update on scroll
-            if(window.scrollY > 50) {
-                 authControls.querySelectorAll('.auth-btn').forEach(btn => {
-                     btn.style.color = 'var(--secondary-color)';
-                 });
-            } else {
-                 authControls.querySelectorAll('.auth-btn').forEach(btn => {
-                     btn.style.color = 'var(--white)';
-                 });
-            }
-        });
-    };
-    
-    const initMobileNav = () => {
-        // The DOMContentLoaded listener handles the click and toggle logic.
-        // This function simply ensures we handle the mobile menu close on link click.
-        if (!navLinks) return; 
+        window.addEventListener('scroll', () => {
+            if (header) header.classList.toggle('scrolled', window.scrollY > 50);
+            
+            // Handle color switching for scrolled state
+            const isScrolled = window.scrollY > 50;
+            
+            // Apply color change to all white header elements
+            const headerElements = document.querySelectorAll('.logo a, .mini-cart a, .menu-btn, #desktop-nav a, .auth-btn');
 
-        navLinks.addEventListener('click', (e) => {
-             const target = e.target.closest('a');
-             if (target) {
-                 if (navLinks.classList.contains("active")) {
-                    navLinks.classList.remove('active');
-                    document.body.classList.remove('nav-open');
-                    // Reset icon (menuBtn is a global variable)
-                    const menuIcon = menuBtn ? menuBtn.querySelector('i') : null;
-                    if(menuIcon) {
-                        menuIcon.classList.remove('fa-times');
-                        menuIcon.classList.add('fa-bars');
-                    }
-                }
-             }
-        });
-    };
+            headerElements.forEach(el => {
+                el.style.color = isScrolled ? 'var(--secondary-color)' : 'var(--white)';
+            });
 
-    // --- 8. Event Listeners (Updated Quantity Logic) ---
-    if (productGrid) {
-        productGrid.addEventListener('click', (e) => {
-            const card = e.target.closest('.product-card');
-            if (!card) return;
-            
-            const productId = card.dataset.id;
-            const product = products.find(p => p.id === productId);
-            if (!product || product.isLive) return; // Skip if live product
+            // Specific fix for header title font (must also change)
+            const logoSpan = document.querySelector('.logo span');
+            if (logoSpan) {
+                logoSpan.style.color = isScrolled ? 'var(--secondary-color)' : 'var(--white)';
+            }
+            
+            // Specific fix for menu button text color
+            const menuBtnIcon = document.querySelector('.menu-btn');
+            if (menuBtnIcon) {
+                 menuBtnIcon.style.color = isScrolled ? 'var(--secondary-color)' : 'var(--white)';
+            }
+        });
+    };
+    
+    const initMobileNav = () => {
+        // The DOMContentLoaded listener handles the click and toggle logic.
+        if (!navLinks) return; 
 
-            const isGoat = product.id === 'goat';
-            const isMeat = product.isMeat;
-            const qtyEl = card.querySelector('.qty');
-            let currentQty = parseFloat(qtyEl.textContent);
+        navLinks.addEventListener('click', (e) => {
+             const target = e.target.closest('a');
+             if (target) {
+                 if (navLinks.classList.contains("active")) {
+                    navLinks.classList.remove('active');
+                    document.body.classList.remove('nav-open');
+                    const menuIcon = menuBtn ? menuBtn.querySelector('i') : null;
+                    if(menuIcon) {
+                        menuIcon.classList.remove('fa-times');
+                        menuIcon.classList.add('fa-bars');
+                    }
+                }
+             }
+        });
+    };
 
-            if (e.target.classList.contains('plus-btn')) {
-                const step = isMeat ? 0.25 : 1;
-                currentQty += step;
-            } else if (e.target.classList.contains('minus-btn')) {
-                const step = isMeat ? 0.25 : 1;
-                
-                let minQty;
-                if (isGoat) {
-                    minQty = 0.75; 
-                } else if (isMeat) {
-                    minQty = 0.5; 
-                } else {
-                    minQty = 1;
-                }
+    // --- 8. Event Listeners (Updated Quantity Logic) ---
+    if (productGrid) {
+        productGrid.addEventListener('click', (e) => {
+            const card = e.target.closest('.product-card');
+            if (!card) return;
+            
+            const productId = card.dataset.id;
+            const product = products.find(p => p.id === productId);
+            if (!product || product.isLive) return; // Skip if live product
 
-                currentQty = Math.max(minQty, currentQty - step);
-            } else if (e.target.classList.contains('add-to-cart-btn')) {
-                 handleAddToCart(productId, currentQty, card);
-                 return; 
-            }
-            
-            // Update the display
-            qtyEl.textContent = currentQty.toFixed(isMeat ? 2 : 0);
-            
-            // Update the displayed price
-            updatePriceDisplay(card, product); 
-        });
-    }
-    
-    // --- 9. Initialization ---
-    document.addEventListener("DOMContentLoaded", function() {
-        renderProducts();
-        updateCartCount();
-        initSlider();
-        initScrollEffects();
-        initMobileNav();
-        
-        // Final initialization of dynamic prices after rendering
-        document.querySelectorAll('.product-card').forEach(card => {
-            const product = products.find(p => p.id === card.dataset.id);
-            if (product) updatePriceDisplay(card, product);
-        });
-    });
+            const isGoat = product.id === 'goat';
+            const isMeat = product.isMeat;
+            const qtyEl = card.querySelector('.qty');
+            let currentQty = parseFloat(qtyEl.textContent);
+
+            if (e.target.classList.contains('plus-btn')) {
+                const step = isMeat ? 0.25 : 1;
+                currentQty += step;
+            } else if (e.target.classList.contains('minus-btn')) {
+                const step = isMeat ? 0.25 : 1;
+                
+                let minQty;
+                if (isGoat) {
+                    minQty = 0.75; 
+                } else if (isMeat) {
+                    minQty = 0.5; 
+                } else {
+                    minQty = 1;
+                }
+
+                currentQty = Math.max(minQty, currentQty - step);
+            } else if (e.target.classList.contains('add-to-cart-btn')) {
+                 handleAddToCart(productId, currentQty, card);
+                 return; 
+            }
+            
+            // Update the display
+            qtyEl.textContent = currentQty.toFixed(isMeat ? 2 : 0);
+            
+            // Update the displayed price
+            updatePriceDisplay(card, product); 
+        });
+    }
+    
+    // --- 9. Initialization ---
+    document.addEventListener("DOMContentLoaded", function() {
+        renderProducts();
+        updateCartCount();
+        initSlider();
+        initScrollEffects();
+        initMobileNav();
+        
+        // Final initialization of dynamic prices after rendering
+        document.querySelectorAll('.product-card').forEach(card => {
+            const product = products.find(p => p.id === card.dataset.id);
+            if (product) updatePriceDisplay(card, product);
+        });
+    });
 </script>
 </body>
 </html>
