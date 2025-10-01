@@ -62,35 +62,42 @@
             height: calc(100vh - 40px);
         }
 
-        /* --- 2. Header & Navigation (FIXED VISIBILITY) --- */
+        /* --- 2. Header & Navigation (FIXED SOLID BACKGROUND) --- */
         .header {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1rem 0;
             
-            /* FIX: Add a subtle dark gradient layer to ensure white text is always visible */
-            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
-            background-color: rgba(255, 255, 255, 0.2); /* Base transparency */
+            /* FIX: Default Solid Primary Color Background */
+            background-color: var(--primary-color);
+            background-image: none; /* Remove previous gradient */
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Soft shadow for lift */
             
-            -webkit-backdrop-filter: blur(5px);
-            backdrop-filter: blur(5px);
-            transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease, backdrop-filter 0.4s ease, background-image 0.4s ease;
+            transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease;
         }
         
-        /* SCROLLED STATE: Remove gradient and become solid white */
+        /* SCROLLED STATE: Transition to a slightly darker/more opaque version */
         .header.scrolled {
-            background-image: none; /* Remove gradient */
-            background-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            background-color: var(--primary-color-dark); /* Darker green on scroll */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15); /* Slightly stronger shadow */
             padding: 0.75rem 0;
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
         }
         
-        /* Header elements visibility */
+        /* Ensure all text/icons are white in the non-scrolled state (always primary color) */
         .logo a, .mini-cart a, .menu-btn, #desktop-nav a, .auth-btn {
-            /* Enhance text/icon shadow for better contrast against light images */
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.6); 
+            color: var(--white) !important; 
+            text-shadow: none; /* No shadow needed on solid background */
         }
-
+        
+        /* Scrolled state needs to switch to dark text */
+        .header.scrolled .logo a, 
+        .header.scrolled #desktop-nav a, 
+        .header.scrolled .menu-btn,
+        .header.scrolled .mini-cart a,
+        .header.scrolled .auth-btn { 
+            color: var(--white) !important; 
+        }
+        
         /* --- Desktop Header Alignment FIX --- */
         .header-inner { 
             display: flex; 
@@ -99,15 +106,12 @@
             gap: 20px;
         }
         
-        /* Logo & Text - Default (Unscrolled) is WHITE */
-        .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--white); text-decoration: none; }
+        .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; text-decoration: none; }
         .logo img { height: 40px; }
         .logo span { white-space: nowrap; }
 
-        /* HEADER ACTIONS: Container for Cart and Auth buttons */
         .header-actions { display: flex; align-items: center; gap: 20px; }
         
-        /* Desktop Navigation Links Container (Flex-grow allows it to fill space) */
         #desktop-nav { 
             display: flex; 
             align-items: center;
@@ -116,33 +120,21 @@
             justify-content: flex-end; 
         }
         
-        /* Desktop Navigation Links Text */
         #desktop-nav a { 
             font-weight: 500; 
             text-decoration: none; 
             padding: 0.5rem 0; 
             position: relative; 
-            color: var(--white); /* Default (Unscrolled) is White */
             transition: color 0.3s;
         }
 
-        /* SCROLLED STATE: Change everything to secondary-color (DARK) and remove shadow */
-        .header.scrolled .logo a, 
-        .header.scrolled #desktop-nav a, 
-        .header.scrolled .menu-btn,
-        .header.scrolled .mini-cart a,
-        .header.scrolled .auth-btn { 
-            color: var(--secondary-color) !important; 
-            text-shadow: none; /* Remove shadow when background is solid */
+        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; }
+        .mini-cart span { 
+            position: absolute; top: -8px; right: -10px; background-color: var(--secondary-color); /* Dark badge on green background */
+            color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; 
         }
-        .header.scrolled .mini-cart span { background-color: var(--primary-color); color: var(--white); }
-
-        /* AUTH BUTTON STYLING */
-        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; color: var(--white); }
-        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--white); }
-        .mini-cart span { position: absolute; top: -8px; right: -10px; background-color: var(--primary-color); color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
         
-        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--white); }
+        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; }
 
         /* --- MOBILE MENU HANDLING (The slide-out) --- */
         .nav-links { 
@@ -156,30 +148,20 @@
             transform: translateX(100%);
             transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
             list-style: none; padding: 0;
-            display: none; /* Hidden by default for both desktop and mobile, show only when active/via JS in mobile */
+            display: none; 
         }
         .nav-links.active { transform: translateX(0); }
         .nav-links li { padding: 0; }
         .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
-        .nav-links #mobile-auth-links { /* Styling for auth links inside mobile menu */
-            display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1.5rem;
-        }
+        .nav-links #mobile-auth-links { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1.5rem; }
 
         /* --- 8. Responsive Design --- */
         @media (max-width: 992px) {
-            #desktop-nav { display: none !important; } /* Hide the inline desktop links */
+            #desktop-nav { display: none !important; } 
             .header-actions { margin-right: 0; gap: 15px; }
-            .menu-btn { display: block !important; } /* Show hamburger icon */
-            
-            /* Hide the auth controls on mobile header since they are in the slide-out nav-links */
-            #auth-controls {
-                display: none;
-            }
-            
-            /* Crucial mobile menu display fix */
-            .nav-links { 
-                 display: flex; /* Force it to be visible in the flow for mobile, then transform handles showing/hiding */
-            }
+            .menu-btn { display: block !important; } 
+            #auth-controls { display: none; }
+            .nav-links { display: flex; } 
         }
 
         /* --- 3. Hero Slider (rest of the sections remain the same) --- */
@@ -325,6 +307,43 @@
         .slider-nav { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; gap: 12px; }
         .slider-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; }
         .slider-dot.active { background: var(--white); transform: scale(1.2); }
+        
+        /* --- FINAL HEADER FIX: Ensure dark color on scroll matches the overall design --- */
+        .header.scrolled .logo a, 
+        .header.scrolled #desktop-nav a, 
+        .header.scrolled .menu-btn,
+        .header.scrolled .mini-cart a,
+        .header.scrolled .auth-btn { 
+            /* Set to dark secondary color when scrolled */
+            color: var(--secondary-color) !important; 
+            text-shadow: none; 
+        }
+        .header.scrolled .mini-cart span { background-color: var(--primary-color); color: var(--white); }
+        .header.scrolled {
+            background-color: rgba(255, 255, 255, 0.9); /* Lighter solid white on scroll */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        /* --- FINAL HEADER SOLID COLOR --- */
+        .header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1rem 0;
+            
+            /* FIX: Default Solid Primary Color Background */
+            background-color: var(--primary-color);
+            background-image: none; 
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+            
+            transition: background-color 0.4s ease, box-shadow 0.4s ease, padding 0.4s ease;
+        }
+
+        /* Ensure all text/icons are white in the default (primary color) state */
+        .logo a, .mini-cart a, .menu-btn, #desktop-nav a, .auth-btn {
+            color: var(--white) !important; 
+            text-shadow: none; 
+        }
+        .mini-cart span { background-color: var(--secondary-color); color: var(--white); }
 
     </style>
 </head>
