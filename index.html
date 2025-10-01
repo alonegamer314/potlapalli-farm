@@ -22,7 +22,6 @@
             --border-light: #e0e0e0;
             --shadow-light: rgba(0,0,0,0.08);
             --shadow-dark: rgba(0,0,0,0.12);
-            --info-color: #007bff; /* Added for the policy alert */
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         html { scroll-behavior: smooth; }
@@ -31,34 +30,36 @@
         img { max-width: 100%; display: block; }
         a, button { transition: all 0.3s ease; }
 
-        /* --- Policy Alert Bar CSS (NEW) --- */
+        /* --- Policy Alert Bar CSS (RESTORED & STYLED) --- */
         .order-policy-alert {
             position: fixed;
-            top: 70px; /* Below the header, which is 1rem padding + height */
+            top: 70px; /* Calculated: Header padding + height */
             left: 0;
             width: 100%;
-            background-color: var(--info-color); /* Use a blue/info color */
+            background-color: var(--secondary-color); 
             color: var(--white);
             padding: 0.75rem 0;
-            z-index: 900; /* Below header, above content */
+            z-index: 900; 
             text-align: center;
             font-size: 0.95rem;
             font-weight: 500;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             line-height: 1.4;
+            letter-spacing: 0.5px;
         }
         .order-policy-alert strong {
             font-weight: 700;
-            color: #ffc107; /* Bright color for emphasis */
+            color: var(--primary-color); 
+            margin: 0 4px;
         }
-        /* Adjust main content padding to account for the alert bar */
+        
+        /* Adjust main content and hero to account for the alert bar (approx 40px height) */
         main {
-            padding-top: 50px; /* Initial adjustment to push content down */
+            padding-top: 40px; 
         }
         .hero {
-            /* Adjust hero height/padding to account for the alert */
-            margin-top: 50px; 
-            height: calc(100vh - 50px);
+            margin-top: 40px; 
+            height: calc(100vh - 40px);
         }
 
         /* --- 2. Header & Navigation (FIXED ALIGNMENT) --- */
@@ -81,7 +82,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            gap: 20px; /* Added gap for breathing room */
+            gap: 20px;
         }
         
         /* Logo & Text - Default (Unscrolled) is WHITE */
@@ -168,7 +169,7 @@
         }
 
         /* --- 3. Hero Slider (rest of the sections remain the same) --- */
-        .hero { position: relative; height: 100vh; color: var(--white); overflow: hidden; }
+        .hero { position: relative; color: var(--white); overflow: hidden; }
         .hero-slider { display: flex; height: 100%; transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1); }
         .hero-slide { min-width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 1rem; }
         .hero-slide::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.3)); }
@@ -211,7 +212,7 @@
         .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-light); background-color: var(--background-light); cursor: pointer; font-size: 1.3rem; color: var(--secondary-color); }
         .qty-btn:hover { background-color: #e9ecef; }
         .qty { font-weight: 600; font-size: 1.2rem; }
-        .unit-text { font-size: 0.9rem; color: var(--text-light); } 
+        .unit-text { font-size: 0.9rem; color: var(--text-light); } 
 
         .add-to-cart-btn { background: var(--primary-color); color: var(--white); border: none; padding: 0.9rem 1.5rem; border-radius: 50px; cursor: pointer; font-weight: 600; width: 100%; font-size: 1rem; }
         .add-to-cart-btn:hover { background: var(--primary-color-dark); }
@@ -245,39 +246,6 @@
         .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background-color: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 2000; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
         .toast.show { bottom: 20px; }
         body.nav-open { overflow: hidden; }
-        
-        /* --- Policy Alert Bar CSS (NEW) --- */
-        .order-policy-alert {
-            position: fixed;
-            /* Adjust top position based on header height (approx 70px) */
-            top: 70px; 
-            left: 0;
-            width: 100%;
-            background-color: var(--secondary-color); 
-            color: var(--white);
-            padding: 0.75rem 0;
-            z-index: 900; 
-            text-align: center;
-            font-size: 0.95rem;
-            font-weight: 500;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            line-height: 1.4;
-            letter-spacing: 0.5px;
-        }
-        .order-policy-alert strong {
-            font-weight: 700;
-            color: var(--primary-color); 
-            margin: 0 4px;
-        }
-        /* Adjusted main content padding to account for the alert bar */
-        main {
-            padding-top: 40px; 
-        }
-        .hero {
-            /* Adjust hero height/padding to account for the alert */
-            margin-top: 40px; /* Moves the hero down by the alert height */
-            height: calc(100vh - 40px);
-        }
         
     </style>
 </head>
@@ -421,12 +389,12 @@
 
     // Initialize Firebase app instance (using your consistent config):
     const firebaseConfig = {
-        apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-        authDomain: "potlapallifarm.firebaseapp.com",
-        projectId: "potlapallifarm",
-        storageBucket: "potlapallifarm.firebasestorage.app",
+        apiKey: "##FIREBASE_API_KEY##",
+        authDomain: "##FIREBASE_AUTH_DOMAIN##",
+        projectId: "##FIREBASE_PROJECT_ID##",
+        storageBucket: "##FIREBASE_STORAGE_BUCKET##",
         messagingSenderId: "1017629729159",
-        appId: "1:1017629729159:web:357c420a9de335d427b322",
+        appId: "##FIREBASE_APP_ID##",
     };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -608,7 +576,7 @@
             <li><a href="#home">Home</a></li>
             <li><a href="#products">Products</a></li>
             <li><a href="about.html">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="contact-us.html">Contact</a></li>
             <div id="mobile-auth-links">
                 </div>
         `;
