@@ -1270,6 +1270,10 @@ footer {
     -webkit-backdrop-filter: blur(4px);
 }
 
+.global-loader[hidden] {
+   display: none;
+}
+
 .spinner {
     width: 44px;
     height: 44px;
