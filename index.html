@@ -3,53 +3,57 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <meta name="theme-color" content="#27ae60" />
-    <title>Potlapalli Farms — Fresh Farm Produce, Delivered</title>
-    <meta name="description" content="Premium organic goat meat, country chicken, and farm-fresh eggs delivered to your doorstep. Order Sundays 6 AM – 7 PM IST." />
+    <meta name="theme-color" content="#1e4d2b" />
+    <title>Potlapalli Farms — Real food, from a real farm</title>
+    <meta name="description" content="Pasture-raised goat meat, country chicken, and farm-fresh eggs. Harvested Sunday morning, delivered the same day. Family-run in Andhra Pradesh." />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-    <!-- Toast notification container -->
-    <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
-    <!-- Loading overlay -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
     <div id="global-loader" class="global-loader" hidden>
         <div class="spinner"></div>
     </div>
 
-    <!-- ===== HEADER ===== -->
+    <!-- ===== POLICY BAR ===== -->
     <div class="order-policy-alert">
-        <strong>⚠️ Order Policy:</strong> Deliveries on Sundays (6 AM – 7 PM IST) · Within 30–60 mins 💚
+        <span>
+            Sunday deliveries only
+            <span class="dot">·</span>
+            Order before Saturday 6 PM
+            <span class="dot">·</span>
+            6 AM – 7 PM IST
+        </span>
     </div>
 
+    <!-- ===== HEADER ===== -->
     <header class="header" id="header">
         <div class="container header-inner">
             <div class="logo">
-                <a href="index.html">
-                    <img src="assets/logo.png" alt="Potlapalli Farms" onerror="this.style.display='none'"/>
-                    <span>Potlapalli Farms</span>
+                <a href="index.html" aria-label="Potlapalli Farms — Home">
+                    <span class="logo-mark">Potlapalli Farms</span>
                 </a>
             </div>
 
             <nav class="desktop-nav" id="desktop-nav">
-                <a href="#home">Home</a>
-                <a href="#products">Products</a>
+                <a href="#products">Shop</a>
                 <a href="#how-it-works">How It Works</a>
+                <a href="orders.html">My Orders</a>
                 <a href="#contact">Contact</a>
             </nav>
 
             <div class="header-actions">
-                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                <button id="themeToggle" class="icon-btn theme-toggle" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
 
-                <button id="cartBtn" class="mini-cart" aria-label="Open cart">
+                <button id="cartBtn" class="icon-btn mini-cart" aria-label="Open cart">
                     <i class="fas fa-shopping-bag"></i>
                     <span id="cartCount">0</span>
                 </button>
@@ -63,7 +67,7 @@
         </div>
     </header>
 
-    <!-- Mobile nav overlay -->
+    <!-- ===== MOBILE NAV ===== -->
     <div class="mobile-nav" id="mobileNav">
         <div class="mobile-nav-header">
             <span class="mobile-nav-title">Menu</span>
@@ -78,7 +82,7 @@
     <!-- ===== CART DRAWER ===== -->
     <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
         <div class="cart-drawer-header">
-            <h3><i class="fas fa-shopping-bag"></i> Your Cart</h3>
+            <h3>Your Cart</h3>
             <button class="cart-drawer-close" id="cartDrawerClose" aria-label="Close cart">
                 <i class="fas fa-times"></i>
             </button>
@@ -90,49 +94,105 @@
 
     <!-- ===== MAIN ===== -->
     <main>
+
         <!-- HERO -->
         <section class="hero" id="home">
             <div class="hero-slider" id="heroSlider">
                 <div class="hero-slide">
-                    <img src="assets/images/shopnow.jpeg" alt="Farm fields" onerror="this.src='https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=1600'">
+                    <img src="assets/images/shopnow.jpeg" alt="Farm fields at dawn" onerror="this.src='https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=1600'">
                     <div class="hero-content">
-                        <h1>Farm Freshness, Delivered.</h1>
-                        <p>The best of nature, from our farm to your family.</p>
-                        <a href="#products" class="hero-btn">Shop Now <i class="fas fa-arrow-right"></i></a>
+                        <h1>Real food,<br><em>from a real farm.</em></h1>
+                        <p>Order by Saturday 6 PM. We harvest Sunday morning and deliver to your door the same day.</p>
+                        <a href="#products" class="hero-btn">
+                            Shop this week's produce
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
                 <div class="hero-slide">
-                    <img src="assets/images/hero.jpg" alt="Organic goodness" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1600'">
+                    <img src="assets/images/hero.jpg" alt="Country chicken on open pasture" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1600'">
                     <div class="hero-content">
-                        <h1>Pure, Organic Goodness</h1>
-                        <p>No chemicals. No compromises. Just honest, healthy food.</p>
-                        <a href="#products" class="hero-btn">Explore <i class="fas fa-arrow-right"></i></a>
+                        <h1>Country chicken,<br><em>as it should taste.</em></h1>
+                        <p>Free-range, slow-grown, and smoked over turmeric. Raised the way it has always been done.</p>
+                        <a href="#products" class="hero-btn">
+                            Explore the range
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
                 <div class="hero-slide">
-                    <img src="assets/images/goat.jpg" alt="Ethically raised" onerror="this.src='https://images.unsplash.com/photo-1535083783855-76ae62b2914e?auto=format&fit=crop&q=80&w=1600'">
+                    <img src="assets/images/goat.jpg" alt="Pasture-raised goats" onerror="this.src='https://images.unsplash.com/photo-1535083783855-76ae62b2914e?auto=format&fit=crop&q=80&w=1600'">
                     <div class="hero-content">
-                        <h1>Ethically Raised, Freshly Delivered</h1>
-                        <p>Free-range, grass-fed, and treated with care — always.</p>
-                        <a href="#products" class="hero-btn">Order Fresh <i class="fas fa-arrow-right"></i></a>
+                        <h1>Pasture-raised<br><em>goat meat.</em></h1>
+                        <p>Tender, ethically raised, and cut fresh on order day. From a family that raises them personally.</p>
+                        <a href="#products" class="hero-btn">
+                            Order fresh
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>
             <div class="slider-nav" id="sliderNav"></div>
         </section>
 
+        <!-- TRUST BAR -->
+        <section class="trust-bar">
+            <div class="container trust-bar-inner">
+                <div class="trust-item">
+                    <i class="fas fa-seedling"></i>
+                    <div class="trust-item-text">
+                        <span class="trust-item-label">Raised</span>
+                        <span class="trust-item-value">On our own farm</span>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-clock"></i>
+                    <div class="trust-item-text">
+                        <span class="trust-item-label">Delivered</span>
+                        <span class="trust-item-value">Same day, always</span>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-leaf"></i>
+                    <div class="trust-item-text">
+                        <span class="trust-item-label">Grown</span>
+                        <span class="trust-item-value">Chemical-free</span>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-users"></i>
+                    <div class="trust-item-text">
+                        <span class="trust-item-label">Served</span>
+                        <span class="trust-item-value">500+ families</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- WHY US -->
         <section id="why-choose-us" class="section animated-section">
             <div class="container">
-                <div class="section-header">
-                    <h2>Why Potlapalli Farms?</h2>
-                    <p>Rooted in tradition, delivered with modern convenience.</p>
+                <div class="section-header left">
+                    <span class="eyebrow">Why our customers stay</span>
+                    <h2>Not a marketplace. A single farm.</h2>
+                    <p>Every item comes from the same land in Andhra Pradesh. The same hands that raise them, pack them for you.</p>
                 </div>
                 <div class="features-grid">
-                    <div class="feature-card"><div class="icon"><i class="fas fa-leaf"></i></div><h3>100% Organic</h3><p>Grown naturally without harmful pesticides or chemicals.</p></div>
-                    <div class="feature-card"><div class="icon"><i class="fas fa-truck"></i></div><h3>Farm to Doorstep</h3><p>We harvest, pack, and deliver for maximum freshness.</p></div>
-                    <div class="feature-card"><div class="icon"><i class="fas fa-heart"></i></div><h3>Ethically Raised</h3><p>Free-range, grass-fed, and treated with genuine care.</p></div>
-                    <div class="feature-card"><div class="icon"><i class="fas fa-shield-alt"></i></div><h3>Quality Assured</h3><p>Hygienically packed to preserve nutrition and taste.</p></div>
+                    <div class="feature-card">
+                        <div class="icon"><i class="fas fa-seedling"></i></div>
+                        <h3>Raised on pasture</h3>
+                        <p>Our animals roam free, eat grass and grain, and are never given growth hormones.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon"><i class="fas fa-box"></i></div>
+                        <h3>Harvested to order</h3>
+                        <p>Nothing sits in cold storage. We harvest only after you order, on Sunday morning.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon"><i class="fas fa-house-chimney"></i></div>
+                        <h3>Family-run</h3>
+                        <p>You speak to us directly. No call centres, no middlemen, no strangers handling your food.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -140,9 +200,10 @@
         <!-- PRODUCTS -->
         <section class="section" id="products">
             <div class="container">
-                <div class="section-header">
-                    <h2>Our Fresh Produce</h2>
-                    <p>Handpicked and curated with care, from our fields to your plate.</p>
+                <div class="section-header left">
+                    <span class="eyebrow">This week's selection</span>
+                    <h2>Fresh from the farm</h2>
+                    <p>Nine items, all raised or grown by us. Prices are per kilogram unless stated otherwise.</p>
                 </div>
                 <div class="product-grid" id="product-grid"></div>
             </div>
@@ -152,8 +213,9 @@
         <section id="upcoming-products-section" class="section animated-section">
             <div class="container">
                 <div class="section-header">
-                    <h2><i class="fas fa-seedling" style="color:var(--primary)"></i> Coming Soon</h2>
-                    <p>We're expanding with more fresh, high-quality organic items!</p>
+                    <span class="eyebrow">Coming to your table</span>
+                    <h2>Expanding soon</h2>
+                    <p>Freshwater fish, buffalo milk, and oyster mushrooms are on the way. Join our WhatsApp list to know first.</p>
                 </div>
                 <ul class="upcoming-list" id="upcoming-list"></ul>
             </div>
@@ -162,11 +224,26 @@
         <!-- HOW IT WORKS -->
         <section id="how-it-works" class="section animated-section">
             <div class="container">
-                <div class="section-header"><h2>How It Works</h2></div>
+                <div class="section-header">
+                    <span class="eyebrow">From order to doorstep</span>
+                    <h2>How it works</h2>
+                </div>
                 <div class="how-it-works-grid">
-                    <div class="step-card"><div class="icon"><i class="fas fa-mobile-screen-button"></i></div><h3>1. Order Online</h3><p>Browse and place your order in a few clicks.</p></div>
-                    <div class="step-card"><div class="icon"><i class="fas fa-box-open"></i></div><h3>2. Harvest & Pack</h3><p>We harvest fresh from the farm after you order.</p></div>
-                    <div class="step-card"><div class="icon"><i class="fas fa-bolt"></i></div><h3>3. Fast Delivery</h3><p>Delivered to your doorstep at peak freshness.</p></div>
+                    <div class="step-card">
+                        <span class="step-number">01</span>
+                        <h3>You order by Saturday</h3>
+                        <p>Place your order any time before Saturday 6 PM IST. Choose your items, quantities, and delivery address.</p>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-number">02</span>
+                        <h3>We harvest Sunday morning</h3>
+                        <p>Your order is packed fresh the same morning, hygienically, and labelled with your name and OTP.</p>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-number">03</span>
+                        <h3>Delivered the same day</h3>
+                        <p>Within 30–60 minutes of dispatch. Share your OTP with the delivery person when you receive it.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -174,11 +251,19 @@
         <!-- TESTIMONIALS -->
         <section id="testimonials" class="section animated-section">
             <div class="container">
-                <div class="section-header"><h2>What Our Customers Say</h2></div>
+                <div class="section-header">
+                    <span class="eyebrow">In their words</span>
+                    <h2>What customers say</h2>
+                </div>
                 <div class="testimonial-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p>"The best meat I've had in years! The freshness is unparalleled. You can truly taste the difference."</p>
-                    <div class="testimonial-author">— Priya S, Hyderabad</div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p>"The difference is unmistakable. The meat tastes the way I remember from my grandmother's village — not the pale, watery kind from supermarkets."</p>
+                    <div class="testimonial-author">
+                        <strong>Priya S.</strong>
+                        Hyderabad
+                    </div>
                 </div>
             </div>
         </section>
@@ -188,31 +273,33 @@
     <footer id="contact">
         <div class="container">
             <div class="footer-grid">
-                <div class="footer-col">
-                    <h4>Potlapalli Farms</h4>
-                    <p>Dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p>
+                <div class="footer-brand">
+                    <span class="logo-mark">Potlapalli Farms</span>
+                    <p>A family farm in Andhra Pradesh, raising food the way it should be raised — slowly, honestly, and in the open.</p>
                 </div>
                 <div class="footer-col">
-                    <h4>Quick Links</h4>
-                    <a href="#home">Home</a>
-                    <a href="#products">Products</a>
-                    <a href="orders.html">My Orders</a>
-                    <a href="profile.html">My Profile</a>
+                    <h4>Shop</h4>
+                    <a href="#products">All products</a>
+                    <a href="orders.html">My orders</a>
+                    <a href="cart.html">My cart</a>
                 </div>
                 <div class="footer-col">
-                    <h4>Contact</h4>
-                    <p>Potlapalli Farms, AP</p>
-                    <p><a href="mailto:pgf.natural@gmail.com">pgf.natural@gmail.com</a></p>
-                    <p><a href="tel:+917981059178">+91 79810 59178</a></p>
+                    <h4>Company</h4>
+                    <a href="about.html">Our story</a>
+                    <a href="#how-it-works">How it works</a>
+                    <a href="terms.html">Terms & Privacy</a>
                 </div>
                 <div class="footer-col">
-                    <h4>Follow Us</h4>
-                    <a href="https://www.instagram.com/potlapallifarms" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> Instagram</a>
-                    <a href="https://wa.me/917981059178" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    <h4>Get in touch</h4>
+                    <a href="mailto:pgf.natural@gmail.com"><i class="fas fa-envelope"></i> pgf.natural@gmail.com</a>
+                    <a href="tel:+917981059178"><i class="fas fa-phone"></i> +91 79810 59178</a>
+                    <a href="https://wa.me/917981059178" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp us</a>
+                    <a href="https://www.instagram.com/potlapallifarms" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> @potlapallifarms</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2025 Potlapalli Farms. All rights reserved. Made with 💚 in Andhra Pradesh.</p>
+                <span>© 2025 Potlapalli Farms. All rights reserved.</span>
+                <span>Made with care in Andhra Pradesh.</span>
             </div>
         </div>
     </footer>
