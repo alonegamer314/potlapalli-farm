@@ -1,447 +1,1234 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Your cart at Potlapalli Farm — fresh goat meat, eggs, milk & more" />
-    <title>Your Cart - Potlapalli Farm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#1e4d2b" />
+    <title>Your Cart — Potlapalli Farms</title>
+    <meta name="description" content="Review your fresh produce order before checkout." />
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+    <link rel="stylesheet" href="css/style.css" />
+
     <style>
-        /* --- 1. Foundational Styles & Variables --- */
-        :root {
-            --primary-color: #27ae60;
-            --primary-color-dark: #1e874b;
-            --secondary-color: #2c3e50;
-            --background-light: #f8f9fa;
-            --text-dark: #333;
-            --text-light: #555;
-            --white: #fff;
-            --border-light: #e0e0e0;
-            --danger-color: #e74c3c;
-            --shadow-light: rgba(0,0,0,0.08);
-            --shadow-dark: rgba(0,0,0,0.12);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        html { scroll-behavior: smooth; }
-        /* FIX: Adjusted padding-top to account for header + alert bar (~100px total) */
-        body { background: var(--background-light); color: var(--text-dark); padding-top: 6.5rem; }
-        .container { width: 90%; max-width: 1100px; margin: 0 auto; }
-        a, button { transition: all 0.3s ease; }
-        
-        /* --- Policy Alert Bar CSS (NEW) --- */
-        .order-policy-alert {
-            position: fixed;
-            top: 70px; /* Below the fixed header */
-            left: 0;
-            width: 100%;
-            background-color: var(--secondary-color); 
-            color: var(--white);
-            padding: 0.75rem 0;
-            z-index: 900; 
-            text-align: center;
-            font-size: 0.95rem;
-            font-weight: 500;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            line-height: 1.4;
-            letter-spacing: 0.5px;
-        }
-        .order-policy-alert strong {
-            font-weight: 700;
-            color: var(--primary-color); 
-            margin: 0 4px;
+        /* ============================================================
+           CART PAGE — page-specific styles
+           ============================================================ */
+
+        .cart-page-main {
+            padding: 56px 0 80px;
+            background: var(--bg-main);
+            min-height: calc(100vh - var(--header-height) - var(--alert-height));
         }
 
-        /* --- Floating Clock Widget (NEW FEATURE) --- */
-        .time-floater {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--secondary-color);
-            color: var(--white);
-            padding: 10px 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        .cart-page-header {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .cart-page-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 6px;
+        }
+
+        .cart-page-header .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .cart-page-header .cart-total-inline {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            letter-spacing: -0.01em;
+        }
+
+        .cart-page-header .cart-total-inline strong {
+            font-weight: 800;
+            color: var(--text-main);
+            margin-left: 6px;
+        }
+
+        /* Layout */
+        .cart-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 380px;
+            gap: 32px;
+            align-items: flex-start;
+        }
+
+        /* Cart items container */
+        .cart-items-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .cart-items-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-warm);
+        }
+
+        .cart-items-head h2 {
+            font-family: var(--font-body);
+            font-size: 11px;
             font-weight: 600;
-            font-size: 0.9rem;
-            z-index: 1000;
-            text-align: center;
-            border: 2px solid transparent;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .cart-items-head .cart-items-count {
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Individual item */
+        .cart-line {
+            display: grid;
+            grid-template-columns: 92px minmax(0, 1fr) auto;
+            gap: 20px;
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+            transition: background 0.2s ease;
+            animation: fadeSlideIn 0.35s ease;
+        }
+
+        .cart-line:last-child { border-bottom: none; }
+
+        .cart-line:hover { background: var(--bg-warm); }
+
+        .cart-line.removing {
+            opacity: 0;
+            transform: translateX(-20px);
             transition: all 0.3s ease;
         }
-        .time-floater.sunday {
-            background-color: var(--primary-color);
-            border-color: var(--white);
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+
+        .cart-line-img-wrap {
+            position: relative;
+            width: 92px;
+            height: 92px;
         }
 
-
-        /* --- 2. Header (Consistent with index.html structure) --- */
-        .header { 
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; 
-            /* Solid Primary Color Background */
-            background: var(--primary-color);
-            padding: 1rem 0; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+        .cart-line-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            background: var(--bg-warm);
         }
-        .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-        
-        .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--white); text-decoration: none; }
-        .logo img { height: 40px; } 
-        .logo span { white-space: nowrap; }
 
-        /* Desktop Nav */
-        #desktop-nav { 
-            display: flex; align-items: center; gap: 30px; 
-            flex-grow: 1; justify-content: flex-end; 
+        .cart-line-img-wrap .item-badge {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: var(--forest);
+            color: var(--cream);
+            font-family: var(--font-body);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 3px 7px;
+            border-radius: var(--radius-pill);
         }
-        #desktop-nav a { text-decoration: none; color: var(--white); font-weight: 500; }
 
-        /* Header Actions (Cart & Auth) */
-        .header-actions { display: flex; align-items: center; gap: 20px; }
-        
-        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--white); }
-        .mini-cart span { 
-            position: absolute; top: -8px; right: -10px; 
-            background-color: var(--secondary-color); /* Dark badge on green header */
-            color: var(--white); 
-            font-size: 0.7rem; font-weight: 600; 
-            border-radius: 50%; width: 18px; height: 18px; 
-            display: flex; align-items: center; justify-content: center; 
+        .cart-line-body {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
-        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; color: var(--white); }
 
-        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--white); }
+        .cart-line-name {
+            font-family: var(--font-display);
+            font-size: 1.02rem;
+            font-weight: 700;
+            letter-spacing: -0.015em;
+            color: var(--text-main);
+            line-height: 1.25;
+        }
 
-        /* Mobile Slide-Out Menu Styles (minimal for now, assuming external CSS handles full functionality) */
-        .nav-links { display: none; } 
+        .cart-line-meta {
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
 
-        /* --- 3. Main Cart Page Layout --- */
-        .cart-page { padding: 4rem 1rem; }
-        .cart-header h1 { font-family: 'Playfair Display', serif; color: var(--secondary-color); font-size: 2.8rem; text-align: center; margin-bottom: 1rem; }
-        .cart-header p { text-align: center; font-size: 1.1rem; color: var(--text-light); margin-bottom: 3rem; }
-        .cart-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 2.5rem; align-items: flex-start; }
+        .cart-line-meta .dot-sep {
+            color: var(--stone-light);
+            font-size: 0.6rem;
+        }
 
-        /* --- 4. Cart Items List (VISUAL IMPROVEMENTS) --- */
-        .cart-items { background: var(--white); border-radius: 16px; box-shadow: 0 8px 30px var(--shadow-light); }
-        .cart-item { display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border-bottom: 1px solid var(--border-light); transition: opacity 0.4s ease, transform 0.4s ease; }
-        .cart-item.removing { opacity: 0; transform: scale(0.95); }
-        .cart-item:last-child { border-bottom: none; }
-        .cart-item img { width: 100px; height: 100px; border-radius: 12px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .item-details { flex-grow: 1; }
-        .item-details h4 { font-size: 1.2rem; font-weight: 600; color: var(--secondary-color); margin-bottom: 0.25rem; }
-        .item-details p { font-size: 1rem; color: var(--text-light); font-weight: 500; }
-        .quantity-controls { display: flex; align-items: center; gap: 1rem; margin-top: 0.8rem; }
-        .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-light); background: var(--background-light); cursor: pointer; font-size: 1.2rem; color: var(--text-dark); transition: all 0.2s; }
-        .qty-btn:hover { background-color: #e9ecef; }
-        .qty { font-weight: 600; font-size: 1.1rem; min-width: 20px; text-align: center; }
-        .item-total { 
-            font-weight: 700; 
-            font-size: 1.3rem; 
-            color: var(--primary-color-dark); /* Highlighted total */
+        .cart-line-stepper-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 8px;
+        }
+
+        .cart-line-stepper {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--bg-main);
+        }
+
+        .cart-line-stepper button {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            color: var(--text-main);
+            transition: var(--trans-fast);
+        }
+
+        .cart-line-stepper button:hover:not(:disabled) {
+            background: var(--charcoal);
+            color: var(--cream);
+        }
+
+        .cart-line-stepper button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .cart-line-stepper .qty-value {
+            min-width: 58px;
+            text-align: center;
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-main);
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            line-height: 32px;
+            padding: 0 6px;
+        }
+
+        .cart-line-remove {
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            transition: var(--trans-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cart-line-remove:hover {
+            color: var(--danger);
+            background: rgba(177, 58, 42, 0.06);
+        }
+
+        .cart-line-total {
+            text-align: right;
+            align-self: flex-start;
+            padding-top: 4px;
+        }
+
+        .cart-line-total .line-total {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
             white-space: nowrap;
         }
-        .remove-btn { background: none; border: none; color: var(--danger-color); font-size: 1.2rem; cursor: pointer; margin-left: 1rem; padding: 0.5rem; border-radius: 50%; }
-        .remove-btn:hover { background-color: #fef2f2; }
-        
-        .undo-container { padding: 1rem 1.5rem; background-color: #fef2f2; text-align: center; font-size: 0.9rem; }
-        .undo-btn { background: none; border: none; color: var(--primary-color); text-decoration: underline; cursor: pointer; font-weight: 600; }
 
-        /* --- 5. Order Summary Card (VISUAL IMPROVEMENTS) --- */
-        .cart-summary { background: var(--white); border-radius: 16px; box-shadow: 0 8px 30px var(--shadow-light); padding: 2rem; position: sticky; top: 120px; border: 1px solid var(--primary-color); }
-        .cart-summary h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--secondary-color); text-align: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 1rem; }
-        .summary-total { margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--secondary-color); font-weight: 700; font-size: 1.3rem; }
-        .btn { display: block; width: 100%; padding: 0.9rem 1.6rem; text-align: center; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1.05rem; cursor: pointer; transition: all 0.3s; }
-        .btn-primary { background: var(--primary-color); color: var(--white); border: 2px solid var(--primary-color); margin-bottom: 1rem; }
-        .btn-primary:hover { background: var(--primary-color-dark); border-color: var(--primary-color-dark); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4); }
-        .btn-outline { background: transparent; border: 2px solid var(--secondary-color); color: var(--secondary-color); }
-        .btn-outline:hover { background: var(--secondary-color); color: var(--white); }
-
-        /* --- 6. Empty Cart State --- */
-        .empty-cart { text-align: center; padding: 4rem; background: var(--white); border-radius: 16px; box-shadow: 0 8px 30px var(--shadow-light); }
-        .empty-cart h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--secondary-color); margin-bottom: 1rem; }
-        .empty-cart p { font-size: 1.1rem; color: var(--text-light); margin-bottom: 2rem; }
-        
-        /* --- 7. Random Click Section --- */
-        .random-click-section { padding: 4rem 1rem; }
-        .random-click-card { max-width: 400px; margin: 0 auto; background: var(--white); padding: 1rem; border-radius: 8px; box-shadow: 0 10px 40px var(--shadow-dark); text-align: center; transform: rotate(-2deg); }
-        .random-click-card:hover { transform: rotate(0deg) scale(1.02); }
-        .random-click-card h3 { font-family: 'Playfair Display', serif; margin-bottom: 1rem; }
-        .random-click-card img {
-            border-radius: 4px;
-            max-width: 100%;
-            height: auto;
-            max-height: 400px;
-            object-fit: cover;
-            display: block;
-            margin: 0 auto;
+        .cart-line-total .line-unit {
+            font-family: var(--font-body);
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+            white-space: nowrap;
         }
-        .random-click-card p { font-size: 0.9rem; color: var(--text-light); margin-top: 1rem; font-style: italic; }
+
+        /* Summary card */
+        .cart-summary {
+            background: var(--bg-warm);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            position: sticky;
+            top: calc(var(--header-height) + var(--alert-height) + 20px);
+        }
+
+        .cart-summary h3 {
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .summary-row span:last-child {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .summary-row .free-badge {
+            color: var(--forest);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+        }
+
+        [data-theme="dark"] .summary-row .free-badge { color: #6bc487; }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-strong);
+            margin-bottom: 20px;
+        }
+
+        .summary-total-label {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .summary-total-value {
+            font-family: var(--font-display);
+            font-size: 1.65rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-main);
+        }
+
+        .summary-checkout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            background: var(--terracotta);
+            color: var(--cream);
+            padding: 16px 24px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            transition: var(--trans-fast);
+            cursor: pointer;
+        }
+
+        .summary-checkout-btn:hover {
+            background: var(--terracotta-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .summary-continue {
+            display: block;
+            text-align: center;
+            margin-top: 14px;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .summary-continue:hover {
+            color: var(--forest);
+            text-decoration: underline;
+        }
+
+        /* Policy note */
+        .cart-policy-note {
+            margin-top: 20px;
+            padding: 14px 16px;
+            background: var(--bg-main);
+            border: 1px dashed var(--border-strong);
+            border-radius: var(--radius-md);
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .cart-policy-note i {
+            color: var(--terracotta);
+            font-size: 0.85rem;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        .cart-policy-note p {
+            font-family: var(--font-body);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+            margin: 0;
+        }
+
+        .cart-policy-note strong { color: var(--text-main); font-weight: 600; }
+
+        /* Empty cart */
+        .cart-empty-state {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 80px 32px;
+            text-align: center;
+            max-width: 520px;
+            margin: 40px auto;
+        }
+
+        .cart-empty-state .empty-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--forest-soft);
+            color: var(--forest);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 24px;
+        }
+
+        [data-theme="dark"] .cart-empty-state .empty-icon {
+            background: rgba(107, 196, 135, 0.15);
+            color: #6bc487;
+        }
+
+        .cart-empty-state h2 {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 10px;
+        }
+
+        .cart-empty-state p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 28px;
+            line-height: 1.55;
+        }
+
+        .cart-empty-state .empty-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--forest);
+            color: var(--cream);
+            padding: 14px 28px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            transition: var(--trans-fast);
+        }
+
+        .cart-empty-state .empty-cta:hover {
+            background: var(--forest-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* You might also like */
+        .suggestions {
+            margin-top: 96px;
+            padding-top: 56px;
+            border-top: 1px solid var(--border);
+        }
+
+        .suggestions-head {
+            margin-bottom: 32px;
+        }
+
+        .suggestions-head h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 6px;
+        }
+
+        .suggestions-head p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .suggestion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 20px;
+        }
+
+        .suggestion-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: var(--trans);
+        }
+
+        .suggestion-card:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .suggestion-card img {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            background: var(--bg-warm);
+        }
+
+        .suggestion-body {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .suggestion-body h4 {
+            font-family: var(--font-display);
+            font-size: 0.98rem;
+            font-weight: 700;
+            letter-spacing: -0.015em;
+            margin-bottom: 6px;
+            line-height: 1.3;
+            color: var(--text-main);
+        }
+
+        .suggestion-price {
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            flex-grow: 1;
+        }
+
+        .suggestion-price strong {
+            font-family: var(--font-display);
+            font-weight: 800;
+            color: var(--text-main);
+            font-size: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .suggestion-add {
+            background: transparent;
+            border: 1px solid var(--forest);
+            color: var(--forest);
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.82rem;
+            letter-spacing: 0.02em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--trans-fast);
+            width: 100%;
+        }
+
+        .suggestion-add:hover {
+            background: var(--forest);
+            color: var(--cream);
+        }
+
+        [data-theme="dark"] .suggestion-add {
+            border-color: #3f844f;
+            color: #6bc487;
+        }
+        [data-theme="dark"] .suggestion-add:hover {
+            background: #3f844f;
+            color: var(--cream);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .cart-layout {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .cart-summary {
+                position: static;
+                order: 2;
+            }
+            .cart-items-card { order: 1; }
+        }
 
         @media (max-width: 600px) {
-            .random-click-card img {
-                max-height: 250px;
-            }
-        }
+            .cart-page-main { padding: 32px 0 56px; }
 
-        /* --- 9. Footer Styles (Copied from Index) --- */
-        footer { background: #1e293b; color: #cbd5e1; padding: 5rem 0 2rem; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
-        .footer-col h4 { font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--white); }
-        .footer-col p, .footer-col a { color: #94a3b8; text-decoration: none; }
-        .footer-col a { display: block; margin-bottom: 0.75rem; }
-        .footer-col a:hover { color: var(--white); padding-left: 5px; }
-        .footer-bottom { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #334155; font-size: 0.9rem; color: #94a3b8; }
-        
-        /* --- 8. Responsive Design --- */
-        @media (max-width: 992px) { 
-            .cart-layout { grid-template-columns: 1fr; } 
-            .cart-summary { position: static; margin-top: 2rem; } 
-        }
-        @media (max-width: 480px) {
-            .cart-item { flex-wrap: wrap; }
-            .item-total { margin-left: auto; }
-            /* Hide desktop navigation and show menu button for mobile */
-            #desktop-nav { display: none !important; }
-            .header-actions { margin-left: auto; } /* Push actions to the right */
-            .menu-btn { display: block; }
-            #auth-controls { display: none; }
+            .cart-page-header h1 { font-size: 1.6rem; }
+
+            .cart-line {
+                grid-template-columns: 72px minmax(0, 1fr);
+                gap: 14px;
+                padding: 18px;
+                position: relative;
+            }
+
+            .cart-line-img-wrap { width: 72px; height: 72px; }
+
+            .cart-line-total {
+                grid-column: 2;
+                text-align: left;
+                padding-top: 10px;
+                border-top: 1px dashed var(--border);
+                margin-top: 6px;
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                width: 100%;
+            }
+
+            .cart-line-total .line-total { font-size: 1rem; }
+            .cart-line-total .line-unit { margin-top: 0; }
+
+            .cart-line-name { font-size: 0.95rem; }
+
+            .cart-line-stepper .qty-value { min-width: 48px; }
+
+            .cart-summary { padding: 22px; }
+
+            .summary-total-value { font-size: 1.4rem; }
+
+            .suggestions { margin-top: 56px; padding-top: 36px; }
+
+            .suggestion-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 12px;
+            }
+            .suggestion-body { padding: 14px; }
+            .suggestion-body h4 { font-size: 0.88rem; }
         }
     </style>
 </head>
 <body>
+
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+    <div id="global-loader" class="global-loader" hidden>
+        <div class="spinner"></div>
+    </div>
+
+    <!-- POLICY BAR -->
+    <div class="order-policy-alert">
+        <span>
+            Sunday deliveries only
+            <span class="dot">·</span>
+            Order before Saturday 6 PM
+            <span class="dot">·</span>
+            6 AM – 7 PM IST
+        </span>
+    </div>
+
+    <!-- HEADER -->
     <header class="header" id="header">
         <div class="container header-inner">
             <div class="logo">
-                <a href="index.html">
-                    <img src="assets/logo.png" alt="Potlapalli Farms Logo"/>
-                    <span>Potlapalli Farms</span>
+                <a href="index.html" aria-label="Potlapalli Farms — Home">
+                    <svg class="logo-symbol" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.3"/>
+                        <path d="M20 10 Q 12.5 18, 20 30 Q 27.5 18, 20 10 Z" fill="currentColor"/>
+                        <path d="M20 13.5 L 20 26.5" stroke="var(--bg-main)" stroke-width="1" stroke-linecap="round"/>
+                        <path d="M20 18 Q 17.2 16.6, 15.8 15.2" stroke="var(--bg-main)" stroke-width="0.85" stroke-linecap="round" fill="none"/>
+                        <path d="M20 21.5 Q 22.8 20.1, 24.2 18.7" stroke="var(--bg-main)" stroke-width="0.85" stroke-linecap="round" fill="none"/>
+                    </svg>
+                    <span class="logo-text">
+                        <span class="logo-name">Potlapalli</span>
+                        <span class="logo-sub">Farms</span>
+                    </span>
                 </a>
             </div>
-            
-            <nav class="header-nav" id="desktop-nav"> 
+
+            <nav class="desktop-nav" id="desktop-nav">
                 <a href="index.html">Home</a>
-                <a href="index.html#products">Products</a>
-                <a href="about.html">About</a>
+                <a href="index.html#products">Shop</a>
+                <a href="orders.html">My Orders</a>
                 <a href="index.html#contact">Contact</a>
             </nav>
 
             <div class="header-actions">
-                <div class="mini-cart">
-                    <a href="cart.html" aria-label="View shopping cart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cartCount">0</span>
-                    </a>
-                </div>
-                <div id="auth-controls" class="auth-controls">
-                    <a href="signin.html" class="auth-btn">Log In</a>
-                </div>
-                <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
+                <button id="themeToggle" class="icon-btn theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+
+                <button class="icon-btn mini-cart" aria-label="Cart" aria-current="page">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="cartCount">0</span>
+                </button>
+
+                <div id="auth-controls" class="auth-controls"></div>
+
+                <button class="menu-btn" id="menuBtn" aria-label="Open menu">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- ORDER POLICY ALERT BAR (NEW) 
-    <div class="order-policy-alert">
-        <div class="container">
-            ⚠️ **Order Freshness Policy:** We accept orders **EXCLUSIVELY on Sundays (6 AM - 7 PM IST)**. 
-            All deliveries are completed on the same day, typically within **30-60 minutes** of order confirmation.
+    <!-- MOBILE NAV -->
+    <div class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-header">
+            <span class="mobile-nav-title">Menu</span>
+            <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
+        <ul class="mobile-nav-links" id="mobileNavLinks"></ul>
     </div>
-    <!-- END ORDER POLICY ALERT BAR -->
-    
-    <main class="cart-page">
+    <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+
+    <!-- MAIN -->
+    <main class="cart-page-main">
         <div class="container">
-            <div class="cart-header">
-                <h1>Your Cart</h1>
-                <p>Review and manage the items for your order. </p> 
-                <p>⚠️ Order Policy: Currently, We accept orders EXCLUSIVELY on Sundays (6 AM - 7 PM IST). 
-            We strive to complete all deliveries within 30 to 60 minutes of order confirmation, Thank You 💚👨‍🌾</p>
-            </div>
-            <div id="cart-content"></div>
+            <div id="cartContent"></div>
         </div>
     </main>
 
-    <section class="random-click-section">
-        <div class="random-click-card">
-            <h3>Life on the Farm</h3>
-            <img src="assets/images/happy-goat.jpg" alt="A happy goat at Potlapalli Farm">
-            <p>Shot by: Sidhard</p>
-        </div>
-    </section>
-
+    <!-- FOOTER -->
     <footer id="contact">
         <div class="container">
-             <div class="footer-grid">
-                <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
-                <div class="footer-col"><h4>Quick Links</h4><a href="index.html#home">Home</a><a href="index.html#products">Products</a><a href="about.html">About</a><a href="gallery.html">Farm Gallery</a></div>
-                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Farms, AP<br>Email: <a href="mailto:pgf.natural@gmail.com">pgf.natural@gmail.com</a> <br>Phone: +91 98765 43210</p></div>
-                <div class="footer-col"><h4>Follow Us</h4><a href="#">Facebook</a><a href="https://www.instagram.com/potlapallifarms" target="_blank">Instagram</a></div>
-             </div>
-             <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <svg class="logo-symbol" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.3"/>
+                            <path d="M20 10 Q 12.5 18, 20 30 Q 27.5 18, 20 10 Z" fill="currentColor"/>
+                            <path d="M20 13.5 L 20 26.5" stroke="#1a1a1a" stroke-width="1" stroke-linecap="round"/>
+                        </svg>
+                        <span class="logo-text">
+                            <span class="logo-name">Potlapalli</span>
+                            <span class="logo-sub">Farms</span>
+                        </span>
+                    </div>
+                    <p>A family farm in Andhra Pradesh, raising food the way it should be raised — slowly, honestly, and in the open.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <a href="index.html#products">All products</a>
+                    <a href="orders.html">My orders</a>
+                    <a href="cart.html">My cart</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <a href="about.html">Our story</a>
+                    <a href="index.html#how-it-works">How it works</a>
+                    <a href="terms.html">Terms & Privacy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Get in touch</h4>
+                    <a href="mailto:pgf.natural@gmail.com"><i class="fas fa-envelope"></i> pgf.natural@gmail.com</a>
+                    <a href="tel:+917981059178"><i class="fas fa-phone"></i> +91 79810 59178</a>
+                    <a href="https://wa.me/917981059178" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp us</a>
+                    <a href="https://www.instagram.com/potlapallifarms" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> @potlapallifarms</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2025 Potlapalli Farms. All rights reserved.</span>
+                <span>Made with care in Andhra Pradesh.</span>
+            </div>
         </div>
     </footer>
-    <div id="toast" class="toast"></div>
 
-    <script type="module">
-        const products = {
-            'goat': { id: 'goat', name: 'Premium Goat Meat', price: 850, image: 'assets/images/goat.jpg' },
-            'chicken': { id: 'chicken', name: 'Country Chicken', price: 320, image: 'assets/images/chicken.jpg' },
-            // Note: Updated image path for eggs
-            'eggs': { id: 'eggs', name: 'Farm Eggs', price: 8, image: 'assets/images/eggs.jpg' }, 
-            'milk': { id: 'milk', name: 'Fresh Goat Milk', price: 60, image: 'assets/images/milk.jpg' }
+    <script>
+    /* ============================================================
+       CART PAGE — Logic
+       Reads from localStorage key: potlapalliCart
+       ============================================================ */
+    (function () {
+        'use strict';
+
+        // ---- Config ----
+        var CART_KEY = 'potlapalliCart';
+        var THEME_KEY = 'potlapalliTheme';
+        var FALLBACK_IMG = 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&q=80&w=400';
+
+        // Product reference for images, units, steps, minimums.
+        // Only items in the cart actually need to look up here.
+        var PRODUCTS = {
+            'live-ram':         { name: 'Live Ram (Macherla Pottelu)', unit: 'kg',    isMeat: true,  isLive: true,  image: 'assets/images/live-ram.jpg' },
+            'buck':             { name: 'Buck (Meka Pothu)',           unit: 'kg',    isMeat: true,  isLive: true,  image: 'assets/images/buck.jpg' },
+            'live-natu-kodi':   { name: 'Live Natu Kodi',              unit: 'kg',    isMeat: false, isLive: true,  image: 'assets/images/live-natu-kodi.jpg' },
+            'sonali-chicken':   { name: 'Sonali Country Chicken',      unit: 'kg',    isMeat: true,  isLive: false, image: 'assets/images/sonali-chicken.jpg' },
+            'backyard-chicken': { name: 'Backyard Country Chicken',    unit: 'kg',    isMeat: true,  isLive: false, image: 'assets/images/backyard.jpg' },
+            'natu-kodi-smokey': { name: 'Natu Kodi (Smoked)',          unit: 'kg',    isMeat: true,  isLive: false, image: 'assets/images/natu-kodi-smokey.jpg' },
+            'goat':             { name: 'Premium Goat Meat',           unit: 'kg',    isMeat: true,  isLive: false, image: 'assets/images/goat.jpg' },
+            'eggs-dozen':       { name: 'Country Chicken Eggs (12)',   unit: 'dozen', isMeat: false, isLive: false, image: 'assets/images/eggs-dozen.jpg' },
+            'eggs-tray':        { name: 'Country Chicken Eggs (30)',   unit: 'tray',  isMeat: false, isLive: false, image: 'assets/images/tray.jpg' }
         };
 
-        const cartContentEl = document.getElementById('cart-content');
-        const headerCartCountEl = document.getElementById('cartCount');
-        const CART_STORAGE_KEY = 'potlapalliCart';
-        let recentlyRemoved = null;
+        var SUGGESTIONS = ['sonali-chicken', 'eggs-dozen', 'backyard-chicken', 'natu-kodi-smokey', 'eggs-tray', 'goat'];
 
+        // ---- DOM refs ----
+        var cartContentEl = document.getElementById('cartContent');
+        var cartCountEl = document.getElementById('cartCount');
+        var toastContainer = document.getElementById('toast-container');
+        var themeToggle = document.getElementById('themeToggle');
+        var menuBtn = document.getElementById('menuBtn');
+        var mobileNav = document.getElementById('mobileNav');
+        var mobileNavClose = document.getElementById('mobileNavClose');
+        var mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
+        var mobileNavLinks = document.getElementById('mobileNavLinks');
+        var authControls = document.getElementById('auth-controls');
+
+        // ---- Utilities ----
+        function escapeHtml(str) {
+            return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        }
+
+        function formatMoney(n) {
+            var v = Math.round(Number(n) || 0);
+            return '\u20B9' + v.toLocaleString('en-IN');
+        }
+
+        function formatQty(qty, isMeat) {
+            if (!isMeat) return String(qty);
+            // Trim trailing zeros from 0.50 → 0.5, 0.75 → 0.75
+            return qty.toFixed(2).replace(/\.?0+$/, '');
+        }
+
+        function showToast(message, type) {
+            type = type || 'success';
+            var icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+            var el = document.createElement('div');
+            el.className = 'toast ' + type;
+            el.innerHTML = '<i class="fas ' + (icons[type] || icons.success) + '"></i><span>' + escapeHtml(message) + '</span>';
+            toastContainer.appendChild(el);
+            setTimeout(function () { el.classList.add('hiding'); }, 4000);
+            setTimeout(function () { el.remove(); }, 4400);
+        }
+
+        // ---- Cart storage ----
         function getCart() {
             try {
-                const cartData = localStorage.getItem(CART_STORAGE_KEY);
-                return cartData && Array.isArray(JSON.parse(cartData)) ? JSON.parse(cartData) : [];
+                var raw = localStorage.getItem(CART_KEY);
+                var parsed = raw ? JSON.parse(raw) : [];
+                return Array.isArray(parsed) ? parsed : [];
             } catch (e) { return []; }
         }
 
         function saveCart(cart) {
-            localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
-            renderCart();
-            updateHeaderCartCount();
-        }
-
-        /**
-         * FIX: Updates the header cart count to reflect the number of unique items (products),
-         * not the total quantity, to avoid decimal display.
-         */
-        function updateHeaderCartCount() {
-            const cart = getCart();
-            // Count the number of unique products (length of the cart array)
-            const totalItems = cart.length; 
-            if(headerCartCountEl) headerCartCountEl.textContent = totalItems;
-        }
-
-        function updateItemQuantity(productId, change) {
-            let cart = getCart();
-            const itemIndex = cart.findIndex(item => item.id === productId);
-            
-            if (itemIndex > -1) {
-                // Ensure quantity remains at least 1 when increasing/decreasing
-                const newQuantity = cart[itemIndex].quantity + change;
-                cart[itemIndex].quantity = Math.max(0, newQuantity);
-                
-                if (cart[itemIndex].quantity <= 0) {
-                     // If quantity drops to 0 or below, remove the item
-                     cart.splice(itemIndex, 1); 
-                }
+            try {
+                localStorage.setItem(CART_KEY, JSON.stringify(cart));
+            } catch (e) {
+                showToast('Could not save cart. Storage may be full.', 'error');
             }
-            saveCart(cart);
+            updateHeaderBadge();
         }
 
-        function removeItem(productId) {
-            let cart = getCart();
-            const itemIndex = cart.findIndex(item => item.id === productId);
-            if (itemIndex === -1) return;
-            
-            recentlyRemoved = { item: cart[itemIndex], index: itemIndex };
-            cart.splice(itemIndex, 1);
-            
-            const itemEl = cartContentEl.querySelector(`.cart-item[data-id="${productId}"]`);
-            if (itemEl) {
-                itemEl.classList.add('removing');
-                setTimeout(() => saveCart(cart), 400); // Wait for animation to finish
-            } else {
-                saveCart(cart);
-            }
+        function updateHeaderBadge() {
+            if (!cartCountEl) return;
+            cartCountEl.textContent = getCart().length;
         }
 
-        function undoRemove() {
-            if (!recentlyRemoved) return;
-            let cart = getCart();
-            // Splice the removed item back at its original index
-            cart.splice(recentlyRemoved.index, 0, recentlyRemoved.item);
-            recentlyRemoved = null;
-            saveCart(cart);
+        // ---- Validation helpers ----
+        function getProductMeta(itemId) {
+            return PRODUCTS[itemId] || {};
+        }
+
+        function getStep(item) {
+            return item.isMeat ? 0.25 : 1;
+        }
+
+        function getMinQty(item) {
+            if (item.id === 'goat') return 0.75;
+            return item.isMeat ? 0.5 : 1;
+        }
+
+        // ---- Rendering ----
+        function renderEmpty() {
+            cartContentEl.innerHTML =
+                '<div class="cart-empty-state">' +
+                    '<div class="empty-icon"><i class="fas fa-shopping-bag"></i></div>' +
+                    '<h2>Your cart is empty</h2>' +
+                    '<p>Add some fresh produce to get started. We harvest Sunday morning and deliver the same day.</p>' +
+                    '<a href="index.html#products" class="empty-cta">' +
+                        'Browse the shop <i class="fas fa-arrow-right"></i>' +
+                    '</a>' +
+                '</div>' +
+                renderSuggestions([]);
+            bindSuggestionButtons();
         }
 
         function renderCart() {
-            const cart = getCart();
+            var cart = getCart();
 
-            if (cart.length === 0 && !recentlyRemoved) {
-                cartContentEl.innerHTML = `<div class="empty-cart"><h2>Your Cart is Empty</h2><p>Looks like you haven't added any fresh products yet.</p><a href="index.html" class="btn btn-primary" style="display:inline-block; width:auto;">Continue Shopping</a></div>`;
+            if (cart.length === 0) {
+                renderEmpty();
                 return;
             }
 
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            var subtotal = cart.reduce(function (sum, item) {
+                return sum + item.price * item.quantity;
+            }, 0);
 
-            cartContentEl.innerHTML = `
-                <div class="cart-layout">
-                    <div class="cart-items">
-                        ${cart.map(item => {
-                            const unit = item.id === 'eggs' ? ' dozen' : (item.id === 'milk' ? ' L' : ' kg');
-                            const displayQuantity = item.quantity.toFixed(item.quantity % 1 === 0 ? 0 : 2); // Show 2 decimals only if not an integer
-                            return `
-                                <div class="cart-item" data-id="${item.id}">
-                                    <img src="${products[item.id]?.image || ''}" alt="${item.name}">
-                                    <div class="item-details">
-                                        <h4>${item.name}</h4><p>₹${item.price} per ${unit.trim()}</p>
-                                        <div class="quantity-controls">
-                                            <button class="qty-btn decrease-qty-btn">-</button>
-                                            <span class="qty">${displayQuantity}${unit}</span>
-                                            <button class="qty-btn increase-qty-btn">+</button>
-                                        </div>
-                                    </div>
-                                    <span class="item-total">₹${(item.price * item.quantity).toFixed(0)}</span>
-                                    <button class="remove-btn"><i class="fas fa-trash"></i></button>
-                                </div>
-                            `;
-                        }).join('')}
-                        ${recentlyRemoved ? `<div class="undo-container">Item removed. <button class="undo-btn">Undo</button></div>` : ''}
-                    </div>
-                    <div class="cart-summary">
-                        <h3>Order Summary</h3>
-                        <div class="summary-row"><span>Subtotal</span><span>₹${subtotal.toFixed(0)}</span></div>
-                        <div class="summary-row"><span>Delivery Fee</span><span>FREE</span></div>
-                        <div class="summary-row summary-total"><span>Total</span><span>₹${subtotal.toFixed(0)}</span></div>
-                        <a href="contact.html" class="btn btn-primary">Proceed to Checkout</a>
-                        <a href="index.html" class="btn btn-outline">Continue Shopping</a>
-                    </div>
-                </div>
-            `;
+            var itemCount = cart.reduce(function (sum, item) {
+                return sum + 1;
+            }, 0);
+
+            var headerHtml =
+                '<div class="cart-page-header">' +
+                    '<div>' +
+                        '<h1>Your cart</h1>' +
+                        '<p class="subtitle">' + itemCount + ' item' + (itemCount === 1 ? '' : 's') + ' ready for Sunday delivery.</p>' +
+                    '</div>' +
+                    '<div class="cart-total-inline">Subtotal<strong>' + formatMoney(subtotal) + '</strong></div>' +
+                '</div>';
+
+            var itemsHtml = cart.map(function (item) {
+                var meta = getProductMeta(item.id);
+                var isMeat = !!item.isMeat;
+                var unit = item.unit || meta.unit || 'kg';
+                var image = item.image || meta.image || FALLBACK_IMG;
+                var qtyDisplay = formatQty(item.quantity, isMeat) + ' ' + unit;
+                var unitPriceLabel = formatMoney(item.price) + ' / ' + unit;
+                var lineTotal = item.price * item.quantity;
+                var step = getStep(item);
+                var minQty = getMinQty(item);
+                var canDecrease = item.quantity - step >= minQty - 0.0001;
+
+                var badge = meta.isLive ? '<span class="item-badge">Live</span>' : '';
+
+                return '' +
+                    '<div class="cart-line" data-id="' + escapeHtml(item.id) + '">' +
+                        '<div class="cart-line-img-wrap">' +
+                            '<img class="cart-line-img" src="' + escapeHtml(image) + '" alt="' + escapeHtml(item.name) + '" ' +
+                                'onerror="this.onerror=null;this.src=\'' + FALLBACK_IMG + '\'">' +
+                            badge +
+                        '</div>' +
+                        '<div class="cart-line-body">' +
+                            '<div class="cart-line-name">' + escapeHtml(item.name) + '</div>' +
+                            '<div class="cart-line-meta">' +
+                                '<span>' + unitPriceLabel + '</span>' +
+                            '</div>' +
+                            '<div class="cart-line-stepper-row">' +
+                                '<div class="cart-line-stepper">' +
+                                    '<button data-action="dec" aria-label="Decrease quantity"' + (canDecrease ? '' : ' disabled') + '>' +
+                                        '<i class="fas fa-minus"></i>' +
+                                    '</button>' +
+                                    '<span class="qty-value">' + qtyDisplay + '</span>' +
+                                    '<button data-action="inc" aria-label="Increase quantity">' +
+                                        '<i class="fas fa-plus"></i>' +
+                                    '</button>' +
+                                '</div>' +
+                                '<button class="cart-line-remove" data-action="remove">' +
+                                    '<i class="fas fa-trash"></i> Remove' +
+                                '</button>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="cart-line-total">' +
+                            '<div class="line-total">' + formatMoney(lineTotal) + '</div>' +
+                            '<div class="line-unit">' + formatMoney(item.price) + ' \u00D7 ' + formatQty(item.quantity, isMeat) + '</div>' +
+                        '</div>' +
+                    '</div>';
+            }).join('');
+
+            var summaryHtml =
+                '<aside class="cart-summary">' +
+                    '<h3>Order summary</h3>' +
+                    '<div class="summary-row"><span>Items (' + itemCount + ')</span><span>' + formatMoney(subtotal) + '</span></div>' +
+                    '<div class="summary-row"><span>Delivery</span><span class="free-badge">Free</span></div>' +
+                    '<div class="summary-total">' +
+                        '<span class="summary-total-label">Total</span>' +
+                        '<span class="summary-total-value">' + formatMoney(subtotal) + '</span>' +
+                    '</div>' +
+                    '<a href="checkout.html" class="summary-checkout-btn">' +
+                        'Proceed to checkout <i class="fas fa-arrow-right"></i>' +
+                    '</a>' +
+                    '<a href="index.html#products" class="summary-continue">Continue shopping</a>' +
+                    '<div class="cart-policy-note">' +
+                        '<i class="fas fa-info-circle"></i>' +
+                        '<p><strong>Sunday delivery only.</strong> Place your order before Saturday 6 PM. We harvest Sunday morning and deliver within 30–60 minutes of dispatch.</p>' +
+                    '</div>' +
+                '</aside>';
+
+            cartContentEl.innerHTML =
+                headerHtml +
+                '<div class="cart-layout">' +
+                    '<section class="cart-items-card">' +
+                        '<div class="cart-items-head">' +
+                            '<h2>Items in cart</h2>' +
+                            '<span class="cart-items-count">' + itemCount + ' item' + (itemCount === 1 ? '' : 's') + '</span>' +
+                        '</div>' +
+                        itemsHtml +
+                    '</section>' +
+                    summaryHtml +
+                '</div>' +
+                renderSuggestions(cart);
+
+            bindCartInteractions();
+            bindSuggestionButtons();
         }
 
-        cartContentEl.addEventListener('click', (e) => {
-            const target = e.target;
-            const itemEl = target.closest('.cart-item');
-            const productId = itemEl?.dataset.id;
-            
-            // Determine step based on product type (assuming all meat is 0.25, others 1)
-            const step = (productId === 'goat' || productId === 'chicken') ? 0.25 : 1;
+        function renderSuggestions(cart) {
+            var inCart = {};
+            cart.forEach(function (item) { inCart[item.id] = true; });
 
-            if (target.closest('.increase-qty-btn')) updateItemQuantity(productId, step);
-            else if (target.closest('.decrease-qty-btn')) updateItemQuantity(productId, -step);
-            else if (target.closest('.remove-btn')) removeItem(productId);
-            else if (target.matches('.undo-btn')) undoRemove();
-        });
+            var candidates = SUGGESTIONS.filter(function (id) { return !inCart[id] && PRODUCTS[id]; });
+            var picks = candidates.slice(0, 4);
 
-        // Simple Mobile Menu Toggle (to handle hamburger button)
-        document.addEventListener('DOMContentLoaded', () => {
-            // Note: Firebase auth imports needed for mobile menu handling are missing in cart.html,
-            // but the basic DOM listeners are retained here for structure.
-            
+            if (picks.length === 0) return '';
+
+            var cards = picks.map(function (id) {
+                var meta = PRODUCTS[id];
+                var qty = id === 'goat' ? 0.75 : (meta.isMeat ? 0.5 : 1);
+                var unit = meta.unit || 'kg';
+                var priceLabel = formatMoney(meta.price || 0);
+
+                return '' +
+                    '<div class="suggestion-card">' +
+                        '<img src="' + escapeHtml(meta.image) + '" alt="' + escapeHtml(meta.name) + '" ' +
+                            'onerror="this.onerror=null;this.src=\'' + FALLBACK_IMG + '\'">' +
+                        '<div class="suggestion-body">' +
+                            '<h4>' + escapeHtml(meta.name) + '</h4>' +
+                            '<div class="suggestion-price"><strong>' + priceLabel + '</strong> / ' + unit + '</div>' +
+                            '<button class="suggestion-add" data-suggestion-id="' + escapeHtml(id) + '">' +
+                                '<i class="fas fa-cart-plus"></i> Add' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>';
+            }).join('');
+
+            return '' +
+                '<section class="suggestions">' +
+                    '<div class="suggestions-head">' +
+                        '<h2>You might also like</h2>' +
+                        '<p>Freshly harvested Sunday — add before Saturday 6 PM.</p>' +
+                    '</div>' +
+                    '<div class="suggestion-grid">' + cards + '</div>' +
+                '</section>';
+        }
+
+        // ---- Interactions ----
+        function bindCartInteractions() {
+            cartContentEl.querySelectorAll('.cart-line').forEach(function (lineEl) {
+                lineEl.querySelectorAll('[data-action]').forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        var action = btn.dataset.action;
+                        var id = lineEl.dataset.id;
+                        if (!id) return;
+
+                        var cart = getCart();
+                        var item = cart.find(function (i) { return i.id === id; });
+                        if (!item) return;
+
+                        var step = getStep(item);
+                        var minQty = getMinQty(item);
+
+                        if (action === 'inc') {
+                            item.quantity = roundQty(item.quantity + step);
+                            saveCart(cart);
+                            renderCart();
+                        } else if (action === 'dec') {
+                            var next = roundQty(item.quantity - step);
+                            if (next < minQty - 0.0001) {
+                                showToast('Minimum order is ' + formatQty(minQty, item.isMeat) + ' ' + (item.unit || 'kg') + '.', 'info');
+                                return;
+                            }
+                            item.quantity = next;
+                            saveCart(cart);
+                            renderCart();
+                        } else if (action === 'remove') {
+                            lineEl.classList.add('removing');
+                            setTimeout(function () {
+                                var newCart = getCart().filter(function (i) { return i.id !== id; });
+                                saveCart(newCart);
+                                renderCart();
+                                showToast(item.name + ' removed from cart', 'info');
+                            }, 250);
+                        }
+                    });
+                });
+            });
+        }
+
+        function bindSuggestionButtons() {
+            document.querySelectorAll('[data-suggestion-id]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var id = btn.dataset.suggestionId;
+                    var meta = PRODUCTS[id];
+                    if (!meta) return;
+
+                    var cart = getCart();
+                    var existing = cart.find(function (i) { return i.id === id; });
+
+                    var defaultQty = id === 'goat' ? 0.75 : (meta.isMeat ? 0.5 : 1);
+
+                    if (existing) {
+                        existing.quantity = roundQty(existing.quantity + (meta.isMeat ? 0.25 : 1));
+                    } else {
+                        cart.push({
+                            id: id,
+                            name: meta.name,
+                            price: meta.price,
+                            unit: meta.unit || 'kg',
+                            isMeat: !!meta.isMeat,
+                            image: meta.image,
+                            quantity: defaultQty
+                        });
+                    }
+
+                    saveCart(cart);
+                    renderCart();
+
+                    var qtyLabel = meta.isMeat
+                        ? formatQty(defaultQty, true) + ' kg'
+                        : defaultQty + ' ' + (meta.unit || '');
+                    showToast(meta.name + ' (' + qtyLabel + ') added to cart');
+                });
+            });
+        }
+
+        function roundQty(q) {
+            // Round to 2 decimals to avoid floating-point drift (0.1+0.2 issues)
+            return Math.round(q * 100) / 100;
+        }
+
+        // ---- Theme toggle ----
+        function initTheme() {
+            var icon = themeToggle ? themeToggle.querySelector('i') : null;
+            var apply = function (theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+                if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            };
+
+            var saved = 'light';
+            try { saved = localStorage.getItem(THEME_KEY) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+            apply(saved);
+
+            themeToggle && themeToggle.addEventListener('click', function () {
+                var current = document.documentElement.getAttribute('data-theme');
+                apply(current === 'dark' ? 'light' : 'dark');
+            });
+        }
+
+        // ---- Header scroll ----
+        function initHeaderScroll() {
+            var header = document.getElementById('header');
+            if (!header) return;
+            var onScroll = function () { header.classList.toggle('scrolled', window.scrollY > 20); };
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+        }
+
+        // ---- Mobile nav ----
+        function initMobileNav() {
+            var links = [
+                { href: 'index.html', icon: 'fa-home', label: 'Home' },
+                { href: 'index.html#products', icon: 'fa-store', label: 'Shop' },
+                { href: 'orders.html', icon: 'fa-receipt', label: 'My Orders' },
+                { href: 'profile.html', icon: 'fa-user', label: 'My Profile' },
+                { href: 'signin.html', icon: 'fa-sign-in-alt', label: 'Log In' },
+                { href: 'signup.html', icon: 'fa-user-plus', label: 'Sign Up' }
+            ];
+
+            if (mobileNavLinks) {
+                mobileNavLinks.innerHTML = links.map(function (l) {
+                    return '<li><a href="' + l.href + '"><i class="fas ' + l.icon + '"></i><span>' + l.label + '</span></a></li>';
+                }).join('');
+            }
+
+            function open() {
+                mobileNav && mobileNav.classList.add('active');
+                mobileNavBackdrop && mobileNavBackdrop.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            function close() {
+                mobileNav && mobileNav.classList.remove('active');
+                mobileNavBackdrop && mobileNavBackdrop.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            menuBtn && menuBtn.addEventListener('click', open);
+            mobileNavClose && mobileNavClose.addEventListener('click', close);
+            mobileNavBackdrop && mobileNavBackdrop.addEventListener('click', close);
+
+            mobileNavLinks && mobileNavLinks.addEventListener('click', function (e) {
+                if (e.target.closest('a')) close();
+            });
+        }
+
+        // ---- Auth controls (static fallback — Firebase re-enables later) ----
+        function renderAuthControlsStatic() {
+            if (!authControls) return;
+            // Firebase disabled for now — show sign-in prompt.
+            // When Firebase is live, this element will be re-rendered by a shared script.
+            authControls.innerHTML =
+                '<a href="signin.html" class="auth-btn">Log In</a>' +
+                '<a href="signup.html" class="auth-btn primary">Sign Up</a>';
+        }
+
+        // ---- Init ----
+        document.addEventListener('DOMContentLoaded', function () {
+            initTheme();
+            initHeaderScroll();
+            initMobileNav();
+            renderAuthControlsStatic();
+            updateHeaderBadge();
             renderCart();
-            updateHeaderCartCount();
         });
+
+    })();
     </script>
 </body>
 </html>
