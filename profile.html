@@ -1,475 +1,312 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Profile - Potlapalli Farm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#1e4d2b" />
+    <title>My Profile — Potlapalli Farms</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    <style>
-        /* --- 1. Foundational Styles & Variables --- */
-        :root {
-            --primary-color: #27ae60; --primary-color-dark: #1e874b; --secondary-color: #2c3e50; --background-light: #f8f9fa;
-            --text-dark: #333; --text-light: #555; --white: #fff; --border-light: #eee; --danger-color: #e74c3c;
-            --shadow-light: rgba(0,0,0,0.08);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', Arial, sans-serif; }
-        body { background: var(--background-light); color: var(--text-dark); line-height: 1.6; padding-top: 5rem; }
-        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
-        body.nav-open { overflow: hidden; }
-        a, button { transition: all 0.3s ease; text-decoration: none; }
-
-        /* --- 2. Header & Navigation --- */
-        .header { 
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 0.75rem 0; 
-            background-color: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.07); 
-        }
-        .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-        .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
-        .logo img { height: 40px; }
-        #desktop-nav { display: flex; align-items: center; gap: 30px; flex-grow: 1; justify-content: flex-end; margin-right: 20px; }
-        #desktop-nav a { color: var(--secondary-color); font-weight: 500; }
-        .header-actions { display: flex; align-items: center; gap: 20px; }
-        .mini-cart a { font-size: 1.2rem; position: relative; color: var(--secondary-color); }
-        #cartCount { position: absolute; top: -8px; right: -10px; background-color: var(--primary-color); color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
-        .auth-btn { font-weight: 600; font-size: 0.95rem; color: var(--secondary-color); }
-        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--secondary-color); }
-
-        /* Mobile Nav Slide-out styles */
-        .nav-links {
-            display: none; 
-            position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
-            background-color: var(--white); z-index: 999; 
-            flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
-            transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-            list-style: none; padding: 0;
-        }
-        .nav-links.active { transform: translateX(0); display: flex; }
-        .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
-
-        /* --- 3. Profile Page Layout --- */
-        .profile-page { padding: 4rem 1rem; }
-        .profile-container { display: flex; gap: 2rem; max-width: 1200px; margin: 0 auto; }
-        
-        .profile-sidebar { 
-            flex-shrink: 0; 
-            width: 250px; 
-            background: var(--white); 
-            border-radius: 12px; 
-            padding: 1.5rem; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
-            height: fit-content; 
-            position: sticky; 
-            top: 100px;
-        }
-        .profile-sidebar h3 { font-size: 1.2rem; color: var(--secondary-color); margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); }
-        .profile-nav a { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: #333; text-decoration: none; border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.3s; }
-        .profile-nav a:hover, .profile-nav a.active { background: var(--primary-color); color: var(--white); }
-        .profile-nav a i { font-size: 1.1rem; }
-
-        /* Logout button styling */
-        #logoutBtn { margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 1rem !important; color: var(--danger-color) !important; font-weight: 600;}
-        #logoutBtn:hover { background: var(--danger-color); color: var(--white) !important; }
-
-        .profile-main { flex: 1; background: var(--white); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; }
-        .profile-main > div { display: none; }
-        .profile-main > div.active { display: block; }
-        .section-title { font-size: 1.8rem; color: var(--secondary-color); margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); font-family: 'Playfair Display', serif; }
-        .profile-info { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; }
-        .profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 2rem; font-weight: 600; flex-shrink: 0; }
-        .profile-details h4 { font-size: 1.5rem; color: var(--secondary-color); }
-        .profile-details p { color: var(--text-light); margin: 0.3rem 0; }
-        .btn-edit { background: var(--primary-color); color: var(--white); border: none; padding: 0.6rem 1.2rem; border-radius: 50px; font-size: 0.9rem; cursor: pointer; margin-left: auto; transition: background-color 0.3s; }
-        .btn-edit:hover { background-color: var(--primary-color-dark); }
-        
-        /* Auth Wall styles */
-        #auth-wall { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--background-light); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        #auth-wall .modal-content { max-width: 400px; padding: 4rem; text-align: center; }
-        #auth-wall h2 { font-size: 2rem; color: var(--secondary-color); margin-bottom: 1rem; }
-        #auth-wall p { margin-bottom: 1.5rem; }
-        
-        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: #333; color: var(--white); padding: 15px 25px; border-radius: 50px; z-index: 2001; transition: bottom 0.5s ease; }
-        .toast.show { bottom: 20px; } .toast.error { background-color: var(--danger-color); }
-        
-        /* Loading Spinner */
-        .loading-spinner {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--background-light); display: flex; align-items: center; 
-            justify-content: center; z-index: 3000;
-        }
-
-        /* --- Responsive Design (FIXED MOBILE LAYOUT) --- */
-        @media (max-width: 992px) {
-            #desktop-nav { display: none; }
-            .header-actions { margin-left: auto; }
-            .menu-btn { display: block; }
-            
-            .profile-page { padding-top: 2rem; }
-            .profile-container { 
-                flex-direction: column; 
-            }
-            .profile-main { 
-                order: 1; 
-            }
-            .profile-sidebar { 
-                width: 100%; 
-                order: 2; 
-                position: static; 
-                margin-top: 1rem;
-            }
-            
-            /* Mobile Nav Slide-out styles */
-            .nav-links {
-                display: none; 
-                position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
-                background-color: var(--white); z-index: 999; 
-                flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
-                transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-                list-style: none; padding: 0;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-    <div id="loading-spinner" class="loading-spinner">
-        <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary-color);"></i>
+
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <div class="order-policy-alert">
+        <span>
+            Sunday deliveries only
+            <span class="dot">·</span>
+            Order before Saturday 6 PM
+            <span class="dot">·</span>
+            6 AM – 7 PM IST
+        </span>
     </div>
 
-    <header class="header">
+    <header class="header" id="header">
         <div class="container header-inner">
             <div class="logo">
-                <a href="index.html">
-                    <img src="assets/logo.png" alt="Potlapalli Farms Logo"/>
-                    <span>Potlapalli Farms</span>
+                <a href="index.html" aria-label="Potlapalli Farms — Home">
+                    <svg class="logo-symbol" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.3"/>
+                        <path d="M20 10 Q 12.5 18, 20 30 Q 27.5 18, 20 10 Z" fill="currentColor"/>
+                        <path d="M20 13.5 L 20 26.5" stroke="var(--bg-main)" stroke-width="1" stroke-linecap="round"/>
+                        <path d="M20 18 Q 17.2 16.6, 15.8 15.2" stroke="var(--bg-main)" stroke-width="0.85" stroke-linecap="round" fill="none"/>
+                        <path d="M20 21.5 Q 22.8 20.1, 24.2 18.7" stroke="var(--bg-main)" stroke-width="0.85" stroke-linecap="round" fill="none"/>
+                    </svg>
+                    <span class="logo-text">
+                        <span class="logo-name">Potlapalli</span>
+                        <span class="logo-sub">Farms</span>
+                    </span>
                 </a>
             </div>
-            
-            <nav id="desktop-nav">
+
+            <nav class="desktop-nav" id="desktop-nav">
                 <a href="index.html">Home</a>
-                <a href="index.html#products">Products</a>
-                <a href="about.html">About</a>
+                <a href="index.html#products">Shop</a>
+                <a href="orders.html">My Orders</a>
                 <a href="index.html#contact">Contact</a>
             </nav>
-            
-            <div class="header-actions">
-                <div class="mini-cart">
-                    <a href="cart.html" aria-label="View shopping cart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cartCount">0</span>
-                    </a>
-                </div>
-                 <a id="desktopLogoutBtn" class="auth-btn" style="display: none;">Logout</a>
 
-                <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+            <div class="header-actions">
+                <button id="themeToggle" class="icon-btn theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="cart.html" class="icon-btn mini-cart" aria-label="Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="cartCount">0</span>
+                </a>
+                <button class="auth-btn" id="signOutBtn">Log Out</button>
             </div>
         </div>
     </header>
-    
-    <ul class="nav-links" id="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="orders.html">Orders</a></li>
-        <li><a href="cart.html">My Cart</a></li>
-        <li id="logout-mobile-li"><a href="#" id="logoutBtnMobile" style="color: var(--danger-color); font-weight: 700;">Logout</a></li>
-    </ul>
 
-    <main id="main-content" style="display: none;">
-        <div class="profile-page">
-            <div class="profile-container">
-                <div class="profile-sidebar">
-                    <h3>Your Account</h3>
-                    <div class="profile-nav">
-                        <a href="profile.html" class="profile-tab active" data-tab="info"><i class="fas fa-user"></i> Profile Info</a>
-                        
-                        <a href="orders.html" class="profile-tab"><i class="fas fa-box"></i> Order History</a>
-                        
-                        <a class="profile-tab" data-tab="addresses"><i class="fas fa-map-marker-alt"></i> Addresses</a>
-                        <a class="profile-tab" data-tab="security"><i class="fas fa-lock"></i> Security</a>
-                        <a id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                    </div>
-                </div>
-                <div class="profile-main">
-                    <div id="tab-info" class="active">
-                        <h2 class="section-title">My Profile</h2>
-                        <div class="profile-info">
-                            <div class="profile-avatar" id="profileAvatar"></div>
-                            <div class="profile-details">
-                                <h4 id="profileName">Loading...</h4>
-                                <p id="profileEmail"></p>
-                                <p id="profilePhone"></p>
-                            </div>
-                            <!-- <button class="btn-edit" id="editProfileBtn">Edit Info</button> -->
-                        </div>
-                        <h3 style="color: var(--secondary-color); margin-top: 3rem;">Account Status</h3>
-                        <p id="accountRole">Role: Customer</p>
-                        <p id="accountCreationDate">Member Since: N/A</p>
-                    </div>
+    <main class="profile-page">
+        <div class="container">
 
-                    <div id="tab-addresses">
-                        <h2 class="section-title">Your Addresses</h2>
-                        <p>Your saved addresses will appear here. For now, they are only saved with your orders.</p>
-                    </div>
-
-                    <div id="tab-security">
-                        <h2 class="section-title">Security & Password</h2>
-                        <p>Use the form below to change your password.</p>
-                        <form id="changePasswordForm" style="max-width: 400px; margin-top: 2rem;">
-                            <div class="input-group"><label for="newPassword">New Password</label><input type="password" id="newPassword" required></div>
-                            <div class="input-group"><label for="confirmNewPassword">Confirm New Password</label><input type="password" id="confirmNewPassword" required></div>
-                            <button type="submit" class="auth-btn-primary">Change Password</button>
-                        </form>
-                    </div>
+            <div id="profileContent">
+                <div class="profile-loading">
+                    <div class="spinner"></div>
+                    <p>Loading your profile...</p>
                 </div>
             </div>
+
         </div>
     </main>
 
-    <div id="auth-wall" class="modal-overlay">
-        <div class="modal-content">
-            <h2>Access Denied</h2>
-            <p>You must be signed in to view your profile page.</p>
-            <a href="signin.html" class="auth-btn-primary" style="text-decoration:none; display:block;">Sign In</a>
-        </div>
-    </div>
-
-     <!--
-<div id="editProfileModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header"><h2>Edit Profile</h2><button class="close-modal" id="closeModalBtn">&times;</button></div>
-            <div class="modal-body">
-                <form id="editProfileForm">
-                    <div class="input-group"><label for="editName">Full Name</label><input type="text" id="editName" required></div>
-                    <div class="input-group"><label for="editPhone">Phone Number</label><input type="tel" id="editPhone" placeholder="e.g., +919876543210"></div>
-                    <button type="submit" class="auth-btn-primary">Save Changes</button>
-                </form>
-            </div>
-        </div>
-    </div> 
-    --->
-    
-    <div id="toast" class="toast"></div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        
+        import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
             authDomain: "potlapallifarm.firebaseapp.com",
             projectId: "potlapallifarm",
             storageBucket: "potlapallifarm.firebasestorage.app",
             messagingSenderId: "1017629729159",
-            appId: "1:1017629729159:web:357c420a9de335d427b322"
+            appId: "1:1017629729159:web:357c420a9de335d427b322",
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- DOM Elements ---
-        const mainContent = document.getElementById('main-content');
-        const authWall = document.getElementById('auth-wall');
-        const loadingSpinner = document.getElementById('loading-spinner');
-        const profileNameEl = document.getElementById('profileName');
-        const profileEmailEl = document.getElementById('profileEmail');
-        const profilePhoneEl = document.getElementById('profilePhone');
-        const profileAvatarEl = document.getElementById('profileAvatar');
-        const accountRoleEl = document.getElementById('accountRole');
-        const accountCreationDateEl = document.getElementById('accountCreationDate');
-        const editProfileModal = document.getElementById('editProfileModal');
-        const editProfileForm = document.getElementById('editProfileForm');
-        const editNameInput = document.getElementById('editName');
-        const editPhoneInput = document.getElementById('editPhone');
-        const toastEl = document.getElementById('toast');
-        const logoutBtn = document.getElementById('logoutBtn'); 
-        const desktopLogoutBtn = document.getElementById('desktopLogoutBtn'); 
-        const logoutBtnMobile = document.getElementById('logoutBtnMobile'); 
-        const changePasswordForm = document.getElementById('changePasswordForm');
-        const newPasswordInput = document.getElementById('newPassword');
-        const confirmNewPasswordInput = document.getElementById('confirmNewPassword');
-        const menuBtnElement = document.getElementById('menuBtn');
-        const navLinks = document.getElementById('nav-links');
+        const THEME_KEY = 'potlapalliTheme';
+        const CART_KEY = 'potlapalliCart';
+        const profileContent = document.getElementById('profileContent');
+        const signOutBtn = document.getElementById('signOutBtn');
         const cartCountEl = document.getElementById('cartCount');
 
-        // --- Utility Functions ---
-
-        function showToast(message, isError = false) {
-            toastEl.textContent = message;
-            toastEl.className = isError ? 'toast show error' : 'toast show';
-            setTimeout(() => { toastEl.className = 'toast'; }, 3000);
-        }
-        
-        const updateCartCount = () => {
-            const cart = JSON.parse(localStorage.getItem('potlapalliCart')) || [];
-            if (cartCountEl) cartCountEl.textContent = cart.length;
+        // --- Theme ---
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle?.querySelector('i');
+        const applyTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem(THEME_KEY, theme);
+            if (themeIcon) themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         };
-
-
-        async function fetchUserProfile(user) {
-            const userDocRef = doc(db, "users", user.uid);
-            try {
-                const docSnap = await getDoc(userDocRef);
-                const creationDate = user.metadata.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString() : 'N/A';
-                const userData = docSnap.exists() ? docSnap.data() : {};
-                
-                const displayName = userData.name || user.displayName || "Farm User";
-
-                profileNameEl.textContent = displayName;
-                profileEmailEl.textContent = `📧 ${userData.email || user.email}`;
-                profilePhoneEl.textContent = userData.phone ? `📞 ${userData.phone}` : '📞 Add phone number';
-                profileAvatarEl.textContent = (displayName || user.email || 'A')[0].toUpperCase();
-                
-                accountRoleEl.textContent = `Role: ${userData.role ? userData.role.toUpperCase() : 'CUSTOMER'}`;
-                accountCreationDateEl.textContent = `Member Since: ${creationDate}`;
-                
-            } catch (error) {
-                showToast("Could not load profile data.", true);
-                console.error("Profile fetch error:", error);
-            }
-        }
-        
-        // --- Authentication Check (FIXED) ---
-        onAuthStateChanged(auth, user => {
-            // Hide spinner immediately after the auth state is confirmed (even if null)
-            loadingSpinner.style.display = 'none';
-
-            if (user) {
-                // User is logged in: Show content, hide wall, set logout button
-                mainContent.style.display = 'block';
-                authWall.style.display = 'none';
-                fetchUserProfile(user);
-                desktopLogoutBtn.style.display = 'inline-block';
-            } else {
-                // User is NOT logged in: Hide content, show wall, hide logout button
-                mainContent.style.display = 'none';
-                authWall.style.display = 'flex';
-                authWall.classList.add('show');
-                desktopLogoutBtn.style.display = 'none';
-            }
+        applyTheme(localStorage.getItem(THEME_KEY) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+        themeToggle?.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            applyTheme(current === 'dark' ? 'light' : 'dark');
         });
 
-        // --- Log out logic (WORKING) ---
-        const handleLogout = (e) => {
-             e.preventDefault();
-            signOut(auth).then(() => {
-                showToast('Signed out successfully. Redirecting...', false);
-                setTimeout(() => { window.location.href = 'signin.html'; }, 500); 
-            }).catch(error => { 
-                showToast('Error signing out.', true); 
-                console.error("Logout error:", error);
+        // --- Cart badge ---
+        try {
+            const cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+            if (cartCountEl) cartCountEl.textContent = Array.isArray(cart) ? cart.length : 0;
+        } catch {}
+
+        // --- Sign out ---
+        signOutBtn?.addEventListener('click', async () => {
+            try { await signOut(auth); window.location.replace('index.html'); }
+            catch (err) { console.error(err); }
+        });
+
+        function escapeHtml(str) {
+            return String(str ?? '').replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        function renderProfile(profile, user) {
+            const initials = (profile.name || user.email || 'P').trim().charAt(0).toUpperCase();
+            const memberSince = profile.createdAt?.toDate
+                ? profile.createdAt.toDate().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
+                : 'Member';
+
+            profileContent.innerHTML = `
+                <div class="profile-header">
+                    <h1>Hello, ${escapeHtml((profile.name || 'there').split(' ')[0])}.</h1>
+                    <p>Manage your account details and delivery address below.</p>
+                </div>
+
+                <div class="profile-grid">
+
+                    <section class="profile-card">
+                        <h2>Delivery details</h2>
+                        <p class="card-sub">These are used as the default when you place an order.</p>
+
+                        <form class="profile-form" id="profileForm" novalidate>
+
+                            <div class="field" id="field-name">
+                                <label for="name">Full name</label>
+                                <input type="text" id="name" name="name" value="${escapeHtml(profile.name || '')}" required />
+                                <div class="field-error">Please enter your name.</div>
+                            </div>
+
+                            <div class="field" id="field-phone">
+                                <label for="phone">Phone number</label>
+                                <input type="tel" id="phone" name="phone" maxlength="10" inputmode="numeric" value="${escapeHtml(profile.phone || '')}" required />
+                                <div class="field-error">Please enter a valid 10-digit mobile number.</div>
+                            </div>
+
+                            <div class="field" id="field-address">
+                                <label for="address">Delivery address</label>
+                                <textarea id="address" name="address" required>${escapeHtml(profile.address || '')}</textarea>
+                                <div class="field-error">Please enter your full address.</div>
+                            </div>
+
+                            <button type="submit" class="auth-submit" id="saveBtn">
+                                Save changes
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </form>
+                    </section>
+
+                    <aside>
+                        <section class="profile-card">
+                            <h2>Account</h2>
+                            <p class="card-sub">Read-only account information.</p>
+
+                            <div class="profile-info-row">
+                                <span class="profile-info-label">Email</span>
+                                <span class="profile-info-value">${escapeHtml(user.email || '—')}</span>
+                            </div>
+                            <div class="profile-info-row">
+                                <span class="profile-info-label">Member since</span>
+                                <span class="profile-info-value">${memberSince}</span>
+                            </div>
+                            <div class="profile-info-row">
+                                <span class="profile-info-label">Initials</span>
+                                <span class="profile-info-value">${initials}</span>
+                            </div>
+
+                            <button class="profile-signout" id="signOutBtn2">
+                                <i class="fas fa-sign-out-alt"></i> Sign out of this account
+                            </button>
+                        </section>
+                    </aside>
+
+                </div>
+            `;
+
+            // Bind sign out button 2
+            document.getElementById('signOutBtn2')?.addEventListener('click', async () => {
+                try { await signOut(auth); window.location.replace('index.html'); }
+                catch (err) { console.error(err); }
             });
-        };
 
-        // --- Profile Edit Logic ---
-        document.getElementById('editProfileBtn').addEventListener('click', () => {
-            editNameInput.value = profileNameEl.textContent;
-            const currentPhone = profilePhoneEl.textContent;
-            editPhoneInput.value = currentPhone.includes('+') ? currentPhone.replace('📞 ', '') : '';
-            editProfileModal.classList.add('show');
-        });
-        
-        document.getElementById('closeModalBtn').addEventListener('click', () => editProfileModal.classList.remove('show'));
-        
-        // --- FIXED: Attach Logout listeners (Ensure the buttons are working) ---
-        if (logoutBtn) logoutBtn.addEventListener('click', handleLogout); 
-        if (desktopLogoutBtn) desktopLogoutBtn.addEventListener('click', handleLogout); 
-        if (logoutBtnMobile) logoutBtnMobile.addEventListener('click', handleLogout);
+            // Bind form save
+            document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const nameEl = document.getElementById('name');
+                const phoneEl = document.getElementById('phone');
+                const addressEl = document.getElementById('address');
+                const saveBtn = document.getElementById('saveBtn');
 
-        editProfileForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const user = auth.currentUser;
-            if (!user) return;
+                const name = nameEl.value.trim();
+                const phone = phoneEl.value.trim();
+                const address = addressEl.value.trim();
 
-            const newName = editNameInput.value.trim();
-            const newPhone = editPhoneInput.value.trim();
+                const nameOk = name.length >= 2;
+                const phoneOk = /^[6-9]\d{9}$/.test(phone);
+                const addressOk = address.length >= 10;
 
-            if (!newName) {
-                showToast("Name cannot be empty.", true);
+                document.getElementById('field-name').classList.toggle('has-error', !nameOk);
+                document.getElementById('field-phone').classList.toggle('has-error', !phoneOk);
+                document.getElementById('field-address').classList.toggle('has-error', !addressOk);
+
+                if (!nameOk || !phoneOk || !addressOk) return;
+
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+                try {
+                    await updateDoc(doc(db, 'users', user.uid), {
+                        name, phone, address,
+                        updatedAt: serverTimestamp(),
+                    });
+
+                    try { await updateProfile(user, { displayName: name }); } catch {}
+
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = 'Save changes <i class="fas fa-check"></i>';
+
+                    // Success toast
+                    const toast = document.createElement('div');
+                    toast.className = 'toast success';
+                    toast.innerHTML = '<i class="fas fa-check-circle"></i><span>Profile updated</span>';
+                    document.getElementById('toast-container').appendChild(toast);
+                    setTimeout(() => toast.classList.add('hiding'), 3000);
+                    setTimeout(() => toast.remove(), 3400);
+
+                    // Update greeting
+                    const h1 = document.querySelector('.profile-header h1');
+                    if (h1) h1.textContent = `Hello, ${name.split(' ')[0]}.`;
+                } catch (err) {
+                    console.error('Profile update failed:', err);
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = 'Save changes <i class="fas fa-check"></i>';
+                    alert('Could not save changes. Please try again.');
+                }
+            });
+        }
+
+        // --- Auth gate: redirect to signin if not signed in ---
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.replace('signin.html?redirect=profile.html');
                 return;
             }
 
             try {
-                const userDocRef = doc(db, "users", user.uid);
-                await setDoc(userDocRef, { name: newName, phone: newPhone, email: user.email }, { merge: true });
-                
-                if(user.displayName !== newName) {
-                    await updateProfile(user, { displayName: newName });
-                }
-                
-                showToast('Profile updated!');
-                fetchUserProfile(user); // Refresh UI
-                editProfileModal.classList.remove('show');
-            } catch (error) {
-                showToast(`Error saving profile. Please check console.`, true);
-                console.error("Profile update error:", error);
-            }
-        });
+                const snap = await getDoc(doc(db, 'users', user.uid));
+                let profile = {};
 
-        // --- Change Password Logic (in Security Tab) ---
-        changePasswordForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const user = auth.currentUser;
-            const newPass = newPasswordInput.value;
-            const confirmNewPass = confirmNewPasswordInput.value;
-
-            if (newPass !== confirmNewPass) {
-                return showToast("Passwords do not match.", true);
-            }
-            if (newPass.length < 6) {
-                return showToast("Password must be at least 6 characters long.", true);
-            }
-
-            try {
-                await updatePassword(user, newPass);
-                showToast('Password changed successfully! Please log in again if prompted.', false);
-                changePasswordForm.reset();
-            } catch (error) {
-                if (error.code === 'auth/requires-recent-login') {
-                    showToast("Password requires recent login. Please sign out and sign in again before changing.", true);
+                if (snap.exists()) {
+                    profile = snap.data();
                 } else {
-                    showToast(`Error changing password: ${error.message}`, true);
+                    // Failsafe: create an empty profile doc so rules don't error
+                    profile = {
+                        uid: user.uid,
+                        name: user.displayName || '',
+                        email: user.email || '',
+                        phone: '',
+                        address: '',
+                        role: 'customer',
+                    };
+                    try {
+                        await setDoc(doc(db, 'users', user.uid), { ...profile, createdAt: serverTimestamp() });
+                    } catch (err) {
+                        console.warn('Could not auto-create profile:', err);
+                    }
                 }
-                console.error("Password change error:", error);
+
+                renderProfile(profile, user);
+            } catch (err) {
+                console.error('Could not load profile:', err);
+                profileContent.innerHTML = `
+                    <div class="profile-loading">
+                        <p style="color: var(--danger); font-weight: 500;">Could not load your profile. Please try again.</p>
+                    </div>`;
             }
         });
-
-
-        // --- Navigation and Tab Logic (WORKING) ---
-        document.querySelectorAll('.profile-tab').forEach(tab => {
-            if (tab.dataset.tab) { 
-                tab.addEventListener('click', (e) => {
-                    e.preventDefault(); 
-                    
-                    document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    document.querySelectorAll('.profile-main > div').forEach(content => {
-                        content.classList.toggle('active', content.id === `tab-${tab.dataset.tab}`);
-                    });
-                });
-            }
-        });
-
-        // --- Hamburger Menu Logic ---
-        menuBtnElement.addEventListener("click", () => {
-            navLinks.classList.toggle("active");
-            document.body.classList.toggle("nav-open");
-            menuBtnElement.querySelector('i').className = navLinks.classList.contains("active") ? 'fas fa-times' : 'fas fa-bars';
-        });
-        
-        // Hide mobile menu on link click
-        navLinks.querySelectorAll('a').forEach(link => {
-             link.addEventListener('click', () => {
-                if (navLinks.classList.contains("active") && !link.getAttribute('href').startsWith('#')) {
-                    navLinks.classList.remove('active');
-                    document.body.classList.remove('nav-open');
-                    document.getElementById('menuBtn').querySelector('i').className = 'fas fa-bars';
-                }
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', updateCartCount);
     </script>
 </body>
 </html>
