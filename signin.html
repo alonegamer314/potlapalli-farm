@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <meta name="theme-color" content="#1e4d2b" />
-    <title>Sign In — Potlapalli Farms</title>
-    <meta name="description" content="Sign in to your Potlapalli Farms account to place your weekly order." />
+    <title>Log In — Potlapalli Farms</title>
+    <meta name="description" content="Log in to your Potlapalli Farms account to place your weekly order." />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,139 +16,70 @@
 
     <style>
         /* ============================================================
-           SIGN IN PAGE
+           SIGNIN PAGE — additions on top of shared auth classes
            ============================================================ */
 
-        body {
-            background: var(--bg-main);
-        }
-
-        /* Full-height split layout */
-        .si-shell {
-            min-height: 100vh;
-            min-height: 100dvh;
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            padding-top: calc(var(--header-height) + var(--alert-height));
-        }
-
-        /* LEFT — photo panel */
-        .si-visual {
-            position: relative;
-            overflow: hidden;
-            background: var(--charcoal);
-            display: flex;
-            align-items: flex-end;
-            padding: 56px 48px;
-            min-height: calc(100vh - var(--header-height) - var(--alert-height));
-            min-height: calc(100dvh - var(--header-height) - var(--alert-height));
-        }
-
-        .si-visual img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 0;
-        }
-
-        .si-visual::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                linear-gradient(180deg, rgba(26, 26, 26, 0.1) 0%, rgba(26, 26, 26, 0.45) 45%, rgba(26, 26, 26, 0.88) 100%),
-                linear-gradient(90deg, rgba(26, 26, 26, 0.35) 0%, rgba(26, 26, 26, 0) 60%);
-            z-index: 1;
-        }
-
-        .si-visual-inner {
-            position: relative;
-            z-index: 2;
-            max-width: 480px;
+        /* Fade-up animation for both panels */
+        .auth-visual-content,
+        .auth-form-wrap {
             animation: siFadeUp 0.9s var(--ease-out) forwards;
             opacity: 0;
             transform: translateY(20px);
         }
 
-        .si-visual .eyebrow {
+        .auth-form-wrap {
+            animation-delay: 0.1s;
+        }
+
+        @keyframes siFadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Gold accent on the eyebrow + quote card in the visual panel */
+        .auth-visual-content .eyebrow {
             color: var(--gold);
             margin-bottom: 18px;
         }
 
-        .si-visual h2 {
-            font-family: var(--font-display);
-            font-size: clamp(1.85rem, 3.2vw, 2.65rem);
-            font-weight: 800;
-            letter-spacing: -0.035em;
-            line-height: 1.1;
-            color: var(--cream);
-            margin-bottom: 18px;
-        }
-
-        .si-visual h2 em {
+        .auth-visual-content h2 em {
             font-style: normal;
             font-weight: 500;
             color: #e6a58a;
         }
 
-        .si-visual p {
-            font-family: var(--font-body);
-            font-size: 1rem;
-            line-height: 1.65;
-            color: rgba(250, 247, 242, 0.78);
-            max-width: 400px;
-            margin-bottom: 36px;
-        }
-
-        .si-quote {
+        /* Quote card at the bottom of the visual panel */
+        .auth-visual-quote {
             padding: 20px 22px;
             background: rgba(250, 247, 242, 0.08);
             border-left: 3px solid var(--gold);
             border-radius: 0 var(--radius-md) var(--radius-md) 0;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
+            margin-top: 28px;
         }
 
-        .si-quote p {
+        .auth-visual-quote strong {
+            display: block;
+            font-family: var(--font-body);
+            font-style: normal;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .auth-visual-quote {
             font-family: var(--font-display);
             font-style: italic;
             font-size: 0.98rem;
             line-height: 1.55;
             color: var(--cream);
-            margin-bottom: 8px;
             letter-spacing: -0.005em;
         }
 
-        .si-quote .who {
-            font-family: var(--font-body);
-            font-style: normal;
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            color: rgba(250, 247, 242, 0.65);
-        }
-
-        /* RIGHT — form panel */
-        .si-form-panel {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 56px 48px;
-            background: var(--bg-main);
-        }
-
-        .si-form-wrap {
-            width: 100%;
-            max-width: 400px;
-            animation: siFadeUp 0.9s var(--ease-out) forwards;
-            animation-delay: 0.1s;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        /* Mobile-only brand mark at top */
+        /* Mobile-only brand mark at top of form */
         .si-mobile-brand {
             display: none;
             margin-bottom: 32px;
@@ -177,168 +108,23 @@
             color: var(--text-main);
         }
 
-        /* Header */
-        .si-head {
-            margin-bottom: 32px;
-        }
-
-        .si-head h1 {
-            font-family: var(--font-display);
-            font-size: clamp(1.85rem, 3vw, 2.2rem);
-            font-weight: 800;
-            letter-spacing: -0.035em;
-            line-height: 1.15;
-            color: var(--text-main);
-            margin-bottom: 10px;
-        }
-
-        .si-head p {
-            font-family: var(--font-body);
-            font-size: 0.96rem;
-            line-height: 1.6;
-            color: var(--text-muted);
-        }
-
-        /* Error banner */
-        .si-error {
-            display: none;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 14px 16px;
-            background: rgba(177, 58, 42, 0.08);
-            border: 1px solid rgba(177, 58, 42, 0.25);
-            border-radius: var(--radius-md);
-            margin-bottom: 20px;
-            font-family: var(--font-body);
-            font-size: 0.86rem;
-            font-weight: 500;
-            color: var(--danger);
-            line-height: 1.5;
-        }
-
-        .si-error.show { display: flex; }
-
-        .si-error i {
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        /* Form */
-        .si-form {
+        /* Forgot password row */
+        .si-forgot-row {
             display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
-
-        .si-field {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .si-field label {
-            font-family: var(--font-body);
-            font-size: 0.76rem;
-            font-weight: 600;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-        }
-
-        .si-input-wrap {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .si-field input {
-            width: 100%;
-            padding: 14px 16px;
-            background: var(--bg-main);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            font-family: var(--font-body);
-            font-size: 0.95rem;
-            color: var(--text-main);
-            transition: var(--trans-fast);
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .si-field input:focus {
-            border-color: var(--forest);
-            box-shadow: 0 0 0 3px var(--forest-soft);
-        }
-
-        .si-field input::placeholder {
-            color: var(--stone-light);
-        }
-
-        .si-field.has-error input {
-            border-color: var(--danger);
-            box-shadow: 0 0 0 3px rgba(177, 58, 42, 0.1);
-        }
-
-        .si-field input[type="password"],
-        .si-field input.with-toggle { padding-right: 48px; }
-
-        /* Password toggle */
-        .si-toggle {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 34px;
-            height: 34px;
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 0.88rem;
-            transition: var(--trans-fast);
-            cursor: pointer;
-            background: transparent;
-            border: none;
-        }
-
-        .si-toggle:hover {
-            color: var(--text-main);
-            background: var(--bg-warm);
-        }
-
-        /* Error text */
-        .si-field .err {
-            display: none;
-            font-family: var(--font-body);
-            font-size: 0.78rem;
-            font-weight: 500;
-            color: var(--danger);
-            margin-top: 2px;
-        }
-
-        .si-field.has-error .err { display: block; }
-
-        /* Password + forgot row */
-        .si-pw-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-top: -4px;
+            justify-content: flex-end;
+            margin-top: -6px;
         }
 
         .si-forgot {
+            background: none;
+            border: none;
+            padding: 0;
             font-family: var(--font-body);
             font-size: 0.82rem;
             font-weight: 500;
             color: var(--text-muted);
-            background: none;
-            border: none;
             cursor: pointer;
-            padding: 0;
             transition: var(--trans-fast);
-            text-decoration: none;
         }
 
         .si-forgot:hover {
@@ -347,90 +133,6 @@
         }
 
         [data-theme="dark"] .si-forgot:hover { color: #6bc487; }
-
-        /* Submit button */
-        .si-submit {
-            margin-top: 6px;
-            background: var(--terracotta);
-            color: var(--cream);
-            padding: 16px 24px;
-            border-radius: var(--radius-sm);
-            font-family: var(--font-body);
-            font-weight: 600;
-            font-size: 0.95rem;
-            letter-spacing: 0.02em;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: var(--trans-fast);
-            cursor: pointer;
-            border: none;
-            width: 100%;
-        }
-
-        .si-submit:hover:not(:disabled) {
-            background: var(--terracotta-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 12px 28px rgba(196, 90, 58, 0.35);
-        }
-
-        .si-submit:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        .si-submit i.fa-arrow-right {
-            transition: transform 0.3s var(--ease);
-        }
-
-        .si-submit:hover:not(:disabled) i.fa-arrow-right {
-            transform: translateX(4px);
-        }
-
-        /* Divider */
-        .si-divider {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin: 26px 0 20px;
-            color: var(--stone-light);
-            font-family: var(--font-body);
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .si-divider::before,
-        .si-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
-
-        /* Footer link */
-        .si-alt {
-            text-align: center;
-            font-family: var(--font-body);
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .si-alt a {
-            color: var(--forest);
-            font-weight: 600;
-            text-decoration: none;
-            margin-left: 4px;
-        }
-
-        [data-theme="dark"] .si-alt a { color: #6bc487; }
-
-        .si-alt a:hover {
-            color: var(--terracotta);
-            text-decoration: underline;
-        }
 
         /* Legal footer */
         .si-legal {
@@ -456,15 +158,9 @@
             text-decoration-color: currentColor;
         }
 
-        /* Fade-up animation */
-        @keyframes siFadeUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         /* ============================================================
            FORGOT PASSWORD DIALOG
            ============================================================ */
-
         .fp-dialog {
             border: none;
             border-radius: var(--radius-lg);
@@ -534,15 +230,16 @@
             gap: 16px;
         }
 
-        .fp-form .si-field { gap: 8px; }
-
         .fp-actions {
             display: flex;
             gap: 10px;
             margin-top: 4px;
         }
 
-        .fp-actions .si-submit { flex: 1; margin: 0; }
+        .fp-actions .auth-submit {
+            flex: 1;
+            margin: 0;
+        }
 
         .fp-cancel {
             flex: 1;
@@ -567,8 +264,6 @@
             padding: 8px 0;
         }
 
-        .fp-success.show { display: block; }
-
         .fp-success .check {
             width: 60px;
             height: 60px;
@@ -587,7 +282,7 @@
             color: #6bc487;
         }
 
-        .fp-success h4 {
+        .fp-success h3 {
             font-family: var(--font-display);
             font-size: 1.15rem;
             font-weight: 800;
@@ -603,27 +298,15 @@
         }
 
         /* ============================================================
-           RESPONSIVE
+           RESPONSIVE — mobile brand + radial tint
            ============================================================ */
-
         @media (max-width: 992px) {
-            .si-shell {
-                grid-template-columns: 1fr;
-                padding-top: calc(var(--header-height) + var(--alert-height));
-            }
-
-            .si-visual { display: none; }
-
-            .si-form-panel {
-                padding: 40px 24px 64px;
-                align-items: flex-start;
-                min-height: calc(100vh - var(--header-height) - var(--alert-height));
-                min-height: calc(100dvh - var(--header-height) - var(--alert-height));
+            .auth-form-panel {
                 position: relative;
             }
 
-            /* Subtle radial tint on mobile */
-            .si-form-panel::before {
+            /* Subtle radial tint behind the form on mobile */
+            .auth-form-panel::before {
                 content: '';
                 position: absolute;
                 top: -100px;
@@ -635,31 +318,23 @@
                 z-index: 0;
             }
 
-            .si-form-wrap {
+            .auth-form-wrap {
                 position: relative;
                 z-index: 1;
                 padding-top: 8px;
             }
 
             .si-mobile-brand { display: block; }
-
-            .si-head h1 { font-size: 1.85rem; }
         }
 
         @media (max-width: 480px) {
-            .si-form-panel { padding: 32px 20px 48px; }
-            .si-head { margin-bottom: 26px; }
-            .si-form { gap: 16px; }
-            .si-field input { padding: 13px 14px; font-size: 0.92rem; }
-            .si-submit { padding: 15px 20px; font-size: 0.92rem; }
-            .si-divider { margin: 22px 0 18px; }
             .fp-inner { padding: 26px 20px; }
             .fp-actions { flex-direction: column-reverse; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .si-visual-inner,
-            .si-form-wrap {
+            .auth-visual-content,
+            .auth-form-wrap {
                 animation: none !important;
                 opacity: 1 !important;
                 transform: none !important;
@@ -670,11 +345,7 @@
 <body>
 
     <div id="toast-container" class="toast-container" aria-live="polite"></div>
-    <div id="global-loader" class="global-loader" hidden>
-        <div class="spinner"></div>
-    </div>
 
-    <!-- POLICY BAR -->
     <div class="order-policy-alert">
         <span>
             Sunday deliveries only
@@ -685,7 +356,6 @@
         </span>
     </div>
 
-    <!-- HEADER -->
     <header class="header" id="header">
         <div class="container header-inner">
             <div class="logo">
@@ -707,7 +377,7 @@
             <nav class="desktop-nav" id="desktop-nav">
                 <a href="index.html">Home</a>
                 <a href="index.html#products">Shop</a>
-                <a href="about.html">Our Story</a>
+                <a href="index.html#how-it-works">How It Works</a>
                 <a href="index.html#contact">Contact</a>
             </nav>
 
@@ -715,53 +385,30 @@
                 <button id="themeToggle" class="icon-btn theme-toggle" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
-                <a href="cart.html" class="icon-btn mini-cart" aria-label="Cart">
-                    <i class="fas fa-shopping-bag"></i>
-                    <span id="cartCount">0</span>
-                </a>
                 <a href="signup.html" class="auth-btn primary">Sign Up</a>
-                <button class="menu-btn" id="menuBtn" aria-label="Open menu">
-                    <i class="fas fa-bars"></i>
-                </button>
             </div>
         </div>
     </header>
 
-    <!-- MOBILE NAV -->
-    <div class="mobile-nav" id="mobileNav">
-        <div class="mobile-nav-header">
-            <span class="mobile-nav-title">Menu</span>
-            <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <ul class="mobile-nav-links" id="mobileNavLinks"></ul>
-    </div>
-    <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+    <main class="auth-page">
 
-    <!-- MAIN -->
-    <main class="si-shell">
-
-        <!-- LEFT — photo panel -->
-        <aside class="si-visual">
-            <img src="assets/images/hero.jpg" alt="Potlapalli Farms"
-                 onerror="this.src='https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=1400'">
-
-            <div class="si-visual-inner">
+        <!-- LEFT: photo panel -->
+        <aside class="auth-visual">
+            <img src="assets/images/hero.jpg" alt="Potlapalli Farms" onerror="this.src='https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=1200'">
+            <div class="auth-visual-content">
                 <span class="eyebrow">Welcome back</span>
                 <h2>Your weekly order<br><em>is waiting.</em></h2>
-                <p>Sign in to reorder your favourites, track deliveries, and manage your address — all in one place.</p>
-
-                <div class="si-quote">
-                    <p>"The difference is unmistakable. The meat tastes the way I remember from my grandmother's village."</p>
-                    <span class="who">— Priya S., Hyderabad</span>
+                <p>Log in to reorder your favourites, track deliveries, and manage your address — all in one place.</p>
+                <div class="auth-visual-quote">
+                    <strong>Priya S. · Hyderabad</strong>
+                    "The difference is unmistakable — it tastes like my grandmother's village."
                 </div>
             </div>
         </aside>
 
-        <!-- RIGHT — form panel -->
-        <section class="si-form-panel">
-            <div class="si-form-wrap">
+        <!-- RIGHT: form panel -->
+        <section class="auth-form-panel">
+            <div class="auth-form-wrap">
 
                 <!-- Mobile brand mark -->
                 <div class="si-mobile-brand">
@@ -775,59 +422,53 @@
                     </a>
                 </div>
 
-                <!-- Header -->
-                <div class="si-head">
-                    <h1>Welcome back.</h1>
-                    <p>Sign in with the email and password you used when you signed up.</p>
+                <div class="auth-header">
+                    <h1>Welcome back</h1>
+                    <p>Log in with the email and password you used when you signed up.</p>
                 </div>
 
-                <!-- Error banner -->
-                <div class="si-error" id="siError" role="alert">
+                <div id="authError" class="auth-error-banner" style="display:none;">
                     <i class="fas fa-exclamation-circle"></i>
-                    <span id="siErrorText">Something went wrong.</span>
+                    <span id="authErrorText">Something went wrong.</span>
                 </div>
 
-                <!-- Form -->
-                <form class="si-form" id="signinForm" novalidate>
+                <form class="auth-form" id="signinForm" novalidate>
 
-                    <div class="si-field" id="f-email">
+                    <div class="field" id="field-email">
                         <label for="email">Email address</label>
-                        <input type="email" id="email" name="email" placeholder="you@example.com"
-                               autocomplete="email" inputmode="email" required />
-                        <span class="err">Please enter a valid email address.</span>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" inputmode="email" required />
+                        <div class="field-error">Please enter a valid email address.</div>
                     </div>
 
-                    <div class="si-field" id="f-password">
+                    <div class="field" id="field-password">
                         <label for="password">Password</label>
-                        <div class="si-input-wrap">
-                            <input type="password" id="password" name="password"
-                                   placeholder="Your password" autocomplete="current-password" required />
-                            <button type="button" class="si-toggle" data-toggle="password" aria-label="Show password">
+                        <div class="field-input-wrap">
+                            <input type="password" id="password" name="password" placeholder="Your password" autocomplete="current-password" required />
+                            <button type="button" class="field-toggle-pw" aria-label="Show password" data-toggle="password">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
-                        <span class="err">Please enter your password.</span>
+                        <div class="field-error">Please enter your password.</div>
                     </div>
 
-                    <div class="si-pw-meta">
+                    <div class="si-forgot-row">
                         <button type="button" class="si-forgot" id="forgotBtn">Forgot password?</button>
                     </div>
 
-                    <button type="submit" class="si-submit" id="signinBtn">
-                        Sign In
+                    <button type="submit" class="auth-submit" id="signinBtn">
+                        Log In
                         <i class="fas fa-arrow-right"></i>
                     </button>
+
                 </form>
 
-                <div class="si-divider">New here?</div>
-
-                <div class="si-alt">
+                <div class="auth-alt">
                     Don't have an account?
                     <a href="signup.html">Create one</a>
                 </div>
 
                 <div class="si-legal">
-                    By signing in you agree to our
+                    By logging in you agree to our
                     <a href="terms.html">Terms &amp; Privacy Policy</a>.
                 </div>
 
@@ -852,32 +493,30 @@
                 </p>
 
                 <form class="fp-form" id="forgotForm" novalidate>
-                    <div class="si-field" id="fp-email-field">
+                    <div class="field" id="field-fp-email">
                         <label for="fpEmail">Email address</label>
-                        <input type="email" id="fpEmail" name="fpEmail" placeholder="you@example.com"
-                               autocomplete="email" inputmode="email" required />
-                        <span class="err">Please enter a valid email address.</span>
+                        <input type="email" id="fpEmail" placeholder="you@example.com" autocomplete="email" inputmode="email" required />
+                        <div class="field-error">Please enter a valid email address.</div>
                     </div>
 
-                    <div class="si-error" id="fpError" style="margin-bottom: 0;">
+                    <div id="fpError" class="auth-error-banner" style="display:none; margin: 0;">
                         <i class="fas fa-exclamation-circle"></i>
                         <span id="fpErrorText">Something went wrong.</span>
                     </div>
 
                     <div class="fp-actions">
                         <button type="button" class="fp-cancel" id="fpCancel">Cancel</button>
-                        <button type="submit" class="si-submit" id="fpSubmit">
-                            Send reset link
+                        <button type="submit" class="auth-submit" id="fpSubmit">
+                            Send link
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
                 </form>
             </div>
 
-            <!-- Success view -->
             <div class="fp-success" id="fpSuccess">
                 <div class="check"><i class="fas fa-check"></i></div>
-                <h4>Check your inbox</h4>
+                <h3>Check your inbox</h3>
                 <p>We've sent a reset link to your email. It should arrive in the next few minutes. Check spam if you don't see it.</p>
             </div>
 
@@ -885,357 +524,241 @@
     </dialog>
 
     <script type="module">
-    /* ============================================================
-       SIGN IN — logic
-       ============================================================ */
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-        getAuth, signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-        authDomain: "potlapallifarm.firebaseapp.com",
-        projectId: "potlapallifarm",
-        storageBucket: "potlapallifarm.firebasestorage.app",
-        messagingSenderId: "1017629729159",
-        appId: "1:1017629729159:web:357c420a9de335d427b322",
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    // ---- Constants ----
-    const CART_KEY = 'potlapalliCart';
-    const THEME_KEY = 'potlapalliTheme';
-
-    // ---- DOM ----
-    const form = document.getElementById('signinForm');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const submitBtn = document.getElementById('signinBtn');
-    const errorBanner = document.getElementById('siError');
-    const errorText = document.getElementById('siErrorText');
-    const forgotBtn = document.getElementById('forgotBtn');
-    const themeToggle = document.getElementById('themeToggle');
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileNav = document.getElementById('mobileNav');
-    const mobileNavClose = document.getElementById('mobileNavClose');
-    const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
-    const mobileNavLinks = document.getElementById('mobileNavLinks');
-    const cartCountEl = document.getElementById('cartCount');
-    const toastContainer = document.getElementById('toast-container');
-
-    // Forgot dialog elements
-    const forgotDialog = document.getElementById('forgotDialog');
-    const forgotForm = document.getElementById('forgotForm');
-    const fpEmail = document.getElementById('fpEmail');
-    const fpSubmit = document.getElementById('fpSubmit');
-    const fpClose = document.getElementById('fpClose');
-    const fpCancel = document.getElementById('fpCancel');
-    const fpError = document.getElementById('fpError');
-    const fpErrorText = document.getElementById('fpErrorText');
-    const fpSuccess = document.getElementById('fpSuccess');
-    const fpFormView = document.getElementById('fpFormView');
-
-    // ---- Utilities ----
-    function escapeHtml(str) {
-        return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) {
-            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-        });
-    }
-
-    function showToast(message, type) {
-        type = type || 'info';
-        var icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
-        var el = document.createElement('div');
-        el.className = 'toast ' + type;
-        el.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
-        toastContainer.appendChild(el);
-        setTimeout(function () { el.classList.add('hiding'); }, 4000);
-        setTimeout(function () { el.remove(); }, 4400);
-    }
-
-    function isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-    function mapAuthError(code) {
-        var map = {
-            'auth/invalid-email': "That email address doesn't look right.",
-            'auth/user-disabled': 'This account has been disabled.',
-            'auth/user-not-found': "We couldn't find an account with that email. Try signing up instead.",
-            'auth/wrong-password': 'Incorrect email or password.',
-            'auth/invalid-credential': 'Incorrect email or password.',
-            'auth/invalid-login-credentials': 'Incorrect email or password.',
-            'auth/too-many-requests': 'Too many failed attempts. Please try again in a few minutes.',
-            'auth/network-request-failed': 'Network error. Check your connection and try again.',
-            'auth/operation-not-allowed': 'Sign-in is temporarily disabled. Please contact us.',
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+            authDomain: "potlapallifarm.firebaseapp.com",
+            projectId: "potlapallifarm",
+            storageBucket: "potlapallifarm.firebasestorage.app",
+            messagingSenderId: "1017629729159",
+            appId: "1:1017629729159:web:357c420a9de335d427b322",
         };
-        return map[code] || 'Could not sign you in. Please try again.';
-    }
 
-    // ---- Theme ----
-    function initTheme() {
-        var icon = themeToggle ? themeToggle.querySelector('i') : null;
-        function apply(theme) {
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const THEME_KEY = 'potlapalliTheme';
+        const form = document.getElementById('signinForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const submitBtn = document.getElementById('signinBtn');
+        const errorBanner = document.getElementById('authError');
+        const errorText = document.getElementById('authErrorText');
+
+        // Forgot dialog elements
+        const forgotBtn = document.getElementById('forgotBtn');
+        const forgotDialog = document.getElementById('forgotDialog');
+        const forgotForm = document.getElementById('forgotForm');
+        const fpEmail = document.getElementById('fpEmail');
+        const fpSubmit = document.getElementById('fpSubmit');
+        const fpClose = document.getElementById('fpClose');
+        const fpCancel = document.getElementById('fpCancel');
+        const fpError = document.getElementById('fpError');
+        const fpErrorText = document.getElementById('fpErrorText');
+        const fpSuccess = document.getElementById('fpSuccess');
+        const fpFormView = document.getElementById('fpFormView');
+
+        // --- Theme ---
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle?.querySelector('i');
+        const applyTheme = (theme) => {
             document.documentElement.setAttribute('data-theme', theme);
             try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
-            if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        }
-        var saved = 'light';
-        try { saved = localStorage.getItem(THEME_KEY) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
-        apply(saved);
-        themeToggle && themeToggle.addEventListener('click', function () {
-            var cur = document.documentElement.getAttribute('data-theme');
-            apply(cur === 'dark' ? 'light' : 'dark');
+            if (themeIcon) themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        };
+        applyTheme(localStorage.getItem(THEME_KEY) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+        themeToggle?.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            applyTheme(current === 'dark' ? 'light' : 'dark');
         });
-    }
 
-    // ---- Header scroll ----
-    function initHeaderScroll() {
-        var header = document.getElementById('header');
-        if (!header) return;
-        var onScroll = function () { header.classList.toggle('scrolled', window.scrollY > 20); };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
-    }
-
-    // ---- Cart badge ----
-    function updateCartBadge() {
-        if (!cartCountEl) return;
-        try {
-            var raw = localStorage.getItem(CART_KEY);
-            var cart = raw ? JSON.parse(raw) : [];
-            cartCountEl.textContent = Array.isArray(cart) ? cart.length : 0;
-        } catch (e) { cartCountEl.textContent = '0'; }
-    }
-
-    // ---- Mobile nav ----
-    function initMobileNav() {
-        var links = [
-            { href: 'index.html', icon: 'fa-home', label: 'Home' },
-            { href: 'index.html#products', icon: 'fa-store', label: 'Shop' },
-            { href: 'about.html', icon: 'fa-seedling', label: 'Our Story' },
-            { href: 'orders.html', icon: 'fa-receipt', label: 'My Orders' },
-            { href: 'cart.html', icon: 'fa-shopping-bag', label: 'My Cart' },
-            { href: 'signup.html', icon: 'fa-user-plus', label: 'Sign Up' }
-        ];
-        if (mobileNavLinks) {
-            mobileNavLinks.innerHTML = links.map(function (l) {
-                return '<li><a href="' + l.href + '"><i class="fas ' + l.icon + '"></i><span>' + l.label + '</span></a></li>';
-            }).join('');
+        // --- Redirect if already logged in ---
+        function getRedirectTarget() {
+            const params = new URLSearchParams(window.location.search);
+            const target = params.get('redirect');
+            if (!target) return 'index.html';
+            if (/^https?:|^\/\//i.test(target)) return 'index.html';
+            return target;
         }
-        function open() {
-            mobileNav && mobileNav.classList.add('active');
-            mobileNavBackdrop && mobileNavBackdrop.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function close() {
-            mobileNav && mobileNav.classList.remove('active');
-            mobileNavBackdrop && mobileNavBackdrop.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        menuBtn && menuBtn.addEventListener('click', open);
-        mobileNavClose && mobileNavClose.addEventListener('click', close);
-        mobileNavBackdrop && mobileNavBackdrop.addEventListener('click', close);
-        mobileNavLinks && mobileNavLinks.addEventListener('click', function (e) {
-            if (e.target.closest('a')) close();
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.replace(getRedirectTarget());
+            }
         });
-    }
 
-    // ---- Password toggle ----
-    document.querySelectorAll('[data-toggle]').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            var target = document.getElementById(btn.dataset.toggle);
-            if (!target) return;
-            var showing = target.type === 'text';
-            target.type = showing ? 'password' : 'text';
-            var icon = btn.querySelector('i');
-            if (icon) icon.className = showing ? 'fas fa-eye' : 'fas fa-eye-slash';
-            btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
-        });
-    });
-
-    // ---- Error helpers ----
-    function showError(msg) {
-        errorText.textContent = msg;
-        errorBanner.classList.add('show');
-    }
-
-    function hideError() {
-        errorBanner.classList.remove('show');
-    }
-
-    function setFieldError(fieldId, hasError) {
-        var el = document.getElementById(fieldId);
-        if (el) el.classList.toggle('has-error', hasError);
-    }
-
-    // Clear error state on input
-    [emailInput, passwordInput].forEach(function (el) {
-        el && el.addEventListener('input', function () {
-            var field = el.closest('.si-field');
-            if (field) field.classList.remove('has-error');
-            hideError();
-        });
-    });
-
-    // ---- Sign-in submit ----
-    form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        hideError();
-
-        var email = emailInput.value.trim();
-        var password = passwordInput.value;
-
-        var emailOk = isValidEmail(email);
-        var passwordOk = password.length > 0;
-
-        setFieldError('f-email', !emailOk);
-        setFieldError('f-password', !passwordOk);
-
-        if (!emailOk || !passwordOk) {
-            showError('Please fix the errors above and try again.');
-            return;
-        }
-
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in…';
-
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            // onAuthStateChanged handles the redirect
-        } catch (err) {
-            console.error('Sign in failed:', err);
-            showError(mapAuthError(err.code));
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = 'Sign In <i class="fas fa-arrow-right"></i>';
-        }
-    });
-
-    // ---- Redirect after auth ----
-    function getRedirectTarget() {
-        var params = new URLSearchParams(window.location.search);
-        var target = params.get('redirect');
-        if (!target) return 'index.html';
-        // Only allow relative internal paths — never absolute URLs
-        if (/^https?:|^\/\//i.test(target)) return 'index.html';
-        return target;
-    }
-
-    onAuthStateChanged(auth, function (user) {
-        if (user) {
-            window.location.replace(getRedirectTarget());
-        }
-    });
-
-    // ============================================================
-    // FORGOT PASSWORD
-    // ============================================================
-
-    function openForgotDialog() {
-        // Reset to form view
-        fpFormView.style.display = '';
-        fpSuccess.classList.remove('show');
-        fpError.classList.remove('show');
-        fpEmail.value = emailInput.value.trim();
-        document.getElementById('fp-email-field').classList.remove('has-error');
-
-        if (typeof forgotDialog.showModal === 'function') {
-            forgotDialog.showModal();
-        } else {
-            // Fallback for very old browsers
-            alert('Please email pgf.natural@gmail.com to reset your password.');
-            return;
-        }
-
-        setTimeout(function () { fpEmail.focus(); }, 50);
-    }
-
-    function closeForgotDialog() {
-        try { forgotDialog.close(); } catch (e) {}
-    }
-
-    forgotBtn && forgotBtn.addEventListener('click', openForgotDialog);
-    fpClose && fpClose.addEventListener('click', closeForgotDialog);
-    fpCancel && fpCancel.addEventListener('click', closeForgotDialog);
-
-    // Close on backdrop click
-    forgotDialog && forgotDialog.addEventListener('click', function (e) {
-        var rect = forgotDialog.getBoundingClientRect();
-        var inDialog =
-            e.clientX >= rect.left && e.clientX <= rect.right &&
-            e.clientY >= rect.top && e.clientY <= rect.bottom;
-        if (!inDialog) closeForgotDialog();
-    });
-
-    fpEmail && fpEmail.addEventListener('input', function () {
-        document.getElementById('fp-email-field').classList.remove('has-error');
-        fpError.classList.remove('show');
-    });
-
-    forgotForm && forgotForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        var email = fpEmail.value.trim();
-        var emailOk = isValidEmail(email);
-
-        document.getElementById('fp-email-field').classList.toggle('has-error', !emailOk);
-        fpError.classList.remove('show');
-
-        if (!emailOk) return;
-
-        fpSubmit.disabled = true;
-        fpSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…';
-
-        try {
-            await sendPasswordResetEmail(auth, email, {
-                url: window.location.origin + '/signin.html'
+        // --- Password toggle ---
+        document.querySelectorAll('[data-toggle]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const target = document.getElementById(btn.dataset.toggle);
+                if (!target) return;
+                const showing = target.type === 'text';
+                target.type = showing ? 'password' : 'text';
+                const icon = btn.querySelector('i');
+                if (icon) icon.className = showing ? 'fas fa-eye' : 'fas fa-eye-slash';
             });
+        });
 
-            // Show success view
-            fpFormView.style.display = 'none';
-            fpSuccess.classList.add('show');
-        } catch (err) {
-            console.error('Password reset failed:', err);
-            var msg = 'Could not send the reset email. Please try again.';
-            if (err.code === 'auth/user-not-found') {
-                msg = "We couldn't find an account with that email.";
-            } else if (err.code === 'auth/network-request-failed') {
-                msg = 'Network error. Check your connection and try again.';
-            }
-            fpErrorText.textContent = msg;
-            fpError.classList.add('show');
-
-            fpSubmit.disabled = false;
-            fpSubmit.innerHTML = 'Send reset link <i class="fas fa-paper-plane"></i>';
+        // --- Helpers ---
+        function showError(msg) {
+            errorText.textContent = msg;
+            errorBanner.style.display = 'flex';
         }
-    });
+        function hideError() { errorBanner.style.display = 'none'; }
+        function setFieldError(fieldId, hasError) {
+            document.getElementById(fieldId)?.classList.toggle('has-error', hasError);
+        }
+        function mapFirebaseError(code) {
+            const map = {
+                'auth/invalid-email': 'That email address doesn\'t look right.',
+                'auth/user-disabled': 'This account has been disabled.',
+                'auth/user-not-found': 'We couldn\'t find an account with that email. Try signing up instead.',
+                'auth/wrong-password': 'Incorrect email or password.',
+                'auth/invalid-credential': 'Incorrect email or password.',
+                'auth/invalid-login-credentials': 'Incorrect email or password.',
+                'auth/too-many-requests': 'Too many failed attempts. Please try again in a few minutes.',
+                'auth/network-request-failed': 'Network error. Check your connection and try again.',
+                'auth/operation-not-allowed': 'Log in is temporarily disabled. Please contact us.',
+            };
+            return map[code] || 'Could not log you in. Please try again.';
+        }
 
-    // Reset forgot dialog state on close
-    forgotDialog && forgotDialog.addEventListener('close', function () {
-        fpSubmit.disabled = false;
-        fpSubmit.innerHTML = 'Send reset link <i class="fas fa-paper-plane"></i>';
-        fpError.classList.remove('show');
-        fpFormView.style.display = '';
-        fpSuccess.classList.remove('show');
-    });
+        // --- Clear error on input ---
+        [emailInput, passwordInput].forEach((el) => {
+            el?.addEventListener('input', () => {
+                el.closest('.field')?.classList.remove('has-error');
+                hideError();
+            });
+        });
 
-    // ---- Init ----
-    document.addEventListener('DOMContentLoaded', function () {
-        initTheme();
-        initHeaderScroll();
-        initMobileNav();
-        updateCartBadge();
-        // Auto-focus email for smooth keyboard flow
-        setTimeout(function () {
-            if (window.matchMedia('(min-width: 992px)').matches) {
-                emailInput && emailInput.focus();
+        // --- Submit ---
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            const passwordOk = password.length >= 1;
+
+            setFieldError('field-email', !emailOk);
+            setFieldError('field-password', !passwordOk);
+
+            if (!emailOk || !passwordOk) {
+                showError('Please fix the errors above and try again.');
+                return;
             }
-        }, 400);
-    });
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                // onAuthStateChanged will handle the redirect
+            } catch (err) {
+                console.error('Log in failed:', err);
+                showError(mapFirebaseError(err.code));
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Log In <i class="fas fa-arrow-right"></i>';
+            }
+        });
+
+        // ============================================================
+        // FORGOT PASSWORD
+        // ============================================================
+
+        function openForgotDialog() {
+            fpFormView.style.display = '';
+            fpSuccess.style.display = 'none';
+            fpError.style.display = 'none';
+            fpEmail.value = emailInput.value.trim();
+            document.getElementById('field-fp-email')?.classList.remove('has-error');
+
+            if (typeof forgotDialog.showModal === 'function') {
+                forgotDialog.showModal();
+            } else {
+                alert('Please email pgf.natural@gmail.com to reset your password.');
+                return;
+            }
+
+            setTimeout(() => fpEmail.focus(), 50);
+        }
+
+        function closeForgotDialog() {
+            try { forgotDialog.close(); } catch (e) {}
+        }
+
+        forgotBtn?.addEventListener('click', openForgotDialog);
+        fpClose?.addEventListener('click', closeForgotDialog);
+        fpCancel?.addEventListener('click', closeForgotDialog);
+
+        forgotDialog?.addEventListener('click', (e) => {
+            const rect = forgotDialog.getBoundingClientRect();
+            const inDialog =
+                e.clientX >= rect.left && e.clientX <= rect.right &&
+                e.clientY >= rect.top && e.clientY <= rect.bottom;
+            if (!inDialog) closeForgotDialog();
+        });
+
+        fpEmail?.addEventListener('input', () => {
+            document.getElementById('field-fp-email')?.classList.remove('has-error');
+            fpError.style.display = 'none';
+        });
+
+        forgotForm?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = fpEmail.value.trim();
+            const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+            setFieldError('field-fp-email', !emailOk);
+            fpError.style.display = 'none';
+
+            if (!emailOk) return;
+
+            fpSubmit.disabled = true;
+            fpSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                await sendPasswordResetEmail(auth, email, {
+                    url: window.location.origin + '/signin.html'
+                });
+                fpFormView.style.display = 'none';
+                fpSuccess.style.display = 'block';
+            } catch (err) {
+                console.error('Password reset failed:', err);
+                let msg = 'Could not send the reset email. Please try again.';
+                if (err.code === 'auth/user-not-found') {
+                    msg = 'We couldn\'t find an account with that email.';
+                } else if (err.code === 'auth/network-request-failed') {
+                    msg = 'Network error. Check your connection and try again.';
+                }
+                fpErrorText.textContent = msg;
+                fpError.style.display = 'flex';
+
+                fpSubmit.disabled = false;
+                fpSubmit.innerHTML = 'Send link <i class="fas fa-paper-plane"></i>';
+            }
+        });
+
+        forgotDialog?.addEventListener('close', () => {
+            fpSubmit.disabled = false;
+            fpSubmit.innerHTML = 'Send link <i class="fas fa-paper-plane"></i>';
+            fpError.style.display = 'none';
+            fpFormView.style.display = '';
+            fpSuccess.style.display = 'none';
+        });
+
+        // --- Auto-focus on desktop ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (window.matchMedia('(min-width: 992px)').matches) {
+                    emailInput?.focus();
+                }
+            }, 400);
+        });
     </script>
 </body>
 </html>
