@@ -12,6 +12,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+    <!-- Leaflet (free OpenStreetMap) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <link rel="stylesheet" href="css/style.css" />
 
     <style>
@@ -25,9 +29,7 @@
             min-height: calc(100vh - var(--header-height) - var(--alert-height));
         }
 
-        .co-header {
-            margin-bottom: 40px;
-        }
+        .co-header { margin-bottom: 40px; }
 
         .co-header h1 {
             font-family: var(--font-display);
@@ -49,7 +51,7 @@
             align-items: flex-start;
         }
 
-        /* ---- Progress indicator ---- */
+        /* Progress indicator */
         .co-steps {
             display: flex;
             align-items: center;
@@ -97,7 +99,7 @@
             max-width: 40px;
         }
 
-        /* ---- Form card ---- */
+        /* Form card */
         .co-card {
             background: var(--bg-main);
             border: 1px solid var(--border);
@@ -150,6 +152,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            position: relative;
         }
 
         .co-field label {
@@ -207,7 +210,192 @@
 
         .co-field.has-error .err { display: block; }
 
-        /* ---- Payment options ---- */
+        .co-hint {
+            font-family: var(--font-body);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-top: 2px;
+        }
+
+        /* Address suggestions dropdown */
+        .address-suggestions {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+            max-height: 220px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .address-suggestions.open { display: block; }
+
+        .address-suggestion-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: var(--text-main);
+            line-height: 1.45;
+            border-bottom: 1px solid var(--border);
+            transition: var(--trans-fast);
+        }
+
+        .address-suggestion-item:last-child { border-bottom: none; }
+
+        .address-suggestion-item:hover,
+        .address-suggestion-item.active {
+            background: var(--forest-soft);
+            color: var(--forest);
+        }
+
+        [data-theme="dark"] .address-suggestion-item:hover,
+        [data-theme="dark"] .address-suggestion-item.active {
+            background: rgba(107, 196, 135, 0.1);
+            color: #6bc487;
+        }
+
+        .address-suggestion-empty {
+            padding: 12px 16px;
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Map container */
+        .co-map-wrap {
+            position: relative;
+        }
+
+        #map-container {
+            height: 320px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--bg-warm);
+            z-index: 1;
+        }
+
+        .leaflet-container {
+            font-family: var(--font-body) !important;
+            background: var(--bg-warm) !important;
+        }
+
+        .leaflet-control-attribution {
+            font-size: 10px !important;
+            background: rgba(255, 255, 255, 0.85) !important;
+        }
+
+        [data-theme="dark"] .leaflet-control-attribution {
+            background: rgba(20, 17, 14, 0.85) !important;
+            color: var(--text-muted) !important;
+        }
+
+        [data-theme="dark"] .leaflet-control-attribution a {
+            color: var(--text-muted) !important;
+        }
+
+        [data-theme="dark"] .leaflet-tile {
+            filter: brightness(0.85) contrast(0.95) hue-rotate(180deg) invert(1);
+        }
+
+        [data-theme="dark"] .leaflet-container {
+            background: #0a0807 !important;
+        }
+
+        .co-map-status {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 8px 12px;
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-main);
+            box-shadow: var(--shadow-sm);
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: calc(100% - 24px);
+        }
+
+        .co-map-status .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--stone-light);
+            flex-shrink: 0;
+        }
+
+        .co-map-status.located .status-dot {
+            background: var(--forest);
+        }
+
+        .co-map-status.located {
+            color: var(--forest);
+        }
+
+        [data-theme="dark"] .co-map-status.located,
+        [data-theme="dark"] .co-map-status.located .status-dot {
+            color: #6bc487;
+        }
+
+        [data-theme="dark"] .co-map-status.located .status-dot {
+            background: #6bc487;
+        }
+
+        .co-map-actions {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 500;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .co-map-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-sm);
+            transition: var(--trans-fast);
+            cursor: pointer;
+        }
+
+        .co-map-btn:hover {
+            background: var(--forest);
+            border-color: var(--forest);
+            color: var(--cream);
+        }
+
+        .co-map-btn.locating {
+            pointer-events: none;
+        }
+
+        .co-map-btn.locating i {
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Payment options */
         .pay-options {
             display: flex;
             flex-direction: column;
@@ -227,9 +415,7 @@
             background: var(--bg-main);
         }
 
-        .pay-option:hover {
-            border-color: var(--border-strong);
-        }
+        .pay-option:hover { border-color: var(--border-strong); }
 
         .pay-option.selected {
             border-color: var(--forest);
@@ -242,6 +428,7 @@
 
         .pay-option input[type="radio"] {
             appearance: none;
+            -webkit-appearance: none;
             width: 20px;
             height: 20px;
             border: 2px solid var(--border-strong);
@@ -283,7 +470,7 @@
             line-height: 1.5;
         }
 
-        /* ---- Summary ---- */
+        /* Summary */
         .co-summary {
             background: var(--bg-warm);
             border: 1px solid var(--border);
@@ -438,7 +625,7 @@
             flex-shrink: 0;
         }
 
-        /* ---- Empty / signin gates ---- */
+        /* Gates */
         .co-gate {
             background: var(--bg-main);
             border: 1px solid var(--border);
@@ -503,7 +690,7 @@
             box-shadow: var(--shadow-md);
         }
 
-        /* ---- Success view ---- */
+        /* Success view */
         .co-success {
             max-width: 640px;
             margin: 40px auto;
@@ -594,16 +781,27 @@
             font-family: var(--font-body);
             font-size: 0.88rem;
             margin-bottom: 28px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
+
+        .co-success .order-meta > div { flex: 1; min-width: 100px; text-align: left; }
 
         .co-success .order-meta .meta-label {
             color: var(--text-muted);
             font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
         }
 
         .co-success .order-meta .meta-value {
             color: var(--text-main);
-            font-weight: 600;
+            font-weight: 700;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            letter-spacing: -0.01em;
         }
 
         .co-success .actions {
@@ -644,11 +842,14 @@
             color: var(--text-main);
         }
 
-        .co-success .btn-outline-sm:hover {
-            border-color: var(--text-main);
+        .co-success .btn-outline-sm:hover { border-color: var(--text-main); }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        /* ---- Responsive ---- */
+        /* Responsive */
         @media (max-width: 992px) {
             .co-layout {
                 grid-template-columns: 1fr;
@@ -670,6 +871,8 @@
             .co-success h1 { font-size: 1.5rem; }
             .co-success .otp-code { font-size: 1.9rem; letter-spacing: 0.3em; }
             .co-steps { font-size: 0.72rem; gap: 6px; }
+            #map-container { height: 260px; }
+            .co-map-btn { width: 36px; height: 36px; font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -804,23 +1007,13 @@
 
     <script type="module">
     /* ============================================================
-       CHECKOUT — full flow
-       Order of operations:
-         1. Load cart from localStorage
-         2. Verify user is signed in (redirect to signin.html if not)
-         3. Pre-fill from users/{uid} if profile exists
-         4. On submit:
-            - Validate form
-            - Generate 6-digit deliveryOTP + 12-hour expiry
-            - Write order to Firestore 'orders' collection
-            - Show success state with OTP
-            - Clear the cart
+       CHECKOUT — full flow with free OpenStreetMap / Leaflet map
        ============================================================ */
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import {
-        getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, Timestamp
+        getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, Timestamp, GeoPoint
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -839,9 +1032,10 @@
     // ---- Config ----
     const CART_KEY = 'potlapalliCart';
     const THEME_KEY = 'potlapalliTheme';
-    const FALLBACK_IMG = 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&q=80&w=400';
+    const DEFAULT_CENTER = [15.9129, 79.7400]; // Andhra Pradesh
+    const NOMINATIM_UA = 'PotlapalliFarmsCheckout/1.0 (pgf.natural@gmail.com)';
 
-    // ---- DOM refs ----
+    // ---- DOM ----
     const coContentEl = document.getElementById('coContent');
     const cartCountEl = document.getElementById('cartCount');
     const toastContainer = document.getElementById('toast-container');
@@ -857,6 +1051,14 @@
     let currentUser = null;
     let cart = [];
     let isSubmitting = false;
+
+    // Leaflet state
+    let map = null;
+    let marker = null;
+    let searchDebounce = null;
+    let reverseDebounce = null;
+    let selectedLocation = null; // { lat, lng }
+    let suppressReverse = false;
 
     // ---- Utilities ----
     function escapeHtml(str) {
@@ -931,7 +1133,7 @@
             '</div>';
     }
 
-    // ---- Summary ---- 
+    // ---- Summary items ----
     function buildSummaryItems() {
         return cart.map(function (item) {
             var isMeat = !!item.isMeat;
@@ -966,12 +1168,10 @@
 
             '<div class="co-layout">' +
 
-                // LEFT COLUMN — form
                 '<div class="co-left-col">' +
 
                     '<form id="coForm" novalidate>' +
 
-                        // Contact & address
                         '<div class="co-card">' +
                             '<div class="co-card-head">' +
                                 '<div class="co-icon"><i class="fas fa-map-marker-alt"></i></div>' +
@@ -979,6 +1179,7 @@
                             '</div>' +
 
                             '<div class="co-form">' +
+
                                 '<div class="co-field" id="f-name">' +
                                     '<label for="name">Full name</label>' +
                                     '<input type="text" id="name" value="' + escapeHtml(profile.name || '') + '" placeholder="Your full name" autocomplete="name" required />' +
@@ -993,13 +1194,31 @@
 
                                 '<div class="co-field" id="f-address">' +
                                     '<label for="address">Delivery address</label>' +
-                                    '<textarea id="address" placeholder="House / street / village / landmark / PIN" autocomplete="street-address" required>' + escapeHtml(profile.address || '') + '</textarea>' +
+                                    '<input type="text" id="address" value="' + escapeHtml(profile.address || '') + '" placeholder="Start typing your address — we\'ll find it on the map" autocomplete="off" required />' +
+                                    '<div class="address-suggestions" id="addressSuggestions"></div>' +
                                     '<span class="err">Please enter your full delivery address.</span>' +
                                 '</div>' +
+
+                                '<div class="co-field co-map-wrap">' +
+                                    '<label>Pin your exact location</label>' +
+                                    '<div id="map-container"></div>' +
+                                    '<div class="co-map-status" id="mapStatus">' +
+                                        '<span class="status-dot"></span>' +
+                                        '<span id="mapStatusText">Search above, then drag the pin to fine-tune</span>' +
+                                    '</div>' +
+                                    '<div class="co-map-actions">' +
+                                        '<button type="button" class="co-map-btn" id="locateBtn" aria-label="Use my current location" title="Use my current location">' +
+                                            '<i class="fas fa-location-crosshairs"></i>' +
+                                        '</button>' +
+                                    '</div>' +
+                                    '<span class="co-hint">Drag the pin to your exact door. This helps our delivery person find you faster.</span>' +
+                                    '<input type="hidden" id="latitude" />' +
+                                    '<input type="hidden" id="longitude" />' +
+                                '</div>' +
+
                             '</div>' +
                         '</div>' +
 
-                        // Payment
                         '<div class="co-card">' +
                             '<div class="co-card-head">' +
                                 '<div class="co-icon"><i class="fas fa-wallet"></i></div>' +
@@ -1027,7 +1246,6 @@
                     '</form>' +
                 '</div>' +
 
-                // RIGHT COLUMN — summary
                 '<aside class="co-summary">' +
                     '<h3>Order summary</h3>' +
                     '<div class="co-summary-items">' + buildSummaryItems() + '</div>' +
@@ -1051,9 +1269,10 @@
 
         coContentEl.innerHTML = formHtml;
         bindFormInteractions();
+        initMap();
     }
 
-    // ---- Interactions ----
+    // ---- Form interactions ----
     function bindFormInteractions() {
         // Payment option selection
         var payOptions = document.getElementById('payOptions');
@@ -1068,7 +1287,7 @@
             });
         }
 
-        // Clear error state when user types
+        // Clear error state on input
         ['name', 'phone', 'address'].forEach(function (id) {
             var el = document.getElementById(id);
             if (!el) return;
@@ -1078,11 +1297,223 @@
             });
         });
 
-        // Place order
-        var btn = document.getElementById('placeOrderBtn');
-        if (btn) {
-            btn.addEventListener('click', handlePlaceOrder);
+        // Address search
+        var addressInput = document.getElementById('address');
+        if (addressInput) {
+            addressInput.addEventListener('input', handleAddressInput);
+            addressInput.addEventListener('focus', function () {
+                if (this.value.trim().length >= 3) handleAddressInput.call(this);
+            });
+            addressInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') hideSuggestions();
+            });
         }
+
+        // Close suggestions on outside click
+        document.addEventListener('click', function (e) {
+            var wrap = document.getElementById('f-address');
+            if (wrap && !wrap.contains(e.target)) hideSuggestions();
+        });
+
+        // Locate button
+        var locateBtn = document.getElementById('locateBtn');
+        if (locateBtn) {
+            locateBtn.addEventListener('click', useCurrentLocation);
+        }
+
+        // Place order button
+        var btn = document.getElementById('placeOrderBtn');
+        if (btn) btn.addEventListener('click', handlePlaceOrder);
+    }
+
+    // ---- Address autocomplete (Nominatim) ----
+    function handleAddressInput() {
+        var query = this.value.trim();
+        clearTimeout(searchDebounce);
+
+        if (query.length < 3) {
+            hideSuggestions();
+            return;
+        }
+
+        searchDebounce = setTimeout(function () {
+            searchAddressNominatim(query);
+        }, 450);
+    }
+
+    function searchAddressNominatim(query) {
+        var url = 'https://nominatim.openstreetmap.org/search?format=json&limit=6&countrycodes=in&addressdetails=1&q=' + encodeURIComponent(query);
+
+        fetch(url, { headers: { 'Accept': 'application/json' } })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                showSuggestions(data);
+            })
+            .catch(function (err) {
+                console.warn('Address search failed:', err);
+                showSuggestions([]);
+            });
+    }
+
+    function showSuggestions(items) {
+        var box = document.getElementById('addressSuggestions');
+        if (!box) return;
+
+        if (!items || items.length === 0) {
+            box.innerHTML = '<div class="address-suggestion-empty">No matches. Try a nearby landmark.</div>';
+            box.classList.add('open');
+            return;
+        }
+
+        box.innerHTML = items.map(function (item, i) {
+            var label = item.display_name || '';
+            return '<div class="address-suggestion-item" data-idx="' + i + '">' + escapeHtml(label) + '</div>';
+        }).join('');
+        box.classList.add('open');
+
+        box.querySelectorAll('.address-suggestion-item').forEach(function (el, i) {
+            el.addEventListener('click', function () {
+                var item = items[i];
+                if (!item) return;
+                var lat = parseFloat(item.lat);
+                var lng = parseFloat(item.lon);
+                var addr = item.display_name || '';
+
+                suppressReverse = true;
+                var addressInput = document.getElementById('address');
+                if (addressInput) addressInput.value = addr;
+
+                setMarker(lat, lng, true);
+                hideSuggestions();
+                setTimeout(function () { suppressReverse = false; }, 300);
+            });
+        });
+    }
+
+    function hideSuggestions() {
+        var box = document.getElementById('addressSuggestions');
+        if (box) box.classList.remove('open');
+    }
+
+    // ---- Leaflet map ----
+    function initMap() {
+        var container = document.getElementById('map-container');
+        if (!container || typeof L === 'undefined') return;
+
+        map = L.map('map-container', {
+            zoomControl: true,
+            attributionControl: true,
+        }).setView(DEFAULT_CENTER, 7);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+        }).addTo(map);
+
+        marker = L.marker(DEFAULT_CENTER, {
+            draggable: true,
+            icon: L.divIcon({
+                className: 'pf-marker',
+                html: '<div style="width:24px;height:24px;border-radius:50% 50% 50% 0;background:#c45a3a;transform:rotate(-45deg);box-shadow:0 4px 10px rgba(0,0,0,0.3);border:2px solid #fff;"></div>',
+                iconSize: [24, 24],
+                iconAnchor: [12, 24],
+            })
+        }).addTo(map);
+
+        // Marker drag end — update coords + reverse geocode
+        marker.on('dragend', function () {
+            var pos = marker.getLatLng();
+            updateCoordinates(pos.lat, pos.lng);
+            if (!suppressReverse) reverseGeocode(pos.lat, pos.lng);
+        });
+
+        // Click map to move marker
+        map.on('click', function (e) {
+            setMarker(e.latlng.lat, e.latlng.lng, false);
+        });
+
+        // Hide suggestions on map click too
+        map.on('mousedown', hideSuggestions);
+
+        // Fix any layout weirdness
+        setTimeout(function () { map.invalidateSize(); }, 200);
+    }
+
+    function setMarker(lat, lng, center) {
+        if (!map || !marker) return;
+        marker.setLatLng([lat, lng]);
+        if (center) map.setView([lat, lng], 16);
+        updateCoordinates(lat, lng);
+    }
+
+    function updateCoordinates(lat, lng) {
+        selectedLocation = { lat: lat, lng: lng };
+
+        var latEl = document.getElementById('latitude');
+        var lngEl = document.getElementById('longitude');
+        if (latEl) latEl.value = lat;
+        if (lngEl) lngEl.value = lng;
+
+        var status = document.getElementById('mapStatus');
+        var text = document.getElementById('mapStatusText');
+        if (status && text) {
+            status.classList.add('located');
+            text.textContent = 'Location pinned · ' + lat.toFixed(5) + ', ' + lng.toFixed(5);
+        }
+    }
+
+    // ---- Reverse geocode (Nominatim) ----
+    function reverseGeocode(lat, lng) {
+        clearTimeout(reverseDebounce);
+        reverseDebounce = setTimeout(function () {
+            var url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&zoom=18&addressdetails=1';
+
+            fetch(url, { headers: { 'Accept': 'application/json' } })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (!data || !data.display_name) return;
+                    var addressInput = document.getElementById('address');
+                    if (!addressInput) return;
+                    // Only auto-fill if user hasn't typed a specific address
+                    if (!addressInput.value || addressInput.value.length < 8) {
+                        addressInput.value = data.display_name;
+                        var field = document.getElementById('f-address');
+                        if (field) field.classList.remove('has-error');
+                    }
+                })
+                .catch(function (err) { console.warn('Reverse geocode failed:', err); });
+        }, 500);
+    }
+
+    // ---- Use my current location ----
+    function useCurrentLocation() {
+        if (!navigator.geolocation) {
+            showToast('Your browser does not support location access.', 'error');
+            return;
+        }
+
+        var btn = document.getElementById('locateBtn');
+        btn && btn.classList.add('locating');
+
+        navigator.geolocation.getCurrentPosition(
+            function (pos) {
+                btn && btn.classList.remove('locating');
+                var lat = pos.coords.latitude;
+                var lng = pos.coords.longitude;
+                setMarker(lat, lng, true);
+                reverseGeocode(lat, lng);
+                showToast('Location set to your current position.');
+            },
+            function (err) {
+                btn && btn.classList.remove('locating');
+                var msg = 'Could not get your location.';
+                if (err && err.code === 1) msg = 'Location permission denied. Please enable it or pin manually.';
+                else if (err && err.code === 2) msg = 'Location unavailable right now.';
+                else if (err && err.code === 3) msg = 'Location request timed out.';
+                showToast(msg, 'error');
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+        );
     }
 
     // ---- Validation ----
@@ -1095,12 +1526,17 @@
         var nameOk = nameEl.value.trim().length >= 2;
         var phoneOk = /^[6-9]\d{9}$/.test(phoneEl.value.trim());
         var addressOk = addressEl.value.trim().length >= 10;
+        var locationOk = !!(selectedLocation && !isNaN(selectedLocation.lat) && !isNaN(selectedLocation.lng));
 
         document.getElementById('f-name').classList.toggle('has-error', !nameOk);
         document.getElementById('f-phone').classList.toggle('has-error', !phoneOk);
         document.getElementById('f-address').classList.toggle('has-error', !addressOk);
 
-        return nameOk && phoneOk && addressOk;
+        if (!locationOk) {
+            showToast('Please pin your location on the map.', 'error');
+        }
+
+        return nameOk && phoneOk && addressOk && locationOk;
     }
 
     // ---- Place order ----
@@ -1120,8 +1556,6 @@
         }
 
         if (!validateForm()) {
-            showToast('Please fix the errors in the form.', 'error');
-            // Scroll to first error
             var firstErr = document.querySelector('.co-field.has-error');
             if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
@@ -1148,11 +1582,9 @@
             var totalAmount = cart.reduce(function (s, i) { return s + i.price * i.quantity; }, 0);
 
             var deliveryOTP = generateOTP();
-            var otpExpiryDate = new Date(Date.now() + 12 * 60 * 60 * 1000); // 12 hours
+            var otpExpiryDate = new Date(Date.now() + 12 * 60 * 60 * 1000);
             var otpExpiry = Timestamp.fromDate(otpExpiryDate);
 
-            // Build the order document
-            // NOTE: fields match what the security rules already require.
             var orderPayload = {
                 userId: currentUser.uid,
                 items: cart.map(function (it) {
@@ -1173,24 +1605,21 @@
                 status: 'Pending',
                 orderDate: serverTimestamp(),
                 deliveryOTP: deliveryOTP,
-                otpExpiry: otpExpiry
+                otpExpiry: otpExpiry,
+                location: new GeoPoint(selectedLocation.lat, selectedLocation.lng)
             };
 
             var docRef = await addDoc(collection(db, 'orders'), orderPayload);
 
-            // Success — clear cart and render receipt
             clearCart();
             renderSuccess(docRef.id, deliveryOTP, totalAmount, paymentMethod, customerName);
 
         } catch (err) {
             console.error('Order creation failed:', err);
             var msg = (err && err.message) ? err.message : 'Something went wrong.';
-
-            // Friendly message for common cases
             if (String(msg).toLowerCase().indexOf('permission') !== -1) {
                 msg = 'We couldn\'t save your order right now. Please try again or contact us on WhatsApp.';
             }
-
             showToast('Could not place order: ' + msg, 'error');
             if (btn) {
                 btn.disabled = false;
@@ -1210,7 +1639,7 @@
             '<div class="co-success">' +
                 '<div class="check"><i class="fas fa-check"></i></div>' +
                 '<h1>Order placed!</h1>' +
-                '<p class="lead">Thanks ' + escapeHtml(customerName.split(' ')[0] || '') + '. We\'ll harvest fresh Sunday morning and deliver the same day.</p>' +
+                '<p class="lead">Thanks ' + escapeHtml((customerName || '').split(' ')[0] || '') + '. We\'ll harvest fresh Sunday morning and deliver the same day.</p>' +
 
                 '<div class="otp-box">' +
                     '<div class="label">Your delivery OTP</div>' +
@@ -1325,7 +1754,6 @@
             return;
         }
 
-        // Pre-fill profile from Firestore if it exists
         var profile = {};
         try {
             var snap = await getDoc(doc(db, 'users', user.uid));
