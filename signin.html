@@ -1,367 +1,1241 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In - Potlapalli Farm</title>
-    <meta name="description" content="Sign in to your Potlapalli Farms account to manage orders and track deliveries." />
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#1e4d2b" />
+    <title>Sign In — Potlapalli Farms</title>
+    <meta name="description" content="Sign in to your Potlapalli Farms account to place your weekly order." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+    <link rel="stylesheet" href="css/style.css" />
+
     <style>
-        :root {
-            --primary-color: #27ae60; --primary-color-dark: #1e874b; --secondary-color: #2c3e50; --white: #fff;
-            --background-light: #f8f9fa; --danger-color: #e74c3c; --border-light: #e0e0e0;
-            --text-dark: #333; --text-light: #555;
-            --shadow-light: rgba(0,0,0,0.08);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--background-light); padding-top: 5rem; }
-        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
-        a, button { transition: all 0.3s ease; }
-        body.nav-open { overflow: hidden; }
+        /* ============================================================
+           SIGN IN PAGE
+           ============================================================ */
 
-        /* --- 2. Header & Navigation (Fixed Index Style) --- */
-        .header { 
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 0.75rem 0; 
-            background-color: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.07); 
-        }
-        .header-inner { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            gap: 20px; 
-        }
-        .logo a { display: flex; align-items: center; gap: 0.75rem; font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); text-decoration: none; }
-        .logo img { height: 40px; }
-        .logo span { white-space: nowrap; }
-
-        /* Desktop Nav - Hidden for Auth Page */
-        #desktop-nav { display: none; }
-        
-        .header-actions { 
-            display: flex; 
-            align-items: center; 
-            gap: 20px;
-            flex-grow: 1; 
-            justify-content: flex-end; 
+        body {
+            background: var(--bg-main);
         }
 
-        #auth-links-container {
+        /* Full-height split layout */
+        .si-shell {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            padding-top: calc(var(--header-height) + var(--alert-height));
+        }
+
+        /* LEFT — photo panel */
+        .si-visual {
+            position: relative;
+            overflow: hidden;
+            background: var(--charcoal);
+            display: flex;
+            align-items: flex-end;
+            padding: 56px 48px;
+            min-height: calc(100vh - var(--header-height) - var(--alert-height));
+            min-height: calc(100dvh - var(--header-height) - var(--alert-height));
+        }
+
+        .si-visual img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .si-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(26, 26, 26, 0.1) 0%, rgba(26, 26, 26, 0.45) 45%, rgba(26, 26, 26, 0.88) 100%),
+                linear-gradient(90deg, rgba(26, 26, 26, 0.35) 0%, rgba(26, 26, 26, 0) 60%);
+            z-index: 1;
+        }
+
+        .si-visual-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 480px;
+            animation: siFadeUp 0.9s var(--ease-out) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .si-visual .eyebrow {
+            color: var(--gold);
+            margin-bottom: 18px;
+        }
+
+        .si-visual h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.85rem, 3.2vw, 2.65rem);
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            line-height: 1.1;
+            color: var(--cream);
+            margin-bottom: 18px;
+        }
+
+        .si-visual h2 em {
+            font-style: normal;
+            font-weight: 500;
+            color: #e6a58a;
+        }
+
+        .si-visual p {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            line-height: 1.65;
+            color: rgba(250, 247, 242, 0.78);
+            max-width: 400px;
+            margin-bottom: 36px;
+        }
+
+        .si-quote {
+            padding: 20px 22px;
+            background: rgba(250, 247, 242, 0.08);
+            border-left: 3px solid var(--gold);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .si-quote p {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 0.98rem;
+            line-height: 1.55;
+            color: var(--cream);
+            margin-bottom: 8px;
+            letter-spacing: -0.005em;
+        }
+
+        .si-quote .who {
+            font-family: var(--font-body);
+            font-style: normal;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            color: rgba(250, 247, 242, 0.65);
+        }
+
+        /* RIGHT — form panel */
+        .si-form-panel {
             display: flex;
             align-items: center;
-            gap: 20px;
-            margin-right: 20px;
-        }
-        #auth-links-container a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-weight: 500;
+            justify-content: center;
+            padding: 56px 48px;
+            background: var(--bg-main);
         }
 
-        /* Mini Cart Styles */
-        .mini-cart { margin-right: 5px; } 
-        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--secondary-color); }
-        .mini-cart span { 
-            position: absolute; top: -8px; right: -10px; 
-            background-color: var(--primary-color); color: var(--white); 
-            font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; 
-            display: flex; align-items: center; justify-content: center; 
+        .si-form-wrap {
+            width: 100%;
+            max-width: 400px;
+            animation: siFadeUp 0.9s var(--ease-out) forwards;
+            animation-delay: 0.1s;
+            opacity: 0;
+            transform: translateY(20px);
         }
-        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; color: var(--primary-color); }
-        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; z-index: 1001; color: var(--secondary-color); }
 
-        /* Mobile Slide-out Nav */
-        .nav-links { 
-            position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
-            background-color: var(--white); 
-            z-index: 999; 
-            flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
-            transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-            list-style: none; padding: 0;
+        /* Mobile-only brand mark at top */
+        .si-mobile-brand {
             display: none;
+            margin-bottom: 32px;
         }
-        .nav-links.active { transform: translateX(0); display: flex; }
-        .nav-links a { font-size: 1.8rem; font-weight: 600; color: var(--secondary-color); }
-        .nav-links li { padding: 0; }
-        
-        /* --- 3. Main Auth Page Layout --- */
-        .auth-page { display: flex; min-height: calc(100vh - 5rem); }
-        
-        /* FIX: Removed the linear-gradient overlay for a clear image */
-        .auth-left { 
-    flex: 1; 
-    /* This creates a subtle dark overlay (rgba(0,0,0,0.4) over the image */
-    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('assets/images/ram.jpg') center/cover no-repeat; 
-    background-size: cover;
-    color: var(--white); 
-    padding: 60px; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
-    text-align: center; 
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7); /* Kept for even better readability */
-}
-        .auth-left h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 1rem; }
-        .auth-left p { font-size: 1.1rem; max-width: 400px; opacity: 0.9; }
-        .auth-right { flex: 1.2; background-color: var(--white); display: flex; flex-direction: column; justify-content: center; padding: 60px 40px; }
-        .auth-form-container { width: 100%; max-width: 400px; margin: 0 auto; }
-        .auth-form-container h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 2rem; color: var(--secondary-color); text-align: center; }
-        
-        .input-group { position: relative; margin-bottom: 1.5rem; }
-        .input-group label { margin-bottom: 0.5rem; font-weight: 500; color: #333; display: block; }
-        .input-group input { width: 100%; padding: 14px 40px 14px 16px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease; }
-        .input-group input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.1); }
-        .password-toggle { position: absolute; top: 45px; right: 15px; cursor: pointer; color: #999; }
 
-        .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; font-size: 0.9rem; }
-        .remember-me { display: flex; align-items: center; gap: 0.5rem; }
-        .forgot-password a { color: var(--primary-color); text-decoration: none; cursor: pointer; }
-        
-        .btn-primary { width: 100%; background-color: var(--primary-color); color: #fff; border: none; padding: 16px; font-size: 1.1rem; font-weight: 600; border-radius: 8px; cursor: pointer; }
-        .btn-primary:hover { background-color: var(--primary-color-dark); transform: translateY(-2px); }
+        .si-mobile-brand a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
 
-        .auth-footer { margin-top: 2rem; text-align: center; }
-        .auth-footer a { color: var(--primary-color); font-weight: 600; text-decoration: none; }
-        
-        /* --- 4. Modals & Utilities --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-        .modal-overlay.show { display: flex; opacity: 1; }
-        .modal-content { background: var(--white); padding: 2rem; border-radius: 15px; width: 90%; max-width: 500px; text-align: center; position: relative; }
-        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; position: absolute; top: 15px; right: 20px; }
-        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 1001; transition: bottom 0.5s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .toast.show { bottom: 20px; }
-        .toast.error { background: var(--danger-color); }
-        
-        /* --- 5. Responsive Design (MOBILE MENU FIX) --- */
+        .si-mobile-brand .logo-symbol {
+            width: 34px;
+            height: 34px;
+            color: var(--forest);
+        }
+
+        [data-theme="dark"] .si-mobile-brand .logo-symbol { color: #6bc487; }
+
+        .si-mobile-brand .logo-name {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            color: var(--text-main);
+        }
+
+        /* Header */
+        .si-head {
+            margin-bottom: 32px;
+        }
+
+        .si-head h1 {
+            font-family: var(--font-display);
+            font-size: clamp(1.85rem, 3vw, 2.2rem);
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            line-height: 1.15;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .si-head p {
+            font-family: var(--font-body);
+            font-size: 0.96rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        /* Error banner */
+        .si-error {
+            display: none;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            background: rgba(177, 58, 42, 0.08);
+            border: 1px solid rgba(177, 58, 42, 0.25);
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            font-family: var(--font-body);
+            font-size: 0.86rem;
+            font-weight: 500;
+            color: var(--danger);
+            line-height: 1.5;
+        }
+
+        .si-error.show { display: flex; }
+
+        .si-error i {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Form */
+        .si-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .si-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .si-field label {
+            font-family: var(--font-body);
+            font-size: 0.76rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .si-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .si-field input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            transition: var(--trans-fast);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .si-field input:focus {
+            border-color: var(--forest);
+            box-shadow: 0 0 0 3px var(--forest-soft);
+        }
+
+        .si-field input::placeholder {
+            color: var(--stone-light);
+        }
+
+        .si-field.has-error input {
+            border-color: var(--danger);
+            box-shadow: 0 0 0 3px rgba(177, 58, 42, 0.1);
+        }
+
+        .si-field input[type="password"],
+        .si-field input.with-toggle { padding-right: 48px; }
+
+        /* Password toggle */
+        .si-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            transition: var(--trans-fast);
+            cursor: pointer;
+            background: transparent;
+            border: none;
+        }
+
+        .si-toggle:hover {
+            color: var(--text-main);
+            background: var(--bg-warm);
+        }
+
+        /* Error text */
+        .si-field .err {
+            display: none;
+            font-family: var(--font-body);
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--danger);
+            margin-top: 2px;
+        }
+
+        .si-field.has-error .err { display: block; }
+
+        /* Password + forgot row */
+        .si-pw-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-top: -4px;
+        }
+
+        .si-forgot {
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: var(--trans-fast);
+            text-decoration: none;
+        }
+
+        .si-forgot:hover {
+            color: var(--forest);
+            text-decoration: underline;
+        }
+
+        [data-theme="dark"] .si-forgot:hover { color: #6bc487; }
+
+        /* Submit button */
+        .si-submit {
+            margin-top: 6px;
+            background: var(--terracotta);
+            color: var(--cream);
+            padding: 16px 24px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--trans-fast);
+            cursor: pointer;
+            border: none;
+            width: 100%;
+        }
+
+        .si-submit:hover:not(:disabled) {
+            background: var(--terracotta-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 28px rgba(196, 90, 58, 0.35);
+        }
+
+        .si-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .si-submit i.fa-arrow-right {
+            transition: transform 0.3s var(--ease);
+        }
+
+        .si-submit:hover:not(:disabled) i.fa-arrow-right {
+            transform: translateX(4px);
+        }
+
+        /* Divider */
+        .si-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 26px 0 20px;
+            color: var(--stone-light);
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .si-divider::before,
+        .si-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Footer link */
+        .si-alt {
+            text-align: center;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .si-alt a {
+            color: var(--forest);
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 4px;
+        }
+
+        [data-theme="dark"] .si-alt a { color: #6bc487; }
+
+        .si-alt a:hover {
+            color: var(--terracotta);
+            text-decoration: underline;
+        }
+
+        /* Legal footer */
+        .si-legal {
+            margin-top: 36px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            font-family: var(--font-body);
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .si-legal a {
+            color: var(--text-muted);
+            text-decoration: underline;
+            text-decoration-color: var(--border-strong);
+            transition: var(--trans-fast);
+        }
+
+        .si-legal a:hover {
+            color: var(--text-main);
+            text-decoration-color: currentColor;
+        }
+
+        /* Fade-up animation */
+        @keyframes siFadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           FORGOT PASSWORD DIALOG
+           ============================================================ */
+
+        .fp-dialog {
+            border: none;
+            border-radius: var(--radius-lg);
+            padding: 0;
+            max-width: 440px;
+            width: calc(100% - 32px);
+            background: var(--bg-main);
+            color: var(--text-main);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+        }
+
+        .fp-dialog::backdrop {
+            background: var(--overlay-bg);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .fp-inner {
+            padding: 32px 28px;
+            position: relative;
+        }
+
+        .fp-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            background: transparent;
+            cursor: pointer;
+            transition: var(--trans-fast);
+        }
+
+        .fp-close:hover {
+            background: var(--charcoal);
+            color: var(--cream);
+            border-color: var(--charcoal);
+        }
+
+        .fp-inner h3 {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 8px;
+            padding-right: 40px;
+        }
+
+        .fp-inner .fp-desc {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 22px;
+        }
+
+        .fp-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .fp-form .si-field { gap: 8px; }
+
+        .fp-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .fp-actions .si-submit { flex: 1; margin: 0; }
+
+        .fp-cancel {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--border-strong);
+            color: var(--text-main);
+            padding: 16px 24px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition: var(--trans-fast);
+        }
+
+        .fp-cancel:hover { border-color: var(--text-main); }
+
+        .fp-success {
+            display: none;
+            text-align: center;
+            padding: 8px 0;
+        }
+
+        .fp-success.show { display: block; }
+
+        .fp-success .check {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--forest-soft);
+            color: var(--forest);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 18px;
+        }
+
+        [data-theme="dark"] .fp-success .check {
+            background: rgba(107, 196, 135, 0.15);
+            color: #6bc487;
+        }
+
+        .fp-success h4 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .fp-success p {
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+
         @media (max-width: 992px) {
-            .nav-links.active { transform: translateX(0); display: flex; }
-            .menu-btn { display: block; z-index: 1001; }
-            #desktop-nav { display: none; }
-            #auth-links-container { display: none; }
-            .header-actions { justify-content: flex-end; }
-            
-            .auth-left { display: none; }
-            .auth-right { padding: 40px 20px; }
-            .auth-page { min-height: calc(100vh - 5rem); }
+            .si-shell {
+                grid-template-columns: 1fr;
+                padding-top: calc(var(--header-height) + var(--alert-height));
+            }
+
+            .si-visual { display: none; }
+
+            .si-form-panel {
+                padding: 40px 24px 64px;
+                align-items: flex-start;
+                min-height: calc(100vh - var(--header-height) - var(--alert-height));
+                min-height: calc(100dvh - var(--header-height) - var(--alert-height));
+                position: relative;
+            }
+
+            /* Subtle radial tint on mobile */
+            .si-form-panel::before {
+                content: '';
+                position: absolute;
+                top: -100px;
+                right: -100px;
+                width: 320px;
+                height: 320px;
+                background: radial-gradient(circle, var(--forest-soft) 0%, transparent 70%);
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            .si-form-wrap {
+                position: relative;
+                z-index: 1;
+                padding-top: 8px;
+            }
+
+            .si-mobile-brand { display: block; }
+
+            .si-head h1 { font-size: 1.85rem; }
         }
 
-        /* --- 6. Footer --- */
-        footer { background: #1e2d3b; color: #cbd5e1; padding: 5rem 0 2rem; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
-        .footer-col h4 { font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--white); }
-        .footer-col p, .footer-col a { color: #94a3b8; text-decoration: none; }
-        .footer-col a { display: block; margin-bottom: 0.75rem; }
-        .footer-col a:hover { color: var(--white); padding-left: 5px; }
-        .footer-bottom { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #334155; font-size: 0.9rem; }
+        @media (max-width: 480px) {
+            .si-form-panel { padding: 32px 20px 48px; }
+            .si-head { margin-bottom: 26px; }
+            .si-form { gap: 16px; }
+            .si-field input { padding: 13px 14px; font-size: 0.92rem; }
+            .si-submit { padding: 15px 20px; font-size: 0.92rem; }
+            .si-divider { margin: 22px 0 18px; }
+            .fp-inner { padding: 26px 20px; }
+            .fp-actions { flex-direction: column-reverse; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .si-visual-inner,
+            .si-form-wrap {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+    <div id="global-loader" class="global-loader" hidden>
+        <div class="spinner"></div>
+    </div>
+
+    <!-- POLICY BAR -->
+    <div class="order-policy-alert">
+        <span>
+            Sunday deliveries only
+            <span class="dot">·</span>
+            Order before Saturday 6 PM
+            <span class="dot">·</span>
+            6 AM – 7 PM IST
+        </span>
+    </div>
+
+    <!-- HEADER -->
     <header class="header" id="header">
         <div class="container header-inner">
             <div class="logo">
-                <a href="index.html">
-                    <img src="assets/logo.png" alt="Logo"/>
-                    <span>Potlapalli Farms</span>
+                <a href="index.html" aria-label="Potlapalli Farms — Home">
+                    <svg class="logo-symbol" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.3"/>
+                        <path d="M20 10 Q 12.5 18, 20 30 Q 27.5 18, 20 10 Z" fill="currentColor"/>
+                        <path d="M20 13.5 L 20 26.5" stroke="var(--bg-main)" stroke-width="1" stroke-linecap="round"/>
+                        <path d="M20 18 Q 17.2 16.6, 15.8 15.2" stroke="var(--bg-main)" stroke-width="0.85" stroke-linecap="round" fill="none"/>
+                        <path d="M20 21.5 Q 22.8 20.1, 24.2 18.7" stroke="var(--bg-main)" stroke-width="0.85" stroke-linecap="round" fill="none"/>
+                    </svg>
+                    <span class="logo-text">
+                        <span class="logo-name">Potlapalli</span>
+                        <span class="logo-sub">Farms</span>
+                    </span>
                 </a>
             </div>
-            
-            <nav class="header-nav" id="desktop-nav"></nav>
-            
-            <div class="header-actions">
-                <div id="auth-links-container">
-                    <a href="index.html" class="desktop-link">Home</a>
-                    <a href="index.html#products" class="desktop-link">Products</a>
-                    <a href="about.html" class="desktop-link">About</a>
-                    <a href="index.html#contact" class="desktop-link">Contact</a>
-                </div>
 
-                <div class="mini-cart">
-                    <a href="cart.html" aria-label="View shopping cart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cartCount">0</span>
-                    </a>
-                </div>
-                <a href="signup.html" class="auth-btn">Sign Up</a>
-                <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu"><i class="fas fa-bars"></i></button>
+            <nav class="desktop-nav" id="desktop-nav">
+                <a href="index.html">Home</a>
+                <a href="index.html#products">Shop</a>
+                <a href="about.html">Our Story</a>
+                <a href="index.html#contact">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <button id="themeToggle" class="icon-btn theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="cart.html" class="icon-btn mini-cart" aria-label="Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="cartCount">0</span>
+                </a>
+                <a href="signup.html" class="auth-btn primary">Sign Up</a>
+                <button class="menu-btn" id="menuBtn" aria-label="Open menu">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
     </header>
-    
-    <ul class="nav-links" id="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="index.html#products">Products</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="index.html#contact">Contact</a></li>
-        <li><a href="signup.html" style="font-size: 1.5rem; color: var(--primary-color);">Sign Up</a></li>
-    </ul>
 
-    <main class="auth-page">
-        <div class="auth-left">
-            <div class="auth-left-content">
-                <h1>Welcome Back</h1>
-                <p>Sign in to manage your orders, track deliveries, and enjoy exclusive farm deals.</p>
-            </div>
+    <!-- MOBILE NAV -->
+    <div class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-header">
+            <span class="mobile-nav-title">Menu</span>
+            <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-        <div class="auth-right">
-            <div class="auth-form-container">
-                <h2>Log In to Your Account</h2>
-                <form id="signinForm" novalidate>
-                    <div class="input-group">
-                        <label for="signinEmail">Email Address</label>
-                        <input type="email" id="signinEmail" placeholder="Enter your email" required />
-                    </div>
-                    <div class="input-group">
-                        <label for="signinPassword">Password</label>
-                        <input type="password" id="signinPassword" placeholder="Enter your password" required />
-                        <i class="fas fa-eye-slash password-toggle" id="passwordToggle"></i>
-                    </div>
-                    <div class="form-options">
-                        <div class="remember-me"><input type="checkbox" id="rememberMe" /><label for="rememberMe">Remember Me</label></div>
-                        <div class="forgot-password"><a id="forgotPasswordLink">Forgot Password?</a></div>
-                    </div>
-                    <button type="submit" class="btn-primary">Log In</button>
-                </form>
-                <div class="auth-footer"><p>Don't have an account? <a href="signup.html">Sign Up</a></p></div>
-            </div>
-        </div>
-    </main>
-    
-    <div id="toast" class="toast"></div>
-    <div id="forgotPasswordModal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="close-modal" aria-label="Close modal">&times;</button>
-            <div class="modal-header"><h2>Reset Password</h2></div>
-            <div class="modal-body">
-                <p>Enter your email address and we'll send you a link to reset your password.</p>
-                <form id="resetPasswordForm">
-                    <div class="input-group"><label for="resetEmail">Email Address</label><input type="email" id="resetEmail" required /></div>
-                    <button type="submit" class="btn-primary">Send Reset Link</button>
-                </form>
-            </div>
-        </div>
+        <ul class="mobile-nav-links" id="mobileNavLinks"></ul>
     </div>
-    
-    <footer>
-        <div class="container">
-             <div class="footer-grid">
-                <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce 💚</p></div>
-                <div class="footer-col"><h4>Quick Links</h4><a href="index.html">Home</a><a href="profile.html">My Account</a><a href="cart.html">Cart</a></div>
-                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Farms, AP<br>Email: <a href="mailto:pgf.natural@gmail.com">pgf.natural@gmail.com</a><br>Phone: +91 79810 59178</p></div>
-             </div>
-             <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
+    <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+
+    <!-- MAIN -->
+    <main class="si-shell">
+
+        <!-- LEFT — photo panel -->
+        <aside class="si-visual">
+            <img src="assets/images/hero.jpg" alt="Potlapalli Farms"
+                 onerror="this.src='https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=1400'">
+
+            <div class="si-visual-inner">
+                <span class="eyebrow">Welcome back</span>
+                <h2>Your weekly order<br><em>is waiting.</em></h2>
+                <p>Sign in to reorder your favourites, track deliveries, and manage your address — all in one place.</p>
+
+                <div class="si-quote">
+                    <p>"The difference is unmistakable. The meat tastes the way I remember from my grandmother's village."</p>
+                    <span class="who">— Priya S., Hyderabad</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- RIGHT — form panel -->
+        <section class="si-form-panel">
+            <div class="si-form-wrap">
+
+                <!-- Mobile brand mark -->
+                <div class="si-mobile-brand">
+                    <a href="index.html" aria-label="Potlapalli Farms">
+                        <svg class="logo-symbol" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.3"/>
+                            <path d="M20 10 Q 12.5 18, 20 30 Q 27.5 18, 20 10 Z" fill="currentColor"/>
+                            <path d="M20 13.5 L 20 26.5" stroke="var(--bg-main)" stroke-width="1" stroke-linecap="round"/>
+                        </svg>
+                        <span class="logo-name">Potlapalli Farms</span>
+                    </a>
+                </div>
+
+                <!-- Header -->
+                <div class="si-head">
+                    <h1>Welcome back.</h1>
+                    <p>Sign in with the email and password you used when you signed up.</p>
+                </div>
+
+                <!-- Error banner -->
+                <div class="si-error" id="siError" role="alert">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="siErrorText">Something went wrong.</span>
+                </div>
+
+                <!-- Form -->
+                <form class="si-form" id="signinForm" novalidate>
+
+                    <div class="si-field" id="f-email">
+                        <label for="email">Email address</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com"
+                               autocomplete="email" inputmode="email" required />
+                        <span class="err">Please enter a valid email address.</span>
+                    </div>
+
+                    <div class="si-field" id="f-password">
+                        <label for="password">Password</label>
+                        <div class="si-input-wrap">
+                            <input type="password" id="password" name="password"
+                                   placeholder="Your password" autocomplete="current-password" required />
+                            <button type="button" class="si-toggle" data-toggle="password" aria-label="Show password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <span class="err">Please enter your password.</span>
+                    </div>
+
+                    <div class="si-pw-meta">
+                        <button type="button" class="si-forgot" id="forgotBtn">Forgot password?</button>
+                    </div>
+
+                    <button type="submit" class="si-submit" id="signinBtn">
+                        Sign In
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <div class="si-divider">New here?</div>
+
+                <div class="si-alt">
+                    Don't have an account?
+                    <a href="signup.html">Create one</a>
+                </div>
+
+                <div class="si-legal">
+                    By signing in you agree to our
+                    <a href="terms.html">Terms &amp; Privacy Policy</a>.
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- ============================================================
+         FORGOT PASSWORD DIALOG
+         ============================================================ -->
+    <dialog class="fp-dialog" id="forgotDialog" aria-labelledby="fpTitle">
+        <div class="fp-inner">
+
+            <button type="button" class="fp-close" id="fpClose" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div id="fpFormView">
+                <h3 id="fpTitle">Reset your password</h3>
+                <p class="fp-desc">
+                    Enter the email you signed up with. We'll send you a link to set a new password.
+                </p>
+
+                <form class="fp-form" id="forgotForm" novalidate>
+                    <div class="si-field" id="fp-email-field">
+                        <label for="fpEmail">Email address</label>
+                        <input type="email" id="fpEmail" name="fpEmail" placeholder="you@example.com"
+                               autocomplete="email" inputmode="email" required />
+                        <span class="err">Please enter a valid email address.</span>
+                    </div>
+
+                    <div class="si-error" id="fpError" style="margin-bottom: 0;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span id="fpErrorText">Something went wrong.</span>
+                    </div>
+
+                    <div class="fp-actions">
+                        <button type="button" class="fp-cancel" id="fpCancel">Cancel</button>
+                        <button type="submit" class="si-submit" id="fpSubmit">
+                            Send reset link
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Success view -->
+            <div class="fp-success" id="fpSuccess">
+                <div class="check"><i class="fas fa-check"></i></div>
+                <h4>Check your inbox</h4>
+                <p>We've sent a reset link to your email. It should arrive in the next few minutes. Check spam if you don't see it.</p>
+            </div>
+
         </div>
-    </footer>
+    </dialog>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-            authDomain: "potlapallifarm.firebaseapp.com",
-            projectId: "potlapallifarm",
-            storageBucket: "potlapallifarm.firebasestorage.app",
-            messagingSenderId: "1017629729159",
-            appId: "1:1017629729159:web:357c420a9de335d427b322",
+    /* ============================================================
+       SIGN IN — logic
+       ============================================================ */
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+        getAuth, signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+        authDomain: "potlapallifarm.firebaseapp.com",
+        projectId: "potlapallifarm",
+        storageBucket: "potlapallifarm.firebasestorage.app",
+        messagingSenderId: "1017629729159",
+        appId: "1:1017629729159:web:357c420a9de335d427b322",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // ---- Constants ----
+    const CART_KEY = 'potlapalliCart';
+    const THEME_KEY = 'potlapalliTheme';
+
+    // ---- DOM ----
+    const form = document.getElementById('signinForm');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const submitBtn = document.getElementById('signinBtn');
+    const errorBanner = document.getElementById('siError');
+    const errorText = document.getElementById('siErrorText');
+    const forgotBtn = document.getElementById('forgotBtn');
+    const themeToggle = document.getElementById('themeToggle');
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileNavClose = document.getElementById('mobileNavClose');
+    const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
+    const mobileNavLinks = document.getElementById('mobileNavLinks');
+    const cartCountEl = document.getElementById('cartCount');
+    const toastContainer = document.getElementById('toast-container');
+
+    // Forgot dialog elements
+    const forgotDialog = document.getElementById('forgotDialog');
+    const forgotForm = document.getElementById('forgotForm');
+    const fpEmail = document.getElementById('fpEmail');
+    const fpSubmit = document.getElementById('fpSubmit');
+    const fpClose = document.getElementById('fpClose');
+    const fpCancel = document.getElementById('fpCancel');
+    const fpError = document.getElementById('fpError');
+    const fpErrorText = document.getElementById('fpErrorText');
+    const fpSuccess = document.getElementById('fpSuccess');
+    const fpFormView = document.getElementById('fpFormView');
+
+    // ---- Utilities ----
+    function escapeHtml(str) {
+        return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+
+    function showToast(message, type) {
+        type = type || 'info';
+        var icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+        var el = document.createElement('div');
+        el.className = 'toast ' + type;
+        el.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+        toastContainer.appendChild(el);
+        setTimeout(function () { el.classList.add('hiding'); }, 4000);
+        setTimeout(function () { el.remove(); }, 4400);
+    }
+
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function mapAuthError(code) {
+        var map = {
+            'auth/invalid-email': "That email address doesn't look right.",
+            'auth/user-disabled': 'This account has been disabled.',
+            'auth/user-not-found': "We couldn't find an account with that email. Try signing up instead.",
+            'auth/wrong-password': 'Incorrect email or password.',
+            'auth/invalid-credential': 'Incorrect email or password.',
+            'auth/invalid-login-credentials': 'Incorrect email or password.',
+            'auth/too-many-requests': 'Too many failed attempts. Please try again in a few minutes.',
+            'auth/network-request-failed': 'Network error. Check your connection and try again.',
+            'auth/operation-not-allowed': 'Sign-in is temporarily disabled. Please contact us.',
         };
+        return map[code] || 'Could not sign you in. Please try again.';
+    }
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        const signinForm = document.getElementById("signinForm");
-        const passwordInput = document.getElementById("signinPassword");
-        const passwordToggle = document.getElementById("passwordToggle");
-        const forgotPasswordLink = document.getElementById("forgotPasswordLink");
-        const forgotPasswordModal = document.getElementById("forgotPasswordModal");
-        const resetPasswordForm = document.getElementById("resetPasswordForm");
-        const toastEl = document.getElementById('toast');
-        const menuBtn = document.getElementById('menuBtn');
-        const navLinks = document.getElementById('nav-links');
-
-        const updateCartCount = () => {
-            const cartCountEl = document.getElementById('cartCount');
-            const cart = JSON.parse(localStorage.getItem('potlapalliCart')) || [];
-            const totalItems = cart.length; 
-            if (cartCountEl) cartCountEl.textContent = totalItems;
-        };
-
-        function showToast(message, isError = false) {
-            toastEl.textContent = message;
-            toastEl.className = isError ? 'toast show error' : 'toast show';
-            setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+    // ---- Theme ----
+    function initTheme() {
+        var icon = themeToggle ? themeToggle.querySelector('i') : null;
+        function apply(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+            if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
-        
-        passwordToggle.addEventListener('click', () => {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            passwordToggle.classList.toggle('fa-eye');
-            passwordToggle.classList.toggle('fa-eye-slash');
+        var saved = 'light';
+        try { saved = localStorage.getItem(THEME_KEY) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+        apply(saved);
+        themeToggle && themeToggle.addEventListener('click', function () {
+            var cur = document.documentElement.getAttribute('data-theme');
+            apply(cur === 'dark' ? 'light' : 'dark');
         });
+    }
 
-        signinForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const email = document.getElementById("signinEmail").value.trim();
-            const password = passwordInput.value;
-            const remember = document.getElementById("rememberMe").checked;
+    // ---- Header scroll ----
+    function initHeaderScroll() {
+        var header = document.getElementById('header');
+        if (!header) return;
+        var onScroll = function () { header.classList.toggle('scrolled', window.scrollY > 20); };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    }
 
-            if (!email || !password) {
-                showToast("Please fill in all fields.", true);
-                return;
+    // ---- Cart badge ----
+    function updateCartBadge() {
+        if (!cartCountEl) return;
+        try {
+            var raw = localStorage.getItem(CART_KEY);
+            var cart = raw ? JSON.parse(raw) : [];
+            cartCountEl.textContent = Array.isArray(cart) ? cart.length : 0;
+        } catch (e) { cartCountEl.textContent = '0'; }
+    }
+
+    // ---- Mobile nav ----
+    function initMobileNav() {
+        var links = [
+            { href: 'index.html', icon: 'fa-home', label: 'Home' },
+            { href: 'index.html#products', icon: 'fa-store', label: 'Shop' },
+            { href: 'about.html', icon: 'fa-seedling', label: 'Our Story' },
+            { href: 'orders.html', icon: 'fa-receipt', label: 'My Orders' },
+            { href: 'cart.html', icon: 'fa-shopping-bag', label: 'My Cart' },
+            { href: 'signup.html', icon: 'fa-user-plus', label: 'Sign Up' }
+        ];
+        if (mobileNavLinks) {
+            mobileNavLinks.innerHTML = links.map(function (l) {
+                return '<li><a href="' + l.href + '"><i class="fas ' + l.icon + '"></i><span>' + l.label + '</span></a></li>';
+            }).join('');
+        }
+        function open() {
+            mobileNav && mobileNav.classList.add('active');
+            mobileNavBackdrop && mobileNavBackdrop.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function close() {
+            mobileNav && mobileNav.classList.remove('active');
+            mobileNavBackdrop && mobileNavBackdrop.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        menuBtn && menuBtn.addEventListener('click', open);
+        mobileNavClose && mobileNavClose.addEventListener('click', close);
+        mobileNavBackdrop && mobileNavBackdrop.addEventListener('click', close);
+        mobileNavLinks && mobileNavLinks.addEventListener('click', function (e) {
+            if (e.target.closest('a')) close();
+        });
+    }
+
+    // ---- Password toggle ----
+    document.querySelectorAll('[data-toggle]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var target = document.getElementById(btn.dataset.toggle);
+            if (!target) return;
+            var showing = target.type === 'text';
+            target.type = showing ? 'password' : 'text';
+            var icon = btn.querySelector('i');
+            if (icon) icon.className = showing ? 'fas fa-eye' : 'fas fa-eye-slash';
+            btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+        });
+    });
+
+    // ---- Error helpers ----
+    function showError(msg) {
+        errorText.textContent = msg;
+        errorBanner.classList.add('show');
+    }
+
+    function hideError() {
+        errorBanner.classList.remove('show');
+    }
+
+    function setFieldError(fieldId, hasError) {
+        var el = document.getElementById(fieldId);
+        if (el) el.classList.toggle('has-error', hasError);
+    }
+
+    // Clear error state on input
+    [emailInput, passwordInput].forEach(function (el) {
+        el && el.addEventListener('input', function () {
+            var field = el.closest('.si-field');
+            if (field) field.classList.remove('has-error');
+            hideError();
+        });
+    });
+
+    // ---- Sign-in submit ----
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        hideError();
+
+        var email = emailInput.value.trim();
+        var password = passwordInput.value;
+
+        var emailOk = isValidEmail(email);
+        var passwordOk = password.length > 0;
+
+        setFieldError('f-email', !emailOk);
+        setFieldError('f-password', !passwordOk);
+
+        if (!emailOk || !passwordOk) {
+            showError('Please fix the errors above and try again.');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in…';
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            // onAuthStateChanged handles the redirect
+        } catch (err) {
+            console.error('Sign in failed:', err);
+            showError(mapAuthError(err.code));
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Sign In <i class="fas fa-arrow-right"></i>';
+        }
+    });
+
+    // ---- Redirect after auth ----
+    function getRedirectTarget() {
+        var params = new URLSearchParams(window.location.search);
+        var target = params.get('redirect');
+        if (!target) return 'index.html';
+        // Only allow relative internal paths — never absolute URLs
+        if (/^https?:|^\/\//i.test(target)) return 'index.html';
+        return target;
+    }
+
+    onAuthStateChanged(auth, function (user) {
+        if (user) {
+            window.location.replace(getRedirectTarget());
+        }
+    });
+
+    // ============================================================
+    // FORGOT PASSWORD
+    // ============================================================
+
+    function openForgotDialog() {
+        // Reset to form view
+        fpFormView.style.display = '';
+        fpSuccess.classList.remove('show');
+        fpError.classList.remove('show');
+        fpEmail.value = emailInput.value.trim();
+        document.getElementById('fp-email-field').classList.remove('has-error');
+
+        if (typeof forgotDialog.showModal === 'function') {
+            forgotDialog.showModal();
+        } else {
+            // Fallback for very old browsers
+            alert('Please email pgf.natural@gmail.com to reset your password.');
+            return;
+        }
+
+        setTimeout(function () { fpEmail.focus(); }, 50);
+    }
+
+    function closeForgotDialog() {
+        try { forgotDialog.close(); } catch (e) {}
+    }
+
+    forgotBtn && forgotBtn.addEventListener('click', openForgotDialog);
+    fpClose && fpClose.addEventListener('click', closeForgotDialog);
+    fpCancel && fpCancel.addEventListener('click', closeForgotDialog);
+
+    // Close on backdrop click
+    forgotDialog && forgotDialog.addEventListener('click', function (e) {
+        var rect = forgotDialog.getBoundingClientRect();
+        var inDialog =
+            e.clientX >= rect.left && e.clientX <= rect.right &&
+            e.clientY >= rect.top && e.clientY <= rect.bottom;
+        if (!inDialog) closeForgotDialog();
+    });
+
+    fpEmail && fpEmail.addEventListener('input', function () {
+        document.getElementById('fp-email-field').classList.remove('has-error');
+        fpError.classList.remove('show');
+    });
+
+    forgotForm && forgotForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        var email = fpEmail.value.trim();
+        var emailOk = isValidEmail(email);
+
+        document.getElementById('fp-email-field').classList.toggle('has-error', !emailOk);
+        fpError.classList.remove('show');
+
+        if (!emailOk) return;
+
+        fpSubmit.disabled = true;
+        fpSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…';
+
+        try {
+            await sendPasswordResetEmail(auth, email, {
+                url: window.location.origin + '/signin.html'
+            });
+
+            // Show success view
+            fpFormView.style.display = 'none';
+            fpSuccess.classList.add('show');
+        } catch (err) {
+            console.error('Password reset failed:', err);
+            var msg = 'Could not send the reset email. Please try again.';
+            if (err.code === 'auth/user-not-found') {
+                msg = "We couldn't find an account with that email.";
+            } else if (err.code === 'auth/network-request-failed') {
+                msg = 'Network error. Check your connection and try again.';
             }
+            fpErrorText.textContent = msg;
+            fpError.classList.add('show');
 
-            const persistence = remember ? browserLocalPersistence : browserSessionPersistence;
+            fpSubmit.disabled = false;
+            fpSubmit.innerHTML = 'Send reset link <i class="fas fa-paper-plane"></i>';
+        }
+    });
 
-            setPersistence(auth, persistence)
-                .then(() => signInWithEmailAndPassword(auth, email, password))
-                .then(() => {
-                    showToast("Signed in successfully! Redirecting...");
-                    setTimeout(() => { window.location.href = "index.html"; }, 1000); 
-                })
-                .catch((error) => {
-                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-                        showToast("Invalid email or password.", true);
-                    } else {
-                        showToast("An error occurred. Please try again.", true);
-                    }
-                    console.error("Sign-in error:", error);
-                });
-        });
+    // Reset forgot dialog state on close
+    forgotDialog && forgotDialog.addEventListener('close', function () {
+        fpSubmit.disabled = false;
+        fpSubmit.innerHTML = 'Send reset link <i class="fas fa-paper-plane"></i>';
+        fpError.classList.remove('show');
+        fpFormView.style.display = '';
+        fpSuccess.classList.remove('show');
+    });
 
-        forgotPasswordLink.addEventListener('click', () => forgotPasswordModal.classList.add('show'));
-        forgotPasswordModal.querySelector('.close-modal').addEventListener('click', () => forgotPasswordModal.classList.remove('show'));
-
-        resetPasswordForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('resetEmail').value.trim();
-            if(!email) {
-                showToast("Please enter your email address.", true);
-                return;
+    // ---- Init ----
+    document.addEventListener('DOMContentLoaded', function () {
+        initTheme();
+        initHeaderScroll();
+        initMobileNav();
+        updateCartBadge();
+        // Auto-focus email for smooth keyboard flow
+        setTimeout(function () {
+            if (window.matchMedia('(min-width: 992px)').matches) {
+                emailInput && emailInput.focus();
             }
-            sendPasswordResetEmail(auth, email)
-                .then(() => {
-                    forgotPasswordModal.classList.remove('show');
-                    showToast("Password reset email sent! Please check your inbox.");
-                })
-                .catch((error) => {
-                    showToast("Could not send reset email. Please check the address.", true);
-                    console.error("Password reset error:", error);
-                });
-        });
-
-        // Mobile Menu Logic
-        const menuIcon = menuBtn.querySelector('i');
-        menuBtn.addEventListener("click", () => {
-            const isActive = navLinks.classList.toggle("active");
-            document.body.classList.toggle("nav-open");
-            menuIcon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
-        });
-
-        // Initialization
-        document.addEventListener('DOMContentLoaded', updateCartCount);
+        }, 400);
+    });
     </script>
-
 </body>
 </html>
