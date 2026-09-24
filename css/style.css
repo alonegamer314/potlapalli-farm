@@ -8,20 +8,20 @@
 /* ---------- 1. DESIGN TOKENS ---------- */
 :root {
     /* Brand palette */
-    --forest: #1e4d2b;
-    --forest-dark: #143721;
-    --forest-soft: rgba(30, 77, 43, 0.08);
-    --terracotta: #c45a3a;
-    --terracotta-hover: #a84a2f;
-    --terracotta-soft: rgba(196, 90, 58, 0.1);
-    --cream: #faf7f2;
-    --cream-dark: #f2ede4;
+    --forest: #1a4423;
+    --forest-dark: #0d2915;
+    --forest-soft: rgba(26, 68, 35, 0.08);
+    --terracotta: #c05030;
+    --terracotta-hover: #a5421f;
+    --terracotta-soft: rgba(192, 80, 48, 0.1);
+    --cream: #f0eadd;
+    --cream-dark: #e7dfce;
     --charcoal: #1a1a1a;
-    --ink: #2a2622;
-    --stone: #6b6259;
-    --stone-light: #9a9086;
-    --border: #e8e2d5;
-    --border-strong: #d4ccbc;
+    --ink: #1a1a1a;
+    --stone: #56504a;
+    --stone-light: #8a8278;
+    --border: #e2dbc9;
+    --border-strong: #cec5b3;
     --gold: #d4a54c;
     --danger: #b13a2a;
     --warning: #d4821e;
@@ -33,7 +33,7 @@
     --text-main: var(--ink);
     --text-muted: var(--stone);
     --text-inverse: #ffffff;
-    --header-bg: rgba(255, 255, 255, 0.9);
+    --header-bg: rgba(240, 234, 221, 0.9);
     --overlay-bg: rgba(26, 26, 26, 0.55);
 
     /* Typography */
@@ -62,12 +62,12 @@
     --radius-xl: 16px;
     --radius-pill: 9999px;
 
-    /* Shadows — subtle, editorial */
-    --shadow-xs: 0 1px 2px rgba(26, 26, 26, 0.04);
-    --shadow-sm: 0 1px 3px rgba(26, 26, 26, 0.06), 0 1px 2px rgba(26, 26, 26, 0.04);
-    --shadow-md: 0 4px 16px rgba(26, 26, 26, 0.06);
-    --shadow-lg: 0 12px 32px rgba(26, 26, 26, 0.08);
-    --shadow-xl: 0 24px 60px rgba(26, 26, 26, 0.12);
+    /* Shadows — layered, warm-tinted for real depth */
+    --shadow-xs: 0 1px 2px rgba(30, 20, 10, 0.05);
+    --shadow-sm: 0 1px 2px rgba(30, 20, 10, 0.05), 0 2px 6px rgba(30, 20, 10, 0.04);
+    --shadow-md: 0 2px 4px rgba(30, 20, 10, 0.04), 0 8px 20px rgba(30, 20, 10, 0.06);
+    --shadow-lg: 0 4px 8px rgba(30, 20, 10, 0.05), 0 16px 40px rgba(30, 20, 10, 0.09);
+    --shadow-xl: 0 8px 16px rgba(30, 20, 10, 0.06), 0 24px 60px rgba(30, 20, 10, 0.13);
 
     /* Motion */
     --ease: cubic-bezier(0.4, 0, 0.2, 1);
@@ -85,23 +85,31 @@
 
 /* Dark theme */
 [data-theme="dark"] {
-    --bg-main: #14110e;
-    --bg-warm: #1c1814;
-    --bg-elevated: #1c1814;
-    --text-main: #f5efe6;
-    --text-muted: #a89f92;
-    --border: #2a251f;
-    --border-strong: #3a342b;
-    --header-bg: rgba(20, 17, 14, 0.9);
-    --overlay-bg: rgba(0, 0, 0, 0.75);
-    --forest-soft: rgba(63, 132, 79, 0.18);
-    --terracotta-soft: rgba(196, 90, 58, 0.18);
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
-    --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.7);
-}
+    --forest: #6bc487;
+    --forest-dark: #3f844f;
+    --forest-soft: rgba(107, 196, 135, 0.12);
+    --terracotta: #e67856;
+    --terracotta-hover: #d36745;
+    --terracotta-soft: rgba(230, 120, 86, 0.15);
 
+    --cream: #0f0d0a;
+    --cream-dark: #1a1611;
+
+    --bg-main: #0f0d0a;
+    --bg-warm: #1a1611;
+    --bg-elevated: #1a1611;
+    --text-main: #f7f1e6;
+    --text-muted: #a89f92;
+    --border: #2a241d;
+    --border-strong: #3a332a;
+    --header-bg: rgba(15, 13, 10, 0.9);
+    --overlay-bg: rgba(0, 0, 0, 0.75);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.4), 0 8px 20px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.4), 0 16px 40px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 8px 16px rgba(0, 0, 0, 0.5), 0 24px 60px rgba(0, 0, 0, 0.5);
+}
 /* ---------- 2. RESET & BASE ---------- */
 *, *::before, *::after {
     margin: 0;
