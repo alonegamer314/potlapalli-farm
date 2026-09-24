@@ -213,8 +213,8 @@ ul { list-style: none; }
     top: 0;
     left: 0;
     width: 100%;
-    background: var(--charcoal);
-    color: var(--cream);
+    background: #1a1a1a;
+    color: #f0eadd;
     padding: 8px 14px;
     z-index: 1001;
     text-align: center;
@@ -280,8 +280,8 @@ ul { list-style: none; }
 }
 
 .logo-symbol {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     color: var(--forest);
     flex-shrink: 0;
     transition: transform 0.6s var(--ease-out);
@@ -304,7 +304,7 @@ ul { list-style: none; }
 
 .logo-name {
     font-family: var(--font-display);
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: -0.045em;
     color: var(--text-main);
@@ -313,15 +313,15 @@ ul { list-style: none; }
 
 .logo-sub {
     font-family: var(--font-body);
-    font-size: 8.5px;
-    font-weight: 600;
-    letter-spacing: 0.5em;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.42em;
     text-transform: uppercase;
     color: var(--text-muted);
     line-height: 1;
-    padding-left: 2px;
+    padding-left: 0;
+    margin-right: -0.42em;
 }
-
 /* Desktop nav */
 .desktop-nav {
     display: flex;
@@ -387,7 +387,12 @@ ul { list-style: none; }
 .theme-toggle:hover {
     color: var(--terracotta);
     border-color: var(--terracotta);
-    transform: rotate(15deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .theme-toggle:hover {
+        transform: rotate(15deg);
+    }
 }
 
 .mini-cart span {
