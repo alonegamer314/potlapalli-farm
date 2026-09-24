@@ -35,9 +35,7 @@
             align-items: center;
         }
 
-        .ab-hero-text .eyebrow {
-            color: var(--terracotta);
-        }
+        .ab-hero-text .eyebrow { color: var(--terracotta); }
 
         .ab-hero-text h1 {
             font-family: var(--font-display);
@@ -164,13 +162,9 @@
         }
 
         /* Generic section */
-        .ab-section {
-            padding: 96px 0;
-        }
+        .ab-section { padding: 96px 0; }
 
-        .ab-section.alt {
-            background: var(--bg-warm);
-        }
+        .ab-section.alt { background: var(--bg-warm); }
 
         .ab-section-head {
             text-align: center;
@@ -178,9 +172,7 @@
             margin: 0 auto 64px;
         }
 
-        .ab-section-head .eyebrow {
-            color: var(--terracotta);
-        }
+        .ab-section-head .eyebrow { color: var(--terracotta); }
 
         .ab-section-head h2 {
             font-family: var(--font-display);
@@ -197,83 +189,6 @@
             color: var(--text-muted);
         }
 
-        /* Origin story */
-        .origin-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.1fr;
-            gap: 72px;
-            align-items: center;
-        }
-
-        .origin-visual {
-            position: relative;
-        }
-
-        .origin-visual img {
-            width: 100%;
-            aspect-ratio: 1 / 1.1;
-            object-fit: cover;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-        }
-
-        .origin-visual::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            width: 120px;
-            height: 120px;
-            border: 2px solid var(--terracotta);
-            border-radius: var(--radius-lg);
-            z-index: -1;
-            opacity: 0.35;
-        }
-
-        .origin-text h2 {
-            font-family: var(--font-display);
-            font-size: clamp(1.6rem, 3vw, 2.15rem);
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            line-height: 1.15;
-            margin-bottom: 20px;
-        }
-
-        .origin-text p {
-            font-size: 1rem;
-            line-height: 1.75;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-        }
-
-        .origin-text p strong {
-            color: var(--text-main);
-            font-weight: 600;
-        }
-
-        .origin-quote {
-            margin: 32px 0;
-            padding: 24px 28px;
-            border-left: 3px solid var(--terracotta);
-            background: var(--bg-warm);
-            border-radius: 0 var(--radius-md) var(--radius-md) 0;
-        }
-
-        .ab-section.alt .origin-quote {
-            background: var(--bg-main);
-        }
-
-        .origin-quote p {
-            font-family: var(--font-display);
-            font-size: 1.15rem;
-            font-weight: 500;
-            font-style: italic;
-            letter-spacing: -0.01em;
-            color: var(--text-main);
-            line-height: 1.5;
-            margin: 0;
-        }
-
         /* Leaders */
         .leaders-list {
             display: flex;
@@ -288,10 +203,7 @@
             align-items: center;
         }
 
-        .leader.reverse {
-            grid-template-columns: 1.3fr 1fr;
-        }
-
+        .leader.reverse { grid-template-columns: 1.3fr 1fr; }
         .leader.reverse .leader-photo { order: 2; }
         .leader.reverse .leader-text { order: 1; }
 
@@ -351,6 +263,164 @@
 
         .leader-text p strong {
             color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* ====== LAB TESTED SECTION ====== */
+        .lab-section {
+            background: var(--charcoal);
+            padding: 96px 0;
+            position: relative;
+            overflow: hidden;
+            color: var(--cream);
+        }
+
+        .lab-section::before {
+            content: '';
+            position: absolute;
+            top: -150px;
+            right: -150px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(196, 90, 58, 0.14) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .lab-section::after {
+            content: '';
+            position: absolute;
+            bottom: -200px;
+            left: -100px;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(30, 77, 43, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .lab-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .lab-head {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto 56px;
+        }
+
+        .lab-head .eyebrow {
+            color: var(--gold);
+            margin-bottom: 14px;
+        }
+
+        .lab-head h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            color: var(--cream);
+            margin-bottom: 16px;
+        }
+
+        .lab-head p {
+            color: rgba(250, 247, 242, 0.72);
+            font-size: 1.02rem;
+            line-height: 1.65;
+        }
+
+        /* Lab cards */
+        .lab-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .lab-card {
+            background: rgba(250, 247, 242, 0.04);
+            border: 1px solid rgba(250, 247, 242, 0.12);
+            border-radius: var(--radius-lg);
+            padding: 28px 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transition: var(--trans);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .lab-card:hover {
+            background: rgba(250, 247, 242, 0.07);
+            border-color: rgba(250, 247, 242, 0.25);
+            transform: translateY(-3px);
+        }
+
+        .lab-card .lab-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            background: rgba(196, 90, 58, 0.18);
+            color: #e6a58a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .lab-card .lab-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--cream);
+            line-height: 1.25;
+        }
+
+        .lab-card .lab-desc {
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            line-height: 1.55;
+            color: rgba(250, 247, 242, 0.68);
+            flex-grow: 1;
+        }
+
+        .lab-card .lab-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-top: 4px;
+            transition: var(--trans-fast);
+        }
+
+        .lab-card .lab-cta i {
+            transition: transform 0.3s ease;
+            font-size: 0.7rem;
+        }
+
+        .lab-card:hover .lab-cta i { transform: translateX(4px); }
+
+        .lab-foot {
+            margin-top: 40px;
+            text-align: center;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: rgba(250, 247, 242, 0.55);
+            line-height: 1.6;
+        }
+
+        .lab-foot strong {
+            color: rgba(250, 247, 242, 0.9);
             font-weight: 600;
         }
 
@@ -423,13 +493,8 @@
             z-index: 2;
         }
 
-        .division-card.soon .dc-img {
-            filter: grayscale(0.6) opacity(0.75);
-        }
-
-        .division-card.soon .dc-tag {
-            background: var(--terracotta);
-        }
+        .division-card.soon .dc-img { filter: grayscale(0.6) opacity(0.75); }
+        .division-card.soon .dc-tag { background: var(--terracotta); }
 
         /* Values */
         .values-inline {
@@ -490,9 +555,7 @@
             pointer-events: none;
         }
 
-        .ab-cta .eyebrow {
-            color: var(--gold);
-        }
+        .ab-cta .eyebrow { color: var(--gold); }
 
         .ab-cta h2 {
             font-family: var(--font-display);
@@ -575,9 +638,6 @@
             .ab-section { padding: 64px 0; }
             .ab-section-head { margin-bottom: 40px; }
 
-            .origin-grid { grid-template-columns: 1fr; gap: 40px; }
-            .origin-visual { max-width: 420px; margin: 0 auto; }
-
             .leaders-list { gap: 56px; }
             .leader,
             .leader.reverse {
@@ -587,6 +647,8 @@
             .leader.reverse .leader-photo { order: 1; }
             .leader.reverse .leader-text { order: 2; }
             .leader-photo { max-width: 380px; margin: 0 auto; }
+
+            .lab-grid { grid-template-columns: 1fr; gap: 14px; }
 
             .divisions-grid { grid-template-columns: repeat(2, 1fr); }
             .values-inline { grid-template-columns: 1fr; gap: 40px; max-width: 480px; margin: 0 auto; }
@@ -602,11 +664,10 @@
             .ab-section { padding: 48px 0; }
             .ab-section-head { margin-bottom: 32px; }
 
-            .origin-quote { padding: 20px 22px; margin: 24px 0; }
-            .origin-quote p { font-size: 1.02rem; }
-
             .leader-photo::after { display: none; }
-            .origin-visual::before { display: none; }
+
+            .lab-section { padding: 64px 0; }
+            .lab-card { padding: 22px 20px; }
 
             .divisions-grid { grid-template-columns: 1fr; gap: 16px; }
             .division-card .dc-body { padding: 18px; }
@@ -733,47 +794,8 @@
             </div>
         </section>
 
-        <!-- ============ ORIGIN ============ -->
-        <section class="ab-section">
-            <div class="container">
-                <div class="origin-grid">
-
-                    <div class="origin-visual">
-                        <img src="assets/images/visionary.jpg" alt="Farm origins"
-                             onerror="this.src='https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&q=80&w=800'">
-                    </div>
-
-                    <div class="origin-text">
-                        <span class="eyebrow">How it began</span>
-                        <h2>Born in a village. Called back to one.</h2>
-
-                        <p>
-                            <strong>Mr. Potlapalli Balakrishna</strong> was born in Pullalacheruvu village in 1964 — the youngest of five brothers, raised in a family rooted in agriculture for generations. After a B.Sc. in Agriculture from Hindu College, Guntur, life took him to Hyderabad, where he built a career in teaching and real estate.
-                        </p>
-
-                        <p>
-                            But the soil never let go. In 2009, he made the call to go back. Not to retire — to build.
-                        </p>
-
-                        <div class="origin-quote">
-                            <p>"Work is worship. And there is no work more honest than raising food for the people you love."</p>
-                        </div>
-
-                        <p>
-                            What started as a modest plot of land grew, slowly, into what it is today — a working farm with free-range goats, native chickens, dairy animals, and a small team that treats every animal like it matters. Because it does.
-                        </p>
-
-                        <p>
-                            His son, <strong>Venkateswara Rao</strong>, joined with the same conviction — and an unexpected rigour from his career in the pharmaceutical industry. Together, they run a farm that is equal parts traditional and modern.
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
         <!-- ============ LEADERS ============ -->
-        <section class="ab-section alt">
+        <section class="ab-section">
             <div class="container">
                 <div class="ab-section-head">
                     <span class="eyebrow">The people behind it</span>
@@ -826,6 +848,46 @@
                     </div>
 
                 </div>
+            </div>
+        </section>
+
+        <!-- ============ LAB TESTED ============ -->
+        <section class="lab-section">
+            <div class="container lab-inner">
+                <div class="lab-head">
+                    <span class="eyebrow">Verified quality</span>
+                    <h2>We test. You see the reports.</h2>
+                    <p>Every batch we send out is tested for safety, freshness, and purity. The reports are public — because you deserve to know what you're eating.</p>
+                </div>
+
+                <div class="lab-grid">
+
+                    <a href="lab-tests-poultry.html" class="lab-card">
+                        <div class="lab-icon"><i class="fas fa-drumstick-bite"></i></div>
+                        <div class="lab-title">Poultry test reports</div>
+                        <div class="lab-desc">Antibiotic residue, bacterial safety, and freshness checks for country chicken and eggs.</div>
+                        <span class="lab-cta">View reports <i class="fas fa-arrow-right"></i></span>
+                    </a>
+
+                    <a href="lab-tests-goat.html" class="lab-card">
+                        <div class="lab-icon"><i class="fas fa-paw"></i></div>
+                        <div class="lab-title">Goat meat analysis</div>
+                        <div class="lab-desc">Hormone screening, moisture content, and microbiological analysis of every batch.</div>
+                        <span class="lab-cta">View reports <i class="fas fa-arrow-right"></i></span>
+                    </a>
+
+                    <a href="lab-tests-dairy.html" class="lab-card">
+                        <div class="lab-icon"><i class="fas fa-flask-vial"></i></div>
+                        <div class="lab-title">Dairy purity tests</div>
+                        <div class="lab-desc">Fat content, adulteration screening, and shelf-life testing for goat milk.</div>
+                        <span class="lab-cta">View reports <i class="fas fa-arrow-right"></i></span>
+                    </a>
+
+                </div>
+
+                <p class="lab-foot">
+                    <strong>Every batch is traceable.</strong> Each report lists the date, sample ID, and testing laboratory. If you ever have a question, message us — we'll pull the report for your specific order.
+                </p>
             </div>
         </section>
 
