@@ -459,18 +459,24 @@
 
     <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-        authDomain: "potlapallifarm.firebaseapp.com",
-        projectId: "potlapallifarm",
-        storageBucket: "potlapallifarm.firebasestorage.app",
-        messagingSenderId: "1017629729159",
-        appId: "1:1017629729159:web:357c420a9de335d427b322",
-    };
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+const firebaseConfig = {
+    // ... your existing config (do not change this)
+};
+
+const app = initializeApp(firebaseConfig);
+
+// --- App Check Initialization ---
+// Replace the placeholder below with your actual reCAPTCHA Enterprise Site Key
+const appCheck = initializeAppCheck(app, {
+    provider: new ReCaptchaEnterpriseProvider('6LclPcwtAAAAAAQeO5_p2EU3wOebImnE9GpyswL0'),
+    isTokenAutoRefreshEnabled: true
+});
+// --- End App Check Initialization ---
+
+const auth = getAuth(app);
 
     const products = [
         { id: 'live-ram', name: 'Live Ram (Macherla Pottelu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Ram, range 15 to 40 kg.', image: 'assets/ram.jpg' },
