@@ -114,7 +114,7 @@ function initTheme() {
     const apply = (theme) => {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem(THEME_KEY, theme);
-        if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
     };
 
     const saved = localStorage.getItem(THEME_KEY)
