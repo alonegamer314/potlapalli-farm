@@ -2,346 +2,126 @@
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Potlapalli Farms - Fresh & Organic Produce Delivered</title>
-    <meta name="description" content="Experience the taste of freshness. Potlapalli Farms deliver premium, organic goat meat, country chicken, and farm-fresh eggs directly to your doorstep." />
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#27ae60" />
+    <title>Potlapalli Farms — Fresh Farm Produce, Delivered</title>
+    <meta name="description" content="Premium organic goat meat, country chicken, and farm-fresh eggs delivered to your doorstep. Order Sundays 6 AM – 7 PM IST." />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    
-    <style>
-        /* --- 1. Foundational Design System --- */
-        :root {
-            /* Strict Palette */
-            --primary: #27ae60;
-            --primary-hover: #219653; /* Slightly deeper for hover states */
-            --secondary: #2c3e50;
-            --bg-light: #f8f9fa;
-            --white: #ffffff;
-            --dark-bg: #1e293b;
-            
-            /* Dynamic Theme Variables (Light Mode Default) */
-            --bg-main: var(--white);
-            --bg-secondary: var(--bg-light);
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border-light: #e2e8f0;
-            --card-bg: var(--white);
-            --header-bg: rgba(255, 255, 255, 0.85);
-            --overlay-bg: rgba(255, 255, 255, 0.95);
-            
-            /* Shadows (Apple Style) */
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
-            
-            /* Typography */
-            --font-heading: 'Plus Jakarta Sans', sans-serif;
-            --font-body: 'Inter', sans-serif;
-            
-            /* Spacing Scale */
-            --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
-            --space-6: 24px; --space-8: 32px; --space-12: 48px; --space-16: 64px;
-            
-            /* Border Radii */
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-pill: 9999px;
-            
-            /* Transitions */
-            --trans-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            --trans-fast: all 0.2s ease;
-        }
 
-        /* --- Dark Mode Overrides --- */
-        [data-theme="dark"] {
-            --bg-main: #0f172a;
-            --bg-secondary: var(--dark-bg);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-light: #334155;
-            --card-bg: var(--dark-bg);
-            --header-bg: rgba(15, 23, 42, 0.85);
-            --overlay-bg: rgba(15, 23, 42, 0.98);
-            --secondary: #f8fafc; 
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        /* --- Global Reset & Base Styles --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-        html { scroll-behavior: smooth; }
-        body { 
-            background-color: var(--bg-main); 
-            color: var(--text-main); 
-            font-family: var(--font-body);
-            line-height: 1.6; 
-            transition: background-color 0.4s ease, color 0.4s ease;
-        }
-        h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); color: var(--secondary); font-weight: 700; letter-spacing: -0.02em; transition: color 0.4s ease;}
-        p { color: var(--text-muted); }
-        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
-        img { max-width: 100%; display: block; }
-        a, button { transition: var(--trans-fast); outline: none; }
-        button { font-family: var(--font-body); }
-
-        /* --- Policy Alert Bar --- */
-        .order-policy-alert {
-            position: fixed;
-            top: 76px; /* Below header */
-            left: 0; width: 100%;
-            background-color: var(--primary); 
-            color: var(--white);
-            padding: var(--space-2) 0;
-            z-index: 900; 
-            text-align: center;
-            font-size: 0.9rem;
-            font-weight: 500;
-            box-shadow: var(--shadow-sm);
-        }
-        .order-policy-alert strong { font-weight: 700; }
-        main { padding-top: 40px; }
-
-        /* --- 2. Premium Glassmorphism Header --- */
-        .header {
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; 
-            padding: var(--space-4) 0;
-            background: var(--header-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border-light);
-            transition: var(--trans-smooth);
-        }
-        .header.scrolled { padding: var(--space-3) 0; box-shadow: var(--shadow-sm); }
-        .header-inner { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); }
-        
-        .logo a { display: flex; align-items: center; gap: var(--space-2); font-size: 1.25rem; font-weight: 800; font-family: var(--font-heading); text-decoration: none; color: var(--secondary); }
-        .logo img { height: 36px; border-radius: 8px; }
-
-        .header-actions { display: flex; align-items: center; gap: var(--space-6); }
-        
-        #desktop-nav { display: flex; align-items: center; gap: var(--space-6); }
-        #desktop-nav a { font-weight: 500; font-size: 0.95rem; text-decoration: none; color: var(--text-main); position: relative; }
-        #desktop-nav a::after {
-            content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0;
-            background-color: var(--primary); transition: var(--trans-fast);
-        }
-        #desktop-nav a:hover::after { width: 100%; }
-
-        /* Mini Cart */
-        .mini-cart a { font-size: 1.25rem; text-decoration: none; color: var(--secondary); position: relative; display: flex; align-items: center; justify-content: center;}
-        .mini-cart span {
-            position: absolute; top: -6px; right: -8px;
-            background-color: var(--primary); color: var(--white);
-            font-size: 0.7rem; font-weight: 700; border-radius: var(--radius-pill);
-            width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;
-        }
-
-        /* Auth Controls */
-        .auth-btn {
-            background: transparent; color: var(--secondary); font-weight: 600; font-size: 0.95rem; text-decoration: none; cursor: pointer; border: none;
-        }
-        .auth-btn.primary {
-            background: var(--primary); color: var(--white); padding: var(--space-2) var(--space-4); border-radius: var(--radius-pill);
-        }
-        .auth-btn.primary:hover { background: var(--primary-hover); transform: scale(1.02); }
-
-        /* Theme Toggle */
-        .theme-toggle {
-            background: var(--bg-secondary); border: 1px solid var(--border-light); color: var(--secondary);
-            width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--trans-fast);
-        }
-        .theme-toggle:hover { transform: scale(1.05); }
-
-        .menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--secondary); }
-
-        /* --- Mobile Navigation --- */
-        .nav-links {
-            position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
-            background: var(--overlay-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            z-index: 999; flex-direction: column; align-items: center; justify-content: center;
-            gap: var(--space-4); transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-            list-style: none; display: none;
-        }
-        .nav-links.active { transform: translateX(0); }
-        .nav-links a {
-            display: block; color: var(--secondary); padding: var(--space-3) var(--space-6);
-            border-radius: var(--radius-pill); text-decoration: none; text-align: center;
-            font-size: 1.25rem; font-weight: 600; font-family: var(--font-heading);
-        }
-        .nav-links a:hover { background-color: var(--bg-secondary); transform: scale(1.02); }
-
-        /* --- 3. Minimal Hero Section --- */
-        .hero { position: relative; height: 90vh; overflow: hidden; background: var(--dark-bg); margin-top: 36px;}
-        .hero-slider { display: flex; height: 100%; transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1); }
-        .hero-slide { min-width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: var(--space-4); }
-        .hero-slide::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,23,42,0.4), rgba(15,23,42,0.8)); z-index: 1; }
-        .hero-slide img { position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-        .hero-content { position: relative; z-index: 2; max-width: 800px; animation: slideUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; transform: translateY(30px); }
-        
-        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
-        
-        .hero-content h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: var(--space-4); color: var(--white); line-height: 1.1; letter-spacing: -0.03em;}
-        .hero-content p { font-size: clamp(1.1rem, 2vw, 1.25rem); margin-bottom: var(--space-8); color: rgba(255,255,255,0.9); font-weight: 400; }
-        .hero-btn { display: inline-block; background: var(--primary); padding: var(--space-3) var(--space-8); font-size: 1rem; font-weight: 600; border-radius: var(--radius-pill); text-decoration: none; color: var(--white); letter-spacing: 0.5px; }
-        .hero-btn:hover { background: var(--primary-hover); transform: scale(1.03); box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4); }
-
-        .slider-nav { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; gap: var(--space-2); }
-        .slider-dot { width: 10px; height: 10px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: var(--trans-fast); }
-        .slider-dot.active { background: var(--white); transform: scale(1.3); }
-
-        /* --- 4. Section Utilities --- */
-        .section { padding: var(--space-16) 0; }
-        .section-header { text-align: center; margin-bottom: var(--space-12); }
-        .section-header h2 { font-size: clamp(2rem, 4vw, 2.5rem); margin-bottom: var(--space-3); }
-        .section-header p { font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
-        .animated-section { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        .animated-section.visible { opacity: 1; transform: translateY(0); }
-
-        /* --- 5. UI Grids & Premium Cards --- */
-        .features-grid, .product-grid, .how-it-works-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-8); }
-        
-        #why-choose-us, #how-it-works { background: var(--bg-secondary); border-radius: var(--radius-lg); margin: var(--space-8) auto; width: 95%; max-width: 1400px; padding: var(--space-12) 0; }
-        
-        .feature-card, .step-card { text-align: center; padding: var(--space-6); }
-        .feature-card .icon, .step-card .icon { font-size: 2.5rem; color: var(--primary); margin-bottom: var(--space-4); background: rgba(39, 174, 96, 0.1); width: 80px; height: 80px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-pill); }
-        .feature-card h3, .step-card h3 { font-size: 1.25rem; margin-bottom: var(--space-2); }
-
-        /* Apple Style Product Cards */
-        .product-card {
-            background: var(--card-bg);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-light);
-            overflow: hidden; display: flex; flex-direction: column;
-            transition: var(--trans-smooth);
-        }
-        .product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
-        .product-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
-        .product-content { padding: var(--space-6); display: flex; flex-direction: column; flex-grow: 1; }
-        .product-content h3 { font-size: 1.25rem; margin-bottom: var(--space-2); }
-        .product-content p { font-size: 0.95rem; flex-grow: 1; margin-bottom: var(--space-6); }
-        
-        .price-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4); }
-        .price { font-weight: 700; font-size: 1.5rem; color: var(--secondary); font-family: var(--font-heading); }
-        
-        /* iOS Style Stepper */
-        .quantity-controls { display: flex; align-items: center; background: var(--bg-secondary); border-radius: var(--radius-pill); padding: 4px; border: 1px solid var(--border-light); }
-        .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: transparent; cursor: pointer; font-size: 1.2rem; color: var(--secondary); display: flex; align-items: center; justify-content: center; transition: var(--trans-fast); }
-        .qty-btn:hover { background: var(--border-light); }
-        .qty { font-weight: 600; width: 40px; text-align: center; font-size: 1rem; color: var(--secondary); }
-        
-        .add-to-cart-btn { background: var(--primary); color: var(--white); border: none; padding: var(--space-3) 0; border-radius: var(--radius-pill); cursor: pointer; font-weight: 600; width: 100%; font-size: 1rem; transition: var(--trans-fast); }
-        .add-to-cart-btn:hover { background: var(--primary-hover); }
-        .add-to-cart-btn:active { transform: scale(0.98); }
-        
-        .contact-btn { background: var(--secondary); }
-        .contact-btn:hover { background: #1e293b; }
-
-        /* Upcoming Tags */
-        #upcoming-products-section { padding: var(--space-8) 0; }
-        .upcoming-list { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); margin-top: var(--space-4); }
-        .upcoming-list li { background: var(--card-bg); border: 1px solid var(--border-light); padding: var(--space-2) var(--space-4); border-radius: var(--radius-pill); font-weight: 500; font-size: 0.95rem; color: var(--secondary); box-shadow: var(--shadow-sm); }
-        .upcoming-list li i { color: var(--primary); margin-right: var(--space-1); }
-
-        /* --- 6. Footer --- */
-        #testimonials { background: var(--primary); color: var(--white); border-radius: var(--radius-lg); margin: var(--space-8) auto; width: 95%; max-width: 1400px; padding: var(--space-12) 0; }
-        #testimonials h2, #testimonials p { color: var(--white); }
-        .testimonial-card { padding: var(--space-6); max-width: 800px; margin: 0 auto; text-align: center; }
-        .testimonial-card p { font-style: italic; font-size: 1.25rem; line-height: 1.6; color: var(--white); font-family: var(--font-heading); font-weight: 500; margin-bottom: var(--space-4); }
-        
-        footer { background: var(--dark-bg); color: #94a3b8; padding: var(--space-16) 0 var(--space-6); margin-top: var(--space-8); }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-8); }
-        .footer-col h4 { font-size: 1.1rem; margin-bottom: var(--space-4); color: var(--white); }
-        .footer-col p, .footer-col a { color: #94a3b8; text-decoration: none; transition: var(--trans-fast); }
-        .footer-col a { display: block; margin-bottom: var(--space-2); }
-        .footer-col a:hover { color: var(--white); transform: translateX(4px); }
-        .footer-bottom { text-align: center; margin-top: var(--space-12); padding-top: var(--space-6); border-top: 1px solid #334155; font-size: 0.9rem; }
-
-        /* --- 7. Minimal Toast Notification --- */
-        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background-color: var(--text-main); color: var(--bg-main); padding: var(--space-3) var(--space-6); border-radius: var(--radius-pill); z-index: 2000; font-weight: 500; font-size: 0.95rem; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: var(--space-2); }
-        .toast.show { bottom: 30px; }
-        .toast.error { background-color: #ef4444; color: #fff; }
-
-        body.nav-open { overflow: hidden; }
-
-        /* --- 8. Responsive Design --- */
-        @media (max-width: 992px) {
-            #desktop-nav { display: none !important; }
-            #auth-controls { display: none !important; }
-            .menu-btn { display: block !important; }
-            .nav-links { display: flex; }
-            .header-actions { gap: var(--space-4); }
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+    <!-- Toast notification container -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <!-- Loading overlay -->
+    <div id="global-loader" class="global-loader" hidden>
+        <div class="spinner"></div>
+    </div>
+
+    <!-- ===== HEADER ===== -->
     <div class="order-policy-alert">
-        <strong>⚠️ Order Policy:</strong> Deliveries EXCLUSIVELY on Sundays (6 AM - 7 PM IST). Delivery within 30-60 mins! 💚
+        <strong>⚠️ Order Policy:</strong> Deliveries on Sundays (6 AM – 7 PM IST) · Within 30–60 mins 💚
     </div>
 
     <header class="header" id="header">
         <div class="container header-inner">
             <div class="logo">
                 <a href="index.html">
-                    <img src="assets/logo.png" alt="Potlapalli Farms Logo" onerror="this.style.display='none'"/>
+                    <img src="assets/logo.png" alt="Potlapalli Farms" onerror="this.style.display='none'"/>
                     <span>Potlapalli Farms</span>
                 </a>
             </div>
-            
-            <nav class="header-nav" id="desktop-nav"> 
+
+            <nav class="desktop-nav" id="desktop-nav">
                 <a href="#home">Home</a>
                 <a href="#products">Products</a>
-                <a href="about.html">About</a>
-                <a href="contact-us.html">Contact</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#contact">Contact</a>
             </nav>
 
             <div class="header-actions">
-                <button id="themeToggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
-                <div class="mini-cart">
-                    <a href="cart.html" aria-label="View shopping cart">
-                        <i class="fas fa-shopping-bag"></i>
-                        <span id="cartCount">0</span>
-                    </a>
-                </div>
-                <div id="auth-controls" class="auth-controls" style="display:flex; gap:16px; align-items:center;"></div>
-                <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">
+
+                <button id="cartBtn" class="mini-cart" aria-label="Open cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="cartCount">0</span>
+                </button>
+
+                <div id="auth-controls" class="auth-controls"></div>
+
+                <button class="menu-btn" id="menuBtn" aria-label="Open menu">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
         </div>
     </header>
-    
-    <ul class="nav-links" id="nav-links"></ul>
 
+    <!-- Mobile nav overlay -->
+    <div class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-header">
+            <span class="mobile-nav-title">Menu</span>
+            <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="mobile-nav-links" id="mobileNavLinks"></ul>
+    </div>
+    <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+
+    <!-- ===== CART DRAWER ===== -->
+    <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+        <div class="cart-drawer-header">
+            <h3><i class="fas fa-shopping-bag"></i> Your Cart</h3>
+            <button class="cart-drawer-close" id="cartDrawerClose" aria-label="Close cart">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-drawer-body" id="cartDrawerBody"></div>
+        <div class="cart-drawer-footer" id="cartDrawerFooter"></div>
+    </aside>
+    <div class="cart-drawer-backdrop" id="cartDrawerBackdrop"></div>
+
+    <!-- ===== MAIN ===== -->
     <main>
+        <!-- HERO -->
         <section class="hero" id="home">
-            <div class="hero-slider">
-                <div class="hero-slide active">
-                    <img src="assets/images/shopnow.jpeg" alt="Lush green farm fields" onerror="this.src='https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80'">
+            <div class="hero-slider" id="heroSlider">
+                <div class="hero-slide">
+                    <img src="assets/images/shopnow.jpeg" alt="Farm fields" onerror="this.src='https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=1600'">
                     <div class="hero-content">
                         <h1>Farm Freshness, Delivered.</h1>
                         <p>The best of nature, from our farm to your family.</p>
-                        <a href="#products" class="hero-btn">Shop Now</a>
+                        <a href="#products" class="hero-btn">Shop Now <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="hero-slide">
-                    <img src="assets/images/hero.jpg" alt="Organic Goodness" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80'">
+                    <img src="assets/images/hero.jpg" alt="Organic goodness" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1600'">
                     <div class="hero-content">
                         <h1>Pure, Organic Goodness</h1>
-                        <p>No chemicals, no compromises. Just honest, healthy food.</p>
-                        <a href="about.html" class="hero-btn">Our Story</a>
+                        <p>No chemicals. No compromises. Just honest, healthy food.</p>
+                        <a href="#products" class="hero-btn">Explore <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="hero-slide">
+                    <img src="assets/images/goat.jpg" alt="Ethically raised" onerror="this.src='https://images.unsplash.com/photo-1535083783855-76ae62b2914e?auto=format&fit=crop&q=80&w=1600'">
+                    <div class="hero-content">
+                        <h1>Ethically Raised, Freshly Delivered</h1>
+                        <p>Free-range, grass-fed, and treated with care — always.</p>
+                        <a href="#products" class="hero-btn">Order Fresh <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="slider-nav"></div>
+            <div class="slider-nav" id="sliderNav"></div>
         </section>
 
+        <!-- WHY US -->
         <section id="why-choose-us" class="section animated-section">
             <div class="container">
                 <div class="section-header">
@@ -349,14 +129,15 @@
                     <p>Rooted in tradition, delivered with modern convenience.</p>
                 </div>
                 <div class="features-grid">
-                    <div class="feature-card"><div class="icon"><i class="fas fa-leaf"></i></div><h3>100% Organic</h3><p>Grown naturally without any harmful pesticides or chemicals.</p></div>
-                    <div class="feature-card"><div class="icon"><i class="fas fa-truck"></i></div><h3>Farm to Doorstep</h3><p>We harvest, pack, and deliver, ensuring maximum freshness.</p></div>
-                    <div class="feature-card"><div class="icon"><i class="fas fa-heart"></i></div><h3>Ethically Raised</h3><p>Our animals are free-range, grass-fed, and treated with care.</p></div>
+                    <div class="feature-card"><div class="icon"><i class="fas fa-leaf"></i></div><h3>100% Organic</h3><p>Grown naturally without harmful pesticides or chemicals.</p></div>
+                    <div class="feature-card"><div class="icon"><i class="fas fa-truck"></i></div><h3>Farm to Doorstep</h3><p>We harvest, pack, and deliver for maximum freshness.</p></div>
+                    <div class="feature-card"><div class="icon"><i class="fas fa-heart"></i></div><h3>Ethically Raised</h3><p>Free-range, grass-fed, and treated with genuine care.</p></div>
                     <div class="feature-card"><div class="icon"><i class="fas fa-shield-alt"></i></div><h3>Quality Assured</h3><p>Hygienically packed to preserve nutrition and taste.</p></div>
                 </div>
             </div>
         </section>
 
+        <!-- PRODUCTS -->
         <section class="section" id="products">
             <div class="container">
                 <div class="section-header">
@@ -366,407 +147,76 @@
                 <div class="product-grid" id="product-grid"></div>
             </div>
         </section>
-        
+
+        <!-- UPCOMING -->
         <section id="upcoming-products-section" class="section animated-section">
-            <div class="container"></div>
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="fas fa-seedling" style="color:var(--primary)"></i> Coming Soon</h2>
+                    <p>We're expanding with more fresh, high-quality organic items!</p>
+                </div>
+                <ul class="upcoming-list" id="upcoming-list"></ul>
+            </div>
         </section>
 
+        <!-- HOW IT WORKS -->
         <section id="how-it-works" class="section animated-section">
             <div class="container">
                 <div class="section-header"><h2>How It Works</h2></div>
                 <div class="how-it-works-grid">
-                    <div class="step-card"><div class="icon"><i class="fas fa-mobile-screen-button"></i></div><h3>1. Order Online</h3><p>Browse our fresh selection and place your order with a few clicks.</p></div>
-                    <div class="step-card"><div class="icon"><i class="fas fa-box-open"></i></div><h3>2. Harvest & Pack</h3><p>We harvest your produce fresh from the farm only after you order.</p></div>
-                    <div class="step-card"><div class="icon"><i class="fas fa-bolt"></i></div><h3>3. Fast Delivery</h3><p>Your order is delivered to your doorstep, ensuring peak freshness.</p></div>
+                    <div class="step-card"><div class="icon"><i class="fas fa-mobile-screen-button"></i></div><h3>1. Order Online</h3><p>Browse and place your order in a few clicks.</p></div>
+                    <div class="step-card"><div class="icon"><i class="fas fa-box-open"></i></div><h3>2. Harvest & Pack</h3><p>We harvest fresh from the farm after you order.</p></div>
+                    <div class="step-card"><div class="icon"><i class="fas fa-bolt"></i></div><h3>3. Fast Delivery</h3><p>Delivered to your doorstep at peak freshness.</p></div>
                 </div>
             </div>
         </section>
-        
+
+        <!-- TESTIMONIALS -->
         <section id="testimonials" class="section animated-section">
             <div class="container">
-                <div class="section-header"><h2 style="color: white;">What Our Customers Say</h2></div>
+                <div class="section-header"><h2>What Our Customers Say</h2></div>
                 <div class="testimonial-card">
-                    <p>"The best meat I've had in years! The freshness is unparalleled. You can truly taste the difference. Highly recommended!"</p>
-                    <div class="testimonial-author" style="color: rgba(255,255,255,0.8);">- Priya S, Hyderabad</div>
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>"The best meat I've had in years! The freshness is unparalleled. You can truly taste the difference."</p>
+                    <div class="testimonial-author">— Priya S, Hyderabad</div>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- ===== FOOTER ===== -->
     <footer id="contact">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-col">
-                    <h4>About Us</h4>
-                    <p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p>
+                    <h4>Potlapalli Farms</h4>
+                    <p>Dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p>
                 </div>
                 <div class="footer-col">
                     <h4>Quick Links</h4>
-                    <a href="#home">Home</a><a href="#products">Products</a><a href="about.html">About</a><a href="gallery.html">Farm Gallery</a>
+                    <a href="#home">Home</a>
+                    <a href="#products">Products</a>
+                    <a href="orders.html">My Orders</a>
+                    <a href="profile.html">My Profile</a>
                 </div>
                 <div class="footer-col">
                     <h4>Contact</h4>
-                    <p>Potlapalli Farms, AP<br>Email: <a href="mailto:pgf.natural@gmail.com" style="display:inline;">pgf.natural@gmail.com</a><br>Phone: +91 79810 59178</p>
+                    <p>Potlapalli Farms, AP</p>
+                    <p><a href="mailto:pgf.natural@gmail.com">pgf.natural@gmail.com</a></p>
+                    <p><a href="tel:+917981059178">+91 79810 59178</a></p>
                 </div>
                 <div class="footer-col">
-                    <h4>Follow Us</h4> 
-                    <a href="https://www.instagram.com/potlapallifarms" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                    <h4>Follow Us</h4>
+                    <a href="https://www.instagram.com/potlapallifarms" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="https://wa.me/917981059178" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2025 Potlapalli Farms. All Rights Reserved.</p>
+                <p>© 2025 Potlapalli Farms. All rights reserved. Made with 💚 in Andhra Pradesh.</p>
             </div>
         </div>
     </footer>
-    
-    <div id="toast" class="toast" aria-live="polite"></div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Theme Management
-        const themeToggleBtn = document.getElementById('themeToggle');
-        const themeIcon = themeToggleBtn.querySelector('i');
-        
-        const applyTheme = (theme) => {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-            themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        };
-
-        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        applyTheme(savedTheme);
-
-        themeToggleBtn.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-        });
-
-        // Mobile Menu
-        const menuBtn = document.getElementById('menuBtn');
-        const navLinks = document.getElementById('nav-links');
-        
-        if (menuBtn && navLinks) {
-            const menuIcon = menuBtn.querySelector('i');
-            menuBtn.addEventListener('click', () => {
-                const isActive = navLinks.classList.toggle('active');
-                document.body.classList.toggle("nav-open");
-                menuIcon.classList.toggle('fa-bars', !isActive);
-                menuIcon.classList.toggle('fa-times', isActive);
-            });
-        }
-    });
-    </script>
-
-    <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
-    authDomain: "potlapallifarm.firebaseapp.com",
-    projectId: "potlapallifarm",
-    storageBucket: "potlapallifarm.firebasestorage.app",
-    messagingSenderId: "1017629729159",
-    appId: "1:1017629729159:web:357c420a9de335d427b322"
-};
-
-const app = initializeApp(firebaseConfig);
-
-// --- App Check Initialization ---
-const appCheck = initializeAppCheck(app, {
-    provider: new ReCaptchaEnterpriseProvider('6LclPcwtAAAAAAQeO5_p2EU3wOebImnE9GpyswL0'), // Your key is perfectly placed here!
-    isTokenAutoRefreshEnabled: true
-});
-// --- End App Check Initialization ---
-const auth = getAuth(app);
-
-    const products = [
-        { id: 'live-ram', name: 'Live Ram (Macherla Pottelu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Ram, range 15 to 40 kg.', image: 'assets/ram.jpg' },
-        { id: 'buck', name: 'Buck (Meka Pothu)', price: 450, unit: '/kg', category: 'Live Meat', isMeat: true, isLive: true, description: 'Live Buck, range 15 to 40 kg.', image: 'assets/images/buck.jpg' },
-        { id: 'live-natu-kodi', name: 'Live Natu Kodi (Country Chicken)', price: 700, unit: '/kg', category: 'Live Birds', isMeat: false, isLive: true, description: 'Fresh, live country chicken, delivered to your specifications.', image: 'assets/live-natu-kodi.jpg' },
-        { id: 'sonali-chicken', name: 'Sonali Country Chicken (Smokey Turmeric)', price: 550, unit: '/kg', category: 'Meat', isMeat: true, description: 'Premium Sonali country chicken.', image: 'assets/images/sonali-chicken.jpg' },
-        { id: 'backyard-chicken', name: 'Backyard Country Chicken (Smokey Turmeric)', price: 800, unit: '/kg', category: 'Meat', isMeat: true, description: 'High-quality backyard country chicken.', image: 'assets/images/backyard.jpg' },
-        { id: 'natu-kodi-smokey', name: 'Natu Kodi (Smoked Country Chicken)', price: 900, unit: '/kg', category: 'Meat', isMeat: true, description: 'Premium country chicken, delicately smoked.', image: 'assets/images/natu-kodi-smokey.jpg' },
-        { id: 'goat', name: 'Premium Goat Meat', price: 900, unit: '/kg', category: 'Meat', isMeat: true, description: 'Tender, pasture-raised goat meat.', image: 'assets/images/goat.jpg' },
-        { id: 'eggs-dozen', name: 'Country Chicken Eggs', price: 180, unit: '/dozen', category: 'Eggs', isMeat: false, description: 'A dozen golden-yolk eggs.', image: 'assets/images/eggs-dozen.jpg' },
-        { id: 'eggs-tray', name: '30 Eggs Tray', price: 430, unit: '/tray', category: 'Eggs', isMeat: false, description: 'Tray of 30 golden-yolk eggs.', image: 'assets/images/tray.jpg' }
-    ];
-
-    const upcomingProducts = ['Fish', 'Prawns', 'Crabs', 'Buffalo Milk', 'Cow Milk', 'Button Mushrooms'];
-    const CART_KEY = 'potlapalliCart';
-
-    const productGrid = document.getElementById('product-grid');
-    const cartCountEl = document.getElementById('cartCount');
-    const upcomingProductsSection = document.getElementById('upcoming-products-section');
-    const toastEl = document.getElementById('toast');
-    const header = document.getElementById('header');
-    const menuBtn = document.getElementById("menuBtn");
-    const navLinks = document.getElementById("nav-links");
-    const authControls = document.getElementById('auth-controls');
-
-    const showToast = (message, isError = false) => {
-        toastEl.innerHTML = isError ? `<i class="fas fa-exclamation-circle"></i> ${message}` : `<i class="fas fa-check-circle"></i> ${message}`;
-        toastEl.className = `toast ${isError ? 'error' : ''}`;
-        setTimeout(() => toastEl.classList.add('show'), 10);
-        setTimeout(() => toastEl.classList.remove('show'), 3000);
-    };
-
-    const updateCartCount = () => {
-        const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-        if (cartCountEl) cartCountEl.textContent = cart.length;
-    };
-
-    const handleAddToCart = (productId, quantity, cardElement) => {
-        if (quantity <= 0) {
-            showToast('Quantity must be more than the minimum order size.', true);
-            return;
-        }
-        const product = products.find(p => p.id === productId);
-        if (!product) return;
-
-        let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-        const existingItem = cart.find(item => item.id === productId);
-
-        if (existingItem) existingItem.quantity += quantity;
-        else cart.push({ ...product, quantity: quantity });
-        
-        localStorage.setItem(CART_KEY, JSON.stringify(cart));
-        updateCartCount();
-        showToast(`${quantity.toFixed(product.isMeat ? 2 : 0)}${product.isMeat ? 'kg' : product.unit.replace('/', '')} added to cart!`);
-
-        if (cardElement) {
-            const isGoat = product.id === 'goat';
-            const resetQty = isGoat ? 0.75 : (product.isMeat ? 0.5 : 1);
-            cardElement.querySelector('.qty').textContent = resetQty.toFixed(product.isMeat ? 2 : 0);
-            updatePriceDisplay(cardElement, product);
-        }
-    };
-
-    const updatePriceDisplay = (cardElement, product) => {
-        const qtyEl = cardElement.querySelector('.qty');
-        const priceDisplayEl = cardElement.querySelector('.price-display');
-        const pricePerUnitSmallEl = cardElement.querySelector('.price-per-unit-small');
-
-        const currentQty = parseFloat(qtyEl.textContent);
-        const calculatedPrice = product.price * currentQty;
-        
-        priceDisplayEl.textContent = `₹${calculatedPrice.toFixed(0)}`;
-        pricePerUnitSmallEl.innerHTML = `(₹${product.price}${product.unit})`;
-    };
-
-    const renderProducts = () => {
-        if (!productGrid) return;
-        
-        productGrid.innerHTML = products.map(product => {
-            const isGoat = product.id === 'goat';
-            const initialQty = isGoat ? 0.75 : (product.isMeat ? 0.5 : 1);
-            const unitText = product.isMeat ? 'kg' : product.unit.replace('/', '');
-            const initialPrice = product.price * initialQty;
-            
-            // Dummy image fallback for aesthetics
-            const imgSrc = `assets/images/${product.id}.jpg`;
-            const fallbackSrc = `https://images.unsplash.com/photo-1604622206864-16a2b8eb6a29?auto=format&fit=crop&q=80&w=600`;
-
-            if (product.isLive) {
-                return `
-                    <div class="product-card animated-section" data-id="${product.id}">
-                        <img src="${imgSrc}" onerror="this.src='${fallbackSrc}'" alt="${product.name}">
-                        <div class="product-content">
-                            <h3>${product.name}</h3>
-                            <p>${product.description} <br><span class="price-per-unit-small" style="font-size:0.85rem; color:var(--text-muted);">(₹${product.price}/kg Live Weight)</span></p>
-                            <div style="margin-top:auto">
-                                <div class="price-line">
-                                    <span class="price price-display">₹${product.price}/kg</span>
-                                </div>
-                                <a href="#contact" class="add-to-cart-btn contact-btn" style="display:block; text-align:center; text-decoration:none;">Contact to Order</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            return `
-                <div class="product-card animated-section" data-id="${product.id}">
-                    <img src="${imgSrc}" onerror="this.src='${fallbackSrc}'" alt="${product.name}">
-                    <div class="product-content">
-                        <h3>${product.name}</h3>
-                        <p>${product.description} <br><span class="price-per-unit-small" style="font-size:0.85rem; color:var(--text-muted);">(₹${product.price}${product.unit})</span></p>
-                        <div style="margin-top:auto">
-                            <div class="price-line">
-                                <span class="price price-display">₹${initialPrice.toFixed(0)}</span>
-                                <div class="quantity-controls">
-                                    <button class="qty-btn minus-btn" aria-label="Decrease quantity"><i class="fas fa-minus" style="font-size:0.8rem;"></i></button>
-                                    <span class="qty">${initialQty.toFixed(product.isMeat ? 2 : 0)}</span>
-                                    <button class="qty-btn plus-btn" aria-label="Increase quantity"><i class="fas fa-plus" style="font-size:0.8rem;"></i></button>
-                                </div>
-                            </div>
-                            <button class="add-to-cart-btn">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        renderUpcomingProducts();
-    };
-
-    const renderUpcomingProducts = () => {
-        const container = document.querySelector('#upcoming-products-section .container');
-        if (!container) return; 
-        container.innerHTML = `
-            <div class="section-header"><h2><i class="fas fa-seedling" style="color:var(--primary)"></i> Coming Soon</h2><p>We are expanding our range with more fresh, high-quality organic items!</p></div>
-            <ul class="upcoming-list">
-                ${upcomingProducts.map(item => `<li><i class="fas fa-check"></i> ${item}</li>`).join('')}
-            </ul>
-        `;
-    };
-
-    const renderAuthControls = (user) => {
-        authControls.innerHTML = '';
-        
-        if (user) {
-            authControls.innerHTML = `
-                <a href="profile.html" class="auth-btn">My Profile</a>
-                <button class="auth-btn" id="signOutBtn">Log Out</button>
-            `;
-            const desktopSignOutBtn = document.getElementById('signOutBtn');
-            if (desktopSignOutBtn) desktopSignOutBtn.addEventListener('click', handleLogout);
-        } else {
-            authControls.innerHTML = `
-                <a href="signin.html" class="auth-btn">Log In</a>
-                <a href="signup.html" class="auth-btn primary">Sign Up</a>
-            `;
-        }
-
-        let mobileNavHTML = `
-            <li><a href="#home">Home</a></li>
-            <li><a href="#products">Products</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="contact-us.html">Contact</a></li>
-        `;
-
-        if (user) {
-            mobileNavHTML += `<li><a href="profile.html">My Profile</a></li><li><a href="#" id="signOutBtnMobile">Log Out</a></li>`;
-        } else {
-            mobileNavHTML += `<li><a href="signin.html">Log In</a></li><li><a href="signup.html">Sign Up</a></li>`;
-        }
-        navLinks.innerHTML = mobileNavHTML;
-
-        if (user) {
-            const mobileSignOutBtn = document.getElementById('signOutBtnMobile');
-            if (mobileSignOutBtn) mobileSignOutBtn.addEventListener('click', (e) => { e.preventDefault(); handleLogout(); });
-        }
-    };
-
-    const handleLogout = () => {
-        signOut(auth).then(() => showToast("Signed out successfully!")).catch(error => showToast("Logout error.", true));
-    };
-
-    onAuthStateChanged(auth, renderAuthControls);
-
-    const initSlider = () => { 
-        const slider = document.querySelector('.hero-slider');
-        const slides = document.querySelectorAll('.hero-slide');
-        const sliderNav = document.querySelector('.slider-nav');
-        if (!slider || slides.length <= 1) return;
-
-        let currentIndex = 0; let slideInterval;
-
-        slides.forEach((_, i) => {
-            const dot = document.createElement('div');
-            dot.classList.add('slider-dot');
-            if (i === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => { currentIndex = i; updateSlider(); resetInterval(); });
-            sliderNav.appendChild(dot);
-        });
-        
-        const dots = document.querySelectorAll('.slider-dot');
-        const updateSlider = () => {
-            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
-        };
-
-        const nextSlide = () => { currentIndex = (currentIndex + 1) % slides.length; updateSlider(); };
-        const resetInterval = () => { clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); };
-
-        slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
-        slider.addEventListener('mouseleave', resetInterval);
-        resetInterval();
-    };
-
-    const initScrollEffects = () => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.animated-section').forEach(el => observer.observe(el));
-
-        window.addEventListener('scroll', () => {
-            if (header) header.classList.toggle('scrolled', window.scrollY > 20);
-        });
-    };
-    
-    const initMobileNav = () => {
-        if (!navLinks) return; 
-        navLinks.addEventListener('click', (e) => {
-            const target = e.target.closest('a');
-            if (target && target.id !== 'signOutBtnMobile') {
-                if (navLinks.classList.contains("active")) {
-                    navLinks.classList.remove('active');
-                    document.body.classList.remove('nav-open');
-                    const menuIcon = menuBtn ? menuBtn.querySelector('i') : null;
-                    if(menuIcon) { menuIcon.classList.remove('fa-times'); menuIcon.classList.add('fa-bars'); }
-                }
-            }
-        });
-    };
-
-    if (productGrid) {
-        productGrid.addEventListener('click', (e) => {
-            const card = e.target.closest('.product-card');
-            if (!card) return;
-            
-            const productId = card.dataset.id;
-            const product = products.find(p => p.id === productId);
-            if (!product || product.isLive) return; 
-
-            const isGoat = product.id === 'goat';
-            const isMeat = product.isMeat;
-            const qtyEl = card.querySelector('.qty');
-            let currentQty = parseFloat(qtyEl.textContent);
-
-            if (e.target.closest('.plus-btn')) {
-                currentQty += isMeat ? 0.25 : 1;
-            } else if (e.target.closest('.minus-btn')) {
-                let minQty = isGoat ? 0.75 : (isMeat ? 0.5 : 1);
-                currentQty = Math.max(minQty, currentQty - (isMeat ? 0.25 : 1));
-            } else if (e.target.closest('.add-to-cart-btn') || e.target.classList.contains('add-to-cart-btn')) {
-                handleAddToCart(productId, currentQty, card);
-                return; 
-            }
-            
-            qtyEl.textContent = currentQty.toFixed(isMeat ? 2 : 0);
-            updatePriceDisplay(card, product); 
-        });
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        renderProducts();
-        updateCartCount();
-        initSlider();
-        initScrollEffects();
-        initMobileNav();
-        
-        document.querySelectorAll('.product-card').forEach(card => {
-            const product = products.find(p => p.id === card.dataset.id);
-            if (product && !product.isLive) updatePriceDisplay(card, product);
-        });
-    });
-    </script>
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
