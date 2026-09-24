@@ -1,539 +1,2024 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Delivery Dashboard - Potlapalli Farm</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-<style>
-:root {
---primary-color: #3498db; /* Blue for Maps/Navigation focus */
---secondary-color: #2c3e50;
---background-light: #f8f9fa;
---text-dark: #333;
---white: #fff;
---border-light: #e0e0e0;
---danger-color: #e74c3c; /* Red for cancelled/logout */
---success-color: #2ecc77; /* Green for delivered */
---warning-color: #f39c12; /* Orange for COD */
---info-color: #3498db;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-body { background: var(--background-light); color: var(--text-dark); }
-.container { width: 95%; max-width: 800px; margin: 0 auto; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#1e4d2b" />
+    <title>Delivery Dashboard — Potlapalli Farms</title>
+    <meta name="robots" content="noindex, nofollow" />
 
-    /* --- Loading Spinner/Overlay Styles --- */
-    #maps-loader-overlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: var(--background-light);
-        z-index: 5000; 
-        display: flex; align-items: center; justify-content: center;
-        transition: opacity 0.3s ease;
-    }
-    .loader-spinner {
-        width: 50px; height: 50px;
-        border: 5px solid #f3f3f3;
-        border-top: 5px solid var(--primary-color);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    /* Login View Styles - Hidden by default */
-    #maps-login-view { display: none; align-items: center; justify-content: center; min-height: 100vh; }
-    .login-box { background: var(--white); padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-    .login-box h1 { font-family: 'Playfair Display', serif; margin-bottom: 2rem; color: var(--secondary-color); }
-    .input-group { margin-bottom: 1.5rem; text-align: left; }
-    .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
-    .input-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem;}
-    .btn { width: 100%; padding: 1rem; background: var(--primary-color); color: var(--white); border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; }
-    .btn:hover { opacity: 0.9; }
-    
-    /* Dashboard View Styles - Hidden by default */
-    #maps-dashboard-view { display: none; }
-    
-    /* Cleaner Dashboard Header */
-    .maps-header { 
-        background: var(--secondary-color); 
-        padding: 1.5rem 1rem; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
-        position: sticky; top: 0; z-index: 100; 
-        color: var(--white);
-    }
-    .maps-header .container { display: flex; justify-content: space-between; align-items: center; }
-    .maps-header h1 { 
-        font-family: 'Playfair Display', serif; 
-        font-size: 1.8rem; 
-        color: var(--white); 
-    }
-    #logoutBtn { 
-        background: var(--danger-color); 
-        color: white; 
-        border: none; 
-        padding: 0.5rem 1rem; 
-        border-radius: 6px; 
-        cursor: pointer; 
-        font-weight: 600;
-    }
+    <style>
+        /* ============================================================
+           DELIVERY DASHBOARD
+           ============================================================ */
+        :root {
+            --forest: #1e4d2b;
+            --forest-dark: #143721;
+            --forest-soft: rgba(30, 77, 43, 0.08);
+            --terracotta: #c45a3a;
+            --terracotta-hover: #a84a2f;
+            --terracotta-soft: rgba(196, 90, 58, 0.1);
+            --cream: #faf7f2;
+            --cream-dark: #f2ede4;
+            --charcoal: #1a1a1a;
+            --ink: #2a2622;
+            --stone: #6b6259;
+            --stone-light: #9a9086;
+            --border: #e8e2d5;
+            --border-strong: #d4ccbc;
+            --gold: #d4a54c;
+            --danger: #b13a2a;
+            --warning: #d4821e;
+            --blue: #2d6bb1;
+            --blue-soft: rgba(45, 107, 177, 0.1);
+            --whatsapp: #25d366;
+            --whatsapp-dark: #1da851;
 
-    .maps-main { padding: 2rem 1rem; }
-    .maps-main h2 { text-align: center; margin-bottom: 1.5rem; color: var(--secondary-color); }
-    .order-queue { 
-        display: flex; 
-        flex-direction: column; 
-        gap: 1.5rem; 
-    }
-    .order-card { 
-        background: var(--white); 
-        border-radius: 16px; 
-        box-shadow: 0 8px 30px rgba(0,0,0,0.08); 
-        overflow: hidden; 
-        transition: opacity 0.5s ease;
-    }
-    .order-card.removed {
-        opacity: 0;
-        height: 0;
-        margin: 0;
-        padding: 0;
-    }
-    .card-header { padding: 1rem 1.5rem; background: var(--info-color); color: var(--white); }
-    .card-header h3 { font-size: 1.2rem; }
-    .card-body { padding: 1.5rem; }
-    .detail-row { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
-    .detail-row .icon { font-size: 1.2rem; color: var(--primary-color); width: 20px; text-align: center; }
-    .detail-row .content p { margin: 0; }
-    .detail-row .content .label { font-weight: 600; }
-    .items-list { list-style: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border-light); font-size: 0.9em; }
-    .cod-highlight { background: var(--warning-color); color: var(--white); padding: 1rem; border-radius: 8px; text-align: center; margin-top: 1rem; }
-    .cod-highlight .amount { font-size: 1.5rem; font-weight: 700; }
+            --font-display: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-    /* OTP Input Styling */
-    .otp-input { 
-        padding: 10px; 
-        font-size: 1.2rem; 
-        font-weight: 600;
-        text-align: center;
-        border: 2px solid var(--info-color); 
-        border-radius: 8px;
-        width: 100%;
-    }
-    
-    .card-footer { 
-        display: grid; 
-        grid-template-columns: 1fr 1fr; /* Two main columns for action buttons */
-        gap: 0.8rem; 
-        padding: 1.5rem; 
-        background: #fdfdfd; 
-        border-top: 1px solid var(--border-light); 
-    }
-    .card-footer .btn { padding: 0.8rem 0.5rem; font-size: 0.9rem; }
-    .footer-row { grid-column: span 2; margin-bottom: 0.8rem; }
-    
-    /* Action Buttons Styling */
-    .btn { 
-        padding: 0.8rem 0.5rem; 
-        border-radius: 6px; 
-        font-weight: 600; 
-        text-decoration: none; 
-        text-align: center; 
-        border: none;
-        cursor: pointer; 
-        transition: all 0.3s; 
-        font-size: 0.9rem;
-        color: var(--white);
-    }
-    
-    .btn-map { background: var(--info-color); color: white; }
-    
-    .btn-success { 
-        background: var(--success-color); 
-        color: var(--white); 
-    }
-    .btn-cancel { 
-        background: var(--danger-color); 
-        color: var(--white); 
-    }
+            --radius-xs: 4px;
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-pill: 9999px;
 
+            --shadow-sm: 0 1px 3px rgba(26, 26, 26, 0.06), 0 1px 2px rgba(26, 26, 26, 0.04);
+            --shadow-md: 0 4px 16px rgba(26, 26, 26, 0.06);
+            --shadow-lg: 0 12px 32px rgba(26, 26, 26, 0.08);
+            --shadow-xl: 0 24px 60px rgba(26, 26, 26, 0.12);
 
-    /* Modal & Toast Styles */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-    .modal-overlay.show { display: flex; opacity: 1; }
-    .modal-content { background: var(--white); padding: 2rem; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; }
-    .modal-body .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
-    .btn-outline { border: 2px solid var(--secondary-color); color: var(--secondary-color); background: transparent; }
-    .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--secondary-color); color: var(--white); padding: 1rem 1.5rem; border-radius: 50px; z-index: 1001; transition: bottom 0.5s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-    .toast.show { bottom: 20px; }
-    .toast.error { background: var(--danger-color); }
-</style>
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --trans-fast: all 0.18s var(--ease);
+            --trans: all 0.3s var(--ease);
+        }
 
+        [data-theme="dark"] {
+            --cream: #14110e;
+            --cream-dark: #1c1814;
+            --ink: #f5efe6;
+            --stone: #a89f92;
+            --stone-light: #6b6259;
+            --border: #2a251f;
+            --border-strong: #3a342b;
+            --forest-soft: rgba(107, 196, 135, 0.12);
+            --terracotta-soft: rgba(196, 90, 58, 0.15);
+            --blue-soft: rgba(45, 107, 177, 0.15);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html { -webkit-text-size-adjust: 100%; }
+
+        body {
+            background: var(--cream);
+            color: var(--ink);
+            font-family: var(--font-body);
+            font-size: 15px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: var(--ink);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        button {
+            font-family: var(--font-body);
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: inherit;
+            font-size: inherit;
+        }
+
+        input, textarea, select {
+            font-family: var(--font-body);
+            font-size: 16px;
+            color: inherit;
+        }
+
+        ::selection { background: var(--forest); color: var(--cream); }
+
+        :focus-visible {
+            outline: 2px solid var(--terracotta);
+            outline-offset: 2px;
+            border-radius: var(--radius-xs);
+        }
+
+        /* ============================================================
+           LOADER
+           ============================================================ */
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 17, 14, 0.35);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader-overlay.show { display: flex; }
+
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top-color: var(--cream);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ============================================================
+           LOGIN VIEW
+           ============================================================ */
+        .login-view {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background:
+                radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0) 0 0 / 28px 28px,
+                var(--cream);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--cream);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 44px 36px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        [data-theme="dark"] .login-card { background: var(--cream-dark); }
+
+        .login-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .login-brand svg {
+            width: 40px;
+            height: 40px;
+            color: var(--forest);
+            flex-shrink: 0;
+        }
+
+        [data-theme="dark"] .login-brand svg { color: #6bc487; }
+
+        .login-brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+            gap: 4px;
+        }
+
+        .login-brand-text .name {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: -0.04em;
+            color: var(--ink);
+        }
+
+        .login-brand-text .sub {
+            font-family: var(--font-body);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--stone);
+        }
+
+        .login-card h1 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+        }
+
+        .login-card .login-sub {
+            color: var(--stone);
+            font-size: 0.9rem;
+            margin-bottom: 28px;
+            line-height: 1.55;
+        }
+
+        .login-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .login-field label {
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--stone);
+        }
+
+        .login-field input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--cream);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            transition: var(--trans-fast);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        [data-theme="dark"] .login-field input { background: var(--cream); }
+
+        .login-field input:focus {
+            border-color: var(--forest);
+            box-shadow: 0 0 0 3px var(--forest-soft);
+        }
+
+        .login-error {
+            display: none;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 14px;
+            background: rgba(177, 58, 42, 0.08);
+            border: 1px solid rgba(177, 58, 42, 0.25);
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--danger);
+            line-height: 1.5;
+        }
+
+        .login-error.show { display: flex; }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--forest);
+            color: var(--cream);
+            padding: 15px 24px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            transition: var(--trans-fast);
+            cursor: pointer;
+            border: none;
+            width: 100%;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--forest-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        /* ============================================================
+           APP SHELL
+           ============================================================ */
+        .app-shell {
+            display: none;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        .app-shell.active { display: block; }
+
+        /* Header */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--cream);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        [data-theme="dark"] .app-header { background: rgba(20, 17, 14, 0.85); }
+
+        .app-header-inner {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .app-brand svg {
+            width: 32px;
+            height: 32px;
+            color: var(--forest);
+            flex-shrink: 0;
+        }
+
+        [data-theme="dark"] .app-brand svg { color: #6bc487; }
+
+        .app-brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+            gap: 3px;
+            min-width: 0;
+        }
+
+        .app-brand-text .name {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 0.95rem;
+            letter-spacing: -0.03em;
+            color: var(--ink);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .app-brand-text .sub {
+            font-family: var(--font-body);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            color: var(--stone);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink);
+            font-size: 0.95rem;
+            border: 1px solid var(--border);
+            background: var(--cream);
+            transition: var(--trans-fast);
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        [data-theme="dark"] .icon-btn { background: var(--cream-dark); }
+
+        .icon-btn:hover { border-color: var(--ink); background: var(--cream-dark); }
+
+        .icon-btn.logout { color: var(--danger); border-color: rgba(177, 58, 42, 0.25); }
+        .icon-btn.logout:hover { background: rgba(177, 58, 42, 0.08); border-color: var(--danger); }
+
+        /* Main container */
+        .app-main {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 20px 18px 80px;
+        }
+
+        /* ============================================================
+           GREETING + STATS
+           ============================================================ */
+        .greeting {
+            margin-bottom: 20px;
+        }
+
+        .greeting .eyebrow {
+            font-family: var(--font-body);
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--terracotta);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .greeting h1 {
+            font-size: clamp(1.4rem, 5vw, 1.85rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin-bottom: 4px;
+        }
+
+        .greeting p {
+            color: var(--stone);
+            font-size: 0.9rem;
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .stat-mini {
+            background: var(--cream);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 14px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .stat-mini { background: var(--cream-dark); }
+
+        .stat-mini .stat-label {
+            font-family: var(--font-body);
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--stone);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .stat-mini .stat-value {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--ink);
+            line-height: 1;
+        }
+
+        .stat-mini .stat-value small {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--stone);
+            margin-left: 2px;
+        }
+
+        .stat-mini.cash .stat-value { color: var(--warning); }
+
+        /* ============================================================
+           FILTER TABS
+           ============================================================ */
+        .filter-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .filter-tabs::-webkit-scrollbar { display: none; }
+
+        .filter-tab {
+            padding: 12px 14px;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--stone);
+            border-bottom: 2px solid transparent;
+            transition: var(--trans-fast);
+            white-space: nowrap;
+            margin-bottom: -1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-tab:hover { color: var(--ink); }
+
+        .filter-tab.active {
+            color: var(--forest);
+            border-bottom-color: var(--forest);
+        }
+
+        [data-theme="dark"] .filter-tab.active { color: #6bc487; border-bottom-color: #6bc487; }
+
+        .filter-tab .count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            background: var(--cream-dark);
+            border-radius: var(--radius-pill);
+            font-size: 0.7rem;
+            color: var(--stone);
+            font-weight: 700;
+        }
+
+        [data-theme="dark"] .filter-tab .count { background: #1a1712; }
+
+        .filter-tab.active .count { background: var(--forest); color: var(--cream); }
+
+        /* ============================================================
+           ORDER CARDS
+           ============================================================ */
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .order-card {
+            background: var(--cream);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+            animation: cardIn 0.4s var(--ease-out);
+        }
+
+        [data-theme="dark"] .order-card { background: var(--cream-dark); }
+
+        .order-card.removing {
+            opacity: 0;
+            transform: translateX(-30px) scale(0.95);
+        }
+
+        .order-card.new-assignment {
+            box-shadow: 0 0 0 2px var(--forest);
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Status ribbon at top */
+        .order-ribbon {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            font-family: var(--font-body);
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .order-ribbon.ribbon-confirmed {
+            background: var(--forest);
+            color: var(--cream);
+        }
+
+        .order-ribbon.ribbon-out {
+            background: var(--blue);
+            color: var(--cream);
+        }
+
+        .order-ribbon.ribbon-delivered {
+            background: var(--cream-dark);
+            color: var(--stone);
+            border-bottom: 1px solid var(--border);
+        }
+
+        [data-theme="dark"] .order-ribbon.ribbon-delivered { background: #1a1712; }
+
+        .order-ribbon .ribbon-id {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .order-ribbon .ribbon-id i { font-size: 0.85rem; }
+
+        .order-ribbon .ribbon-time {
+            font-weight: 600;
+            opacity: 0.85;
+            letter-spacing: 0.06em;
+        }
+
+        /* Order body */
+        .order-body {
+            padding: 18px 18px 20px;
+        }
+
+        .order-customer {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .order-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--forest-soft);
+            color: var(--forest);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: -0.02em;
+            flex-shrink: 0;
+        }
+
+        [data-theme="dark"] .order-avatar { background: rgba(107, 196, 135, 0.15); color: #6bc487; }
+
+        .order-customer-info {
+            min-width: 0;
+            flex-grow: 1;
+        }
+
+        .order-customer-info .name {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.05rem;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .order-customer-info .total {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: var(--stone);
+        }
+
+        .order-customer-info .total strong {
+            color: var(--ink);
+            font-weight: 700;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            letter-spacing: -0.015em;
+        }
+
+        /* COD banner */
+        .cod-banner {
+            background: linear-gradient(135deg, var(--gold), #b8883a);
+            color: #2a1f0a;
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cod-banner .cod-label {
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            opacity: 0.75;
+            margin-bottom: 2px;
+        }
+
+        .cod-banner .cod-amount {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }
+
+        .cod-banner i { font-size: 1.75rem; opacity: 0.4; }
+
+        /* Info blocks */
+        .order-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .info-line {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .info-line > i {
+            width: 20px;
+            text-align: center;
+            color: var(--stone);
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        .info-line .info-text {
+            color: var(--ink);
+            word-break: break-word;
+            flex-grow: 1;
+        }
+
+        .info-line .info-text a {
+            color: var(--forest);
+            font-weight: 600;
+        }
+
+        [data-theme="dark"] .info-line .info-text a { color: #6bc487; }
+
+        /* Quick actions row */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .quick-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 8px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background: var(--cream);
+            font-family: var(--font-body);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            color: var(--ink);
+            transition: var(--trans-fast);
+            text-align: center;
+            cursor: pointer;
+        }
+
+        [data-theme="dark"] .quick-action { background: var(--cream-dark); }
+
+        .quick-action i {
+            font-size: 1.05rem;
+            color: var(--forest);
+        }
+
+        [data-theme="dark"] .quick-action i { color: #6bc487; }
+
+        .quick-action:hover {
+            border-color: var(--forest);
+            background: var(--forest-soft);
+        }
+
+        .quick-action.whatsapp i { color: var(--whatsapp); }
+        .quick-action.whatsapp:hover { border-color: var(--whatsapp); background: rgba(37, 211, 102, 0.08); }
+
+        .quick-action.call i { color: var(--blue); }
+        .quick-action.call:hover { border-color: var(--blue); background: var(--blue-soft); }
+
+        .quick-action.map i { color: var(--terracotta); }
+        .quick-action.map:hover { border-color: var(--terracotta); background: var(--terracotta-soft); }
+
+        /* Items compact */
+        .order-items-compact {
+            border-top: 1px dashed var(--border);
+            padding-top: 12px;
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .item-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            gap: 12px;
+        }
+
+        .item-line .iname {
+            color: var(--ink);
+            flex-grow: 1;
+            font-weight: 500;
+        }
+
+        .item-line .iname small {
+            display: block;
+            color: var(--stone);
+            font-size: 0.75rem;
+            font-weight: 400;
+            margin-top: 1px;
+        }
+
+        .item-line .iprice {
+            color: var(--stone);
+            font-weight: 600;
+            white-space: nowrap;
+            font-size: 0.82rem;
+        }
+
+        /* Primary action button — big */
+        .action-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.01em;
+            transition: var(--trans-fast);
+            cursor: pointer;
+            border: none;
+        }
+
+        .action-primary.start {
+            background: var(--forest);
+            color: var(--cream);
+        }
+
+        .action-primary.start:hover:not(:disabled) {
+            background: var(--forest-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-primary.complete {
+            background: var(--terracotta);
+            color: var(--cream);
+        }
+
+        .action-primary.complete:hover:not(:disabled) {
+            background: var(--terracotta-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-primary:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .action-primary i { font-size: 1.05rem; }
+
+        .action-primary.done {
+            background: var(--cream-dark);
+            color: var(--stone);
+            cursor: default;
+            border: 1px solid var(--border);
+        }
+
+        [data-theme="dark"] .action-primary.done { background: #1a1712; }
+
+        /* OTP panel (expanded state) */
+        .otp-panel {
+            display: none;
+            margin-top: 14px;
+            padding: 20px;
+            background: var(--cream-dark);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            animation: otpIn 0.25s var(--ease-out);
+        }
+
+        [data-theme="dark"] .otp-panel { background: #0f0d0a; }
+
+        .otp-panel.open { display: block; }
+
+        @keyframes otpIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .otp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .otp-header h4 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .otp-header .close-otp {
+            width: 30px;
+            height: 30px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--stone);
+            border: 1px solid var(--border);
+            background: transparent;
+            cursor: pointer;
+            transition: var(--trans-fast);
+            font-size: 0.8rem;
+        }
+
+        .otp-header .close-otp:hover { background: var(--charcoal); color: var(--cream); border-color: var(--charcoal); }
+
+        .otp-hint {
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            color: var(--stone);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .otp-input-wrap {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .otp-input {
+            width: 100%;
+            padding: 18px 20px;
+            background: var(--cream);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            font-family: var(--font-display);
+            font-size: 1.65rem;
+            font-weight: 800;
+            letter-spacing: 0.4em;
+            text-align: center;
+            color: var(--ink);
+            transition: var(--trans-fast);
+            outline: none;
+            -webkit-appearance: none;
+            padding-left: calc(20px + 0.4em);
+        }
+
+        [data-theme="dark"] .otp-input { background: var(--cream); }
+
+        .otp-input:focus {
+            border-color: var(--forest);
+            box-shadow: 0 0 0 4px var(--forest-soft);
+        }
+
+        .otp-input.error {
+            border-color: var(--danger);
+            animation: shake 0.4s var(--ease);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+
+        .otp-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .otp-submit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px;
+            background: var(--forest);
+            color: var(--cream);
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            border: none;
+            cursor: pointer;
+            transition: var(--trans-fast);
+        }
+
+        .otp-submit:hover:not(:disabled) {
+            background: var(--forest-dark);
+        }
+
+        .otp-submit:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .otp-expired-warn {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 12px 14px;
+            background: rgba(212, 130, 30, 0.1);
+            border: 1px solid rgba(212, 130, 30, 0.3);
+            border-radius: var(--radius-md);
+            margin-bottom: 14px;
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            color: #8a5512;
+            line-height: 1.5;
+        }
+
+        [data-theme="dark"] .otp-expired-warn { color: #e6a547; }
+
+        .otp-expired-warn i { flex-shrink: 0; margin-top: 1px; }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 72px 24px;
+            border-radius: var(--radius-lg);
+            border: 1px dashed var(--border-strong);
+            background: var(--cream);
+        }
+
+        [data-theme="dark"] .empty-state { background: var(--cream-dark); }
+
+        .empty-state .empty-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--forest-soft);
+            color: var(--forest);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 18px;
+        }
+
+        [data-theme="dark"] .empty-state .empty-icon { background: rgba(107, 196, 135, 0.15); color: #6bc487; }
+
+        .empty-state h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--stone);
+            font-size: 0.9rem;
+            line-height: 1.55;
+            max-width: 340px;
+            margin: 0 auto;
+        }
+
+        /* ============================================================
+           TOAST
+           ============================================================ */
+        .toast-container {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            left: 16px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+            align-items: flex-end;
+        }
+
+        .toast {
+            background: var(--cream);
+            color: var(--ink);
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--forest);
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 380px;
+            pointer-events: auto;
+            animation: toastIn 0.4s var(--ease-out);
+        }
+
+        [data-theme="dark"] .toast { background: var(--cream-dark); }
+
+        .toast i { color: var(--forest); flex-shrink: 0; }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.error i { color: var(--danger); }
+        .toast.info { border-left-color: var(--blue); }
+        .toast.info i { color: var(--blue); }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 480px) {
+            .app-main { padding: 16px 14px 80px; }
+
+            .stats-row { gap: 8px; }
+            .stat-mini { padding: 12px 12px; }
+            .stat-mini .stat-value { font-size: 1.3rem; }
+
+            .order-body { padding: 16px 16px 18px; }
+            .order-ribbon { padding: 11px 16px; }
+
+            .quick-actions { gap: 6px; }
+            .quick-action { padding: 10px 6px; font-size: 0.68rem; }
+            .quick-action i { font-size: 1rem; }
+
+            .otp-input { font-size: 1.4rem; padding: 16px; }
+        }
+    </style>
 </head>
 <body>
-<div id="maps-loader-overlay">
-    <div class="loader-spinner"></div>
-</div>
 
-<div id="maps-login-view">
-<div class="login-box">
-<h1>Maps Driver Login</h1>
-<form id="mapsLoginForm">
-<div class="input-group"><label for="mapsEmail">Email</label><input type="email" id="mapsEmail" required></div>
-<div class="input-group"><label for="mapsPassword">Password</label><input type="password" id="mapsPassword" required></div>
-<button type="submit" class="btn">Login</button>
-</form>
-</div>
-</div>
+    <div id="loaderOverlay" class="loader-overlay">
+        <div class="spinner"></div>
+    </div>
 
-<div id="maps-dashboard-view">
-    <header class="maps-header">
-        <div class="container"><h1>Delivery Dashboard</h1><button id="logoutBtn">Logout</button></div>
-    </header>
-    <main class="maps-main">
-        <div class="container" id="order-queue-container">
-            <div class="order-queue"><h2>Loading orders...</h2></div>
-        </div>
-    </main>
-</div>
+    <div id="toastContainer" class="toast-container"></div>
 
-<div id="statusConfirmModal" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-body">
-            <h3 id="modalTitle">Confirm Action</h3>
-            <p id="modalMessage"></p>
-            <div class="btn-group">
-                <button class="btn btn-outline" id="confirmCancel">Cancel</button>
-                <button class="btn btn-primary" id="confirmAction">Confirm</button>
+    <!-- ============================================================
+         LOGIN VIEW
+         ============================================================ -->
+    <div id="loginView" class="login-view">
+        <div class="login-card">
+            <div class="login-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.3"/>
+                    <path d="M20 10 Q 12.5 18, 20 30 Q 27.5 18, 20 10 Z" fill="currentColor"/>
+                    <path d="M20 13.5 L 20 26.5" stroke="#faf7f2" stroke-width="1" stroke-linecap="round"/>
+                </svg>
+                <div class="login-brand-text">
+                    <span class="name">Potlapalli</span>
+                    <span class="sub">Farms</span>
+                </div>
             </div>
+
+            <h1>Delivery login</h1>
+            <p class="login-sub">Sign in with your driver account to see today's delivery queue.</p>
+
+            <div id="loginError" class="login-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="loginErrorText"></span>
+            </div>
+
+            <form id="loginForm" novalidate>
+                <div class="login-field">
+                    <label for="driverEmail">Email</label>
+                    <input type="email" id="driverEmail" placeholder="you@example.com" autocomplete="email" inputmode="email" required />
+                </div>
+                <div class="login-field">
+                    <label for="driverPassword">Password</label>
+                    <input type="password" id="driverPassword" placeholder="Your password" autocomplete="current-password" required />
+                </div>
+                <button type="submit" class="btn-primary" id="loginBtn">
+                    Sign in <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
         </div>
     </div>
-</div>
-<div id="toast" class="toast"></div>
 
-<script type="module">
+    <!-- ============================================================
+         APP SHELL
+         ============================================================ -->
+    <div id="appShell" class="app-shell">
+
+        <header class="app-header">
+            <div class="app-header-inner">
+                <div class="app-brand">
+                    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.3"/>
+                        <path d="M20 10 Q 12.5 18, 20 30 Q 27.5 18, 20 10 Z" fill="currentColor"/>
+                    </svg>
+                    <div class="app-brand-text">
+                        <span class="name">Delivery</span>
+                        <span class="sub">Potlapalli</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="icon-btn logout" id="logoutBtn" aria-label="Log out" title="Log out">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-main">
+
+            <!-- Greeting -->
+            <div class="greeting">
+                <span class="eyebrow" id="greetingEyebrow">Ready for today</span>
+                <h1 id="greetingName">Hello</h1>
+                <p id="greetingSub">Loading your queue…</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-mini">
+                    <span class="stat-label">Active</span>
+                    <div class="stat-value" id="statActive">0</div>
+                </div>
+                <div class="stat-mini">
+                    <span class="stat-label">Delivered</span>
+                    <div class="stat-value" id="statDelivered">0</div>
+                </div>
+                <div class="stat-mini cash">
+                    <span class="stat-label">Cash on hand</span>
+                    <div class="stat-value" id="statCash">₹0</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filter-tabs" id="filterTabs">
+                <button class="filter-tab active" data-filter="active">
+                    Active
+                    <span class="count" id="countActive">0</span>
+                </button>
+                <button class="filter-tab" data-filter="delivered">
+                    Delivered
+                    <span class="count" id="countDelivered">0</span>
+                </button>
+            </div>
+
+            <!-- Orders -->
+            <div class="orders-list" id="ordersList"></div>
+
+        </main>
+    </div>
+
+    <script type="module">
+    /* ============================================================
+       DELIVERY DASHBOARD — logic
+       ============================================================ */
+
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, query, where, onSnapshot, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import {
+        getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+        getFirestore, collection, doc, getDoc, updateDoc,
+        onSnapshot, query, orderBy, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // IMPORTANT: Use your actual Firebase configuration
+    /* ---------- CONFIG ---------- */
     const firebaseConfig = {
         apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
         authDomain: "potlapallifarm.firebaseapp.com",
         projectId: "potlapallifarm",
         storageBucket: "potlapallifarm.firebasestorage.app",
         messagingSenderId: "1017629729159",
-        appId: "1:1017629729159:web:357c420a9de335d427b322"
+        appId: "1:1017629729159:web:357c420a9de335d427b322",
     };
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const loginView = document.getElementById('maps-login-view');
-    const dashboardView = document.getElementById('maps-dashboard-view');
-    const loginForm = document.getElementById('mapsLoginForm');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const orderQueueContainer = document.getElementById('order-queue-container');
-    const confirmModal = document.getElementById('statusConfirmModal');
-    const toastEl = document.getElementById('toast');
-    const loaderOverlay = document.getElementById('maps-loader-overlay'); 
-    let unsubscribeOrders = null;
-    let activeOrderId = null;
-    let activeStatusUpdate = null; // Stores 'Cancelled'
+    /* ---------- STATE ---------- */
+    let currentUser = null;
+    let currentProfile = null;
+    let allOrders = [];
+    let activeFilter = 'active';
+    let ordersUnsub = null;
+    let seenOrderIds = new Set();
+    let firstLoad = true;
 
-    function showToast(message, isError = false) {
-        toastEl.textContent = message;
-        toastEl.className = isError ? 'toast show error' : 'toast show';
-        setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+    /* ---------- DOM ---------- */
+    const $ = (sel, ctx = document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+
+    const loginView = $('#loginView');
+    const appShell = $('#appShell');
+    const loginForm = $('#loginForm');
+    const loginError = $('#loginError');
+    const loginErrorText = $('#loginErrorText');
+    const loginBtn = $('#loginBtn');
+    const loader = $('#loaderOverlay');
+    const toastContainer = $('#toastContainer');
+    const ordersList = $('#ordersList');
+
+    /* ---------- UTILITIES ---------- */
+    function escapeHtml(str) {
+        return String(str ?? '').replace(/[&<>"']/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
     }
 
-    /**
-     * Renders the order cards for navigation.
-     */
-    function renderOrders(orders) {
-        if (orders.length === 0) {
-            orderQueueContainer.innerHTML = `<div class="order-queue"><h2>No orders currently assigned for navigation.</h2></div>`;
-            attachEventListeners();
+    function formatMoney(n) {
+        return '₹' + Math.round(Number(n) || 0).toLocaleString('en-IN');
+    }
+
+    function formatQty(qty, isMeat) {
+        if (!isMeat) return String(qty);
+        return Number(qty).toFixed(2).replace(/\.?0+$/, '');
+    }
+
+    function toJsDate(ts) {
+        if (!ts) return null;
+        try {
+            if (typeof ts.toDate === 'function') return ts.toDate();
+            if (ts.seconds) return new Date(ts.seconds * 1000);
+            const d = new Date(ts);
+            return isNaN(d.getTime()) ? null : d;
+        } catch { return null; }
+    }
+
+    function formatClock(ts) {
+        const d = toJsDate(ts);
+        if (!d) return '';
+        return d.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true });
+    }
+
+    function relativeTime(ts) {
+        const d = toJsDate(ts);
+        if (!d) return '';
+        const diff = Date.now() - d.getTime();
+        const mins = Math.floor(diff / 60000);
+        if (mins < 1) return 'just now';
+        if (mins < 60) return `${mins} min ago`;
+        const hours = Math.floor(mins / 60);
+        if (hours < 24) return `${hours}h ago`;
+        const days = Math.floor(hours / 24);
+        return `${days}d ago`;
+    }
+
+    function isToday(ts) {
+        const d = toJsDate(ts);
+        if (!d) return false;
+        const now = new Date();
+        return d.toDateString() === now.toDateString();
+    }
+
+    function showLoader(show) {
+        loader.classList.toggle('show', show);
+    }
+
+    function showToast(message, type = 'success') {
+        const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+        const el = document.createElement('div');
+        el.className = `toast ${type}`;
+        el.innerHTML = `<i class="fas ${icons[type] || icons.success}"></i><span>${escapeHtml(message)}</span>`;
+        toastContainer.appendChild(el);
+        setTimeout(() => {
+            el.style.transition = 'opacity 0.3s, transform 0.3s';
+            el.style.opacity = '0';
+            el.style.transform = 'translateX(100%)';
+            setTimeout(() => el.remove(), 300);
+        }, 4000);
+    }
+
+    let audioCtx = null;
+    function playDing() {
+        try {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.value = 880;
+            osc.type = 'sine';
+            gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.15, audioCtx.currentTime + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.5);
+        } catch {}
+    }
+
+    /* ---------- THEME ---------- */
+    function initTheme() {
+        const toggle = $('#themeToggle');
+        const icon = toggle?.querySelector('i');
+        const apply = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+            try { localStorage.setItem('potlapalliTheme', theme); } catch {}
+            if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        };
+        const saved = localStorage.getItem('potlapalliTheme')
+            || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        apply(saved);
+        toggle?.addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-theme');
+            apply(cur === 'dark' ? 'light' : 'dark');
+        });
+    }
+
+    /* ---------- LOGIN ---------- */
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loginError.classList.remove('show');
+
+        const email = $('#driverEmail').value.trim();
+        const password = $('#driverPassword').value;
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 1) {
+            loginErrorText.textContent = 'Enter a valid email and password.';
+            loginError.classList.add('show');
             return;
         }
 
-        const ordersHtml = orders.map(order => {
-            const customerPhone = order.phone || 'Phone number not available';
-            const shippingAddress = order.address || 'Address not available';
-            const totalAmount = order.totalAmount ? order.totalAmount.toFixed(2) : '0.00';
-            
-            const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shippingAddress)}`; 
-            
-            let otpStatusText = '';
-            if (order.otpExpiry) {
-                const expiryTime = order.otpExpiry.toDate();
-                const currentTime = new Date();
-                if (currentTime > expiryTime) {
-                    otpStatusText = '<span style="color: var(--danger-color); font-weight: 600;">(EXPIRED)</span>';
-                }
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in…';
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            // onAuthStateChanged handles the rest
+        } catch (err) {
+            console.error('Login failed:', err);
+            const msg = (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password')
+                ? 'Incorrect email or password.'
+                : err.code === 'auth/too-many-requests'
+                ? 'Too many failed attempts. Try again later.'
+                : 'Could not sign in. Please try again.';
+            loginErrorText.textContent = msg;
+            loginError.classList.add('show');
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = 'Sign in <i class="fas fa-arrow-right"></i>';
+        }
+    });
+
+    /* ---------- LOGOUT ---------- */
+    $('#logoutBtn').addEventListener('click', async () => {
+        if (!confirm('Log out of the delivery dashboard?')) return;
+        try { await signOut(auth); } catch (e) { console.error(e); }
+    });
+
+    /* ---------- AUTH GATE ---------- */
+    onAuthStateChanged(auth, async (user) => {
+        currentUser = user;
+
+        if (ordersUnsub) {
+            ordersUnsub();
+            ordersUnsub = null;
+        }
+
+        if (!user) {
+            loginView.style.display = 'flex';
+            appShell.classList.remove('active');
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = 'Sign in <i class="fas fa-arrow-right"></i>';
+            return;
+        }
+
+        // Verify driver role
+        showLoader(true);
+        try {
+            const snap = await getDoc(doc(db, 'users', user.uid));
+            if (!snap.exists()) {
+                await signOut(auth);
+                loginErrorText.textContent = 'Your account is missing a profile. Contact admin.';
+                loginError.classList.add('show');
+                showLoader(false);
+                return;
             }
 
-            return `
-                <div class="order-card" data-id="${order.id}">
-                    <div class="card-header"><h3>Order #${order.id.slice(-6).toUpperCase()} ${otpStatusText}</h3></div>
-                    <div class="card-body">
-                        <div class="detail-row"><div class="icon"><i class="fas fa-user"></i></div><div class="content"><p class="label">Customer:</p><p>${order.customerName || 'N/A'}</p></div></div>
-                        <div class="detail-row"><div class="icon"><i class="fas fa-map-marker-alt"></i></div><div class="content"><p class="label">Address:</p><p>${shippingAddress}</p></div></div>
-                        <div class="detail-row"><div class="icon"><i class="fas fa-phone"></i></div><div class="content"><p class="label">Phone:</p><p><a href="tel:${customerPhone}" style="color: var(--info-color); text-decoration: none;">${customerPhone}</a></p></div></div>
-                        
-                        ${order.paymentMethod === 'COD' ? 
-                            `<div class="cod-highlight"><p>COD Amount:</p><p class="amount">₹${totalAmount}</p></div>` 
-                            : ''
+            currentProfile = snap.data();
+            const role = currentProfile.role;
+            const isDriver = role === 'driver' || role === 'delivery' || role === 'maps';
+
+            if (!isDriver) {
+                await signOut(auth);
+                loginErrorText.textContent = 'This account is not a delivery account.';
+                loginError.classList.add('show');
+                showLoader(false);
+                return;
+            }
+        } catch (err) {
+            console.error('Role check failed:', err);
+            await signOut(auth);
+            loginErrorText.textContent = 'Could not verify your access. Try again.';
+            loginError.classList.add('show');
+            showLoader(false);
+            return;
+        }
+
+        // Show dashboard
+        loginView.style.display = 'none';
+        appShell.classList.add('active');
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = 'Sign in <i class="fas fa-arrow-right"></i>';
+
+        const displayName = (currentProfile.name || user.email || 'Driver').split(' ')[0];
+        $('#greetingName').textContent = `Hi ${displayName}`;
+
+        updateGreetingEyebrow();
+        startOrdersListener();
+        showLoader(false);
+    });
+
+    function updateGreetingEyebrow() {
+        const hour = new Date().getHours();
+        const day = new Date().getDay();
+        let text = 'Ready for today';
+        if (day === 0) text = 'Delivery day';
+        else if (hour < 12) text = 'Good morning';
+        else if (hour < 17) text = 'Good afternoon';
+        else text = 'Good evening';
+        $('#greetingEyebrow').textContent = text;
+    }
+
+    /* ---------- ORDERS LISTENER ---------- */
+    function startOrdersListener() {
+        ordersUnsub = onSnapshot(
+            query(collection(db, 'orders'), orderBy('orderDate', 'desc')),
+            (snap) => {
+                const newOrders = [];
+
+                snap.docChanges().forEach(change => {
+                    if (change.type === 'added') {
+                        const id = change.doc.id;
+                        if (!firstLoad && !seenOrderIds.has(id)) {
+                            const data = change.doc.data();
+                            // Only notify for actionable orders
+                            if (data.status === 'Confirmed' || data.status === 'Pending') {
+                                newOrders.push({ id, ...data });
+                            }
                         }
+                    }
+                });
 
-                        <ul class="items-list">${(order.items || []).map(item => `<li>${item.name || 'Unknown'} x ${item.quantity || 1}</li>`).join('')}</ul>
+                snap.docs.forEach(d => seenOrderIds.add(d.id));
+                firstLoad = false;
+
+                allOrders = snap.docs
+                    .map(d => ({ id: d.id, ...d.data() }))
+                    // Only show orders relevant to the driver
+                    .filter(o => ['Confirmed', 'Out for Delivery', 'Delivered'].includes(o.status));
+
+                renderAll();
+
+                newOrders.forEach(o => {
+                    showToast(`New order for ${o.customerName} — ${formatMoney(o.totalAmount)}`, 'success');
+                    playDing();
+                });
+            },
+            (err) => {
+                console.error('Orders listener error:', err);
+                showToast('Failed to load orders. Check connection.', 'error');
+            }
+        );
+    }
+
+    /* ---------- FILTERS ---------- */
+    $$('#filterTabs .filter-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            $$('#filterTabs .filter-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            activeFilter = tab.dataset.filter;
+            renderOrders();
+        });
+    });
+
+    function getFilteredOrders() {
+        if (activeFilter === 'active') {
+            return allOrders.filter(o => ['Confirmed', 'Out for Delivery'].includes(o.status));
+        }
+        if (activeFilter === 'delivered') {
+            return allOrders.filter(o => o.status === 'Delivered' && isToday(o.deliveredAt || o.updatedAt || o.orderDate));
+        }
+        return allOrders;
+    }
+
+    /* ---------- RENDER ---------- */
+    function renderAll() {
+        renderStats();
+        renderOrders();
+    }
+
+    function renderStats() {
+        const active = allOrders.filter(o => ['Confirmed', 'Out for Delivery'].includes(o.status));
+        const deliveredToday = allOrders.filter(o => o.status === 'Delivered' && isToday(o.deliveredAt || o.updatedAt || o.orderDate));
+        const cash = deliveredToday
+            .filter(o => o.paymentMethod === 'COD')
+            .reduce((s, o) => s + (Number(o.totalAmount) || 0), 0);
+
+        $('#statActive').textContent = active.length;
+        $('#statDelivered').textContent = deliveredToday.length;
+        $('#statCash').textContent = formatMoney(cash);
+
+        $('#countActive').textContent = active.length;
+        $('#countDelivered').textContent = deliveredToday.length;
+
+        const pendingPickup = active.filter(o => o.status === 'Confirmed').length;
+        const onRoad = active.filter(o => o.status === 'Out for Delivery').length;
+
+        if (active.length === 0) {
+            $('#greetingSub').textContent = 'No active deliveries right now. Nice work.';
+        } else {
+            const parts = [];
+            if (pendingPickup) parts.push(`${pendingPickup} to pick up`);
+            if (onRoad) parts.push(`${onRoad} on the road`);
+            $('#greetingSub').textContent = parts.join(' · ') || 'Loading your queue…';
+        }
+    }
+
+    function renderOrders() {
+        const filtered = getFilteredOrders();
+
+        if (filtered.length === 0) {
+            const isActiveTab = activeFilter === 'active';
+            ordersList.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas ${isActiveTab ? 'fa-check-double' : 'fa-box-open'}"></i>
                     </div>
-                    <div class="card-footer" style="grid-template-columns: 1fr 1fr;">
-                        
-                        <a href="${mapLink}" target="_blank" class="btn btn-map footer-row" style="grid-column: span 2;"><i class="fas fa-map-marked-alt"></i> Navigate on Maps</a>
-                        
-                        <div class="footer-row" style="grid-column: span 2; margin-bottom: 0;">
-                            <input type="text" placeholder="Enter Customer OTP (6 digits)" class="otp-input" data-order-id="${order.id}" maxlength="6">
+                    <h3>${isActiveTab ? 'All caught up' : 'Nothing here yet'}</h3>
+                    <p>${isActiveTab
+                        ? 'You have no active deliveries. New assignments will appear here automatically.'
+                        : 'Delivered orders for today will appear here.'}</p>
+                </div>`;
+            return;
+        }
+
+        ordersList.innerHTML = filtered.map(renderOrderCard).join('');
+        attachCardListeners();
+    }
+
+    function renderOrderCard(o) {
+        const items = Array.isArray(o.items) ? o.items : [];
+        const isOut = o.status === 'Out for Delivery';
+        const isDelivered = o.status === 'Delivered';
+        const isConfirmed = o.status === 'Confirmed';
+
+        const ribbonClass = isDelivered ? 'ribbon-delivered' : isOut ? 'ribbon-out' : 'ribbon-confirmed';
+        const ribbonLabel = isDelivered ? 'Delivered' : isOut ? 'On the road' : 'Ready for pickup';
+        const ribbonIcon = isDelivered ? 'fa-check-circle' : isOut ? 'fa-truck-fast' : 'fa-box';
+
+        const initials = String(o.customerName || 'C')
+            .split(' ')
+            .slice(0, 2)
+            .map(w => w.charAt(0).toUpperCase())
+            .join('');
+
+        const phone = String(o.phone || '').replace(/\D/g, '');
+        const waMessage = encodeURIComponent(
+            `Hi ${o.customerName}, this is your Potlapalli Farms delivery partner. I'm on my way with your order #${o.id.slice(-6).toUpperCase()}. See you shortly.`
+        );
+        const waLink = phone ? `https://wa.me/91${phone}?text=${waMessage}` : '#';
+        const telLink = phone ? `tel:+91${phone}` : '#';
+
+        // Map link: prefer coordinates, fall back to address search
+        let mapLink = '#';
+        if (o.location && typeof o.location.latitude === 'number') {
+            mapLink = `https://www.google.com/maps/dir/?api=1&destination=${o.location.latitude},${o.location.longitude}&travelmode=driving`;
+        } else if (o.address) {
+            mapLink = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(o.address)}&travelmode=driving`;
+        }
+
+        // COD banner
+        const codHtml = (o.paymentMethod === 'COD' && !isDelivered)
+            ? `<div class="cod-banner">
+                   <div>
+                       <div class="cod-label">Collect on delivery</div>
+                       <div class="cod-amount">${formatMoney(o.totalAmount)}</div>
+                   </div>
+                   <i class="fas fa-hand-holding-dollar"></i>
+               </div>`
+            : '';
+
+        // OTP status check
+        let otpWarn = '';
+        let otpExpired = false;
+        if (!isDelivered && o.otpExpiry) {
+            const exp = toJsDate(o.otpExpiry);
+            if (exp && exp.getTime() < Date.now()) {
+                otpExpired = true;
+                otpWarn = `
+                    <div class="otp-expired-warn">
+                        <i class="fas fa-triangle-exclamation"></i>
+                        <span>The 12-hour OTP window has expired. Customer verification still required — confirm identity verbally.</span>
+                    </div>`;
+            }
+        }
+
+        // Action buttons
+        let primaryBtn = '';
+        if (isConfirmed) {
+            primaryBtn = `
+                <button class="action-primary start" data-action="start" data-order-id="${o.id}">
+                    <i class="fas fa-truck-fast"></i>
+                    Start delivery
+                </button>`;
+        } else if (isOut) {
+            primaryBtn = `
+                <button class="action-primary complete" data-action="complete" data-order-id="${o.id}">
+                    <i class="fas fa-key"></i>
+                    Enter OTP to complete
+                </button>`;
+        } else if (isDelivered) {
+            primaryBtn = `
+                <div class="action-primary done">
+                    <i class="fas fa-check-circle"></i>
+                    Delivered ${o.deliveredAt ? '· ' + formatClock(o.deliveredAt) : ''}
+                </div>`;
+        }
+
+        // Items summary
+        const itemsHtml = items.map(it => {
+            const qty = formatQty(it.quantity, !!it.isMeat) + (it.unit ? ' ' + it.unit : '');
+            return `<div class="item-line">
+                <span class="iname">${escapeHtml(it.name)}<small>${qty}</small></span>
+                <span class="iprice">${formatMoney(it.price * it.quantity)}</span>
+            </div>`;
+        }).join('');
+
+        // Relative time of order
+        const relTime = relativeTime(o.orderDate);
+        const placedTime = formatClock(o.orderDate);
+
+        return `
+            <article class="order-card" data-id="${o.id}">
+                <div class="order-ribbon ${ribbonClass}">
+                    <span class="ribbon-id">
+                        <i class="fas ${ribbonIcon}"></i>
+                        ${ribbonLabel} · #${o.id.slice(-6).toUpperCase()}
+                    </span>
+                    <span class="ribbon-time">${escapeHtml(relTime)}</span>
+                </div>
+
+                <div class="order-body">
+
+                    <div class="order-customer">
+                        <div class="order-avatar">${escapeHtml(initials)}</div>
+                        <div class="order-customer-info">
+                            <div class="name">${escapeHtml(o.customerName || 'Customer')}</div>
+                            <div class="total">Placed at ${escapeHtml(placedTime)} · <strong>${formatMoney(o.totalAmount)}</strong></div>
                         </div>
+                    </div>
 
-                        <button class="btn btn-success btn-verify" 
-                                data-id="${order.id}" 
-                                data-otp-value="${order.deliveryOTP}"
-                                style="grid-column: 1 / span 1;">
-                            <i class="fas fa-check-circle"></i> Verify & Deliver
-                        </button>
+                    ${codHtml}
 
-                        <button class="btn btn-cancel status-btn" data-status="Cancelled" data-id="${order.id}" style="grid-column: 2 / span 1;">
-                            <i class="fas fa-times-circle"></i> Cancel
-                        </button>
+                    <div class="order-info">
+                        <div class="info-line">
+                            <i class="fas fa-phone"></i>
+                            <span class="info-text"><a href="${telLink}">${escapeHtml(o.phone || 'No phone')}</a></span>
+                        </div>
+                        <div class="info-line">
+                            <i class="fas fa-location-dot"></i>
+                            <span class="info-text">${escapeHtml(o.address || 'No address')}</span>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <a href="${waLink}" target="_blank" rel="noopener" class="quick-action whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                            WhatsApp
+                        </a>
+                        <a href="${telLink}" class="quick-action call">
+                            <i class="fas fa-phone"></i>
+                            Call
+                        </a>
+                        <a href="${mapLink}" target="_blank" rel="noopener" class="quick-action map">
+                            <i class="fas fa-diamond-turn-right"></i>
+                            Navigate
+                        </a>
+                    </div>
+
+                    <div class="order-items-compact">
+                        ${itemsHtml}
+                    </div>
+
+                    ${otpWarn}
+
+                    ${primaryBtn}
+
+                    <div class="otp-panel" data-otp-for="${o.id}">
+                        <div class="otp-header">
+                            <h4>Verify delivery</h4>
+                            <button class="close-otp" data-action="close-otp" data-order-id="${o.id}" aria-label="Close">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <p class="otp-hint">Ask the customer for their 6-digit OTP and enter it below.</p>
+                        <div class="otp-input-wrap">
+                            <input
+                                type="tel"
+                                inputmode="numeric"
+                                pattern="[0-9]*"
+                                maxlength="6"
+                                class="otp-input"
+                                placeholder="······"
+                                data-otp-input-for="${o.id}"
+                                autocomplete="one-time-code"
+                            />
+                        </div>
+                        <div class="otp-actions">
+                            <button class="otp-submit" data-action="verify-otp" data-order-id="${o.id}" disabled>
+                                <i class="fas fa-check"></i>
+                                Confirm delivery
+                            </button>
+                        </div>
                     </div>
                 </div>
-            `;
-        }).join('');
-        
-        orderQueueContainer.innerHTML = `<div class="order-queue">${ordersHtml}</div>`;
-        attachEventListeners(); 
+            </article>`;
     }
 
-    /**
-     * Checks OTP and updates the status to 'Delivered'.
-     */
-    async function verifyAndDeliver(orderId, enteredOTP, correctOTP, verifyBtn) {
-        const cardElement = verifyBtn.closest('.order-card');
-        verifyBtn.disabled = true;
+    /* ---------- CARD INTERACTIONS ---------- */
+    function attachCardListeners() {
+        // Start delivery
+        $$('[data-action="start"]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const orderId = btn.dataset.orderId;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Starting…';
+                await updateStatus(orderId, 'Out for Delivery');
+            });
+        });
 
-        if (enteredOTP !== correctOTP) {
-            showToast("OTP Mismatch. Please re-enter the code.", true);
-            verifyBtn.disabled = false;
-            return;
-        }
+        // Complete (open OTP panel)
+        $$('[data-action="complete"]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const orderId = btn.dataset.orderId;
+                const panel = document.querySelector(`[data-otp-for="${orderId}"]`);
+                const input = document.querySelector(`[data-otp-input-for="${orderId}"]`);
+                if (!panel) return;
 
-        const orderDocRef = doc(db, 'orders', orderId);
-        try {
-            const orderSnap = await getDoc(orderDocRef);
-            const orderData = orderSnap.data();
+                // Close other panels
+                $$('.otp-panel.open').forEach(p => {
+                    if (p !== panel) p.classList.remove('open');
+                });
 
-            // 3. Expiration Check
-            if (orderData.otpExpiry) {
-                const expiryTime = orderData.otpExpiry.toDate();
-                const currentTime = new Date();
-                if (currentTime > expiryTime) {
-                    showToast("OTP has expired (12-hour limit). Cannot confirm delivery.", true);
-                    verifyBtn.disabled = false;
+                panel.classList.toggle('open');
+                if (panel.classList.contains('open') && input) {
+                    setTimeout(() => input.focus(), 100);
+                }
+            });
+        });
+
+        // Close OTP panel
+        $$('[data-action="close-otp"]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const orderId = btn.dataset.orderId;
+                document.querySelector(`[data-otp-for="${orderId}"]`)?.classList.remove('open');
+            });
+        });
+
+        // OTP input handler
+        $$('.otp-input').forEach(input => {
+            input.addEventListener('input', (e) => {
+                // Digits only
+                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                e.target.classList.remove('error');
+
+                const orderId = input.dataset.otpInputFor;
+                const submitBtn = document.querySelector(`[data-action="verify-otp"][data-order-id="${orderId}"]`);
+                if (submitBtn) {
+                    submitBtn.disabled = e.target.value.length !== 6;
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && input.value.length === 6) {
+                    const orderId = input.dataset.otpInputFor;
+                    document.querySelector(`[data-action="verify-otp"][data-order-id="${orderId}"]`)?.click();
+                }
+            });
+        });
+
+        // Verify OTP
+        $$('[data-action="verify-otp"]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const orderId = btn.dataset.orderId;
+                const input = document.querySelector(`[data-otp-input-for="${orderId}"]`);
+                const entered = input ? input.value.trim() : '';
+
+                if (entered.length !== 6) {
+                    showToast('Enter all 6 digits', 'error');
                     return;
                 }
-            }
-            
-            // 4. Await the update: If this fails, it throws an error and jumps to catch{}
-            await updateOrderStatus(orderId, 'Delivered');
 
-            // 5. SUCCESS: Only if the update SUCCEEDED, perform the optimistic UI hide.
-            if (cardElement) {
-                cardElement.classList.add('removed');
-            }
-            showToast(`Order status updated to Delivered.`);
+                const order = allOrders.find(o => o.id === orderId);
+                if (!order) return;
 
-        } catch (error) {
-            console.error("Error during verification process:", error);
-            // The error is now handled by updateOrderStatus which shows the toast.
-        }
-        
-        verifyBtn.disabled = false;
-    }
+                const correct = String(order.deliveryOTP || '');
 
-    /**
-     * Updates the order status to a specific value (Cancelled/Delivered).
-     * We re-throw the error on permission denial to halt the optimistic UI update in verifyAndDeliver.
-     */
-    async function updateOrderStatus(orderId, newStatus) {
-        const orderRef = doc(db, 'orders', orderId);
-        try {
-            await updateDoc(orderRef, { status: newStatus });
-        } catch (error) {
-             if (error.code === 'permission-denied') {
-                showToast("🔴 FAILED: Permission Denied. Check Firestore Rules.", true);
-                console.error("DEBUG: Update failed. User lacks permissions for orders collection.", error);
-            } else {
-                showToast(`Failed to update status to ${newStatus}. (Check Console)`, true);
-            }
-            // CRITICAL: Propagate the failure up to the calling function
-            throw error; 
-        }
-    }
-
-    /**
-     * Sets up a real-time listener for orders.
-     */
-    function listenToOrders() {
-        const ordersQuery = query(
-            collection(db, "orders"), 
-            where("status", "==", "Shipped"), 
-            orderBy("orderDate", "asc")
-        );
-
-        unsubscribeOrders = onSnapshot(ordersQuery, (snapshot) => {
-            const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            renderOrders(orders);
-        }, (error) => {
-            console.error("Error listening to orders:", error);
-            showToast("Failed to load orders. Check your network or permissions.", true);
-        });
-    }
-    
-    // --- Authentication and View Management ---
-    
-    let isDashboardInitialized = false;
-
-    onAuthStateChanged(auth, async (user) => {
-        // Step 1: Hide the loader first, regardless of auth status
-        loaderOverlay.style.display = 'none';
-
-        if (user) {
-            // CRITICAL FIX: Prevent re-initialization loop
-            if (isDashboardInitialized) return; 
-
-            const userDocRef = doc(db, "users", user.uid);
-            try {
-                const docSnap = await getDoc(userDocRef);
-                const userRole = docSnap.exists() ? docSnap.data().role : null;
-                
-                // Step 2: Check if user has the correct role (maps OR driver)
-                if (userRole === 'maps' || userRole === 'driver') {
-                    loginView.style.display = 'none';
-                    dashboardView.style.display = 'block';
-                    if (unsubscribeOrders) unsubscribeOrders();
-                    listenToOrders();
-                    isDashboardInitialized = true;
-                } else {
-                    // Access Denied: User logged in but has wrong role
-                    signOut(auth);
-                    showToast("Access Denied: Not a delivery staff account.", true);
-                    loginView.style.display = 'flex';
+                if (entered !== correct) {
+                    input.classList.add('error');
+                    showToast('Incorrect OTP. Ask the customer again.', 'error');
+                    setTimeout(() => input.classList.remove('error'), 500);
+                    input.value = '';
+                    btn.disabled = true;
+                    input.focus();
+                    return;
                 }
-            } catch (error) {
-                // Database error during role check
-                signOut(auth);
-                console.error("Error verifying account role:", error);
-                showToast("Error verifying account.", true);
-                loginView.style.display = 'flex'; 
-            }
-        } else {
-            // Step 3: Not logged in (or just logged out), show login view
-            loginView.style.display = 'flex';
-            dashboardView.style.display = 'none';
-            isDashboardInitialized = false;
-            if (unsubscribeOrders) unsubscribeOrders();
-        }
-    });
-    
-    // --- Event Listeners ---
-    
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault(); 
-        const email = document.getElementById('mapsEmail').value;
-        const password = document.getElementById('mapsPassword').value;
-        
-        // Show loader during login attempt
-        loaderOverlay.style.display = 'flex';
-        loginForm.querySelector('.btn').disabled = true;
-        loginView.style.display = 'none'; 
 
-        signInWithEmailAndPassword(auth, email, password)
-            .then(() => {
-                // Success is handled by onAuthStateChanged
-            })
-            .catch(err => {
-                showToast("Login Failed. Please check your email and password.", true);
-                loginForm.querySelector('.btn').disabled = false;
-                loaderOverlay.style.display = 'none';
-                loginView.style.display = 'flex';
-            });
-    });
-    
-    logoutBtn.addEventListener('click', () => signOut(auth));
-    
-    // Attaches listeners to the buttons on the dynamically generated cards
-    function attachEventListeners() {
-        document.querySelectorAll('.btn-verify').forEach(button => {
-            button.onclick = (e) => {
-                const orderId = button.dataset.id;
-                const correctOTP = button.dataset.otpValue;
-                
-                const otpInput = button.closest('.order-card').querySelector(`.otp-input`);
-                const enteredOTP = otpInput ? otpInput.value.trim() : '';
+                // Success — mark delivered
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Confirming…';
 
-                verifyAndDeliver(orderId, enteredOTP, correctOTP, button);
-            };
-        });
-
-        // The Cancel button uses the modal for confirmation
-        document.querySelectorAll('.status-btn').forEach(button => {
-            button.onclick = (e) => {
-                const orderId = button.dataset.id;
-                const newStatus = button.dataset.status;
-                
-                activeOrderId = orderId;
-                activeStatusUpdate = newStatus;
-
-                document.getElementById('modalTitle').textContent = `Confirm ${newStatus}?`;
-                document.getElementById('modalMessage').textContent = 
-                    `Are you sure you want to mark Order #${orderId.slice(-6).toUpperCase()} as ${newStatus}?`;
-                
-                const confirmBtn = document.getElementById('confirmAction');
-                confirmBtn.className = `btn ${newStatus === 'Cancelled' ? 'btn-danger' : 'btn-primary'}`;
-                confirmBtn.textContent = `Yes, ${newStatus}`;
-
-                confirmModal.classList.add('show');
-            };
-        });
-    }
-
-    // Modal Confirmation and Cancellation Listeners
-    document.getElementById('confirmAction').addEventListener('click', async () => {
-        if (activeOrderId && activeStatusUpdate) {
-            if (activeStatusUpdate === 'Cancelled') {
                 try {
-                    await updateOrderStatus(activeOrderId, 'Cancelled');
-                    // IMMEDIATE CLIENT-SIDE REMOVAL for Cancelled status
-                    const cardElement = document.querySelector(`.order-card[data-id="${activeOrderId}"]`);
-                    if (cardElement) {
-                        cardElement.classList.add('removed');
-                    }
-                } catch(e) {
-                    // Error already toasted by updateOrderStatus, just return
-                }
-            }
-        }
-        confirmModal.classList.remove('show');
-        activeOrderId = null;
-        activeStatusUpdate = null;
-    });
-    
-    document.getElementById('confirmCancel').addEventListener('click', () => {
-        confirmModal.classList.remove('show');
-        activeOrderId = null;
-        activeStatusUpdate = null;
-    });
-</script>
+                    await updateDoc(doc(db, 'orders', orderId), {
+                        status: 'Delivered',
+                        deliveredAt: serverTimestamp(),
+                        deliveredBy: currentUser.uid,
+                        updatedAt: serverTimestamp(),
+                    });
 
+                    // Animate card out
+                    const card = document.querySelector(`.order-card[data-id="${orderId}"]`);
+                    if (card) {
+                        card.classList.add('removing');
+                        setTimeout(() => {
+                            // The real-time listener will re-render
+                        }, 400);
+                    }
+
+                    showToast(`Order #${orderId.slice(-6).toUpperCase()} delivered`, 'success');
+                    playDing();
+                } catch (err) {
+                    console.error('Delivery update failed:', err);
+                    showToast('Could not confirm delivery. Try again.', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-check"></i> Confirm delivery';
+                }
+            });
+        });
+    }
+
+    async function updateStatus(orderId, newStatus) {
+        try {
+            await updateDoc(doc(db, 'orders', orderId), {
+                status: newStatus,
+                updatedAt: serverTimestamp(),
+                assignedDriverId: currentUser.uid,
+            });
+            showToast(`Order #${orderId.slice(-6).toUpperCase()} — ${newStatus}`, 'success');
+        } catch (err) {
+            console.error('Status update failed:', err);
+            showToast('Could not update. Try again.', 'error');
+            // Trigger re-render to restore button state
+            renderAll();
+        }
+    }
+
+    /* ---------- INIT ---------- */
+    document.addEventListener('DOMContentLoaded', () => {
+        initTheme();
+    });
+    </script>
 </body>
 </html>
