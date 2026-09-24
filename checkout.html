@@ -1,1 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Secure checkout — Potlapalli Farms" />
+    <title>Checkout - Potlapalli Farms</title>
 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        :root {
+            --primary-color: #27ae60;
+            --primary-color-dark: #1e874b;
+            --secondary-color: #2c3e50;
+            --background-light: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #555;
+            --white: #fff;
+            --border-light: #e0e0e0;
+            --danger-color: #e74c3c;
+            --shadow-light: rgba(0,0,0,0.08);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--background-light); color: var(--text-dark); padding-top: 5rem; }
+        .container { width: 90%; max-width: 1100px; margin: 0 auto; }
+        a, button { transition: all 0.3s ease; }
+
+        /* Header */
+        .header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: var(--primary-color); padding: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .logo a { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--white); text-decoration: none; }
+        .logo img { height: 40px; }
+        #desktop-nav { display: flex; align-items: center; gap: 30px; flex-grow: 1; justify-content: flex-end; }
+        #desktop-nav a { text-decoration: none; color: var(--white); font-weight: 500; }
+        .header-actions { display: flex; align-items: center; gap: 20px; }
+        .mini-cart a { font-size: 1.2rem; text-decoration: none; position: relative; color: var(--white); }
+        .mini-cart span { position: absolute; top: -8px; right: -10px; background-color: var(--secondary-color); color: var(--white); font-size: 0.7rem; font-weight: 600; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
+        .auth-btn { font-weight: 600; text-decoration: none; font-size: 0.95rem; color: var(--white); }
+        .menu-btn { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--white); }
+
+        /* Page */
+        .checkout-page { padding: 3rem 1rem; }
+        .checkout-header h1 { font-family: 'Playfair Display', serif; color: var(--secondary-color); font-size: 2.8rem; text-align: center; margin-bottom: 1rem; }
+        .checkout-header p { text-align: center; font-size: 1.1rem; color: var(--text-light); margin-bottom: 3rem; }
+        .checkout-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 2.5rem; align-items: flex-start; }
+
+        .checkout-card { background: var(--white); border-radius: 16px; box-shadow: 0 8px 30px var(--shadow-light); padding: 2rem; }
+        .checkout-card h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--secondary-color); margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); }
+
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; font-weight: 600; font-size: 0.95rem; color: var(--secondary-color); margin-bottom: 0.5rem; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 0.85rem 1rem;
+            border: 1px solid var(--border-light); border-radius: 10px;
+            font-size: 1rem; font-family: inherit; color: var(--text-dark);
+            background: var(--background-light); transition: all 0.2s ease;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--primary-color);
+            background: var(--white); box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.15);
+        }
+        .form-group textarea { resize: vertical; min-height: 90px; }
+        .form-error { color: var(--danger-color); font-size: 0.85rem; margin-top: 0.35rem; display: none; }
+        .form-group.invalid input, .form-group.invalid textarea { border-color: var(--danger-color); }
+        .form-group.invalid .form-error { display: block; }
+
+        .payment-options { display: flex; flex-direction: column; gap: 0.75rem; }
+        .payment-option {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.9rem 1rem; border: 2px solid var(--border-light);
+            border-radius: 10px; cursor: pointer; transition: all 0.2s ease;
+        }
+        .payment-option:hover { border-color: var(--primary-color); background: #f0fdf4; }
+        .payment-option input { width: auto; margin: 0; }
+        .payment-option.selected { border-color: var(--primary-color); background: #f0fdf4; }
+        .payment-option-label { font-weight: 600; color: var(--secondary-color); }
+        .payment-option-desc { font-size: 0.85rem; color: var(--text-light); }
+
+        /* Summary */
+        .summary-card { background: var(--white); border-radius: 16px; box-shadow: 0 8px 30px var(--shadow-light); padding: 2rem; position: sticky; top: 100px; border: 1px solid var(--primary-color); }
+        .summary-card h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--secondary-color); margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); text-align: center; }
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.95rem; }
+        .summary-item-name { color: var(--text-dark); font-weight: 500; }
+        .summary-item-name small { color: var(--text-light); font-weight: 400; }
+        .summary-item-price { color: var(--secondary-color); font-weight: 600; }
+        .summary-total { display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--secondary-color); font-weight: 700; font-size: 1.2rem; }
+        .btn { display: block; width: 100%; padding: 0.9rem 1.6rem; text-align: center; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1.05rem; cursor: pointer; transition: all 0.3s; border: none; }
+        .btn-primary { background: var(--primary-color); color: var(--white); margin-top: 1.5rem; }
+        .btn-primary:hover:not(:disabled) { background: var(--primary-color-dark); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Empty / Auth prompt states */
+        .state-card { background: var(--white); border-radius: 16px; box-shadow: 0 8px 30px var(--shadow-light); padding: 3rem; text-align: center; }
+        .state-card h2 { font-family: 'Playfair Display', serif; color: var(--secondary-color); margin-bottom: 1rem; font-size: 1.8rem; }
+        .state-card p { color: var(--text-light); margin-bottom: 1.5rem; font-size: 1.05rem; }
+        .state-card .btn-primary { display: inline-block; width: auto; padding: 0.85rem 2rem; margin-top: 0; }
+
+        /* Success state */
+        .success-card { background: var(--white); border-radius: 16px; box-shadow: 0 8px 30px var(--shadow-light); padding: 3rem; text-align: center; max-width: 600px; margin: 0 auto; border-top: 6px solid var(--primary-color); }
+        .success-icon { font-size: 3.5rem; color: var(--primary-color); margin-bottom: 1rem; }
+        .success-card h2 { font-family: 'Playfair Display', serif; color: var(--secondary-color); margin-bottom: 1rem; font-size: 2rem; }
+        .success-card p { color: var(--text-light); margin-bottom: 1rem; font-size: 1rem; line-height: 1.7; }
+        .otp-box { background: #f0fdf4; border: 2px dashed var(--primary-color); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .otp-box p { margin: 0 0 0.5rem; font-weight: 600; color: var(--secondary-color); }
+        .otp-code { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; color: var(--primary-color-dark); letter-spacing: 8px; }
+        .otp-warn { font-size: 0.85rem; color: var(--text-light); margin-top: 0.75rem; }
+        .success-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
+        .success-actions .btn-primary { display: inline-block; width: auto; padding: 0.75rem 1.75rem; margin-top: 0; }
+        .btn-outline { background: transparent; border: 2px solid var(--secondary-color); color: var(--secondary-color); display: inline-block; width: auto; padding: 0.75rem 1.75rem; text-decoration: none; border-radius: 50px; font-weight: 600; }
+        .btn-outline:hover { background: var(--secondary-color); color: var(--white); }
+
+        /* Toast */
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background-color: var(--secondary-color); color: var(--white); padding: 0.85rem 1.5rem; border-radius: 50px; z-index: 2000; font-weight: 500; font-size: 0.95rem; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 0.5rem; max-width: 90%; }
+        .toast.show { bottom: 30px; }
+        .toast.error { background-color: var(--danger-color); }
+
+        /* Footer */
+        footer { background: #1e293b; color: #cbd5e1; padding: 5rem 0 2rem; margin-top: 4rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; }
+        .footer-col h4 { font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--white); }
+        .footer-col p, .footer-col a { color: #94a3b8; text-decoration: none; }
+        .footer-col a { display: block; margin-bottom: 0.75rem; }
+        .footer-col a:hover { color: var(--white); padding-left: 5px; }
+        .footer-bottom { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #334155; font-size: 0.9rem; color: #94a3b8; }
+
+        @media (max-width: 992px) {
+            .checkout-layout { grid-template-columns: 1fr; }
+            .summary-card { position: static; }
+        }
+        @media (max-width: 600px) {
+            .checkout-header h1 { font-size: 2rem; }
+            .checkout-card, .summary-card { padding: 1.5rem; }
+            #desktop-nav { display: none !important; }
+            .menu-btn { display: block; }
+            .otp-code { font-size: 1.8rem; letter-spacing: 5px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-inner">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/logo.png" alt="Potlapalli Farms Logo" onerror="this.style.display='none'"/>
+                    <span>Potlapalli Farms</span>
+                </a>
+            </div>
+            <nav id="desktop-nav">
+                <a href="index.html">Home</a>
+                <a href="index.html#products">Products</a>
+                <a href="about.html">About</a>
+                <a href="index.html#contact">Contact</a>
+            </nav>
+            <div class="header-actions">
+                <div class="mini-cart">
+                    <a href="cart.html" aria-label="View shopping cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCount">0</span>
+                    </a>
+                </div>
+                <button class="menu-btn" aria-label="Menu"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="checkout-page">
+        <div class="container">
+            <div class="checkout-header">
+                <h1>Checkout</h1>
+                <p>Confirm your details to place your order.</p>
+            </div>
+            <div id="checkout-content">
+                <div class="state-card"><p><i class="fas fa-spinner fa-spin"></i> Loading...</p></div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col"><h4>About Us</h4><p>Potlapalli Farms is dedicated to bringing you the freshest, most ethical, and organic produce. A legacy of trust, from our family to yours.</p></div>
+                <div class="footer-col"><h4>Quick Links</h4><a href="index.html">Home</a><a href="index.html#products">Products</a><a href="about.html">About</a><a href="gallery.html">Farm Gallery</a></div>
+                <div class="footer-col"><h4>Contact</h4><p>Potlapalli Farms, AP<br>Email: <a href="mailto:pgf.natural@gmail.com">pgf.natural@gmail.com</a><br>Phone: +91 79810 59178</p></div>
+                <div class="footer-col"><h4>Follow Us</h4><a href="https://www.instagram.com/potlapallifarms" target="_blank">Instagram</a></div>
+            </div>
+            <div class="footer-bottom"><p>© 2025 Potlapalli Farms. All Rights Reserved.</p></div>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+            authDomain: "potlapallifarm.firebaseapp.com",
+            projectId: "potlapallifarm",
+            storageBucket: "potlapallifarm.firebasestorage.app",
+            messagingSenderId: "1017629729159",
+            appId: "1:1017629729159:web:357c420a9de335d427b322",
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const CART_KEY = 'potlapalliCart';
+        const checkoutContentEl = document.getElementById('checkout-content');
+        const cartCountEl = document.getElementById('cartCount');
+        const toastEl = document.getElementById('toast');
+
+        let currentUser = null;
+        let cart = [];
+        let isSubmitting = false;
+
+        // ---- Helpers ----
+        function showToast(msg, isError = false) {
+            toastEl.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i> ${msg}`;
+            toastEl.className = `toast ${isError ? 'error' : ''}`;
+            setTimeout(() => toastEl.classList.add('show'), 10);
+            setTimeout(() => toastEl.classList.remove('show'), 3500);
+        }
+
+        function getCart() {
+            try {
+                const raw = localStorage.getItem(CART_KEY);
+                const parsed = raw ? JSON.parse(raw) : [];
+                return Array.isArray(parsed) ? parsed : [];
+            } catch { return []; }
+        }
+
+        function updateCartCount() {
+            if (cartCountEl) cartCountEl.textContent = getCart().length;
+        }
+
+        function getUnit(productId) {
+            if (productId === 'eggs-dozen' || productId === 'eggs') return 'dozen';
+            if (productId === 'eggs-tray') return 'tray';
+            if (productId === 'milk') return 'L';
+            return 'kg';
+        }
+
+        function formatMoney(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
+
+        function generateOTP() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        // ---- Rendering ----
+        function renderEmptyCart() {
+            checkoutContentEl.innerHTML = `
+                <div class="state-card">
+                    <h2>Your cart is empty</h2>
+                    <p>Add some fresh products before checking out.</p>
+                    <a href="index.html#products" class="btn btn-primary">Browse Products</a>
+                </div>`;
+        }
+
+        function renderSignInPrompt() {
+            checkoutContentEl.innerHTML = `
+                <div class="state-card">
+                    <h2>Please sign in to continue</h2>
+                    <p>You need an account to place an order. It only takes a minute.</p>
+                    <a href="signin.html?redirect=checkout.html" class="btn btn-primary">Sign In</a>
+                    <p style="margin-top: 1.25rem; font-size: 0.9rem;">Don't have an account? <a href="signup.html" style="color: var(--primary-color); font-weight: 600; text-decoration: none;">Create one</a></p>
+                </div>`;
+        }
+
+        function renderForm(profile = {}) {
+            const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            const itemsHtml = cart.map(item => {
+                const unit = getUnit(item.id);
+                const qty = item.quantity;
+                const lineTotal = item.price * qty;
+                return `<div class="summary-item">
+                    <span class="summary-item-name">${escapeHtml(item.name)} <small>(${qty} ${unit})</small></span>
+                    <span class="summary-item-price">${formatMoney(lineTotal)}</span>
+                </div>`;
+            }).join('');
+
+            checkoutContentEl.innerHTML = `
+                <div class="checkout-layout">
+                    <div class="checkout-card">
+                        <h3>Delivery Details</h3>
+                        <form id="checkout-form" novalidate>
+                            <div class="form-group">
+                                <label for="customerName">Full Name *</label>
+                                <input type="text" id="customerName" name="customerName" value="${escapeHtml(profile.name || '')}" placeholder="Your full name" required />
+                                <div class="form-error">Please enter your full name.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" value="${escapeHtml(profile.phone || '')}" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" required />
+                                <div class="form-error">Please enter a valid 10-digit phone number.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Delivery Address *</label>
+                                <textarea id="address" name="address" placeholder="House / Street / Village / Landmark / PIN" required>${escapeHtml(profile.address || '')}</textarea>
+                                <div class="form-error">Please enter your full delivery address.</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Payment Method *</label>
+                                <div class="payment-options">
+                                    <label class="payment-option selected" data-value="COD">
+                                        <input type="radio" name="paymentMethod" value="COD" checked />
+                                        <div>
+                                            <div class="payment-option-label">Cash on Delivery</div>
+                                            <div class="payment-option-desc">Pay when your order arrives.</div>
+                                        </div>
+                                    </label>
+                                    <label class="payment-option" data-value="UPI">
+                                        <input type="radio" name="paymentMethod" value="UPI" />
+                                        <div>
+                                            <div class="payment-option-label">UPI / Online Transfer</div>
+                                            <div class="payment-option-desc">Pay via UPI — details shared after order.</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <p style="font-size:0.85rem; color: var(--text-light); margin-top: 1rem;">
+                                <i class="fas fa-info-circle" style="color: var(--primary-color);"></i>
+                                Deliveries are made on <strong>Sundays only</strong> (6 AM – 7 PM IST).
+                            </p>
+                        </form>
+                    </div>
+
+                    <div class="summary-card">
+                        <h3>Order Summary</h3>
+                        ${itemsHtml}
+                        <div class="summary-total">
+                            <span>Total</span>
+                            <span>${formatMoney(subtotal)}</span>
+                        </div>
+                        <button type="submit" form="checkout-form" class="btn btn-primary" id="placeOrderBtn">
+                            Place Order
+                        </button>
+                    </div>
+                </div>`;
+
+            // Bind payment option UI (highlight selected)
+            checkoutContentEl.querySelectorAll('.payment-option').forEach(el => {
+                el.addEventListener('click', () => {
+                    checkoutContentEl.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
+                    el.classList.add('selected');
+                });
+            });
+
+            document.getElementById('checkout-form').addEventListener('submit', handleSubmit);
+        }
+
+        function renderSuccess(orderId, otp, totalAmount) {
+            checkoutContentEl.innerHTML = `
+                <div class="success-card">
+                    <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                    <h2>Order placed!</h2>
+                    <p>Thanks for your order. Your order ID is <strong>#${orderId.slice(-6).toUpperCase()}</strong>.</p>
+                    <p>Total amount: <strong>${formatMoney(totalAmount)}</strong></p>
+
+                    <div class="otp-box">
+                        <p>Your Delivery OTP</p>
+                        <div class="otp-code">${otp}</div>
+                        <p class="otp-warn">Share this OTP with the delivery person only when you receive your order.</p>
+                    </div>
+
+                    <div class="success-actions">
+                        <a href="orders.html" class="btn-primary">View My Orders</a>
+                        <a href="index.html" class="btn-outline">Back to Home</a>
+                    </div>
+                </div>`;
+        }
+
+        // ---- Form validation ----
+        function validateForm() {
+            const name = document.getElementById('customerName');
+            const phone = document.getElementById('phone');
+            const address = document.getElementById('address');
+            let ok = true;
+
+            const setInvalid = (el, bad) => {
+                const group = el.closest('.form-group');
+                if (group) group.classList.toggle('invalid', bad);
+            };
+
+            setInvalid(name, name.value.trim().length < 2);
+            setInvalid(phone, !/^[6-9]\d{9}$/.test(phone.value.trim()));
+            setInvalid(address, address.value.trim().length < 10);
+
+            if (name.value.trim().length < 2) ok = false;
+            if (!/^[6-9]\d{9}$/.test(phone.value.trim())) ok = false;
+            if (address.value.trim().length < 10) ok = false;
+            return ok;
+        }
+
+        // ---- Submit ----
+        async function handleSubmit(e) {
+            e.preventDefault();
+            if (isSubmitting) return;
+
+            if (!currentUser) {
+                showToast('Please sign in to place an order.', true);
+                return;
+            }
+            if (!validateForm()) {
+                showToast('Please fix the errors in the form.', true);
+                return;
+            }
+
+            const cartNow = getCart();
+            if (cartNow.length === 0) {
+                showToast('Your cart is empty.', true);
+                renderEmptyCart();
+                return;
+            }
+
+            isSubmitting = true;
+            const btn = document.getElementById('placeOrderBtn');
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Placing order...'; }
+
+            try {
+                const customerName = document.getElementById('customerName').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const address = document.getElementById('address').value.trim();
+                const paymentMethod = (document.querySelector('input[name="paymentMethod"]:checked') || {}).value || 'COD';
+
+                const totalAmount = cartNow.reduce((sum, item) => sum + item.price * item.quantity, 0);
+                const deliveryOTP = generateOTP();
+                const otpExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
+
+                const orderPayload = {
+                    userId: currentUser.uid,
+                    items: cartNow.map(it => ({
+                        id: it.id,
+                        name: it.name,
+                        price: it.price,
+                        quantity: it.quantity,
+                        unit: getUnit(it.id)
+                    })),
+                    totalAmount,
+                    customerName,
+                    phone,
+                    address,
+                    paymentMethod,
+                    status: 'Pending',
+                    orderDate: serverTimestamp(),
+                    deliveryOTP,
+                    otpExpiry
+                };
+
+                const docRef = await addDoc(collection(db, 'orders'), orderPayload);
+
+                // Clear cart on success
+                localStorage.removeItem(CART_KEY);
+                updateCartCount();
+
+                renderSuccess(docRef.id, deliveryOTP, totalAmount);
+                showToast('Order placed successfully!');
+            } catch (err) {
+                console.error('Order creation failed:', err);
+                const msg = (err && err.message) ? err.message : 'Something went wrong.';
+                showToast('Could not place order: ' + msg, true);
+                if (btn) { btn.disabled = false; btn.textContent = 'Place Order'; }
+            } finally {
+                isSubmitting = false;
+            }
+        }
+
+        // ---- Init flow ----
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            cart = getCart();
+            updateCartCount();
+
+            if (cart.length === 0) {
+                renderEmptyCart();
+                return;
+            }
+            if (!user) {
+                renderSignInPrompt();
+                return;
+            }
+
+            // Try to pre-fill from users/{uid}
+            let profile = {};
+            try {
+                const snap = await getDoc(doc(db, 'users', user.uid));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    profile = {
+                        name: data.name || data.customerName || '',
+                        phone: data.phone || '',
+                        address: data.address || ''
+                    };
+                }
+            } catch (err) {
+                console.warn('Could not pre-load profile:', err);
+            }
+
+            renderForm(profile);
+        });
+    </script>
+</body>
+</html>
