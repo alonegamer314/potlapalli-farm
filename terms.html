@@ -1,1 +1,991 @@
 
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#1e4d2b" />
+    <title>Terms & Privacy — Potlapalli Farms</title>
+    <meta name="description" content="Terms of Service, Privacy Policy, and Delivery Policy for Potlapalli Farms." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <link rel="stylesheet" href="css/style.css" />
+
+    <style>
+        /* ============================================================
+           TERMS / LEGAL PAGE
+           ============================================================ */
+
+        .tm-main {
+            padding: 56px 0 96px;
+            background: var(--bg-main);
+        }
+
+        .tm-head {
+            max-width: 760px;
+            margin-bottom: 56px;
+        }
+
+        .tm-head .eyebrow { color: var(--terracotta); }
+
+        .tm-head h1 {
+            font-family: var(--font-display);
+            font-size: clamp(1.9rem, 4vw, 2.75rem);
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+
+        .tm-head .updated {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--bg-warm);
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--border);
+        }
+
+        .tm-head .updated i {
+            font-size: 0.75rem;
+            color: var(--forest);
+        }
+
+        /* Layout: TOC + content */
+        .tm-layout {
+            display: grid;
+            grid-template-columns: 260px minmax(0, 1fr);
+            gap: 64px;
+            align-items: flex-start;
+        }
+
+        /* TOC */
+        .tm-toc {
+            position: sticky;
+            top: calc(var(--header-height) + var(--alert-height) + 24px);
+            background: var(--bg-warm);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+        }
+
+        .tm-toc-title {
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tm-toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .tm-toc-list a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 0.86rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: var(--trans-fast);
+            line-height: 1.35;
+        }
+
+        .tm-toc-list a:hover {
+            color: var(--text-main);
+            background: var(--bg-main);
+        }
+
+        .tm-toc-list a.active {
+            color: var(--forest);
+            background: var(--bg-main);
+            font-weight: 600;
+        }
+
+        [data-theme="dark"] .tm-toc-list a.active {
+            color: #6bc487;
+        }
+
+        .tm-toc-list .toc-num {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.72rem;
+            color: var(--terracotta);
+            letter-spacing: 0.05em;
+            flex-shrink: 0;
+            min-width: 16px;
+        }
+
+        /* Content */
+        .tm-content {
+            max-width: 720px;
+        }
+
+        .tm-section {
+            padding-bottom: 48px;
+            margin-bottom: 48px;
+            border-bottom: 1px solid var(--border);
+            scroll-margin-top: calc(var(--header-height) + var(--alert-height) + 24px);
+        }
+
+        .tm-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .tm-section .sec-num {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            color: var(--terracotta);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .tm-section h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.35rem, 2.5vw, 1.7rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .tm-section .sec-lead {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .tm-section h3 {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: -0.015em;
+            margin: 28px 0 10px;
+            color: var(--text-main);
+        }
+
+        .tm-section p {
+            font-family: var(--font-body);
+            font-size: 0.94rem;
+            line-height: 1.75;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .tm-section p:last-child { margin-bottom: 0; }
+
+        .tm-section strong {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .tm-section a {
+            color: var(--forest);
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: var(--trans-fast);
+        }
+
+        [data-theme="dark"] .tm-section a { color: #6bc487; }
+
+        .tm-section a:hover { border-bottom-color: currentColor; }
+
+        /* Lists */
+        .tm-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 8px 0 16px;
+        }
+
+        .tm-list li {
+            font-family: var(--font-body);
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--text-muted);
+            padding-left: 26px;
+            position: relative;
+        }
+
+        .tm-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 9px;
+            width: 14px;
+            height: 1px;
+            background: var(--terracotta);
+        }
+
+        .tm-list li strong {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* Highlight callout */
+        .tm-callout {
+            display: flex;
+            gap: 14px;
+            padding: 18px 20px;
+            background: var(--forest-soft);
+            border: 1px solid rgba(30, 77, 43, 0.15);
+            border-radius: var(--radius-md);
+            margin: 20px 0;
+        }
+
+        [data-theme="dark"] .tm-callout {
+            background: rgba(107, 196, 135, 0.08);
+            border-color: rgba(107, 196, 135, 0.2);
+        }
+
+        .tm-callout i {
+            color: var(--forest);
+            font-size: 1rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        [data-theme="dark"] .tm-callout i { color: #6bc487; }
+
+        .tm-callout p {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .tm-callout strong { color: var(--text-main); font-weight: 700; }
+
+        /* Contact block at bottom */
+        .tm-contact-block {
+            background: var(--bg-warm);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-top: 56px;
+        }
+
+        .tm-contact-block h3 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .tm-contact-block p {
+            font-size: 0.94rem;
+            line-height: 1.65;
+            color: var(--text-muted);
+            margin-bottom: 22px;
+        }
+
+        .tm-contact-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tm-contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.88rem;
+            letter-spacing: 0.02em;
+            transition: var(--trans-fast);
+            border: 1px solid transparent;
+        }
+
+        .tm-contact-btn.primary {
+            background: var(--forest);
+            color: var(--cream);
+        }
+
+        .tm-contact-btn.primary:hover {
+            background: var(--forest-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .tm-contact-btn.outline {
+            background: transparent;
+            border-color: var(--border-strong);
+            color: var(--text-main);
+        }
+
+        .tm-contact-btn.outline:hover {
+            border-color: var(--text-main);
+        }
+
+        /* Mobile TOC — a simple disclosure */
+        .tm-toc-mobile {
+            display: none;
+            background: var(--bg-warm);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0;
+            margin-bottom: 32px;
+            overflow: hidden;
+        }
+
+        .tm-toc-mobile summary {
+            cursor: pointer;
+            padding: 16px 20px;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            list-style: none;
+        }
+
+        .tm-toc-mobile summary::-webkit-details-marker { display: none; }
+
+        .tm-toc-mobile summary::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 0.75rem;
+            transition: transform 0.2s ease;
+        }
+
+        .tm-toc-mobile[open] summary::after { transform: rotate(180deg); }
+
+        .tm-toc-mobile .tm-toc-list {
+            padding: 4px 12px 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .tm-layout {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            .tm-toc { display: none; }
+            .tm-toc-mobile { display: block; }
+        }
+
+        @media (max-width: 600px) {
+            .tm-main { padding: 32px 0 64px; }
+            .tm-head { margin-bottom: 32px; }
+            .tm-section { padding-bottom: 36px; margin-bottom: 36px; }
+            .tm-contact-block { padding: 24px; }
+            .tm-contact-actions { flex-direction: column; }
+            .tm-contact-btn { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+    <div id="global-loader" class="global-loader" hidden>
+        <div class="spinner"></div>
+    </div>
+
+    <!-- POLICY BAR -->
+    <div class="order-policy-alert">
+        <span>
+            Sunday deliveries only
+            <span class="dot">·</span>
+            Order before Saturday 6 PM
+            <span class="dot">·</span>
+            6 AM – 7 PM IST
+        </span>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="container header-inner">
+            <div class="logo">
+                <a href="index.html" aria-label="Potlapalli Farms — Home">
+                    <svg class="logo-symbol" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.3"/>
+                        <path d="M20 10 Q 12.5 18, 20 30 Q 27.5 18, 20 10 Z" fill="currentColor"/>
+                        <path d="M20 13.5 L 20 26.5" stroke="var(--bg-main)" stroke-width="1" stroke-linecap="round"/>
+                        <path d="M20 18 Q 17.2 16.6, 15.8 15.2" stroke="var(--bg-main)" stroke-width="0.85" stroke-linecap="round" fill="none"/>
+                        <path d="M20 21.5 Q 22.8 20.1, 24.2 18.7" stroke="var(--bg-main)" stroke-width="0.85" stroke-linecap="round" fill="none"/>
+                    </svg>
+                    <span class="logo-text">
+                        <span class="logo-name">Potlapalli</span>
+                        <span class="logo-sub">Farms</span>
+                    </span>
+                </a>
+            </div>
+
+            <nav class="desktop-nav" id="desktop-nav">
+                <a href="index.html">Home</a>
+                <a href="index.html#products">Shop</a>
+                <a href="about.html">Our Story</a>
+                <a href="index.html#contact">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <button id="themeToggle" class="icon-btn theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="cart.html" class="icon-btn mini-cart" aria-label="Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="cartCount">0</span>
+                </a>
+                <div id="auth-controls" class="auth-controls"></div>
+                <button class="menu-btn" id="menuBtn" aria-label="Open menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE NAV -->
+    <div class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-header">
+            <span class="mobile-nav-title">Menu</span>
+            <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="mobile-nav-links" id="mobileNavLinks"></ul>
+    </div>
+    <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+
+    <main class="tm-main">
+        <div class="container">
+
+            <!-- Page header -->
+            <div class="tm-head">
+                <span class="eyebrow">Legal</span>
+                <h1>Terms, privacy &amp; delivery policy</h1>
+                <span class="updated">
+                    <i class="fas fa-circle-check"></i>
+                    Last updated: 24 September 2026
+                </span>
+            </div>
+
+            <!-- Mobile TOC -->
+            <details class="tm-toc-mobile">
+                <summary>Jump to a section</summary>
+                <ul class="tm-toc-list">
+                    <li><a href="#s1"><span class="toc-num">01</span> Who we are</a></li>
+                    <li><a href="#s2"><span class="toc-num">02</span> Ordering &amp; delivery</a></li>
+                    <li><a href="#s3"><span class="toc-num">03</span> Pricing &amp; payment</a></li>
+                    <li><a href="#s4"><span class="toc-num">04</span> Freshness &amp; quality</a></li>
+                    <li><a href="#s5"><span class="toc-num">05</span> Returns &amp; refunds</a></li>
+                    <li><a href="#s6"><span class="toc-num">06</span> Privacy &amp; data</a></li>
+                    <li><a href="#s7"><span class="toc-num">07</span> Your rights</a></li>
+                    <li><a href="#s8"><span class="toc-num">08</span> Contact us</a></li>
+                </ul>
+            </details>
+
+            <div class="tm-layout">
+
+                <!-- Sticky TOC (desktop) -->
+                <aside class="tm-toc" aria-label="Table of contents">
+                    <div class="tm-toc-title">On this page</div>
+                    <ul class="tm-toc-list" id="deskToc">
+                        <li><a href="#s1" data-toc="s1"><span class="toc-num">01</span> Who we are</a></li>
+                        <li><a href="#s2" data-toc="s2"><span class="toc-num">02</span> Ordering &amp; delivery</a></li>
+                        <li><a href="#s3" data-toc="s3"><span class="toc-num">03</span> Pricing &amp; payment</a></li>
+                        <li><a href="#s4" data-toc="s4"><span class="toc-num">04</span> Freshness &amp; quality</a></li>
+                        <li><a href="#s5" data-toc="s5"><span class="toc-num">05</span> Returns &amp; refunds</a></li>
+                        <li><a href="#s6" data-toc="s6"><span class="toc-num">06</span> Privacy &amp; data</a></li>
+                        <li><a href="#s7" data-toc="s7"><span class="toc-num">07</span> Your rights</a></li>
+                        <li><a href="#s8" data-toc="s8"><span class="toc-num">08</span> Contact us</a></li>
+                    </ul>
+                </aside>
+
+                <!-- Content -->
+                <div class="tm-content">
+
+                    <!-- 1. WHO WE ARE -->
+                    <section class="tm-section" id="s1">
+                        <span class="sec-num">01</span>
+                        <h2>Who we are</h2>
+                        <p class="sec-lead">
+                            Potlapalli Farms is a family-run farm based in Andhra Pradesh, India. We raise goats, country chicken, and dairy animals, and we deliver fresh produce directly to customers across the state.
+                        </p>
+                        <p>
+                            When you shop with us, you're buying from a real farm — not a marketplace or a reseller. This document explains how we work, how we handle your data, and how we deliver.
+                        </p>
+                        <p>
+                            By placing an order with us, you agree to the terms on this page. If anything is unclear, message us on WhatsApp — we'd rather answer your question than have you guess.
+                        </p>
+                    </section>
+
+                    <!-- 2. ORDERING & DELIVERY -->
+                    <section class="tm-section" id="s2">
+                        <span class="sec-num">02</span>
+                        <h2>Ordering &amp; delivery</h2>
+                        <p class="sec-lead">
+                            We work on a weekly cycle because that's how fresh food actually works. Nothing sits in cold storage. Everything is harvested, packed, and delivered the same day.
+                        </p>
+
+                        <div class="tm-callout">
+                            <i class="fas fa-calendar-week"></i>
+                            <p>
+                                <strong>The weekly rhythm:</strong> Order anytime before <strong>Saturday 6 PM IST</strong>. We harvest Sunday morning. Your order arrives the same day between <strong>6 AM and 7 PM IST</strong>.
+                            </p>
+                        </div>
+
+                        <h3>Order window</h3>
+                        <p>
+                            Orders placed before Saturday 6 PM will be included in that Sunday's delivery. Orders placed after this window will be scheduled for the following week's delivery.
+                        </p>
+
+                        <h3>Delivery area</h3>
+                        <p>
+                            We currently deliver within Andhra Pradesh. If you're unsure whether we cover your address, place your pin on the map during checkout — if we can't reach you, we'll let you know immediately.
+                        </p>
+
+                        <h3>Delivery timeline</h3>
+                        <p>
+                            Once your order leaves the farm on Sunday morning, most deliveries are completed within <strong>30 to 60 minutes</strong>. You'll receive a live status update in your account when the delivery is on the way.
+                        </p>
+
+                        <h3>Delivery OTP</h3>
+                        <p>
+                            For your safety, every order is verified with a 6-digit delivery OTP. Share this code with the delivery person <strong>only when you receive your order</strong>. Never share it before. Our team will never ask for your OTP over the phone.
+                        </p>
+
+                        <h3>Modifications</h3>
+                        <p>
+                            Need to change your address or adjust quantities? Message us on WhatsApp any time before <strong>Saturday 6 PM</strong>. Once we begin harvesting, changes can't be accommodated.
+                        </p>
+                    </section>
+
+                    <!-- 3. PRICING & PAYMENT -->
+                    <section class="tm-section" id="s3">
+                        <span class="sec-num">03</span>
+                        <h2>Pricing &amp; payment</h2>
+                        <p class="sec-lead">
+                            Prices are listed per kilogram, per dozen, or per tray — clearly marked on every product. There are no hidden charges.
+                        </p>
+
+                        <h3>Price transparency</h3>
+                        <p>
+                            The price you see on the product page is the price you pay at checkout. Delivery is <strong>free</strong> on all orders. No minimum order value.
+                        </p>
+
+                        <h3>Weight variation for live animals</h3>
+                        <p>
+                            Live animals (such as goats and country chicken) are priced per kilogram of live weight. Because the exact weight can only be confirmed at the time of harvest, the final amount may vary slightly from the estimate shown at checkout.
+                        </p>
+                        <ul class="tm-list">
+                            <li>You'll receive the <strong>exact weight and final total</strong> on WhatsApp before delivery.</li>
+                            <li>If the final amount differs from your estimate by more than 10%, we'll always ask for your approval first.</li>
+                        </ul>
+
+                        <h3>Payment methods</h3>
+                        <ul class="tm-list">
+                            <li><strong>Cash on delivery</strong> — pay the delivery person when your order arrives.</li>
+                            <li><strong>UPI / online transfer</strong> — payment details are shared on WhatsApp after you place the order.</li>
+                        </ul>
+
+                        <h3>GST and taxes</h3>
+                        <p>
+                            Fresh unprocessed meat, eggs, and milk are currently exempt from GST under Indian tax law. No additional taxes are added to your order.
+                        </p>
+                    </section>
+
+                    <!-- 4. FRESHNESS & QUALITY -->
+                    <section class="tm-section" id="s4">
+                        <span class="sec-num">04</span>
+                        <h2>Freshness &amp; quality</h2>
+                        <p class="sec-lead">
+                            We only sell what we can stand behind. If something ever feels off, we want to know about it — the same day.
+                        </p>
+
+                        <h3>Harvested to order</h3>
+                        <p>
+                            We harvest only after you order. This means nothing we send you has been sitting in cold storage. It's the entire reason we work on a weekly cycle instead of delivering daily.
+                        </p>
+
+                        <h3>Lab tested</h3>
+                        <p>
+                            Every batch is tested for safety, freshness, and purity. Test reports are public on our <a href="about.html">Our Story</a> page. If you want to see the report for a specific order, message us and we'll pull it up.
+                        </p>
+
+                        <h3>Animal welfare</h3>
+                        <p>
+                            Our animals are free-range, grass-fed, and raised without hormones or antibiotics. We don't rush growth. We don't cut corners. What you eat was treated well first.
+                        </p>
+
+                        <h3>Hygiene in packing</h3>
+                        <p>
+                            All meat is hygienically packed and vacuum-sealed to preserve freshness during transit. Your order is labelled with your name, the harvest date, and a batch ID for traceability.
+                        </p>
+                    </section>
+
+                    <!-- 5. RETURNS & REFUNDS -->
+                    <section class="tm-section" id="s5">
+                        <span class="sec-num">05</span>
+                        <h2>Returns &amp; refunds</h2>
+                        <p class="sec-lead">
+                            Fresh food is different from other products. Once harvested and delivered, we can't take it back. But if something is wrong, we'll make it right.
+                        </p>
+
+                        <h3>When something isn't right</h3>
+                        <p>
+                            If your order arrives damaged, spoiled, or doesn't match what you ordered, contact us <strong>within 4 hours of delivery</strong>. We'll verify the issue and offer one of the following:
+                        </p>
+                        <ul class="tm-list">
+                            <li><strong>Full replacement</strong> in the next delivery cycle.</li>
+                            <li><strong>Full refund</strong> processed within 5 to 7 business days.</li>
+                            <li><strong>Partial refund</strong> for partially affected items, if that's what you prefer.</li>
+                        </ul>
+
+                        <h3>What we can't refund</h3>
+                        <p>
+                            Because we harvest to order, once you've received your order and confirmed it in good condition, we cannot accept returns for change of mind. Please check your order carefully when it arrives — the delivery person will wait while you do.
+                        </p>
+
+                        <div class="tm-callout">
+                            <i class="fas fa-circle-info"></i>
+                            <p>
+                                <strong>Our honest stance:</strong> if something is wrong, tell us. We'd rather fix one order than lose a customer. Reach us on WhatsApp at <strong>+91 79810 59178</strong>.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- 6. PRIVACY & DATA -->
+                    <section class="tm-section" id="s6">
+                        <span class="sec-num">06</span>
+                        <h2>Privacy &amp; data</h2>
+                        <p class="sec-lead">
+                            We collect the minimum information needed to deliver your order and improve our service. Nothing more.
+                        </p>
+
+                        <h3>What we collect</h3>
+                        <ul class="tm-list">
+                            <li><strong>Account information:</strong> name, email, phone number, and a hashed password (managed securely by Firebase Authentication).</li>
+                            <li><strong>Delivery information:</strong> your delivery address and, if you use the map picker, precise latitude/longitude coordinates.</li>
+                            <li><strong>Order history:</strong> what you've ordered, when, and for how much — so we can show it back to you and help if there's an issue.</li>
+                            <li><strong>Optional:</strong> if you contact us on WhatsApp, we see your phone number and message.</li>
+                        </ul>
+
+                        <h3>How we use it</h3>
+                        <ul class="tm-list">
+                            <li>To deliver your order to the correct address.</li>
+                            <li>To notify you about order status changes.</li>
+                            <li>To respond to your questions or complaints.</li>
+                            <li>To improve our product selection based on what customers order most.</li>
+                        </ul>
+
+                        <h3>What we never do</h3>
+                        <ul class="tm-list">
+                            <li>We never sell, rent, or share your data with advertisers.</li>
+                            <li>We never send marketing messages without your consent.</li>
+                            <li>We never ask for your delivery OTP over the phone.</li>
+                            <li>We never ask for card numbers, bank passwords, or UPI PINs.</li>
+                        </ul>
+
+                        <h3>Where your data lives</h3>
+                        <p>
+                            Your account and order data are stored securely in Google Firebase, which encrypts data in transit and at rest. Only authorized team members (farm management and delivery staff) can access order information — and only the parts they need to complete your delivery.
+                        </p>
+
+                        <h3>Cookies &amp; local storage</h3>
+                        <p>
+                            We use your browser's local storage to remember your cart, your theme preference (light/dark), and whether you're signed in. We don't use tracking cookies or third-party analytics that follow you across the web.
+                        </p>
+                    </section>
+
+                    <!-- 7. YOUR RIGHTS -->
+                    <section class="tm-section" id="s7">
+                        <span class="sec-num">07</span>
+                        <h2>Your rights</h2>
+                        <p class="sec-lead">
+                            You have full control over your account and the data associated with it.
+                        </p>
+
+                        <h3>You can always:</h3>
+                        <ul class="tm-list">
+                            <li><strong>View your data</strong> — your profile and order history are visible on your account.</li>
+                            <li><strong>Update your details</strong> — change your name, phone, or address anytime from your profile page.</li>
+                            <li><strong>Delete your account</strong> — message us and we'll permanently remove your account and personal data within 7 days. Historical order records required for tax and legal compliance will be retained for the legally required period, but anonymized.</li>
+                            <li><strong>Opt out of communications</strong> — reply STOP to any WhatsApp message or just ask us to remove you from our list.</li>
+                            <li><strong>Ask us anything</strong> — what data we have, where it came from, and what we're doing with it. We'll answer honestly.</li>
+                        </ul>
+
+                        <h3>Changes to these terms</h3>
+                        <p>
+                            If we make meaningful changes to these terms, we'll update the "Last updated" date at the top of this page and notify active customers via WhatsApp. Continued use of the site after a change means you accept the updated terms.
+                        </p>
+                    </section>
+
+                    <!-- 8. CONTACT US -->
+                    <section class="tm-section" id="s8">
+                        <span class="sec-num">08</span>
+                        <h2>Contact us</h2>
+                        <p class="sec-lead">
+                            If anything in this document is unclear, or if you have a concern about your account, order, or data — reach out. You'll speak to us directly, not a call centre.
+                        </p>
+                    </section>
+
+                    <!-- Contact block -->
+                    <div class="tm-contact-block">
+                        <h3>Get in touch</h3>
+                        <p>
+                            We usually reply within an hour during the day. If it's urgent (something wrong with today's delivery), call directly.
+                        </p>
+                        <div class="tm-contact-actions">
+                            <a href="https://wa.me/917981059178" target="_blank" rel="noopener" class="tm-contact-btn primary">
+                                <i class="fab fa-whatsapp"></i> Message on WhatsApp
+                            </a>
+                            <a href="mailto:pgf.natural@gmail.com" class="tm-contact-btn outline">
+                                <i class="fas fa-envelope"></i> pgf.natural@gmail.com
+                            </a>
+                            <a href="tel:+917981059178" class="tm-contact-btn outline">
+                                <i class="fas fa-phone"></i> +91 79810 59178
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <svg class="logo-symbol" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.3"/>
+                            <path d="M20 10 Q 12.5 18, 20 30 Q 27.5 18, 20 10 Z" fill="currentColor"/>
+                            <path d="M20 13.5 L 20 26.5" stroke="#1a1a1a" stroke-width="1" stroke-linecap="round"/>
+                        </svg>
+                        <span class="logo-text">
+                            <span class="logo-name">Potlapalli</span>
+                            <span class="logo-sub">Farms</span>
+                        </span>
+                    </div>
+                    <p>A family farm in Andhra Pradesh, raising food the way it should be raised — slowly, honestly, and in the open.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <a href="index.html#products">All products</a>
+                    <a href="orders.html">My orders</a>
+                    <a href="cart.html">My cart</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <a href="about.html">Our story</a>
+                    <a href="index.html#how-it-works">How it works</a>
+                    <a href="terms.html">Terms &amp; Privacy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Get in touch</h4>
+                    <a href="mailto:pgf.natural@gmail.com"><i class="fas fa-envelope"></i> pgf.natural@gmail.com</a>
+                    <a href="tel:+917981059178"><i class="fas fa-phone"></i> +91 79810 59178</a>
+                    <a href="https://wa.me/917981059178" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp us</a>
+                    <a href="https://www.instagram.com/potlapallifarms" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> @potlapallifarms</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2025 Potlapalli Farms. All rights reserved.</span>
+                <span>Made with care in Andhra Pradesh.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAXmkk4DfFahS9euqh-xR7uS3JpRS0Ll0c",
+        authDomain: "potlapallifarm.firebaseapp.com",
+        projectId: "potlapallifarm",
+        storageBucket: "potlapallifarm.firebasestorage.app",
+        messagingSenderId: "1017629729159",
+        appId: "1:1017629729159:web:357c420a9de335d427b322",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const THEME_KEY = 'potlapalliTheme';
+    const CART_KEY = 'potlapalliCart';
+
+    const themeToggle = document.getElementById('themeToggle');
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileNavClose = document.getElementById('mobileNavClose');
+    const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
+    const mobileNavLinks = document.getElementById('mobileNavLinks');
+    const authControls = document.getElementById('auth-controls');
+    const cartCountEl = document.getElementById('cartCount');
+    const toastContainer = document.getElementById('toast-container');
+
+    function escapeHtml(str) {
+        return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+
+    function showToast(message, type) {
+        type = type || 'info';
+        var icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+        var el = document.createElement('div');
+        el.className = 'toast ' + type;
+        el.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+        toastContainer.appendChild(el);
+        setTimeout(function () { el.classList.add('hiding'); }, 4000);
+        setTimeout(function () { el.remove(); }, 4400);
+    }
+
+    function initTheme() {
+        var icon = themeToggle ? themeToggle.querySelector('i') : null;
+        function apply(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+            if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        var saved = 'light';
+        try { saved = localStorage.getItem(THEME_KEY) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+        apply(saved);
+        themeToggle && themeToggle.addEventListener('click', function () {
+            var cur = document.documentElement.getAttribute('data-theme');
+            apply(cur === 'dark' ? 'light' : 'dark');
+        });
+    }
+
+    function initHeaderScroll() {
+        var header = document.getElementById('header');
+        if (!header) return;
+        var onScroll = function () { header.classList.toggle('scrolled', window.scrollY > 20); };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    }
+
+    function updateCartBadge() {
+        if (!cartCountEl) return;
+        try {
+            var raw = localStorage.getItem(CART_KEY);
+            var cart = raw ? JSON.parse(raw) : [];
+            cartCountEl.textContent = Array.isArray(cart) ? cart.length : 0;
+        } catch (e) { cartCountEl.textContent = '0'; }
+    }
+
+    function initMobileNav() {
+        var links = [
+            { href: 'index.html', icon: 'fa-home', label: 'Home' },
+            { href: 'index.html#products', icon: 'fa-store', label: 'Shop' },
+            { href: 'about.html', icon: 'fa-seedling', label: 'Our Story' },
+            { href: 'orders.html', icon: 'fa-receipt', label: 'My Orders' },
+            { href: 'cart.html', icon: 'fa-shopping-bag', label: 'My Cart' }
+        ];
+        if (mobileNavLinks) {
+            mobileNavLinks.innerHTML = links.map(function (l) {
+                return '<li><a href="' + l.href + '"><i class="fas ' + l.icon + '"></i><span>' + l.label + '</span></a></li>';
+            }).join('');
+        }
+        function open() {
+            mobileNav && mobileNav.classList.add('active');
+            mobileNavBackdrop && mobileNavBackdrop.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function close() {
+            mobileNav && mobileNav.classList.remove('active');
+            mobileNavBackdrop && mobileNavBackdrop.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        menuBtn && menuBtn.addEventListener('click', open);
+        mobileNavClose && mobileNavClose.addEventListener('click', close);
+        mobileNavBackdrop && mobileNavBackdrop.addEventListener('click', close);
+        mobileNavLinks && mobileNavLinks.addEventListener('click', function (e) {
+            if (e.target.closest('a')) close();
+        });
+    }
+
+    function renderAuthControls(user) {
+        if (!authControls) return;
+        if (user) {
+            var shortName = (user.displayName || user.email || '').split('@')[0].split(' ')[0];
+            authControls.innerHTML =
+                '<a href="profile.html" class="auth-btn" title="My Profile">' +
+                    '<i class="fas fa-user-circle"></i> ' + escapeHtml(shortName).slice(0, 12) +
+                '</a>' +
+                '<button class="auth-btn" id="signOutBtn">Log Out</button>';
+            var btn = document.getElementById('signOutBtn');
+            if (btn) {
+                btn.addEventListener('click', function () {
+                    signOut(auth).then(function () { showToast('Signed out', 'info'); });
+                });
+            }
+        } else {
+            authControls.innerHTML =
+                '<a href="signin.html" class="auth-btn">Log In</a>' +
+                '<a href="signup.html" class="auth-btn primary">Sign Up</a>';
+        }
+    }
+
+    // Highlight active TOC link as user scrolls
+    function initScrollSpy() {
+        var sections = document.querySelectorAll('.tm-section[id]');
+        var tocLinks = document.querySelectorAll('#deskToc a');
+        if (!sections.length || !tocLinks.length) return;
+
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    var id = entry.target.id;
+                    tocLinks.forEach(function (link) {
+                        link.classList.toggle('active', link.dataset.toc === id);
+                    });
+                }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+
+        sections.forEach(function (sec) { observer.observe(sec); });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        initTheme();
+        initHeaderScroll();
+        initMobileNav();
+        updateCartBadge();
+        initScrollSpy();
+    });
+
+    onAuthStateChanged(auth, renderAuthControls);
+    </script>
+</body>
+</html>
