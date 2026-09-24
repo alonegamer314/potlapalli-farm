@@ -2,6 +2,8 @@
    POTLAPALLI FARMS — MAIN APPLICATION LOGIC
    Sections: Firebase → State → Utils → Theme → Header → Nav →
              Cart → Products → Hero → Scroll → Auth → Notifications
+   Products now come from Firestore in real time. Falls back to
+   the hardcoded list if the collection is empty.
    ============================================================ */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -40,7 +42,8 @@ const CART_KEY = 'potlapalliCart';
 const SEEN_STATUSES_KEY = 'potlapalliSeenStatuses';
 const THEME_KEY = 'potlapalliTheme';
 
-const PRODUCTS = [
+// Fallback catalog — used only when the Firestore `products` collection is empty.
+const FALLBACK_PRODUCTS = [
     { id: 'live-ram',         name: 'Live Ram (Macherla Pottelu)',       price: 450, unit: 'kg',    category: 'Live Meat',  isMeat: true,  isLive: true,  description: 'Live Ram, range 15–40 kg.',             image: 'assets/images/live-ram.jpg' },
     { id: 'buck',             name: 'Buck (Meka Pothu)',                 price: 450, unit: 'kg',    category: 'Live Meat',  isMeat: true,  isLive: true,  description: 'Live Buck, range 15–40 kg.',            image: 'assets/images/buck.jpg' },
     { id: 'live-natu-kodi',   name: 'Live Natu Kodi (Country Chicken)',  price: 700, unit: 'kg',    category: 'Live Birds', isMeat: false, isLive: true,  description: 'Live country chicken, your choice.',    image: 'assets/images/live-natu-kodi.jpg' },
@@ -52,12 +55,16 @@ const PRODUCTS = [
     { id: 'eggs-tray',        name: 'Country Chicken Eggs (30 Tray)',    price: 430, unit: 'tray',  category: 'Eggs',       isMeat: false, isLive: false, description: 'Tray of 30 golden-yolk eggs.',          image: 'assets/images/tray.jpg' },
 ];
 
+// Live catalog (mutated by the Firestore listener)
+let PRODUCTS = FALLBACK_PRODUCTS.slice();
+
 const UPCOMING_PRODUCTS = ['Fish', 'Prawns', 'Crabs', 'Buffalo Milk', 'Cow Milk', 'Button Mushrooms'];
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&q=80&w=600';
 
 let currentUser = null;
 let activeOrdersUnsub = null;
+let productsUnsub = null;
 
 /* ---------- 3. UTILITIES ---------- */
 const $  = (sel, ctx = document) => ctx.querySelector(sel);
@@ -403,15 +410,18 @@ function formatProductPrice(product, qty) {
 
 function renderProductCard(product) {
     const qty = initialQty(product);
-    const unitLabel = product.isMeat ? 'kg' : product.unit;
+    const unitLabel = product.isMeat ? 'kg' : (product.unit || 'kg');
     const badge = product.isLive
         ? `<span class="product-badge live">Live</span>`
-        : `<span class="product-badge">${product.category}</span>`;
+        : `<span class="product-badge">${escapeHtml(product.category || 'Fresh')}</span>`;
 
     const imgHtml = `
         <img src="${product.image}"
              onerror="this.onerror=null;this.src='${FALLBACK_IMG}'"
              alt="${escapeHtml(product.name)}" loading="lazy">`;
+
+    // Stock handling — if stock is 0, show "Sold out"
+    const outOfStock = typeof product.stock === 'number' && product.stock <= 0;
 
     if (product.isLive) {
         return `
@@ -433,8 +443,14 @@ function renderProductCard(product) {
             </div>`;
     }
 
+    const addBtn = outOfStock
+        ? `<button class="add-to-cart-btn" disabled><i class="fas fa-ban"></i> Sold out</button>`
+        : `<button class="add-to-cart-btn" data-action="add">
+               <i class="fas fa-cart-plus"></i> Add to Cart
+           </button>`;
+
     return `
-        <div class="product-card animated-section" data-id="${product.id}">
+        <div class="product-card animated-section ${outOfStock ? 'sold-out' : ''}" data-id="${product.id}">
             ${badge}
             ${imgHtml}
             <div class="product-content">
@@ -450,9 +466,7 @@ function renderProductCard(product) {
                         <button class="qty-btn plus-btn" data-action="inc" aria-label="Increase"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
-                <button class="add-to-cart-btn" data-action="add">
-                    <i class="fas fa-cart-plus"></i> Add to Cart
-                </button>
+                ${addBtn}
             </div>
         </div>`;
 }
@@ -460,10 +474,22 @@ function renderProductCard(product) {
 function renderProducts() {
     const grid = $('#product-grid');
     if (!grid) return;
+
+    if (PRODUCTS.length === 0) {
+        grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 48px 20px; color: var(--text-muted);">
+                <i class="fas fa-leaf" style="font-size: 2rem; opacity: 0.4; display: block; margin-bottom: 14px;"></i>
+                <p>No products available right now. Please check back soon.</p>
+            </div>`;
+        return;
+    }
+
     grid.innerHTML = PRODUCTS.map(renderProductCard).join('');
 
     // Event delegation for quantity controls & add to cart
-    grid.addEventListener('click', (e) => {
+    // (Removed once before reattaching — avoids duplicate listeners on refresh)
+    if (grid._listener) grid.removeEventListener('click', grid._listener);
+    grid._listener = (e) => {
         const card = e.target.closest('.product-card');
         if (!card) return;
 
@@ -472,20 +498,21 @@ function renderProducts() {
 
         const qtyEl = card.querySelector('.qty');
         const priceEl = card.querySelector('.price-display');
+        if (!qtyEl || !priceEl) return;
+
         const isGoat = product.id === 'goat';
         const isMeat = product.isMeat;
         const step = isMeat ? 0.25 : 1;
         const minQty = isGoat ? 0.75 : (isMeat ? 0.5 : 1);
 
         const btn = e.target.closest('[data-action]');
-        if (!btn) return;
+        if (!btn || btn.disabled) return;
 
         const action = btn.dataset.action;
 
         if (action === 'add') {
             const qty = parseFloat(qtyEl.dataset.qty) || minQty;
             addToCart(product.id, qty);
-            // reset to initial
             const reset = initialQty(product);
             qtyEl.dataset.qty = reset;
             qtyEl.textContent = isMeat ? reset.toFixed(2) : reset;
@@ -501,7 +528,11 @@ function renderProducts() {
         qtyEl.dataset.qty = qty;
         qtyEl.textContent = isMeat ? qty.toFixed(2) : qty;
         priceEl.textContent = formatMoney(product.price * qty);
-    });
+    };
+    grid.addEventListener('click', grid._listener);
+
+    // Re-observe newly added cards for scroll animations
+    observeAnimatedSections();
 }
 
 function renderUpcoming() {
@@ -510,6 +541,50 @@ function renderUpcoming() {
     list.innerHTML = UPCOMING_PRODUCTS
         .map(p => `<li><i class="fas fa-check"></i> ${escapeHtml(p)}</li>`)
         .join('');
+}
+
+/* ---------- 9b. LOAD PRODUCTS FROM FIRESTORE ---------- */
+function loadProducts() {
+    const grid = $('#product-grid');
+    if (!grid) return; // not on homepage
+
+    try {
+        productsUnsub = onSnapshot(
+            collection(db, 'products'),
+            (snap) => {
+                if (snap.empty) {
+                    // Firestore has no products yet — use fallback so site stays alive
+                    PRODUCTS = FALLBACK_PRODUCTS.slice();
+                } else {
+                    PRODUCTS = snap.docs.map(d => {
+                        const data = d.data();
+                        return {
+                            id: d.id,
+                            name: data.name || 'Product',
+                            price: Number(data.price) || 0,
+                            unit: data.unit || 'kg',
+                            category: data.category || 'Fresh',
+                            isMeat: !!data.isMeat,
+                            isLive: !!data.isLive,
+                            description: data.description || '',
+                            image: data.image || '',
+                            stock: typeof data.stock === 'number' ? data.stock : null,
+                        };
+                    });
+                }
+                renderProducts();
+            },
+            (err) => {
+                console.warn('Products listener failed, using fallback:', err.message);
+                PRODUCTS = FALLBACK_PRODUCTS.slice();
+                renderProducts();
+            }
+        );
+    } catch (err) {
+        console.warn('Could not start products listener:', err);
+        PRODUCTS = FALLBACK_PRODUCTS.slice();
+        renderProducts();
+    }
 }
 
 /* ---------- 10. HERO SLIDER ---------- */
@@ -576,26 +651,24 @@ function initHeroSlider() {
 }
 
 /* ---------- 11. SCROLL ANIMATIONS ---------- */
-function initScrollAnimations() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+let scrollObserver = null;
 
-    $$('.animated-section').forEach(el => observer.observe(el));
-
-    // Observe dynamically added product cards
-    const grid = $('#product-grid');
-    if (grid) {
-        const mo = new MutationObserver(() => {
-            $$('.animated-section', grid).forEach(el => observer.observe(el));
-        });
-        mo.observe(grid, { childList: true });
+function observeAnimatedSections() {
+    if (!scrollObserver) {
+        scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    scrollObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
     }
+    $$('.animated-section:not(.visible)').forEach(el => scrollObserver.observe(el));
+}
+
+function initScrollAnimations() {
+    observeAnimatedSections();
 }
 
 /* ---------- 12. AUTH UI ---------- */
@@ -694,12 +767,14 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeaderScroll();
     initMobileNav();
     initCartDrawer();
-    renderProducts();
     renderUpcoming();
     initHeroSlider();
     initScrollAnimations();
     updateCartCount();
     renderCartDrawer();
+
+    // Products come from Firestore (with fallback)
+    loadProducts();
 });
 
 /* Expose for other pages (cart.html, checkout.html) to reuse in future phases */
