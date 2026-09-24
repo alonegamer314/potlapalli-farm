@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // --- Helper Functions (CRITICAL for role checks) ---
+    function getRole() {
+      // Safely fetch the role from the requesting user's profile document
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    
+    function isAdmin() {
+      return getRole() == 'admin';
+    }
+    
+    function isDeliveryStaff() { 
+      // Checks for both roles
+      return getRole() == 'maps' || getRole() == 'driver';
+    }
+    
+    function isAuthorizedPersonnel() {
+      return isAdmin() || isDeliveryStaff();
+    }
+    
+    function hasRequiredOrderFields() {
+        return request.resource.data.keys().hasAll([
+            'userId', 'items', 'totalAmount', 'customerName', 
+            'phone', 'address', 'paymentMethod', 'status', 
+            'orderDate', 'deliveryOTP', 'otpExpiry'
+        ]);
+    }
+    
+    // ----------------------------------------------------------------------------------
+    // 1. USERS COLLECTION
+    // ----------------------------------------------------------------------------------
+    match /users/{userId} {
+      // Allows user to read/write their own profile. Allows staff to read any profile for role check.
+      allow read, write: if request.auth != null && 
+        (request.auth.uid == userId || isAdmin() || isDeliveryStaff());
+    }
+    
+    // ----------------------------------------------------------------------------------
+    // 2. ORDERS COLLECTION (FINAL RESILIENT WRITE LOGIC)
+    // ----------------------------------------------------------------------------------
+    match /orders/{orderId} {
+        
+        // CREATE: Allows authenticated user to place their own order.
+        allow create: if request.auth != null && 
+            request.auth.uid == request.resource.data.userId &&
+            hasRequiredOrderFields();
+
+        // READ: Allows customer (own order) OR Admin/Delivery staff (all orders) to read.
+        allow read: if request.auth != null && 
+            (request.auth.uid == resource.data.userId || isAuthorizedPersonnel());
+
+        // WRITE/UPDATE: Allows status changes based on role.
+        allow update: if request.auth != null && (
+            
+            // 1. ADMIN: Can update anything (Highest privilege).
+            isAdmin() || 
+            
+            // 2. CUSTOMER: Can only cancel their own order (Strictly status change).
+            (request.auth.uid == resource.data.userId &&
+             request.resource.data.keys().hasOnly(['status']) && 
+             request.resource.data.status == 'Cancelled') ||
+             
+            // 3. MAPS OR DRIVER (FINAL RESILIENCE FIX): 
+            // Ensures the status field is present in the request AND the new value is valid. 
+            // This is the least strict but most likely to succeed permission.
+            (isDeliveryStaff() && 
+             request.resource.data.keys().hasAll(['status']) &&
+             request.resource.data.status in ['Delivered', 'Cancelled']
+            )
+        );
+    }
+
+    // ----------------------------------------------------------------------------------
+    // 3. PRODUCTS COLLECTION
+    // ----------------------------------------------------------------------------------
+    match /products/{productId} {
+        allow read: if true;
+        allow write: if request.auth != null && isAdmin();
+    }
+  }
+}
