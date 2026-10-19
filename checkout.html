@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <meta name="theme-color" content="#1a4423" />
     <title>Checkout | Potlapalli Farms</title>
-    <meta name="description" content="Complete your order. Sunday delivery across Andhra Pradesh." />
+    <meta name="description" content="Complete your order. Sunday delivery across Andhra Pradesh and Telangana." />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -880,10 +880,6 @@
             #map-container { height: 260px; }
             .co-map-btn { width: 36px; height: 36px; font-size: 0.85rem; }
         }
-        /* Hide UPI payment option */
-.pay-option[data-value="UPI"] {
-    display: none !important;
-}
     </style>
 </head>
 <body>
@@ -1038,7 +1034,13 @@
 
     const CART_KEY = 'potlapalliCart';
     const THEME_KEY = 'potlapalliTheme';
-    const DEFAULT_CENTER = [15.9129, 79.7400]; // Andhra Pradesh
+    
+    // Strict boundaries for Andhra Pradesh and Telangana
+    const ALLOWED_BOUNDS = [
+        [12.6, 76.7], // South West
+        [19.9, 84.8]  // North East
+    ];
+    const DEFAULT_CENTER = [15.9129, 79.7400]; // Centered in AP
 
     const coContentEl = document.getElementById('coContent');
     const cartCountEl = document.getElementById('cartCount');
@@ -1213,7 +1215,7 @@
                                             '<i class="fas fa-location-crosshairs"></i>' +
                                         '</button>' +
                                     '</div>' +
-                                    '<span class="co-hint">Drag the pin to your exact door. This helps our delivery person find you faster.</span>' +
+                                    '<span class="co-hint">We currently deliver only within Andhra Pradesh and Telangana.</span>' +
                                     '<input type="hidden" id="latitude" />' +
                                     '<input type="hidden" id="longitude" />' +
                                 '</div>' +
@@ -1235,14 +1237,6 @@
                                         '<div class="pay-option-desc">Pay the delivery person when your order arrives.</div>' +
                                     '</div>' +
                                 '</label>' +
-                           <!-- <label class="pay-option" data-value="UPI">
-                                    <input type="radio" name="paymentMethod" value="UPI" />
-                                    <div class="pay-option-body">
-                                        <div class="pay-option-title">UPI / Online transfer</div>
-                                        <div class="pay-option-desc">Pay via UPI. We will share payment details on WhatsApp after you place the order.</div>
-                                    </div>
-                                </label> 
-                            -->
                             '</div>' +
                         '</div>' +
 
@@ -1297,7 +1291,7 @@
             });
         });
 
-        // NEW: Address Autocomplete with Photon API
+        // Address Autocomplete with Photon API
         var searchInput = document.getElementById('addressSearch');
         var suggestionsBox = document.getElementById('addressSuggestions');
         var addressTextarea = document.getElementById('address');
@@ -1314,23 +1308,28 @@
 
                 searchDebounce = setTimeout(async function() {
                     try {
-                        // Photon API (free, no key needed). Biased towards AP.
-                        var url = 'https://photon.komoot.io/api/?q=' + encodeURIComponent(query) + '&limit=5&lat=15.9129&lon=79.7400';
+                        // Photon API (free, no key needed).
+                        var url = 'https://photon.komoot.io/api/?q=' + encodeURIComponent(query) + '&limit=10';
                         var response = await fetch(url);
                         var data = await response.json();
 
-                        if (!data.features || data.features.length === 0) {
-                            suggestionsBox.innerHTML = '<div class="address-suggestion-empty">No matches found. Please use the map pin below.</div>';
+                        // Filter results strictly for Andhra Pradesh and Telangana
+                        var allowedStates = ['Andhra Pradesh', 'Telangana'];
+                        var validFeatures = data.features.filter(function(f) {
+                            var state = f.properties.state || '';
+                            return allowedStates.some(function(s) { return state.includes(s); });
+                        });
+
+                        if (!validFeatures || validFeatures.length === 0) {
+                            suggestionsBox.innerHTML = '<div class="address-suggestion-empty">No results found in AP or Telangana. Please use the map below.</div>';
                             suggestionsBox.classList.add('open');
                             return;
                         }
 
-                        suggestionsBox.innerHTML = data.features.map(function(feature, index) {
+                        suggestionsBox.innerHTML = validFeatures.map(function(feature, index) {
                             var props = feature.properties;
                             var parts = [props.name, props.street, props.city, props.state].filter(Boolean);
                             var displayName = parts.join(', ');
-                            var lon = feature.geometry.coordinates[0];
-                            var lat = feature.geometry.coordinates[1];
                             
                             return '<div class="address-suggestion-item" data-idx="' + index + '">' + escapeHtml(displayName) + '</div>';
                         }).join('');
@@ -1339,7 +1338,7 @@
 
                         suggestionsBox.querySelectorAll('.address-suggestion-item').forEach(function(el, i) {
                             el.addEventListener('click', function() {
-                                var feature = data.features[i];
+                                var feature = validFeatures[i];
                                 var lon = feature.geometry.coordinates[0];
                                 var lat = feature.geometry.coordinates[1];
                                 var props = feature.properties;
@@ -1355,7 +1354,7 @@
                                 
                                 // Close dropdown
                                 suggestionsBox.classList.remove('open');
-                                searchInput.value = displayName; // Update search bar to reflect selection
+                                searchInput.value = displayName;
                             });
                         });
                     } catch (err) {
@@ -1390,6 +1389,9 @@
         map = L.map('map-container', {
             zoomControl: true,
             attributionControl: true,
+            maxBounds: ALLOWED_BOUNDS, // Lock map to AP & TS
+            maxBoundsViscosity: 1.0,   // Hard lock, prevents dragging outside
+            minZoom: 6                 // Prevent zooming out to see whole world
         }).setView(DEFAULT_CENTER, 7);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
