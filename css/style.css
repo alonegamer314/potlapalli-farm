@@ -1,8 +1,6 @@
 /* ============================================================
-   POTLAPALLI FARMS — MASTER STYLESHEET
-   Aesthetic: Editorial Artisanal · Luxurious Warm Minimal
-   Type: Manrope (display) + Inter (UI)
-   Palette: Forest · Terracotta · Cream · Charcoal
+   POTLAPALLI FARMS - MASTER STYLESHEET
+   Aesthetic: Editorial Artisanal / Luxurious Warm Minimal
    ============================================================ */
 
 /* ---------- 1. DESIGN TOKENS ---------- */
@@ -37,12 +35,12 @@
     --text-main: #1a1a1a;
     --text-muted: #56504a;
     --text-inverse: #ffffff;
-    --header-bg: rgba(240, 234, 221, 0.85);
+    --header-bg: #f0eadd;
     --overlay-bg: rgba(26, 26, 26, 0.55);
 
-    /* Typography */
+    /* Typography - Removed Inter. Using native system UI for a human, native feel. */
     --font-display: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
     /* Spacing */
     --space-1: 4px;
@@ -67,18 +65,16 @@
     --radius-2xl: 20px;
     --radius-pill: 9999px;
 
-    /* Shadows — layered, warm-tinted for real depth */
+    /* Shadows */
     --shadow-xs: 0 1px 2px rgba(30, 20, 10, 0.05);
     --shadow-sm: 0 1px 2px rgba(30, 20, 10, 0.05), 0 2px 6px rgba(30, 20, 10, 0.04);
     --shadow-md: 0 2px 4px rgba(30, 20, 10, 0.04), 0 8px 20px rgba(30, 20, 10, 0.06);
     --shadow-lg: 0 4px 8px rgba(30, 20, 10, 0.05), 0 16px 40px rgba(30, 20, 10, 0.09);
     --shadow-xl: 0 8px 16px rgba(30, 20, 10, 0.06), 0 24px 60px rgba(30, 20, 10, 0.13);
-    --shadow-inner: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 
     /* Motion */
     --ease: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
     --trans-fast: all 0.18s var(--ease);
     --trans: all 0.3s var(--ease);
     --trans-smooth: all 0.5s var(--ease-out);
@@ -111,7 +107,7 @@
     --text-muted: #a89f92;
     --border: #2a241d;
     --border-strong: #3a332a;
-    --header-bg: rgba(15, 13, 10, 0.85);
+    --header-bg: #0f0d0a;
     --overlay-bg: rgba(0, 0, 0, 0.75);
 
     --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -119,7 +115,6 @@
     --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.4), 0 8px 20px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.4), 0 16px 40px rgba(0, 0, 0, 0.4);
     --shadow-xl: 0 8px 16px rgba(0, 0, 0, 0.5), 0 24px 60px rgba(0, 0, 0, 0.5);
-    --shadow-inner: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 /* ---------- 2. RESET & BASE ---------- */
@@ -195,18 +190,6 @@ ul { list-style: none; }
     border-radius: var(--radius-xs);
 }
 
-/* Eyebrow label */
-.eyebrow {
-    display: inline-block;
-    font-family: var(--font-body);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--terracotta);
-    margin-bottom: 16px;
-}
-
 /* ---------- 3. POLICY ALERT BAR ---------- */
 .order-policy-alert {
     position: fixed;
@@ -251,8 +234,6 @@ ul { list-style: none; }
     z-index: 1000;
     padding: 16px 0;
     background: var(--header-bg);
-    backdrop-filter: blur(20px) saturate(140%);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
     border-bottom: 1px solid var(--border);
     transition: var(--trans);
 }
@@ -269,7 +250,7 @@ ul { list-style: none; }
     gap: var(--space-6);
 }
 
-/* === Logo (leaf mark + stacked wordmark) === */
+/* Logo */
 .logo a {
     display: inline-flex;
     align-items: center;
@@ -322,6 +303,7 @@ ul { list-style: none; }
     padding-left: 0;
     margin-right: -0.42em;
 }
+
 /* Desktop nav */
 .desktop-nav {
     display: flex;
@@ -664,7 +646,6 @@ ul { list-style: none; }
     gap: 14px;
     padding: 18px 0;
     border-bottom: 1px solid var(--border);
-    animation: fadeSlideIn 0.3s ease;
 }
 
 .cart-item:last-child { border-bottom: none; }
@@ -866,9 +847,6 @@ main { padding-top: calc(var(--header-height) + var(--alert-height)); }
     width: 92%;
     max-width: 720px;
     margin-left: max(4%, calc((100% - var(--maxw)) / 2));
-    animation: heroFadeUp 1s var(--ease-out) forwards;
-    opacity: 0;
-    transform: translateY(24px);
 }
 
 .hero-content h1 {
@@ -880,12 +858,6 @@ main { padding-top: calc(var(--header-height) + var(--alert-height)); }
     letter-spacing: -0.04em;
     margin-bottom: 24px;
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.25);
-}
-
-.hero-content h1 em {
-    font-style: normal;
-    font-weight: 500;
-    color: rgba(250, 247, 242, 0.78);
 }
 
 .hero-content p {
@@ -919,9 +891,6 @@ main { padding-top: calc(var(--header-height) + var(--alert-height)); }
     box-shadow: 0 12px 32px rgba(192, 80, 48, 0.45);
 }
 
-.hero-btn i { transition: transform 0.3s var(--ease); }
-.hero-btn:hover i { transform: translateX(4px); }
-
 .slider-nav {
     position: absolute;
     bottom: 32px;
@@ -946,10 +915,6 @@ main { padding-top: calc(var(--header-height) + var(--alert-height)); }
 .slider-dot.active {
     background: #ffffff;
     width: 44px;
-}
-
-@keyframes heroFadeUp {
-    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ---------- 8. TRUST BAR ---------- */
@@ -1052,15 +1017,7 @@ main { padding-top: calc(var(--header-height) + var(--alert-height)); }
     margin-left: 0;
 }
 
-.animated-section {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
-}
-
-.animated-section.visible { opacity: 1; transform: translateY(0); }
-
-/* Why-us: dot-grid warm background */
+/* Why-us background */
 #why-choose-us {
     position: relative;
     background:
@@ -1068,65 +1025,24 @@ main { padding-top: calc(var(--header-height) + var(--alert-height)); }
         var(--bg-warm);
 }
 
-/* ---------- 10. FEATURE CARDS ---------- */
-.features-grid {
+/* ---------- 10. EDITORIAL LIST (Replaced AI 3-icon boxes) ---------- */
+.editorial-list {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 48px;
+    margin-top: 48px;
 }
 
-.feature-card {
-    background: var(--bg-elevated);
-    padding: 44px 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    transition: var(--trans);
-}
-
-.feature-card:hover {
-    background: var(--bg-warm);
-}
-
-.feature-card .icon {
-    width: 52px;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-md);
-    background: var(--forest-soft);
-    color: var(--forest);
-    font-size: 1.15rem;
-    transition: var(--trans);
-}
-
-[data-theme="dark"] .feature-card .icon {
-    background: rgba(107, 196, 135, 0.15);
-    color: #6bc487;
-}
-
-.feature-card:hover .icon {
-    background: var(--forest);
-    color: #ffffff;
-    transform: translateY(-3px);
-}
-
-.feature-card h3 {
+.editorial-item h3 {
     font-family: var(--font-display);
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     font-weight: 700;
+    margin-bottom: 12px;
     letter-spacing: -0.02em;
-    line-height: 1.25;
 }
 
-.feature-card p {
-    font-size: 0.92rem;
+.editorial-item p {
+    font-size: 1rem;
     line-height: 1.6;
     color: var(--text-muted);
 }
@@ -1389,7 +1305,7 @@ main { padding-top: calc(var(--header-height) + var(--alert-height)); }
     border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
     position: relative;
     transition: var(--trans);
     box-shadow: var(--shadow-sm);
@@ -1401,89 +1317,21 @@ main { padding-top: calc(var(--header-height) + var(--alert-height)); }
     box-shadow: var(--shadow-md);
 }
 
-.step-card .step-number {
-    font-family: var(--font-display);
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--terracotta);
-    line-height: 1;
-    letter-spacing: -0.045em;
-}
-
 .step-card h3 {
     font-family: var(--font-display);
     font-size: 1.15rem;
     font-weight: 700;
     letter-spacing: -0.02em;
+    color: var(--text-main);
 }
 
 .step-card p {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     line-height: 1.6;
     color: var(--text-muted);
 }
 
-/* ---------- 14. TESTIMONIALS ---------- */
-#testimonials {
-    background: var(--forest);
-    padding: 96px 0;
-    border-radius: 0;
-}
-
-#testimonials .section-header h2,
-#testimonials .section-header p {
-    color: #ffffff;
-}
-
-#testimonials .section-header p { color: rgba(250, 247, 242, 0.75); }
-
-#testimonials .section-header::before { background: var(--gold); }
-
-#testimonials .eyebrow { color: var(--gold); }
-
-.testimonial-card {
-    max-width: 760px;
-    margin: 0 auto;
-    text-align: center;
-    padding: 24px;
-}
-
-.testimonial-card .stars {
-    color: var(--gold);
-    font-size: 0.9rem;
-    margin-bottom: 28px;
-    letter-spacing: 5px;
-}
-
-.testimonial-card p {
-    font-family: var(--font-display);
-    font-style: normal;
-    font-weight: 500;
-    font-size: clamp(1.15rem, 2.5vw, 1.4rem);
-    line-height: 1.55;
-    color: #ffffff;
-    margin-bottom: 28px;
-    letter-spacing: -0.015em;
-}
-
-.testimonial-author {
-    color: rgba(250, 247, 242, 0.7);
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-}
-
-.testimonial-author strong {
-    color: #ffffff;
-    font-weight: 700;
-    display: block;
-    margin-bottom: 4px;
-    letter-spacing: 0;
-    font-size: 0.92rem;
-}
-
-/* ---------- 15. FOOTER ---------- */
+/* ---------- 14. FOOTER ---------- */
 footer {
     background: var(--charcoal);
     color: var(--stone-light);
@@ -1554,14 +1402,6 @@ footer {
     transform: translateX(3px);
 }
 
-.footer-col a i {
-    margin-right: 10px;
-    font-size: 0.85rem;
-    opacity: 0.7;
-    width: 14px;
-    text-align: center;
-}
-
 .footer-bottom {
     padding-top: 32px;
     border-top: 1px solid rgba(250, 247, 242, 0.1);
@@ -1575,7 +1415,7 @@ footer {
     letter-spacing: 0.02em;
 }
 
-/* ---------- 16. TOAST ---------- */
+/* ---------- 15. TOAST (Removed AI left-border and progress bar) ---------- */
 .toast-container {
     position: fixed;
     top: calc(var(--header-height) + var(--alert-height) + 16px);
@@ -1605,51 +1445,25 @@ footer {
     max-width: 360px;
     pointer-events: auto;
     animation: toastIn 0.4s var(--ease-out);
-    position: relative;
-    overflow: hidden;
 }
-
-.toast::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    background: var(--forest);
-    animation: toastProgress 4s linear forwards;
-}
-
-.toast.hiding { animation: toastOut 0.3s var(--ease) forwards; }
 
 .toast i { color: var(--forest); font-size: 1rem; flex-shrink: 0; }
 
-.toast.success { border-left: 3px solid var(--forest); }
-.toast.success::before { background: var(--forest); }
+.toast.success { border-color: var(--forest); }
 .toast.success i { color: var(--forest); }
 
-.toast.error { border-left: 3px solid var(--danger); }
-.toast.error::before { background: var(--danger); }
+.toast.error { border-color: var(--danger); }
 .toast.error i { color: var(--danger); }
 
-.toast.info { border-left: 3px solid var(--terracotta); }
-.toast.info::before { background: var(--terracotta); }
+.toast.info { border-color: var(--terracotta); }
 .toast.info i { color: var(--terracotta); }
 
 @keyframes toastIn {
-    from { opacity: 0; transform: translateX(100%); }
-    to { opacity: 1; transform: translateX(0); }
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes toastOut {
-    to { opacity: 0; transform: translateX(100%); }
-}
-
-@keyframes toastProgress {
-    from { width: 100%; }
-    to { width: 0%; }
-}
-
-/* ---------- 17. LOADER ---------- */
+/* ---------- 16. LOADER ---------- */
 .global-loader {
     position: fixed;
     inset: 0;
@@ -1675,12 +1489,7 @@ footer {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-@keyframes fadeSlideIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ---------- 18. RESPONSIVE ---------- */
+/* ---------- 17. RESPONSIVE ---------- */
 @media (max-width: 1100px) {
     .footer-grid {
         grid-template-columns: 1.4fr 1fr 1fr;
@@ -1700,7 +1509,7 @@ footer {
     .section { padding: 72px 0; }
     .section-header { margin-bottom: 48px; }
 
-    .features-grid {
+    .editorial-list {
         grid-template-columns: 1fr;
     }
 
@@ -1751,7 +1560,7 @@ footer {
     .trust-item { min-width: 0; }
     .trust-item-value { font-size: 0.95rem; }
 
-    .feature-card { padding: 32px 24px; }
+    .editorial-list { gap: 32px; margin-top: 32px; }
 
     .product-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
 
@@ -1764,9 +1573,6 @@ footer {
     .upcoming-list li { padding: 8px 14px; font-size: 0.78rem; }
 
     .step-card { padding: 28px 22px; }
-    .step-card .step-number { font-size: 2rem; }
-
-    #testimonials { padding: 64px 0; }
 
     .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 40px; }
     .footer-brand { grid-column: 1 / -1; }
@@ -1792,7 +1598,7 @@ footer {
 }
 
 /* ============================================================
-   AUTH PAGES — sign in, sign up, profile
+   AUTH PAGES (Sign in, sign up, profile)
    ============================================================ */
 
 /* ---------- Auth split layout ---------- */
@@ -1838,13 +1644,6 @@ footer {
     position: relative;
     z-index: 2;
     max-width: 480px;
-    animation: heroFadeUp 1s var(--ease-out) forwards;
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-.auth-visual-content .eyebrow {
-    color: var(--gold);
 }
 
 .auth-visual-content h2 {
