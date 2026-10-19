@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <meta name="theme-color" content="#1e4d2b" />
-    <title>Checkout — Potlapalli Farms</title>
-    <meta name="description" content="Complete your order — Sunday delivery across Andhra Pradesh." />
+    <meta name="theme-color" content="#1a4423" />
+    <title>Checkout | Potlapalli Farms</title>
+    <meta name="description" content="Complete your order. Sunday delivery across Andhra Pradesh." />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <!-- Leaflet (free OpenStreetMap) -->
@@ -19,13 +19,11 @@
     <link rel="stylesheet" href="css/style.css" />
 
     <style>
-        /* ============================================================
-           CHECKOUT PAGE — page-specific styles
-           ============================================================ */
+        /* CHECKOUT PAGE */
 
         .co-main {
             padding: 56px 0 80px;
-            background: var(--bg-main);
+            background: var(--bg-page);
             min-height: calc(100vh - var(--header-height) - var(--alert-height));
         }
 
@@ -101,10 +99,11 @@
 
         /* Form card */
         .co-card {
-            background: var(--bg-main);
+            background: var(--bg-elevated);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 32px;
+            box-shadow: var(--shadow-sm);
         }
 
         .co-card + .co-card { margin-top: 24px; }
@@ -168,7 +167,7 @@
         .co-field textarea {
             width: 100%;
             padding: 14px 16px;
-            background: var(--bg-main);
+            background: var(--bg-elevated);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             font-family: var(--font-body);
@@ -224,7 +223,7 @@
             top: calc(100% + 4px);
             left: 0;
             right: 0;
-            background: var(--bg-main);
+            background: var(--bg-elevated);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-md);
@@ -314,7 +313,7 @@
             position: absolute;
             top: 12px;
             left: 12px;
-            background: var(--bg-main);
+            background: var(--bg-elevated);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             padding: 8px 12px;
@@ -368,7 +367,7 @@
         .co-map-btn {
             width: 40px;
             height: 40px;
-            background: var(--bg-main);
+            background: var(--bg-elevated);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             display: flex;
@@ -412,7 +411,7 @@
             cursor: pointer;
             transition: var(--trans-fast);
             position: relative;
-            background: var(--bg-main);
+            background: var(--bg-elevated);
         }
 
         .pay-option:hover { border-color: var(--border-strong); }
@@ -472,18 +471,19 @@
 
         /* Summary */
         .co-summary {
-            background: var(--bg-warm);
+            background: var(--bg-elevated);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 28px;
             position: sticky;
             top: calc(var(--header-height) + var(--alert-height) + 20px);
+            box-shadow: var(--shadow-sm);
         }
 
         .co-summary h3 {
             font-family: var(--font-body);
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--text-muted);
@@ -583,18 +583,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
             width: 100%;
             background: var(--terracotta);
-            color: var(--cream);
+            color: #ffffff;
             padding: 16px 24px;
             border-radius: var(--radius-sm);
             font-family: var(--font-body);
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.95rem;
             letter-spacing: 0.02em;
             transition: var(--trans-fast);
             cursor: pointer;
+            border: none;
         }
 
         .co-place-btn:hover:not(:disabled) {
@@ -627,13 +627,14 @@
 
         /* Gates */
         .co-gate {
-            background: var(--bg-main);
+            background: var(--bg-elevated);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 72px 32px;
             text-align: center;
             max-width: 520px;
             margin: 40px auto;
+            box-shadow: var(--shadow-sm);
         }
 
         .co-gate .gate-icon {
@@ -672,16 +673,18 @@
         .co-gate .gate-btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
             background: var(--forest);
-            color: var(--cream);
+            color: #ffffff;
             padding: 14px 28px;
             border-radius: var(--radius-sm);
             font-family: var(--font-body);
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.95rem;
             letter-spacing: 0.02em;
             transition: var(--trans-fast);
+            border: none;
+            cursor: pointer;
         }
 
         .co-gate .gate-btn:hover {
@@ -694,12 +697,13 @@
         .co-success {
             max-width: 640px;
             margin: 40px auto;
-            background: var(--bg-main);
+            background: var(--bg-elevated);
             border: 1px solid var(--border);
             border-top: 4px solid var(--forest);
             border-radius: var(--radius-lg);
             padding: 48px 40px;
             text-align: center;
+            box-shadow: var(--shadow-sm);
         }
 
         .co-success .check {
@@ -746,7 +750,7 @@
         .co-success .otp-box .label {
             font-family: var(--font-body);
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--text-muted);
@@ -815,19 +819,21 @@
         .co-success .btn-outline-sm {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
             padding: 12px 22px;
             border-radius: var(--radius-sm);
             font-family: var(--font-body);
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.9rem;
             letter-spacing: 0.02em;
             transition: var(--trans-fast);
+            border: none;
+            cursor: pointer;
         }
 
         .co-success .btn-primary-sm {
             background: var(--forest);
-            color: var(--cream);
+            color: #ffffff;
         }
 
         .co-success .btn-primary-sm:hover {
@@ -890,7 +896,7 @@
             <span class="dot">·</span>
             Order before Saturday 6 PM
             <span class="dot">·</span>
-            6 AM – 7 PM IST
+            6 AM - 7 PM IST
         </span>
     </div>
 
@@ -898,7 +904,7 @@
     <header class="header" id="header">
         <div class="container header-inner">
             <div class="logo">
-                <a href="index.html" aria-label="Potlapalli Farms — Home">
+                <a href="index.html" aria-label="Potlapalli Farms Home">
                     <svg class="logo-symbol" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.3"/>
                         <path d="M20 10 Q 12.5 18, 20 30 Q 27.5 18, 20 10 Z" fill="currentColor"/>
@@ -922,7 +928,7 @@
 
             <div class="header-actions">
                 <button id="themeToggle" class="icon-btn theme-toggle" aria-label="Toggle dark mode">
-                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
                 </button>
                 <a href="cart.html" class="icon-btn mini-cart" aria-label="Cart">
                     <i class="fas fa-shopping-bag"></i>
@@ -954,7 +960,7 @@
             <div id="coContent">
                 <div class="co-gate">
                     <div class="gate-icon"><i class="fas fa-spinner fa-spin"></i></div>
-                    <p>Loading checkout…</p>
+                    <p>Loading checkout</p>
                 </div>
             </div>
         </div>
@@ -976,7 +982,7 @@
                             <span class="logo-sub">Farms</span>
                         </span>
                     </div>
-                    <p>A family farm in Andhra Pradesh, raising food the way it should be raised — slowly, honestly, and in the open.</p>
+                    <p>A family farm in Andhra Pradesh, raising food the way it should be raised. Slowly, honestly, and in the open.</p>
                 </div>
                 <div class="footer-col">
                     <h4>Shop</h4>
@@ -992,23 +998,20 @@
                 </div>
                 <div class="footer-col">
                     <h4>Get in touch</h4>
-                    <a href="mailto:pgf.natural@gmail.com"><i class="fas fa-envelope"></i> pgf.natural@gmail.com</a>
-                    <a href="tel:+917981059178"><i class="fas fa-phone"></i> +91 79810 59178</a>
-                    <a href="https://wa.me/917981059178" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp us</a>
-                    <a href="https://www.instagram.com/potlapallifarms" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> @potlapallifarms</a>
+                    <a href="mailto:pgf.natural@gmail.com">pgf.natural@gmail.com</a>
+                    <a href="tel:+917981059178">+91 79810 59178</a>
+                    <a href="https://wa.me/917981059178" target="_blank" rel="noopener">WhatsApp us</a>
+                    <a href="https://www.instagram.com/potlapallifarms" target="_blank" rel="noopener">@potlapallifarms</a>
                 </div>
             </div>
             <div class="footer-bottom">
                 <span>© 2025 Potlapalli Farms. All rights reserved.</span>
-                <span>Made with care in Andhra Pradesh.</span>
             </div>
         </div>
     </footer>
 
     <script type="module">
-    /* ============================================================
-       CHECKOUT — full flow with free OpenStreetMap / Leaflet map
-       ============================================================ */
+    /* CHECKOUT */
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -1029,13 +1032,10 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // ---- Config ----
     const CART_KEY = 'potlapalliCart';
     const THEME_KEY = 'potlapalliTheme';
     const DEFAULT_CENTER = [15.9129, 79.7400]; // Andhra Pradesh
-    const NOMINATIM_UA = 'PotlapalliFarmsCheckout/1.0 (pgf.natural@gmail.com)';
 
-    // ---- DOM ----
     const coContentEl = document.getElementById('coContent');
     const cartCountEl = document.getElementById('cartCount');
     const toastContainer = document.getElementById('toast-container');
@@ -1047,20 +1047,15 @@
     const mobileNavLinks = document.getElementById('mobileNavLinks');
     const authControls = document.getElementById('auth-controls');
 
-    // ---- State ----
     let currentUser = null;
     let cart = [];
     let isSubmitting = false;
 
-    // Leaflet state
     let map = null;
     let marker = null;
     let searchDebounce = null;
-    let reverseDebounce = null;
-    let selectedLocation = null; // { lat, lng }
-    let suppressReverse = false;
+    let selectedLocation = null; 
 
-    // ---- Utilities ----
     function escapeHtml(str) {
         return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) {
             return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -1078,10 +1073,9 @@
 
     function showToast(message, type) {
         type = type || 'success';
-        var icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
         var el = document.createElement('div');
         el.className = 'toast ' + type;
-        el.innerHTML = '<i class="fas ' + (icons[type] || icons.success) + '"></i><span>' + escapeHtml(message) + '</span>';
+        el.innerHTML = '<span>' + escapeHtml(message) + '</span>';
         toastContainer.appendChild(el);
         setTimeout(function () { el.classList.add('hiding'); }, 4000);
         setTimeout(function () { el.remove(); }, 4400);
@@ -1109,14 +1103,13 @@
         return String(Math.floor(100000 + Math.random() * 900000));
     }
 
-    // ---- Gates ----
     function renderEmptyCart() {
         coContentEl.innerHTML =
             '<div class="co-gate">' +
                 '<div class="gate-icon"><i class="fas fa-shopping-bag"></i></div>' +
                 '<h2>Your cart is empty</h2>' +
                 '<p>Add some fresh produce before checking out. We harvest Sunday morning and deliver the same day.</p>' +
-                '<a href="index.html#products" class="gate-btn">Browse the shop <i class="fas fa-arrow-right"></i></a>' +
+                '<a href="index.html#products" class="gate-btn">Browse the shop</a>' +
             '</div>';
     }
 
@@ -1126,14 +1119,13 @@
                 '<div class="gate-icon"><i class="fas fa-user-circle"></i></div>' +
                 '<h2>Please sign in to continue</h2>' +
                 '<p>You need an account to place an order. It only takes a minute.</p>' +
-                '<a href="signin.html?redirect=checkout.html" class="gate-btn">Sign in <i class="fas fa-arrow-right"></i></a>' +
+                '<a href="signin.html?redirect=checkout.html" class="gate-btn">Sign in</a>' +
                 '<p style="margin-top:20px;font-size:0.88rem;">Don\'t have an account? ' +
-                    '<a href="signup.html?redirect=checkout.html" style="color:var(--forest);font-weight:600;text-decoration:none;">Create one</a>' +
+                    '<a href="signup.html?redirect=checkout.html" style="color:var(--forest);font-weight:700;text-decoration:none;">Create one</a>' +
                 '</p>' +
             '</div>';
     }
 
-    // ---- Summary items ----
     function buildSummaryItems() {
         return cart.map(function (item) {
             var isMeat = !!item.isMeat;
@@ -1147,7 +1139,6 @@
         }).join('');
     }
 
-    // ---- Main form ----
     function renderCheckoutForm(profile) {
         profile = profile || {};
         var subtotal = cart.reduce(function (s, i) { return s + i.price * i.quantity; }, 0);
@@ -1192,11 +1183,18 @@
                                     '<span class="err">Please enter a valid 10-digit mobile number.</span>' +
                                 '</div>' +
 
-                                '<div class="co-field" id="f-address">' +
-                                    '<label for="address">Delivery address</label>' +
-                                    '<input type="text" id="address" value="' + escapeHtml(profile.address || '') + '" placeholder="Start typing your address — we\'ll find it on the map" autocomplete="off" required />' +
+                                // Autocomplete Search Field
+                                '<div class="co-field" id="f-search">' +
+                                    '<label for="addressSearch">Search your area or building</label>' +
+                                    '<input type="text" id="addressSearch" placeholder="Start typing your area..." autocomplete="off" />' +
                                     '<div class="address-suggestions" id="addressSuggestions"></div>' +
-                                    '<span class="err">Please enter your full delivery address.</span>' +
+                                '</div>' +
+
+                                // Final Address Textarea
+                                '<div class="co-field" id="f-address">' +
+                                    '<label for="address">Full delivery address</label>' +
+                                    '<textarea id="address" placeholder="Add flat/house number here..." required>' + escapeHtml(profile.address || '') + '</textarea>' +
+                                    '<span class="err">Please enter your full delivery address (minimum 10 characters).</span>' +
                                 '</div>' +
 
                                 '<div class="co-field co-map-wrap">' +
@@ -1237,7 +1235,7 @@
                                     '<input type="radio" name="paymentMethod" value="UPI" />' +
                                     '<div class="pay-option-body">' +
                                         '<div class="pay-option-title">UPI / Online transfer</div>' +
-                                        '<div class="pay-option-desc">Pay via UPI. We\'ll share payment details on WhatsApp after you place the order.</div>' +
+                                        '<div class="pay-option-desc">Pay via UPI. We will share payment details on WhatsApp after you place the order.</div>' +
                                     '</div>' +
                                 '</label>' +
                             '</div>' +
@@ -1257,11 +1255,11 @@
                         '<span class="value">' + formatMoney(subtotal) + '</span>' +
                     '</div>' +
                     '<button type="button" id="placeOrderBtn" class="co-place-btn">' +
-                        'Place order <i class="fas fa-arrow-right"></i>' +
+                        'Place order' +
                     '</button>' +
                     '<div class="co-summary-note">' +
                         '<i class="fas fa-shield-alt"></i>' +
-                        '<span>You\'ll receive a 6-digit delivery OTP on the next screen. Share it only with the delivery person.</span>' +
+                        '<span>You will receive a 6-digit delivery OTP on the next screen. Share it only with the delivery person.</span>' +
                     '</div>' +
                 '</aside>' +
 
@@ -1272,9 +1270,7 @@
         initMap();
     }
 
-    // ---- Form interactions ----
     function bindFormInteractions() {
-        // Payment option selection
         var payOptions = document.getElementById('payOptions');
         if (payOptions) {
             payOptions.querySelectorAll('.pay-option').forEach(function (el) {
@@ -1287,7 +1283,6 @@
             });
         }
 
-        // Clear error state on input
         ['name', 'phone', 'address'].forEach(function (id) {
             var el = document.getElementById(id);
             if (!el) return;
@@ -1297,23 +1292,80 @@
             });
         });
 
-        // Address search
-        var addressInput = document.getElementById('address');
-        if (addressInput) {
-            addressInput.addEventListener('input', handleAddressInput);
-            addressInput.addEventListener('focus', function () {
-                if (this.value.trim().length >= 3) handleAddressInput.call(this);
+        // NEW: Address Autocomplete with Photon API
+        var searchInput = document.getElementById('addressSearch');
+        var suggestionsBox = document.getElementById('addressSuggestions');
+        var addressTextarea = document.getElementById('address');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                clearTimeout(searchDebounce);
+                var query = e.target.value.trim();
+
+                if (query.length < 3) {
+                    suggestionsBox.classList.remove('open');
+                    return;
+                }
+
+                searchDebounce = setTimeout(async function() {
+                    try {
+                        // Photon API (free, no key needed). Biased towards AP.
+                        var url = 'https://photon.komoot.io/api/?q=' + encodeURIComponent(query) + '&limit=5&lat=15.9129&lon=79.7400';
+                        var response = await fetch(url);
+                        var data = await response.json();
+
+                        if (!data.features || data.features.length === 0) {
+                            suggestionsBox.innerHTML = '<div class="address-suggestion-empty">No matches found. Please use the map pin below.</div>';
+                            suggestionsBox.classList.add('open');
+                            return;
+                        }
+
+                        suggestionsBox.innerHTML = data.features.map(function(feature, index) {
+                            var props = feature.properties;
+                            var parts = [props.name, props.street, props.city, props.state].filter(Boolean);
+                            var displayName = parts.join(', ');
+                            var lon = feature.geometry.coordinates[0];
+                            var lat = feature.geometry.coordinates[1];
+                            
+                            return '<div class="address-suggestion-item" data-idx="' + index + '">' + escapeHtml(displayName) + '</div>';
+                        }).join('');
+
+                        suggestionsBox.classList.add('open');
+
+                        suggestionsBox.querySelectorAll('.address-suggestion-item').forEach(function(el, i) {
+                            el.addEventListener('click', function() {
+                                var feature = data.features[i];
+                                var lon = feature.geometry.coordinates[0];
+                                var lat = feature.geometry.coordinates[1];
+                                var props = feature.properties;
+                                var parts = [props.name, props.street, props.city, props.state].filter(Boolean);
+                                var displayName = parts.join(', ');
+
+                                // Fill the final address textarea
+                                addressTextarea.value = displayName;
+                                document.getElementById('f-address').classList.remove('has-error');
+                                
+                                // Move map and pin
+                                setMarker(lat, lon, true);
+                                
+                                // Close dropdown
+                                suggestionsBox.classList.remove('open');
+                                searchInput.value = displayName; // Update search bar to reflect selection
+                            });
+                        });
+                    } catch (err) {
+                        console.warn('Autocomplete failed', err);
+                    }
+                }, 400); // 400ms debounce
             });
-            addressInput.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') hideSuggestions();
+
+            // Close suggestions on outside click
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                    suggestionsBox.classList.remove('open');
+                }
             });
         }
-
-        // Close suggestions on outside click
-        document.addEventListener('click', function (e) {
-            var wrap = document.getElementById('f-address');
-            if (wrap && !wrap.contains(e.target)) hideSuggestions();
-        });
 
         // Locate button
         var locateBtn = document.getElementById('locateBtn');
@@ -1326,76 +1378,6 @@
         if (btn) btn.addEventListener('click', handlePlaceOrder);
     }
 
-    // ---- Address autocomplete (Nominatim) ----
-    function handleAddressInput() {
-        var query = this.value.trim();
-        clearTimeout(searchDebounce);
-
-        if (query.length < 3) {
-            hideSuggestions();
-            return;
-        }
-
-        searchDebounce = setTimeout(function () {
-            searchAddressNominatim(query);
-        }, 450);
-    }
-
-    function searchAddressNominatim(query) {
-        var url = 'https://nominatim.openstreetmap.org/search?format=json&limit=6&countrycodes=in&addressdetails=1&q=' + encodeURIComponent(query);
-
-        fetch(url, { headers: { 'Accept': 'application/json' } })
-            .then(function (r) { return r.json(); })
-            .then(function (data) {
-                showSuggestions(data);
-            })
-            .catch(function (err) {
-                console.warn('Address search failed:', err);
-                showSuggestions([]);
-            });
-    }
-
-    function showSuggestions(items) {
-        var box = document.getElementById('addressSuggestions');
-        if (!box) return;
-
-        if (!items || items.length === 0) {
-            box.innerHTML = '<div class="address-suggestion-empty">No matches. Try a nearby landmark.</div>';
-            box.classList.add('open');
-            return;
-        }
-
-        box.innerHTML = items.map(function (item, i) {
-            var label = item.display_name || '';
-            return '<div class="address-suggestion-item" data-idx="' + i + '">' + escapeHtml(label) + '</div>';
-        }).join('');
-        box.classList.add('open');
-
-        box.querySelectorAll('.address-suggestion-item').forEach(function (el, i) {
-            el.addEventListener('click', function () {
-                var item = items[i];
-                if (!item) return;
-                var lat = parseFloat(item.lat);
-                var lng = parseFloat(item.lon);
-                var addr = item.display_name || '';
-
-                suppressReverse = true;
-                var addressInput = document.getElementById('address');
-                if (addressInput) addressInput.value = addr;
-
-                setMarker(lat, lng, true);
-                hideSuggestions();
-                setTimeout(function () { suppressReverse = false; }, 300);
-            });
-        });
-    }
-
-    function hideSuggestions() {
-        var box = document.getElementById('addressSuggestions');
-        if (box) box.classList.remove('open');
-    }
-
-    // ---- Leaflet map ----
     function initMap() {
         var container = document.getElementById('map-container');
         if (!container || typeof L === 'undefined') return;
@@ -1414,28 +1396,21 @@
             draggable: true,
             icon: L.divIcon({
                 className: 'pf-marker',
-                html: '<div style="width:24px;height:24px;border-radius:50% 50% 50% 0;background:#c45a3a;transform:rotate(-45deg);box-shadow:0 4px 10px rgba(0,0,0,0.3);border:2px solid #fff;"></div>',
+                html: '<div style="width:24px;height:24px;border-radius:50% 50% 50% 0;background:#c05030;transform:rotate(-45deg);box-shadow:0 4px 10px rgba(0,0,0,0.3);border:2px solid #fff;"></div>',
                 iconSize: [24, 24],
                 iconAnchor: [12, 24],
             })
         }).addTo(map);
 
-        // Marker drag end — update coords + reverse geocode
         marker.on('dragend', function () {
             var pos = marker.getLatLng();
             updateCoordinates(pos.lat, pos.lng);
-            if (!suppressReverse) reverseGeocode(pos.lat, pos.lng);
         });
 
-        // Click map to move marker
         map.on('click', function (e) {
             setMarker(e.latlng.lat, e.latlng.lng, false);
         });
 
-        // Hide suggestions on map click too
-        map.on('mousedown', hideSuggestions);
-
-        // Fix any layout weirdness
         setTimeout(function () { map.invalidateSize(); }, 200);
     }
 
@@ -1458,34 +1433,10 @@
         var text = document.getElementById('mapStatusText');
         if (status && text) {
             status.classList.add('located');
-            text.textContent = 'Location pinned · ' + lat.toFixed(5) + ', ' + lng.toFixed(5);
+            text.textContent = 'Location pinned';
         }
     }
 
-    // ---- Reverse geocode (Nominatim) ----
-    function reverseGeocode(lat, lng) {
-        clearTimeout(reverseDebounce);
-        reverseDebounce = setTimeout(function () {
-            var url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&zoom=18&addressdetails=1';
-
-            fetch(url, { headers: { 'Accept': 'application/json' } })
-                .then(function (r) { return r.json(); })
-                .then(function (data) {
-                    if (!data || !data.display_name) return;
-                    var addressInput = document.getElementById('address');
-                    if (!addressInput) return;
-                    // Only auto-fill if user hasn't typed a specific address
-                    if (!addressInput.value || addressInput.value.length < 8) {
-                        addressInput.value = data.display_name;
-                        var field = document.getElementById('f-address');
-                        if (field) field.classList.remove('has-error');
-                    }
-                })
-                .catch(function (err) { console.warn('Reverse geocode failed:', err); });
-        }, 500);
-    }
-
-    // ---- Use my current location ----
     function useCurrentLocation() {
         if (!navigator.geolocation) {
             showToast('Your browser does not support location access.', 'error');
@@ -1501,13 +1452,12 @@
                 var lat = pos.coords.latitude;
                 var lng = pos.coords.longitude;
                 setMarker(lat, lng, true);
-                reverseGeocode(lat, lng);
                 showToast('Location set to your current position.');
             },
             function (err) {
                 btn && btn.classList.remove('locating');
                 var msg = 'Could not get your location.';
-                if (err && err.code === 1) msg = 'Location permission denied. Please enable it or pin manually.';
+                if (err && err.code === 1) msg = 'Location permission denied.';
                 else if (err && err.code === 2) msg = 'Location unavailable right now.';
                 else if (err && err.code === 3) msg = 'Location request timed out.';
                 showToast(msg, 'error');
@@ -1516,7 +1466,6 @@
         );
     }
 
-    // ---- Validation ----
     function validateForm() {
         var nameEl = document.getElementById('name');
         var phoneEl = document.getElementById('phone');
@@ -1539,7 +1488,6 @@
         return nameOk && phoneOk && addressOk && locationOk;
     }
 
-    // ---- Place order ----
     async function handlePlaceOrder() {
         if (isSubmitting) return;
 
@@ -1565,7 +1513,7 @@
         var btn = document.getElementById('placeOrderBtn');
         if (btn) {
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Placing order…';
+            btn.innerHTML = 'Placing order...';
         }
 
         try {
@@ -1618,19 +1566,18 @@
             console.error('Order creation failed:', err);
             var msg = (err && err.message) ? err.message : 'Something went wrong.';
             if (String(msg).toLowerCase().indexOf('permission') !== -1) {
-                msg = 'We couldn\'t save your order right now. Please try again or contact us on WhatsApp.';
+                msg = 'We could not save your order right now. Please try again or contact us on WhatsApp.';
             }
             showToast('Could not place order: ' + msg, 'error');
             if (btn) {
                 btn.disabled = false;
-                btn.innerHTML = 'Place order <i class="fas fa-arrow-right"></i>';
+                btn.innerHTML = 'Place order';
             }
         } finally {
             isSubmitting = false;
         }
     }
 
-    // ---- Success view ----
     function renderSuccess(orderId, otp, totalAmount, paymentMethod, customerName) {
         var shortId = orderId.slice(-6).toUpperCase();
         var payLabel = paymentMethod === 'UPI' ? 'UPI / Online transfer' : 'Cash on delivery';
@@ -1639,7 +1586,7 @@
             '<div class="co-success">' +
                 '<div class="check"><i class="fas fa-check"></i></div>' +
                 '<h1>Order placed!</h1>' +
-                '<p class="lead">Thanks ' + escapeHtml((customerName || '').split(' ')[0] || '') + '. We\'ll harvest fresh Sunday morning and deliver the same day.</p>' +
+                '<p class="lead">Thanks ' + escapeHtml((customerName || '').split(' ')[0] || '') + '. We will harvest fresh Sunday morning and deliver the same day.</p>' +
 
                 '<div class="otp-box">' +
                     '<div class="label">Your delivery OTP</div>' +
@@ -1654,7 +1601,7 @@
                 '</div>' +
 
                 '<div class="actions">' +
-                    '<a href="orders.html" class="btn-primary-sm">View my orders <i class="fas fa-arrow-right"></i></a>' +
+                    '<a href="orders.html" class="btn-primary-sm">View my orders</a>' +
                     '<a href="index.html" class="btn-outline-sm">Back to home</a>' +
                 '</div>' +
             '</div>';
@@ -1663,13 +1610,12 @@
         showToast('Order placed successfully!');
     }
 
-    // ---- Theme ----
     function initTheme() {
         var icon = themeToggle ? themeToggle.querySelector('i') : null;
         function apply(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
-            if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
         }
         var saved = 'light';
         try { saved = localStorage.getItem(THEME_KEY) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
@@ -1680,7 +1626,6 @@
         });
     }
 
-    // ---- Header scroll ----
     function initHeaderScroll() {
         var header = document.getElementById('header');
         if (!header) return;
@@ -1689,18 +1634,17 @@
         onScroll();
     }
 
-    // ---- Mobile nav ----
     function initMobileNav() {
         var links = [
-            { href: 'index.html', icon: 'fa-home', label: 'Home' },
-            { href: 'index.html#products', icon: 'fa-store', label: 'Shop' },
-            { href: 'orders.html', icon: 'fa-receipt', label: 'My Orders' },
-            { href: 'profile.html', icon: 'fa-user', label: 'My Profile' },
-            { href: 'cart.html', icon: 'fa-shopping-bag', label: 'My Cart' }
+            { href: 'index.html', label: 'Home' },
+            { href: 'index.html#products', label: 'Shop' },
+            { href: 'orders.html', label: 'My Orders' },
+            { href: 'profile.html', label: 'My Profile' },
+            { href: 'cart.html', label: 'My Cart' }
         ];
         if (mobileNavLinks) {
             mobileNavLinks.innerHTML = links.map(function (l) {
-                return '<li><a href="' + l.href + '"><i class="fas ' + l.icon + '"></i><span>' + l.label + '</span></a></li>';
+                return '<li><a href="' + l.href + '"><span>' + l.label + '</span></a></li>';
             }).join('');
         }
 
@@ -1722,7 +1666,6 @@
         });
     }
 
-    // ---- Auth controls (static until Firebase live) ----
     function renderAuthControlsStatic() {
         if (!authControls) return;
         authControls.innerHTML =
@@ -1730,7 +1673,6 @@
             '<a href="signup.html" class="auth-btn primary">Sign Up</a>';
     }
 
-    // ---- Init ----
     document.addEventListener('DOMContentLoaded', function () {
         initTheme();
         initHeaderScroll();
@@ -1739,7 +1681,6 @@
         updateHeaderBadge();
     });
 
-    // ---- Auth gate ----
     onAuthStateChanged(auth, async function (user) {
         currentUser = user;
         cart = getCart();
