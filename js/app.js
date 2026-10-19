@@ -1,7 +1,7 @@
 /* ============================================================
-   POTLAPALLI FARMS — MAIN APPLICATION LOGIC
-   Sections: Firebase → State → Utils → Theme → Header → Nav →
-             Cart → Products → Hero → Scroll → Auth → Notifications
+   POTLAPALLI FARMS - MAIN APPLICATION LOGIC
+   Sections: Firebase -> State -> Utils -> Theme -> Header -> Nav ->
+             Cart -> Products -> Hero -> Auth -> Notifications
    Products now come from Firestore in real time. Falls back to
    the hardcoded list if the collection is empty.
    ============================================================ */
@@ -13,8 +13,6 @@ import {
 import {
     getFirestore, collection, query, where, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-// App Check — re-enable once Blaze plan is active (see docs/ROADMAP.md Phase 1)
-// import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
 
 /* ---------- 1. FIREBASE ---------- */
 const firebaseConfig = {
@@ -27,13 +25,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
-// App Check (disabled until billing is enabled)
-// const appCheck = initializeAppCheck(app, {
-//     provider: new ReCaptchaEnterpriseProvider('YOUR_SITE_KEY'),
-//     isTokenAutoRefreshEnabled: true
-// });
-
 const auth = getAuth(app);
 const db = getFirestore(app);
 
@@ -42,10 +33,10 @@ const CART_KEY = 'potlapalliCart';
 const SEEN_STATUSES_KEY = 'potlapalliSeenStatuses';
 const THEME_KEY = 'potlapalliTheme';
 
-// Fallback catalog — used only when the Firestore `products` collection is empty.
+// Fallback catalog - used only when the Firestore products collection is empty.
 const FALLBACK_PRODUCTS = [
-    { id: 'live-ram',         name: 'Live Ram (Macherla Pottelu)',       price: 450, unit: 'kg',    category: 'Live Meat',  isMeat: true,  isLive: true,  description: 'Live Ram, range 15–40 kg.',             image: 'assets/images/live-ram.jpg' },
-    { id: 'buck',             name: 'Buck (Meka Pothu)',                 price: 450, unit: 'kg',    category: 'Live Meat',  isMeat: true,  isLive: true,  description: 'Live Buck, range 15–40 kg.',            image: 'assets/images/buck.jpg' },
+    { id: 'live-ram',         name: 'Live Ram (Macherla Pottelu)',       price: 450, unit: 'kg',    category: 'Live Meat',  isMeat: true,  isLive: true,  description: 'Live Ram, range 15 to 40 kg.',             image: 'assets/images/live-ram.jpg' },
+    { id: 'buck',             name: 'Buck (Meka Pothu)',                 price: 450, unit: 'kg',    category: 'Live Meat',  isMeat: true,  isLive: true,  description: 'Live Buck, range 15 to 40 kg.',            image: 'assets/images/buck.jpg' },
     { id: 'live-natu-kodi',   name: 'Live Natu Kodi (Country Chicken)',  price: 700, unit: 'kg',    category: 'Live Birds', isMeat: false, isLive: true,  description: 'Live country chicken, your choice.',    image: 'assets/images/live-natu-kodi.jpg' },
     { id: 'sonali-chicken',   name: 'Sonali Country Chicken',            price: 550, unit: 'kg',    category: 'Meat',       isMeat: true,  isLive: false, description: 'Premium Sonali with smokey turmeric.',  image: 'assets/images/sonali-chicken.jpg' },
     { id: 'backyard-chicken', name: 'Backyard Country Chicken',          price: 800, unit: 'kg',    category: 'Meat',       isMeat: true,  isLive: false, description: 'High-quality backyard country chicken.', image: 'assets/images/backyard.jpg' },
@@ -55,12 +46,9 @@ const FALLBACK_PRODUCTS = [
     { id: 'eggs-tray',        name: 'Country Chicken Eggs (30 Tray)',    price: 430, unit: 'tray',  category: 'Eggs',       isMeat: false, isLive: false, description: 'Tray of 30 golden-yolk eggs.',          image: 'assets/images/tray.jpg' },
 ];
 
-// Live catalog (mutated by the Firestore listener)
 let PRODUCTS = FALLBACK_PRODUCTS.slice();
-
 const UPCOMING_PRODUCTS = ['Fish', 'Prawns', 'Crabs', 'Buffalo Milk', 'Cow Milk', 'Button Mushrooms'];
-
-const FALLBACK_IMG = 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&q=80&w=600';
+const FALLBACK_IMG = 'assets/images/placeholder.jpg'; // Removed AI slop Unsplash link
 
 let currentUser = null;
 let activeOrdersUnsub = null;
@@ -84,10 +72,10 @@ function showToast(message, type = 'success') {
     const container = $('#toast-container');
     if (!container) return;
 
-    const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+    // Simplified toasts without generic icons
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    toast.innerHTML = `<i class="fas ${icons[type] || icons.success}"></i><span>${escapeHtml(message)}</span>`;
+    toast.innerHTML = `<span>${escapeHtml(message)}</span>`;
     container.appendChild(toast);
 
     setTimeout(() => {
@@ -139,19 +127,19 @@ function initHeaderScroll() {
 /* ---------- 6. MOBILE NAV ---------- */
 function buildMobileNavLinks(user) {
     const links = [
-        { href: '#home', icon: 'fa-home', label: 'Home' },
-        { href: '#products', icon: 'fa-store', label: 'Products' },
-        { href: '#how-it-works', icon: 'fa-circle-question', label: 'How It Works' },
-        { href: '#contact', icon: 'fa-phone', label: 'Contact' },
+        { href: '#home', label: 'Home' },
+        { href: '#products', label: 'Products' },
+        { href: '#how-it-works', label: 'How It Works' },
+        { href: '#contact', label: 'Contact' },
     ];
 
     if (user) {
-        links.push({ href: 'orders.html', icon: 'fa-receipt', label: 'My Orders' });
-        links.push({ href: 'profile.html', icon: 'fa-user', label: 'My Profile' });
-        links.push({ href: '#', icon: 'fa-sign-out-alt', label: 'Log Out', action: 'logout' });
+        links.push({ href: 'orders.html', label: 'My Orders' });
+        links.push({ href: 'profile.html', label: 'My Profile' });
+        links.push({ href: '#', label: 'Log Out', action: 'logout' });
     } else {
-        links.push({ href: 'signin.html', icon: 'fa-sign-in-alt', label: 'Log In' });
-        links.push({ href: 'signup.html', icon: 'fa-user-plus', label: 'Sign Up' });
+        links.push({ href: 'signin.html', label: 'Log In' });
+        links.push({ href: 'signup.html', label: 'Sign Up' });
     }
 
     const list = $('#mobileNavLinks');
@@ -159,7 +147,6 @@ function buildMobileNavLinks(user) {
     list.innerHTML = links.map(l => `
         <li>
             <a href="${l.href}" ${l.action ? `data-action="${l.action}"` : ''}>
-                <i class="fas ${l.icon}"></i>
                 <span>${l.label}</span>
             </a>
         </li>
@@ -300,9 +287,8 @@ function renderCartDrawer() {
     if (cart.length === 0) {
         body.innerHTML = `
             <div class="cart-empty">
-                <i class="fas fa-shopping-bag"></i>
                 <h4>Your cart is empty</h4>
-                <p>Add some fresh produce to get started</p>
+                <p>Add some fresh produce to get started.</p>
                 <button class="cart-checkout-btn" id="emptyCartShop" style="max-width:220px;margin:0 auto;">
                     Browse Products
                 </button>
@@ -323,13 +309,11 @@ function renderCartDrawer() {
                 <div class="cart-item-price">${formatMoney(item.price)} / ${item.unit}</div>
                 <div class="cart-item-controls">
                     <div class="qty-stepper">
-                        <button data-action="dec" aria-label="Decrease"><i class="fas fa-minus"></i></button>
+                        <button data-action="dec" aria-label="Decrease">&minus;</button>
                         <span class="qty-value">${formatQty(item)}</span>
-                        <button data-action="inc" aria-label="Increase"><i class="fas fa-plus"></i></button>
+                        <button data-action="inc" aria-label="Increase">&plus;</button>
                     </div>
-                    <button class="cart-item-remove" data-action="remove" aria-label="Remove">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                    <button class="cart-item-remove" data-action="remove" aria-label="Remove">Remove</button>
                 </div>
             </div>
             <div class="cart-item-total">${formatMoney(item.price * item.quantity)}</div>
@@ -345,7 +329,7 @@ function renderCartDrawer() {
         </div>
         <div class="cart-summary-row">
             <span>Delivery</span>
-            <span style="color: var(--primary); font-weight: 600;">FREE</span>
+            <span style="color: var(--forest); font-weight: 600;">Free</span>
         </div>
         <div class="cart-summary-row total">
             <span>Total</span>
@@ -372,7 +356,6 @@ function initCartDrawer() {
     $('#cartDrawerClose')?.addEventListener('click', closeCartDrawer);
     $('#cartDrawerBackdrop')?.addEventListener('click', closeCartDrawer);
 
-    // Event delegation on cart drawer body
     $('#cartDrawerBody')?.addEventListener('click', (e) => {
         const btn = e.target.closest('button[data-action]');
         if (!btn) return;
@@ -386,7 +369,6 @@ function initCartDrawer() {
         else if (action === 'remove') removeCartItem(id);
     });
 
-    // Close on ESC
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeCartDrawer();
@@ -420,12 +402,11 @@ function renderProductCard(product) {
              onerror="this.onerror=null;this.src='${FALLBACK_IMG}'"
              alt="${escapeHtml(product.name)}" loading="lazy">`;
 
-    // Stock handling — if stock is 0, show "Sold out"
     const outOfStock = typeof product.stock === 'number' && product.stock <= 0;
 
     if (product.isLive) {
         return `
-            <div class="product-card animated-section" data-id="${product.id}">
+            <div class="product-card" data-id="${product.id}">
                 ${badge}
                 ${imgHtml}
                 <div class="product-content">
@@ -436,21 +417,17 @@ function renderProductCard(product) {
                     <div class="price-line">
                         <span class="price">${formatMoney(product.price)}<small>/${unitLabel}</small></span>
                     </div>
-                    <a href="#contact" class="add-to-cart-btn contact-btn">
-                        <i class="fas fa-phone"></i> Contact to Order
-                    </a>
+                    <a href="#contact" class="add-to-cart-btn contact-btn">Contact to Order</a>
                 </div>
             </div>`;
     }
 
     const addBtn = outOfStock
-        ? `<button class="add-to-cart-btn" disabled><i class="fas fa-ban"></i> Sold out</button>`
-        : `<button class="add-to-cart-btn" data-action="add">
-               <i class="fas fa-cart-plus"></i> Add to Cart
-           </button>`;
+        ? `<button class="add-to-cart-btn" disabled>Sold out</button>`
+        : `<button class="add-to-cart-btn" data-action="add">Add to Cart</button>`;
 
     return `
-        <div class="product-card animated-section ${outOfStock ? 'sold-out' : ''}" data-id="${product.id}">
+        <div class="product-card ${outOfStock ? 'sold-out' : ''}" data-id="${product.id}">
             ${badge}
             ${imgHtml}
             <div class="product-content">
@@ -461,9 +438,9 @@ function renderProductCard(product) {
                 <div class="price-line">
                     <span class="price price-display" data-base="${product.price}">${formatProductPrice(product, qty)}</span>
                     <div class="quantity-controls">
-                        <button class="qty-btn minus-btn" data-action="dec" aria-label="Decrease"><i class="fas fa-minus"></i></button>
+                        <button class="qty-btn minus-btn" data-action="dec" aria-label="Decrease">&minus;</button>
                         <span class="qty" data-qty="${qty}">${product.isMeat ? qty.toFixed(2) : qty}</span>
-                        <button class="qty-btn plus-btn" data-action="inc" aria-label="Increase"><i class="fas fa-plus"></i></button>
+                        <button class="qty-btn plus-btn" data-action="inc" aria-label="Increase">&plus;</button>
                     </div>
                 </div>
                 ${addBtn}
@@ -478,7 +455,6 @@ function renderProducts() {
     if (PRODUCTS.length === 0) {
         grid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 48px 20px; color: var(--text-muted);">
-                <i class="fas fa-leaf" style="font-size: 2rem; opacity: 0.4; display: block; margin-bottom: 14px;"></i>
                 <p>No products available right now. Please check back soon.</p>
             </div>`;
         return;
@@ -486,8 +462,6 @@ function renderProducts() {
 
     grid.innerHTML = PRODUCTS.map(renderProductCard).join('');
 
-    // Event delegation for quantity controls & add to cart
-    // (Removed once before reattaching — avoids duplicate listeners on refresh)
     if (grid._listener) grid.removeEventListener('click', grid._listener);
     grid._listener = (e) => {
         const card = e.target.closest('.product-card');
@@ -530,30 +504,26 @@ function renderProducts() {
         priceEl.textContent = formatMoney(product.price * qty);
     };
     grid.addEventListener('click', grid._listener);
-
-    // Re-observe newly added cards for scroll animations
-    observeAnimatedSections();
 }
 
 function renderUpcoming() {
     const list = $('#upcoming-list');
     if (!list) return;
     list.innerHTML = UPCOMING_PRODUCTS
-        .map(p => `<li><i class="fas fa-check"></i> ${escapeHtml(p)}</li>`)
+        .map(p => `<li>${escapeHtml(p)}</li>`)
         .join('');
 }
 
 /* ---------- 9b. LOAD PRODUCTS FROM FIRESTORE ---------- */
 function loadProducts() {
     const grid = $('#product-grid');
-    if (!grid) return; // not on homepage
+    if (!grid) return;
 
     try {
         productsUnsub = onSnapshot(
             collection(db, 'products'),
             (snap) => {
                 if (snap.empty) {
-                    // Firestore has no products yet — use fallback so site stays alive
                     PRODUCTS = FALLBACK_PRODUCTS.slice();
                 } else {
                     PRODUCTS = snap.docs.map(d => {
@@ -599,7 +569,6 @@ function initHeroSlider() {
     let index = 0;
     let timer;
 
-    // Build dots
     nav.innerHTML = '';
     slides.forEach((_, i) => {
         const dot = document.createElement('button');
@@ -630,11 +599,9 @@ function initHeroSlider() {
         timer = setInterval(next, 5500);
     }
 
-    // Pause on hover for desktop
     slider.addEventListener('mouseenter', () => clearInterval(timer));
     slider.addEventListener('mouseleave', restart);
 
-    // Swipe support (mobile)
     let startX = 0;
     slider.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
     slider.addEventListener('touchend', (e) => {
@@ -650,28 +617,7 @@ function initHeroSlider() {
     restart();
 }
 
-/* ---------- 11. SCROLL ANIMATIONS ---------- */
-let scrollObserver = null;
-
-function observeAnimatedSections() {
-    if (!scrollObserver) {
-        scrollObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    scrollObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-    }
-    $$('.animated-section:not(.visible)').forEach(el => scrollObserver.observe(el));
-}
-
-function initScrollAnimations() {
-    observeAnimatedSections();
-}
-
-/* ---------- 12. AUTH UI ---------- */
+/* ---------- 11. AUTH UI ---------- */
 function renderAuthControls(user) {
     const el = $('#auth-controls');
     if (!el) return;
@@ -679,12 +625,8 @@ function renderAuthControls(user) {
     if (user) {
         const shortName = (user.displayName || user.email || '').split('@')[0].split(' ')[0];
         el.innerHTML = `
-            <a href="orders.html" class="auth-btn" title="My Orders">
-                <i class="fas fa-receipt"></i>
-            </a>
-            <a href="profile.html" class="auth-btn" title="My Profile">
-                <i class="fas fa-user-circle"></i> ${escapeHtml(shortName).slice(0, 12)}
-            </a>
+            <a href="orders.html" class="auth-btn" title="My Orders">Orders</a>
+            <a href="profile.html" class="auth-btn" title="My Profile">${escapeHtml(shortName).slice(0, 12)}</a>
             <button class="auth-btn" id="logoutBtn">Log Out</button>
         `;
         $('#logoutBtn')?.addEventListener('click', handleLogout);
@@ -708,9 +650,8 @@ async function handleLogout() {
     }
 }
 
-/* ---------- 13. ORDER NOTIFICATIONS ---------- */
+/* ---------- 12. ORDER NOTIFICATIONS ---------- */
 function startOrderNotifications(uid) {
-    // Stop any existing listener
     if (activeOrdersUnsub) activeOrdersUnsub();
 
     const seen = JSON.parse(localStorage.getItem(SEEN_STATUSES_KEY) || '{}');
@@ -725,7 +666,6 @@ function startOrderNotifications(uid) {
                 const prev = seen[id];
 
                 if (change.type === 'added') {
-                    // First time seeing this order — record without notifying
                     seen[id] = status;
                 } else if (change.type === 'modified' && prev !== status) {
                     seen[id] = status;
@@ -749,7 +689,7 @@ function stopOrderNotifications() {
     }
 }
 
-/* ---------- 14. AUTH LISTENER ---------- */
+/* ---------- 13. AUTH LISTENER ---------- */
 onAuthStateChanged(auth, (user) => {
     currentUser = user;
     renderAuthControls(user);
@@ -761,7 +701,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-/* ---------- 15. INIT ---------- */
+/* ---------- 14. INIT ---------- */
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initHeaderScroll();
@@ -769,13 +709,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initCartDrawer();
     renderUpcoming();
     initHeroSlider();
-    initScrollAnimations();
     updateCartCount();
     renderCartDrawer();
 
-    // Products come from Firestore (with fallback)
     loadProducts();
 });
 
-/* Expose for other pages (cart.html, checkout.html) to reuse in future phases */
 export { auth, db, getCart, saveCart, showToast, formatMoney, escapeHtml };
